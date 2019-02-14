@@ -1,0 +1,48 @@
+﻿<div id="modal_pysicalDisks">
+    <table class="table"
+           st-table="physicalDisksController.disks"
+           st-safe-src="physicalDisksController.safeSource"
+           style="background-color: inherit">
+        <thead>
+            <tr>
+                <th>
+                    {{'DEVICES_DETAILS_LOCAL_STORAGE_PhysicalDiskName'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_LOCAL_STORAGE_State'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_LOCAL_STORAGE_SlotNumber'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_LOCAL_STORAGE_Size'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_LOCAL_STORAGE_SecurityStatus'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_LOCAL_STORAGE_BusProtocol'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_LOCAL_STORAGE_MediaType'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_LOCAL_STORAGE_HotSpare'|translate}}
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="volume in physicalDisksController.disks">
+                <td>{{volume.physicalDiskName}}</td>
+                <td>{{volume.state}}</td>
+                <td>{{volume.slotNumber}}</td>
+                <td>{{volume.size}}</td>
+                <td>{{volume.securityStatus}}</td>
+                <td>{{volume.busProtocol}}</td>
+                <td>{{volume.mediaType}}</td>
+                <td>{{volume.hotSpare}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

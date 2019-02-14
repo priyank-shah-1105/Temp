@@ -1,0 +1,322 @@
+﻿<div style="min-width: 1280px;">
+    <error-display errors="$rootScope.errors"
+                   on-click="$root.ASM.RemoveError(error)"
+                   on-expand-collapse=""></error-display>
+    <div class="row" style="background-color: #000;">
+        <div class="col-xs-6"
+             style="color: #fff; padding: 30px; height: 338px; position: relative;">
+            <h1 class="text-white" style="font-size:36px">{{'GETTINGSTARTED_welcome'|translate}}</h1>
+            <p>&nbsp;</p>
+            <img src="css/app/images/gettingstarted_arrows.png" style="position: absolute; top: 126px; left: 42px;" />
+            <p style="margin-left: 174px; max-width: 600px;">{{'GETTINGSTARTED_title'|translate}}</p>
+            <p style="margin-left: 174px; max-width: 600px;">{{'GETTINGSTARTED_about'|translate}}</p>
+        </div>
+        <div class="col-xs-6" style="background-image: url('images/getting-started-banner-bg-3.png'); background-position: right; height: 338px; background-repeat: no-repeat; background-size: cover;">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 style="margin-bottom: 6px;">{{'GETTINGSTARTED_instructiontitle'|translate}}</h2>
+            <p style="margin-bottom:20px">{{'GETTINGSTARTED_instructions'|translate}}</p>
+        </div>
+    </div>
+    <div id="step-row" class="row bordered">
+        <!-- CONFIGURE  RCM -->
+        <div class="col-fifth">
+            <div class="col-xs-12">
+                <ul class="list-inline">
+                    <li class="col-xs-2 stepIcons">
+                        <i style="font-size: 32px; color: #888888" class="ci-device-storage-chassis-config-gear"></i>
+                    </li>
+                    <li class="col-xs-10">
+                        <div class="height-to-measure">
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <h5 class="stepNumber">{{'GETTINGSTARTED_step1'|translate}}</h5>
+                                    <h2 class="stepTitle">{{'GETTINGSTARTED_step4title'|translate}}</h2>
+                                </div>
+                                <div class="col-xs-3">
+                                    <i style="font-size: 32px;"
+                                       class="success ci-health-circle-check-o pull-right"
+                                       ng-show="gettingStartedComponentController.oobe.configurationCompleted"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <p>{{'GETTINGSTARTED_step4help'|translate}}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn"
+                                    id="lnkConfigureResources"
+                                    ng-click="gettingStartedComponentController.configureRcm()"
+                                    ng-class="{ 'btn-primary': !gettingStartedComponentController.oobe.configurationCompleted,
+                                                'btn-success': gettingStartedComponentController.oobe.configurationCompleted }"
+                                    ng-disabled="!gettingStartedComponentController.oobe.initialSetupCompleted
+                                                || $root.ASM.IsInRole('readonly')
+                                                || $root.ASM.IsInRole('standard')">
+                                {{'GETTINGSTARTED_step4btn'|translate}}
+                            </button>
+                            <spinner ng-if="gettingStartedComponentController.firmwareCopying"></spinner>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- NETWORKS -->
+        <div class="col-fifth">
+            <div class="col-xs-12">
+                <ul class="list-inline">
+                    <li class="col-xs-2 stepIcons">
+                        <i style="font-size: 32px; color: #888888;" class="ci-network-tree"></i>
+                    </li>
+                    <li class="col-xs-10">
+                        <div class="height-to-measure">
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <h5 class="stepNumber">{{'GETTINGSTARTED_step2'|translate}}</h5>
+                                    <h2 class="stepTitle">{{'GETTINGSTARTED_step2title'|translate}}</h2>
+                                </div>
+
+                                <div class="col-xs-3">
+                                    <i class="success ci-health-circle-check-o pull-right"
+                                       style="font-size: 32px;"
+                                       ng-if="gettingStartedComponentController.oobe.networksCompleted"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <p>{{'GETTINGSTARTED_step2help'|translate}}</p>
+                            </div>
+                        </div>
+                        <button class="btn"
+                                id="lnkNetworks"
+                                ng-click="gettingStartedComponentController.addNetworks()"
+                                ng-class="{ 'btn-primary': !gettingStartedComponentController.oobe.networksCompleted,
+                                            'btn-success': gettingStartedComponentController.oobe.networksCompleted }"
+                                ng-disabled="!gettingStartedComponentController.oobe.initialSetupCompleted || $root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                            {{'GETTINGSTARTED_step2btn'|translate}}
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- DISCOVER -->
+        <div class="col-fifth">
+            <div class="col-xs-12">
+                <ul class="list-inline">
+                    <li class="col-xs-2 stepIcons">
+                        <i style="font-size: 32px; color: #888888" class="ci-search-files-clipboard"></i>
+                    </li>
+                    <li class="col-xs-10">
+                        <div class="height-to-measure">
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <h5 class="stepNumber">{{'GETTINGSTARTED_step3'|translate}}</h5>
+                                    <h2 class="stepTitle">{{'GETTINGSTARTED_step3title'|translate}}</h2>
+                                </div>
+                                <div class="col-xs-3">
+                                    <i class="success ci-health-circle-check-o pull-right"
+                                       style="font-size: 32px;"
+                                       ng-if="gettingStartedComponentController.oobe.discoveryCompleted"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <p>{{'GETTINGSTARTED_step3help'|translate}}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="spinner discoverSpinner"
+                                  ng-if="!gettingStartedComponentController.oobe.initialConfigurationCompleted || gettingStartedComponentController.oobe.pendingResources > 0"></span>
+                            <button class="btn"
+                                    id="lnkDiscoverResources"
+                                    ng-click="gettingStartedComponentController.launchDiscoverWizard();"
+                                    ng-class="{ 'btn-primary': !gettingStartedComponentController.oobe.discoveryCompleted,
+                                                'btn-success': gettingStartedComponentController.oobe.discoveryCompleted }"
+                                    ng-disabled="!gettingStartedComponentController.oobe.networksCompleted
+                                                    || !gettingStartedComponentController.oobe.initialSetupCompleted
+                                                    || $root.ASM.IsInRole('readonly')
+                                                    || $root.ASM.IsInRole('standard')">
+                                {{'GETTINGSTARTED_step3btn'|translate}}
+                            </button>
+                        </div>
+                        <br />
+                        <div>
+                            <div class="inProgress">
+                                <strong ng-if="!gettingStartedComponentController.oobe.initialConfigurationCompleted">
+                                    {{'GETTINGSTARTED_initialhardwareconfiginprogress'|translate}}
+                                </strong>
+                            </div>
+                            <div ng-if="gettingStartedComponentController.oobe.pendingResources > 0">
+                                <strong>
+                                    {{'GETTINGSTARTED_discoveryjobrunning'|translate}}
+                                </strong>
+                            </div>
+                        </div>
+                        <ul class="list-unstyled"
+                            id="discoveryprogress"
+                            ng-show="gettingStartedComponentController.oobe.discoveredResources + gettingStartedComponentController.oobe.pendingResources + gettingStartedComponentController.oobe.errorsResources > 0">
+                            <li>
+                                <label>
+                                    <i class="success ci-health-square-check"></i>
+                                    {{'GETTINGSTARTED_discoveredresources'|translate}}
+                                </label>
+                                <span class="resourceCount">{{gettingStartedComponentController.oobe.discoveredResources}}</span>
+                            </li>
+                            <li>
+                                <label>
+                                    <i class="info ci-state-standby-clock"></i>
+                                    {{'GETTINGSTARTED_pendingresources'|translate}}
+                                </label>
+                                <span class="resourceCount">{{gettingStartedComponentController.oobe.pendingResources}}</span>
+                            </li>
+                            <li>
+                                <label>
+                                    <i class="critical ci-action-circle-remove"></i>
+                                    {{'GETTINGSTARTED_errorresources'|translate}}
+                                </label>
+                                <span class="resourceCount">{{gettingStartedComponentController.oobe.errorsResources}}</span>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- DEFINE EXISTING SERVICES -->
+        <div class="col-fifth">
+            <div class="col-xs-12">
+                <ul class="list-inline">
+                    <li class="col-xs-2 stepIcons">
+                        <i style="font-size: 32px; color: #888888" class="ci-deploy"></i>
+                    </li>
+                    <li class="col-xs-10">
+                        <div class="height-to-measure">
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <h5 class="stepNumber">{{'GETTINGSTARTED_step4'|translate}}</h5>
+                                    <h2 class="stepTitle">{{'GETTINGSTARTED_addexistingservice'|translate}}</h2>
+                                </div>
+                                <div class="col-xs-3">
+                                    <i class="success ci-health-circle-check-o pull-right"
+                                       ng-if="gettingStartedComponentController.serviceExists"
+                                       style="font-size: 32px;"></i>
+                                </div>
+                            </div>
+                            <div>
+                                {{'GETTINGSTARTED_addexistingserviceshelp'|translate}}
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn"
+                                    id="lnkConfigureInitialSetup"
+                                    ng-click="gettingStartedComponentController.addExistingService()"
+                                    ng-class="{ 'btn-primary': !gettingStartedComponentController.serviceExists,
+                                                'btn-success': gettingStartedComponentController.serviceExists }"
+                                    ng-disabled="!gettingStartedComponentController.oobe.networksCompleted ||
+                                                    !gettingStartedComponentController.oobe.initialSetupCompleted ||
+                                                    $root.ASM.IsInRole('readonly') ||
+                                                    $root.ASM.IsInRole('standard')">
+                                {{'GETTINGSTARTED_addexistingservice'|translate}}
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- TEMPLATES -->
+        <div class="col-fifth">
+            <div class="col-xs-12">
+                <ul class="list-inline">
+                    <li class="col-xs-2 stepIcons">
+                        <i style="font-size: 32px; color: #888888" class="ci-device-templates-blank-stacked"></i>
+                    </li>
+                    <li class="col-xs-10">
+                        <div class="height-to-measure">
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <h5 class="stepNumber">{{'GETTINGSTARTED_step5'|translate}}</h5>
+                                    <h2 class="stepTitle">{{'GETTINGSTARTED_step5title'|translate}}</h2>
+                                </div>
+                                <div class="col-xs-3">
+                                    <i style="font-size: 32px;"
+                                       class="success ci-health-circle-check-o pull-right"
+                                       ng-if="gettingStartedComponentController.oobe.templateCompleted"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="clearfix">{{'GETTINGSTARTED_step5help'|translate}}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn"
+                                    id="lnkCreateTemplate"
+                                    ng-click="gettingStartedComponentController.createTemplate()"
+                                    ng-class="{ 'btn-primary': !gettingStartedComponentController.oobe.templateCompleted,
+                                                'btn-success': gettingStartedComponentController.oobe.templateCompleted }"
+                                    ng-disabled="!gettingStartedComponentController.oobe.discoveryCompleted ||
+                                                !gettingStartedComponentController.oobe.initialSetupCompleted ||
+                                                $root.ASM.IsInRole('readonly') ||
+                                                $root.ASM.IsInRole('standard')">
+                                {{'GETTINGSTARTED_step5btn'|translate}}
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-row">
+        <div class="col-lg-6 col-md-6 col-xs-12">
+            <div class="well">
+                <div class="row">
+                    <div class="col-xs-12 gsTile">
+                        <ul class="list-inline">
+                            <li>
+                                <h2>
+                                    <i class="ci-settings-gear-multi gsTileIcon" style="font-size: 32px;"></i>
+                                    {{'GENERIC_Settings'|translate}}
+                                </h2>
+                                <button class="btn btn-default" id="restoreNowLink"
+                                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                                        ng-click="gettingStartedComponentController.restoreFromBackup()">
+                                    <span class="icon-ic-action-restore-core"></span>
+                                    <i class="ci-popout-restore-o"></i>{{'GETTINGSTARTED_restorefrombackup'|translate}}
+                                </button>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox"
+                                               id="showgettingstarted"
+                                               ng-model="gettingStartedComponentController.oobe.showgettingstarted"
+                                               ng-click="gettingStartedComponentController.update()"
+                                               ng-disabled="!gettingStartedComponentController.oobe.initialSetupCompleted || $root.ASM.IsInRole('readonly')"
+                                               ng-checked="gettingStartedComponentController.oobe.showgettingstarted && !($root.ASM.IsInRole('readonly'))" />
+                                        {{'GETTINGSTARTED_showwelcome'|translate}}
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12">
+            <div class="well">
+                <div class="row">
+                    <div class="col-xs-12 gsTile">
+                        <ul class="list-inline">
+                            <li>
+                                <h2>
+                                    <i class="ci-support-toolbox-wrench gsTileIcon" style="font-size: 32px;"></i>
+                                    {{'GENERIC_Support'|translate}}
+                                </h2>
+                                <p>{{'GETTINGSTARTED_SupportGetHelpDescription'|translate}}</p>
+                                <br />
+                                <a href="" target="_blank" ng-href="{{gettingStartedComponentController.urlList.asm}}" style="padding-left:0;" class="btn btn-link"><i class="ci-popout-expand-arrow-up-2-o"></i> {{'GETTINGSTARTED_VisitASMSiteSupport'|translate}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

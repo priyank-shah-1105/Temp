@@ -1,0 +1,40 @@
+﻿<div id="VirtualAppliance_banner"
+     ng-if="virtualApplianceVersionBannerController.getShowBanner()"
+     class="row">
+    <div class="alert"
+         role="alert"
+         style="margin-bottom: 0px;padding-bottom: 14px;background-color:#6bacde;color:white;">
+        <ul class="list-inline">
+            <li>
+                <i class="ci-info-circle-info text-default"></i>
+            </li>
+            <li>
+                {{'INDEX_Banner_Actions_VirtualAppliance_description' | translate}}
+                <a ng-click="virtualApplianceVersionBannerController.viewDetails()" style="color:white;text-decoration: underline;">{{ "INDEX_Banner_Actions_Viewfordetails" | translate}}</a>
+            </li>
+            <li class="pull-right">
+                <ul class="list-inline">
+                    <li>
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle"
+                                    style="border: none; color: white;"
+                                    type="button"
+                                    id="VirtualApplianceBannerDropdown"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                {{"INDEX_Banner_Actions_Actions" | translate}}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="VirtualApplianceBannerDropdown">
+                                <li><a id="VirtualApplianceView" href="JavaScript:void(0)" ng-click="virtualApplianceVersionBannerController.viewDetails();">{{"INDEX_Banner_Actions_View" | translate}}</a></li>
+                                <li><a id="VirtualApplianceHide" href="JavaScript:void(0)" ng-click="virtualApplianceVersionBannerController.hide();">{{"INDEX_Banner_Actions_Hide" | translate}}</a></li>
+                                <li><a id="VirtualApplianceDismiss" href="JavaScript:void(0)" ng-click="virtualApplianceVersionBannerController.dismiss();">{{"INDEX_Banner_Actions_Dismiss" | translate}}</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

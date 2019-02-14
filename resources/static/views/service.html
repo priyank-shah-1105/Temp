@@ -1,0 +1,136 @@
+﻿<section id="page_service">
+    <alert ng-repeat="warning in service.warnings" 
+           type="warning" 
+           dismissable="warning.dismissable">
+        <span ng-bind-html="warning.message|htmlSafe"></span>
+    </alert>
+    <header class="row">
+        <div class="col-xs-6">
+            <ol class="breadcrumb">
+                <li>
+                    <a ng-href="#/services/">
+                        {{'SERVICE_DETAIL_Services'|translate}}
+                    </a>
+                </li>
+                <li>
+                    <a ng-href="#/services/{{service.service.health}}">{{service.service.health | serviceHealth}}</a>
+                </li>
+                <li class="active">
+                    {{service.service.name}}
+                </li>
+            </ol>
+        </div>
+        <div class="col-xs-6" ng-if="service.activeTab === 'serviceDetails'">
+            <ul class="pull-right list-inline" style="background-color: #f2f2f2; padding: 4px;">
+                <li>
+                    <strong>{{'SERVICE_DETAIL_TargetRCMVersion'|translate}} </strong>
+                </li>
+                <li>
+                    {{service.service.firmwarePackageName}}
+                </li>
+                <li>
+                    <button id="lnkChangeFirmware"
+                            style="padding-top: 0; padding-bottom: 0; border-top: 0;"
+                            class="btn btn-link"
+                            ng-disabled="$root.ASM.IsInRole('readonly') || !service.service.canEdit || service.service.state == 'In Progress'"
+                            ng-click="service.editService()">
+                        {{'SERVICE_DETAIL_ChangeTargetRCM'|translate}}
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <h1>
+        <span>
+            <!--<statusicon value="service.service.health"></statusicon>-->
+            <span ng-switch="service.service.health">
+                <span ng-switch-when="green">
+                    <statusicon data-toggle="tooltip"
+                                title="{{'GENERIC_Healthy' | translate}}"
+                                value="'GREEN'"></statusicon>
+                </span>
+                <span ng-switch-when="yellow">
+                    <statusicon data-toggle="tooltip"
+                                title="{{'GENERIC_Warning' | translate}}"
+                                value="'WARNING'"></statusicon>
+                </span>
+                <span ng-switch-when="red">
+                    <statusicon data-toggle="tooltip"
+                                title="{{'GENERIC_Critical' | translate}}"
+                                value="'CRITICAL'"></statusicon>
+                </span>
+                <span ng-switch-when="pending">
+                    <statusicon data-toggle="tooltip"
+                                title="{{'GENERIC_Pending' | translate}}"
+                                value="'STANDBY'"></statusicon>
+                </span>
+                <span ng-switch-when="unknown">
+                    <i style="margin-right: 5px;"
+                       data-toggle="tooltip"
+                       title="{{'GENERIC_InProgress' | translate}}"
+                       class="ci-state-standby-clock text-primary"></i>
+                </span>
+                <span ng-switch-when="cancelled">
+                    <i class="ci-action-circle-remove-slash"
+                       style="color:#333333"
+                       data-toggle="tooltip"
+                       title="{{'GENERIC_Cancelled' | translate}}"></i>
+                </span>
+                <span ng-switch-when="incomplete">
+                    <i class="ci-action-circle-minus"
+                       style="color: #EE6411"
+                       data-toggle="tooltip"
+                       title="{{'GENERIC_Incomplete' | translate}}"></i>
+                </span>
+                <span ng-switch-when="servicemode">
+                    <i class="ci-action-circle-wrench"
+                       style="color:#efad18"
+                       data-toggle="tooltip"
+                       title="{{'GENERIC_ServiceMode' | translate}}"></i>
+                </span>
+            </span>
+        </span>
+        <span>{{service.service.name}}</span>
+        {{'SERVICE_DETAIL_Title'|translate}}
+    </h1>
+
+    <div role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist" id="rep_tabs">
+            <li role="presentation" ng-click="service.activeTab = 'serviceDetails'" ng-class="{active: service.activeTab == 'serviceDetails'}">
+                <a ng-click="service.portviewServer = null" data-target="#tab-servicedetails" aria-controls="tab-iso" role="tab" data-toggle="tab" id="tabISO">
+                    {{'SERVICE_DETAIL_Service_Details'|translate}}
+                </a>
+            </li>
+            <li role="presentation" ng-if="service.service.serverlist.length > 0" ng-click="service.activeTab = 'portView'" ng-class="{active: service.activeTab == 'portView'}">
+                <a data-target="#tab-portview" aria-controls="tab-firmware" role="tab" data-toggle="tab" id="tabFirmware">
+                    {{'SERVICE_DETAIL_Port_View'|translate}}
+                </a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane" id="tab-servicedetails" ng-class="{active: service.activeTab == 'serviceDetails'}">
+                <div ng-if="service.activeTab === 'serviceDetails'">
+                    <servicesvg ng-if="service.serviceId"
+                                refresh-service="service.refreshService"
+                                on-server-port-view-click="service.showPortView(tab, server)"
+                                firmwarereport="service.firmwarereport"
+                                service-id="service.serviceId"
+                                errors="$rootScope.errors"
+                                warnings="service.warnings"
+                                service="service.service"></servicesvg>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="tab-portview" ng-class="{active: service.activeTab == 'portView'}">
+                <div ng-if="service.activeTab === 'portView'">
+                    <deviceportview server="service.portviewServer" service="service.service" errors="$rootScope.errors"></deviceportview>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</section>

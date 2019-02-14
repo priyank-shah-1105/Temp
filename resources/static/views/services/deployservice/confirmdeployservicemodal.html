@@ -1,0 +1,24 @@
+﻿<div id="confirm_deployservice_modal">
+    <div class="row">
+        <div class="col-xs-12" ng-bind-html="'TEMPLATES_CREATE_TEMPLATE_WIZARD_PublishedTemplateDescription' | translate | htmlSafe"></div>
+    </div>
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="deploy"
+                        class="btn btn-primary"
+                        ng-click="confirmDeployServiceModalController.deployServiceWizard()">
+                    {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_YesDeployTemplate'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="btnCancel"
+                        class="btn btn-default"
+                        ng-click="confirmDeployServiceModalController.no()">
+                    {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_NoDoNotDeployTemplate'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</div>
+

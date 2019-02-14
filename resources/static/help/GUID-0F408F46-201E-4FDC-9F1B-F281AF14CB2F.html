@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Migrating servers
+(service mobility)</title><link rel="prev" href="GUID-072C70BF-F26C-4B48-8A15-1D3E7E6A362F.html" /><link rel="next" href="GUID-176D8738-1FDD-4211-A751-0945CD50255E.html" /><link href="static/screen.css?mSUyqg2y" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-0F408F46-201E-4FDC-9F1B-F281AF14CB2F" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">Active System Manager Release 8.4</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Migrating servers
+(service mobility)</h1>
+<p>In ASM, service mobility refers to the capability to migrate server’s BIOS, NICs, storage connectivity, and assigned identity information to another server in a designated server pool, to perform planned maintenance or service activities or to respond to a hardware fault or failure issue. </p>
+<p>Currently, migration is supported only for boot form SAN server,
+and it is supported only for bare metal OS installs of Linux or Windows.
+It is not supported for ESXi. Therefore, the migration will not affect
+the virtual machines. </p>
+<p>It is recommended only to migrate between identically configured
+hardware. Different operating systems may not boot correctly on hardware
+that is different.</p>
+<div class="section" id="GUID-64583AF3-6AE6-4002-99F0-5EE459B8B3AF"><h1 id="GUID-092552C1-59D5-42B2-9A9B-5AB789DBEDED">Migration pre-requisites</h1><ul id="GUID-EE5389B9-E23F-4D6B-BA85-AF4EE9DDF32C">
+<li id="LI_154EBCA6E9F14980A2061D5C445E74FB"><p>ASM does not install operating systems on the boot from SAN
+volume. Therefore, you must install operating system on the servers
+prior to migration. </p></li>
+<li id="LI_112327DA240C484BB218AAB8840B0F91"><p>Make sure that the free servers are available in the server
+pool for migration, and it is compatible.</p></li>
+<li id="LI_9E6B4C2C137B4111863A3FF2D0CAEF78"><p>During the migration, the operating systems will not be booted.
+Therefore, it is recommended to shut down the server before migrating
+the boot from SAN image.</p></li>
+<li id="LI_D193B19E01444CC4815029D32C2CEE8D"><p>It is recommended to configure a server pool that has servers
+with same model, RAID, and networking devices, including the specific
+slot to which network resources are connected.</p></li>
+</ul></div>
+<dl class="relations"><dt>Related Tasks</dt><dd class="choice_list"><ul data-inset="false" data-role="listview" data-theme="a"><li><a href="GUID-176D8738-1FDD-4211-A751-0945CD50255E.html">Migrating servers</a></li></ul></dd></dl></article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?MavHWBUW"></script></body></html>

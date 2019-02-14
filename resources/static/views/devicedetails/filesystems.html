@@ -1,0 +1,65 @@
+﻿<div id="device_fileSystems">
+    <table id="fileSystemsTable" class="table"
+           st-table="deviceFileSystemsController.device.fileSystems"
+           st-safe-src="deviceFileSystemsController.safeSrc.fileSystems">
+        <thead>
+            <tr>
+                <th st-sort="state">
+                    {{'GENERIC_State'|translate}}
+                </th>
+                <th st-sort="name">
+                    {{'GENERIC_Name'|translate}}
+                </th>
+                <th st-sort="id">
+                    {{'GENERIC_ID'|translate}}
+                </th>
+                <th st-sort="capacity">
+                    {{'GENERIC_Capacity'|translate}}
+                </th>
+                <th st-sort="allocated">
+                    {{'DEVICES_EMC_Allocated'|translate}}
+                </th>
+                <!--<th st-sort="sizeUsed">
+                    {{'GENERIC_Used'|translate}}
+                </th>-->
+                <th st-sort="pool">
+                    {{'DEVICES_EMC_Pool'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="fileSystem in deviceFileSystemsController.device.fileSystems">
+                <td>
+                    <div ng-switch="fileSystem.state">
+                        <span ng-switch-when="ready">
+                            <statusicon value="'green'"></statusicon>
+                        </span>
+                        <span ng-switch-when="errors">
+                            <statusicon value="'red'"></statusicon>
+                        </span>
+                        <span ng-switch-when="unknown">
+                            <statusicon value="'unknown'"></statusicon>
+                        </span>
+                    </div>
+                    {{fileSystem.state}}
+                </td>
+                <td>{{fileSystem.name}}</td>
+                <td>{{fileSystem.id}}</td>
+                <td>{{fileSystem.capacity}}</td>
+                <td>{{fileSystem.allocated}}</td>
+                <!--<td>{{fileSystem.sizeUsed}}</td>-->
+                <td>{{fileSystem.pool}}</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9" class="text-center">
+                    <div id="pager"
+                         st-pagination="deviceFileSystemsController.device.fileSystems"
+                         st-items-by-page="20"
+                         st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

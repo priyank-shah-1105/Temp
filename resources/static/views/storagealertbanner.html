@@ -1,0 +1,70 @@
+﻿<div id="storage_alert_banner"
+     ng-if="storageAlertBannerController.getShowBanner()"
+     class="row">
+    <div class="alert"
+         ng-class="{'warning':'alert-warning', 'critical':'alert-danger'}[storageAlertBannerController.getCriticality(storageAlertBannerController.storageUtilization.percentageUsed)]"
+         role="alert"
+         style="margin-bottom: 0px;">
+        <ul class="list-inline">
+            <li>
+                <i ng-class="{'warning':'ci-health-warning-tri-bang', 'critical':'ci-action-circle-remove'}[storageAlertBannerController.getCriticality(storageAlertBannerController.storageUtilization.percentageUsed)]"
+                   aria-hidden="true"></i>
+            </li>
+            <!-- Style used to prevent Actions button from wrapping at 1366px -->
+            <li style="width: 90%;">
+                <strong>
+                    {{storageAlertBannerController.getCriticality(storageAlertBannerController.storageUtilization.percentageUsed) === 'warning' ? 'GENERIC_Warning' : 'GENERIC_Critical' | translate | uppercase}}:
+                </strong>
+                <span ng-bind-html="storageAlertBannerController.getBannerTitleText() | htmlSafe"></span>
+                <p>
+                    {{'INDEX_STORAGE_BANNER_Description'|translate}}
+                    <a ng-click="storageAlertBannerController.learnMore()"
+                       ng-href="{{storageAlertBannerController.capacityInfo.learnMoreLink}}"
+                       style="color:inherit;text-decoration: underline;">
+                        {{'INDEX_STORAGE_BANNER_LearnMore'|translate}}
+                    </a>
+                </p>
+            </li>
+            <li class="pull-right">
+
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle"
+                            style="border: none;color:black"
+                            ng-style="{'color': storageAlertBannerController.getCriticality(storageAlertBannerController.storageUtilization.percentageUsed) === 'warning' ? 'black' : 'white'}"
+                            type="button"
+                            id="StorageBannerDropdown"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                        {{"INDEX_Banner_Actions_Actions" | translate}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" 
+                        aria-labelledby="StorageBannerDropdown" 
+                        style="left:-50px">
+                        <li>
+                            <a ng-href="{{storageAlertBannerController.capacityInfo.learnMoreLink}}"
+                               ng-click="storageAlertBannerController.learnMore();">
+                                {{"INDEX_STORAGE_BANNER_LearnMore" | translate}}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="JavaScript:void(0)"
+                               ng-click="storageAlertBannerController.hide();">
+                                {{"INDEX_Banner_Actions_Hide" | translate}}
+                            </a>
+                        </li>
+                        <li ng-if="storageAlertBannerController.getCriticality(storageAlertBannerController.storageUtilization.percentageUsed) === 'warning' ">
+                            <a href="JavaScript:void(0)"
+                               ng-click="storageAlertBannerController.dismiss();">
+                                {{"INDEX_STORAGE_BANNER_DontShowAgain" | translate}}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+            </li>
+        </ul>
+
+    </div>
+</div>

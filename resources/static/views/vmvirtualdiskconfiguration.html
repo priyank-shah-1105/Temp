@@ -1,0 +1,75 @@
+﻿<section id="page_VmVirtualMachineCustomControl">
+    <div class="col-sm-6 skip-form-group">
+        <label class="control-label" ng-if="diskConfiguration.editMode">
+            {{'TEMPLATEBUILDER_VirtualDisks'|translate}}
+        </label>
+        <span ng-if="!diskConfiguration.editMode">
+            {{'TEMPLATEBUILDER_VirtualDisks'|translate}}
+        </span>
+    </div>
+    <div class="col-sm-6">
+        <button type="button"
+                ng-if="diskConfiguration.editMode"
+                id="btnAddVirtualDisk"
+                class="btn btn-primary"
+                ng-click="diskConfiguration.createDisk()">
+            {{'TEMPLATEBUILDER_AddVirtualDisk'|translate}}
+        </button>
+        <div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th ng-if="diskConfiguration.editMode"></th>
+                        <th>
+                            {{'TEMPLATEBUILDER_DiskNum'|translate}}
+                        </th>
+                        <th>
+                            {{'TEMPLATEBUILDER_SizeGB'|translate}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="disk in diskConfiguration.setting.value.virtualdisks"
+                        ng-class="{'ng-invalid' : diskConfiguration.invalidDisk(disk)}">
+                        <td ng-if="diskConfiguration.editMode">
+                            <button id="btnDeleteVirtualDisk"
+                                    class="btn btn-link"
+                                    type="button"
+                                    ng-if="$index > 0"
+                                    ng-click="diskConfiguration.setting.value.virtualdisks.splice($index, 1);">
+                                <i class="ci-trash"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <label class="form-control-static">{{$index + 1}}</label>
+                        </td>
+                        <td>
+                            <span ng-if="!diskConfiguration.editMode">
+                                {{disk.disksize}}
+                            </span>
+                            <div class="col-xs-12" style="max-width: 125px;">
+                                <input type="number"
+                                       id="diskSize_{{disk.id}}"
+                                       ng-style="diskConfiguration.invalidDisk(disk) && {'border': '1px solid #ce1126'}"
+                                       name="diskSize_{{disk.id}}"
+                                       ng-if="diskConfiguration.editMode"
+                                       class="form-control inline-control"
+                                       min="{{diskConfiguration.setting.min}}"
+                                       max="{{diskConfiguration.setting.max}}"
+                                       ng-required="diskConfiguration.setting.required"
+                                       ng-model="disk.disksize" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-if="!diskConfiguration.setting.value.virtualdisks.length">
+                        <td colspan="3"
+                            class="text-danger"
+                            ng-if="diskConfiguration.form._submitted">
+                            {{'TEMPLATEBUILDER_DisksRequired'|translate}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

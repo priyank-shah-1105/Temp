@@ -1,0 +1,33 @@
+﻿<section id="page_biosconfiguration">
+    <div class="row">
+        <label class="col-sm-3 control-label">
+            {{'BIOSCONFIGURATION_Title'|translate}}
+        </label>
+        <div class="col-sm-3">
+            <div class="col-sm-12 form-group">
+                <div class="radio">
+                    <label for="biostype_basic">
+                        <input id="biostype_basic_{{biosConfigurationController.radioGuid}}" 
+                               type="radio" 
+                               value="basic" 
+                               ng-model="biosConfigurationController.setting.value" 
+                               name="bios_{{biosConfigurationController.radioGuid}}" 
+                               ng-disabled="biosConfigurationController.editMode" />
+                        {{'BIOSCONFIGURATION_BasicBIOS'|translate}}
+                    </label>
+                </div>
+                <div class="radio">
+                    <label for="biostype_advanced">
+                        <input id="biostype_advanced_{{biosConfigurationController.radioGuid}}" 
+                               type="radio" 
+                               value="advanced" 
+                               ng-model="biosConfigurationController.setting.value" 
+                               name="bios_{{biosConfigurationController.radioGuid}}" 
+                               ng-disabled="biosConfigurationController.editMode" />
+                        {{'BIOSCONFIGURATION_AdvancedBIOS'|translate}}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,164 @@
+﻿<section id="page_generateSigningCert">
+    <error-display errors="generateCertModalController.errors"
+                   on-click="generateCertModalController.ASM.RemoveError(error, generateCertModalController.errors)"
+                   on-expand-collapse=""></error-display>
+    <header>
+        <p>
+            {{'SETTINGS_SSLInstructions'|translate}}
+        </p>
+    </header>
+    <form id="signingRequestForm"
+          role="form"
+          name="certForm"
+          class="form-horizontal"
+          form-validation="generateCertModalController.submitted">
+        <fieldset>
+            <div class="form-group">
+                <label for="distinguishedName" class="col-md-4 control-label">
+                    {{'SETTINGS_SSLDistinguishedDomain'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <input id="distinguishedName"
+                           type="text"
+                           name="distinguishedName"
+                           class="form-control"
+                           required
+                           ng-model="generateCertModalController.settings.distinguishedName"/>
+                    <span class="text-danger" ng-if="generateCertModalController.submitted">
+                        <span ng-if="certForm.distinguishedName.$error.required">
+                            {{'GENERIC_RequiredField' | translate}}
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="businessName" class="col-md-4 control-label">
+                    {{'SETTINGS_BusinessName'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <input id="businessName" type="text"
+                           class="form-control"
+                           name="businessName"
+                           required
+                           ng-model="generateCertModalController.settings.businessName"/>
+                    <span class="text-danger" ng-if="generateCertModalController.submitted">
+                        <span ng-if="certForm.businessName.$error.required">
+                            {{'GENERIC_RequiredField' | translate}}
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="deptName" class="col-md-4 control-label">
+                    {{'SETTINGS_DepartmentName'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <input id="deptName"
+                           type="text"
+                           name="deptName"
+                           class="form-control"
+                           ng-model="generateCertModalController.settings.departmentName"/>
+                    <span class="text-danger" ng-if="generateCertModalController.submitted">
+                        <span ng-if="certForm.deptName.$error.required">
+                            {{'GENERIC_RequiredField' | translate}}
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="locality" class="col-md-4 control-label">
+                    {{'SETTINGS_Locality'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <input id="locality"
+                           type="text"
+                           name="locality"
+                           class="form-control"
+                           required
+                           ng-model="generateCertModalController.settings.locality"/>
+                    <span class="text-danger" ng-if="generateCertModalController.submitted">
+                        <span ng-if="certForm.locality.$error.required">
+                            {{'GENERIC_RequiredField' | translate}}
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="state" class="col-md-4 control-label">
+                    {{'SETTINGS_State'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <input id="state"
+                           type="text"
+                           name="state"
+                           class="form-control"
+                           required
+                           ng-model="generateCertModalController.settings.state"/>
+                    <span class="text-danger" ng-if="generateCertModalController.submitted">
+                        <span ng-if="certForm.state.$error.required">
+                            {{'GENERIC_RequiredField' | translate}}
+                        </span>
+                    </span>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label for="country" class="col-md-4 control-label">
+                    {{'SETTINGS_Country'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <select id="country"
+                            class="form-control"
+                            name="country"
+                            required
+                            ng-model="generateCertModalController.settings.country"
+                            ng-options="country.id as country.name for country in generateCertModalController.countries"></select>
+                    <span class="text-danger" ng-if="generateCertModalController.submitted">
+                        <span ng-if="certForm.country.$error.required">
+                            {{'GENERIC_RequiredField' | translate}}
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email" class="col-md-4 control-label">
+                    {{'SETTINGS_Email'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <input id="email"
+                           type="email"
+                           name="email"
+                           required
+                           class="form-control"
+                           ng-model="generateCertModalController.settings.email"/>
+                    <span class="text-danger" ng-if="generateCertModalController.submitted">
+                        <span ng-if="certForm.email.$error.required">
+                            {{'GENERIC_RequiredField' | translate}}
+                        </span>
+                        <span ng-if="certForm.email.$error.email">
+                            {{'SETTINGS_EnterValidEmail' | translate}}
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="generateCertSubmit"
+                        class="btn btn-primary"
+                        ng-click="generateCertModalController.submitted = true; certForm.$valid && generateCertModalController.save()">
+                    {{'SETTINGS_Generate'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="cancelBtn"
+                        class="btn btn-default"
+                        ng-click="generateCertModalController.cancel()">
+                    {{'SETTINGS_Cancel'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

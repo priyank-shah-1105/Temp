@@ -1,0 +1,64 @@
+﻿<section id="page_Appliance_Update">
+    <error-display errors="editIpVerificationController.errors"
+                   on-click="editIpVerificationController.ASM.RemoveError(error, editIpVerificationController.errors)"
+                   on-expand-collapse=""></error-display>
+    <div class="row">
+        <div class="col-xs-12">
+            <p ng-bind-html="'SETTINGS_EditIPVerificationInstructionalMessage' | translate | htmlSafe"></p>
+        </div>
+    </div>
+    <div class="row">
+        <form name="editIpVerificationController.serviceTagForm"
+              class="form-horizontal col-lg-6 col-sm-8 col-xs-12"
+              novalidate
+              form-validation="editIpVerificationController.serviceTagForm._submitted">
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <label for="serviceTag">
+                        {{'SETTINGS_EditIPVerification_PortNumbersUsedforIPVerification'|translate}} *
+                    </label>
+                </div>
+                <div class="col-sm-6">
+                    <input type="text"
+                           ng-model="editIpVerificationController.ipVerificationPorts"
+                           name="ipVerificationPorts"
+                           class="form-control"
+                           required
+                           ng-pattern="/^[0-9]{1,5}( *, *[0-9]{1,5})*$/"/>
+                    <div ng-if="editIpVerificationController.serviceTagForm.ipVerificationPorts.$invalid
+                     && editIpVerificationController.serviceTagForm._submitted"
+                         class="text-danger">
+
+                        <div ng-if="editIpVerificationController.serviceTagForm.ipVerificationPorts.$error.pattern">
+                            {{'SETTINGS_EditIPVerificationThisfieldcontainsinvalidcharacters' | translate}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+                <button id="btnSaveServiceTag"
+                        type="submit"
+                        class="btn btn-primary"
+                        ng-click="editIpVerificationController.serviceTagForm._submitted = true; 
+                        editIpVerificationController.serviceTagForm.$valid 
+                        && editIpVerificationController.save()">
+                    {{'GENERIC_Save'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="btnCancelServiceTag"
+                        class="btn btn-default"
+                        type="button"
+                        ng-click="editIpVerificationController.cancel()">
+                    {{'GENERIC_Cancel'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>
+

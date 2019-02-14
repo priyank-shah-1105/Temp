@@ -1,0 +1,44 @@
+﻿<section id="page_editServiceTag">
+    <header>
+        <p>
+            {{'SETTINGS_ASMServiceTag_Help'|translate}}
+        </p>
+    </header>
+    <form id="editServiceTagForm" 
+          name="editServiceTagForm" 
+          class="form-horizontal" 
+          role="form"
+          form-validation="submitted">
+        <fieldset>
+            <div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">
+                        {{'SETTINGS_ASMServiceTag'|translate}}
+                    </label>
+                    <div class="col-md-4">
+                        <input type="text" id="serviceTag" name="serviceTag" class="form-control" ng-model="editServiceTagController.serviceTag" required />
+                        <span ng-show="submitted && editServiceTagForm.serviceTag.$error.required" class="text-danger">
+                            {{'VALIDATIONMESSAGES_required' | translate}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+                <button id="btnSaveServiceTag" type="submit" class="btn btn-primary" ng-click="submitted = true; editServiceTagForm.$valid && editServiceTagController.updateServiceTag()">
+                    {{'GENERIC_Save'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="btnCancelServiceTag" class="btn btn-default" type="button" ng-click="editServiceTagController.cancel()">
+                    {{'GENERIC_Cancel'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+
+</section>

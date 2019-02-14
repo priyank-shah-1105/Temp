@@ -1,0 +1,55 @@
+﻿<section id="page_uploadCertificate">
+    <error-display errors="uploadCertificateModalController.errors" on-click="$root.ASM.RemoveError(error, uploadCertificateModalController.errors)"></error-display>
+    <header>
+        <p>
+            {{'SETTINGS_BrowseAndSave'|translate}}
+        </p>
+    </header>
+    <form name="uploadCertificateModalController.form">
+        <fieldset>
+            <div class="form-group">
+                <label for="sslCertificate" class="control-label col-md-2">
+                    {{'SETTINGS_SSLCert'|translate}}
+                </label>
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <p>{{'SETTINGS_ChooseFile' | translate}}</p>
+                        <div id="fileWrapper">
+                            <input required
+                                   uploader="uploader"
+                                   nv-file-select
+                                   ng-model="uploadCertificateModalController.file"
+                                   id="idLocationFileUpload"
+                                   type="file"
+                                   text="Browse"
+                                   name="templatefile"/>
+                            <span class="text-danger" ng-show="submitted">
+                                <span ng-show="uploadCertificateModalController.form.templatefile.$error.required">
+                                    {{'GENERIC_RequiredField' | translate}}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="btnSubmit"
+                        class="btn btn-primary"
+                        ng-click="submitted = true; uploadCertificateModalController.form.$valid && uploadCertificateModalController.saveUpdates()">
+                    {{'SETTINGS_Save'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="btnCancel"
+                        class="btn btn-default"
+                        ng-click="uploadCertificateModalController.cancel()">
+                    {{'SETTINGS_Cancel'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

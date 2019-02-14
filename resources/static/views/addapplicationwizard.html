@@ -1,0 +1,340 @@
+﻿<wizard id="page_applicationWizard"
+        class=""
+        on-finish="Application.finishWizard()"
+        on-cancel="Application.cancelWizard()">
+    <error-display errors="Application.errors"
+                   on-click="$root.ASM.RemoveError(error, Application.errors)"
+                   on-expand-collapse=""></error-display>
+    <wizard-step ng-if="Application.action != 'edit'"
+                 step-title="{{'ADDAPPLICATION_IdentifyResources'|translate}}"
+                 on-next="Application.identifyResourcesInvalid()">
+        <section>
+            <header>
+                <h2>{{'ADDAPPLICATION_IdentifyResources'|translate}}</h2>
+            </header>
+
+            <p ng-bind-html="'ADDAPPLICATION_IdentifyResourcesText1'|translate|htmlSafe"></p>
+            <p ng-bind-html="'ADDAPPLICATION_IdentifyResourcesText2'|translate|htmlSafe"></p>
+            <h3>{{'ADDAPPLICATION_SelectResources'|translate}}</h3>
+
+            <table class="table table-striped"
+                   st-table="Application.targetComponents"
+                   st-safe-src="Application.safeTargetComponents">
+                <thead>
+                    <tr>
+                        <th class="checkColumn" st-sort="duplicateApplication">
+                            {{'GENERIC_select'|translate}}
+                        </th>
+                        <th st-sort="name">
+                            {{'GENERIC_ResourceName'|translate}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="component in Application.targetComponents">
+                        <td class="checkColumn">
+                            <input type="checkbox"
+                                   class="selectServerCheckbox"
+                                   ng-model="component.duplicateApplication" />
+                        </td>
+                        <td>{{component.name}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+    </wizard-step>
+    <wizard-step step-title="{{'ADDAPPLICATION_IdentifyApplications'|translate}}"
+                 on-next="Application.validateStep2()"
+                 invalid="Application.addedApplications.length === 0">
+        <section>
+            <header>
+                <h2>{{'ADDAPPLICATION_IdentifyApplications'|translate}}</h2>
+            </header>
+
+            <p ng-bind-html="'ADDAPPLICATION_IdentifyApplicationsText'|translate|htmlSafe"></p>
+            <br />
+
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="ddlAddApplication">{{'ADDAPPLICATION_AddApplication'|translate}}</label>
+                    <select class="form-control"
+                            id="ddlAddApplication"
+                            ng-model="Application.selectedApplication"
+                            ng-options="item.id as item.name for item in Application.applications"></select>
+                    <button class="btn btn-primary"
+                            ng-disabled="Application.selectedApplication == -1"
+                            ng-click="Application.addApplication()">
+                        {{'GENERIC_Add'|translate}}
+                    </button>
+                </div>
+            </form>
+
+            <br />
+
+            <table class="table table-striped identifyApplicationsTable table-condensed">
+                <thead>
+                    <tr>
+                        <th class="iconColumn"></th>
+                        <th class="iconColumn">
+                            {{'ADDAPPLICATION_THInstallOrder'|translate}}
+                        </th>
+                        <th>
+                            {{'ADDAPPLICATION_ApplicationType'|translate}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="application in Application.addedApplications">
+                        <td class="iconColumn">
+                            <button class="btn btn-link"
+                                    ng-click="Application.removeApplication(application)">
+                                <i class="ci-trash"></i>
+                            </button>
+                        </td>
+                        <td class="iconColumn">
+                            <div style="position: relative; width: 25px; left: 5px;">
+                                <button class="btn btn-link"
+                                        ng-if="$index > 0"
+                                        ng-click="Application.moveUp($index)"
+                                        ng-style="{'top': ($index == Application.addedApplications.length - 1) ? 7 : 0}"
+                                        style="position: absolute; padding: 0;">
+                                    <i class="ci-arrow-drop-down ci-rotate-180"></i>
+                                </button>
+                                <button class="btn btn-link"
+                                        ng-if="$index < Application.addedApplications.length - 1"
+                                        ng-click="Application.moveDown($index)"
+                                        ng-style="{'top': ($index == 0) ? 7 : 15}"
+                                        style="position: absolute; padding: 0;">
+                                    <i class="ci-arrow-drop-down"></i>
+                                </button>
+                            </div>
+                            <p class="form-control-static" style="margin-left: 5px;">
+                                {{$index + 1}}
+                            </p>
+                        </td>
+                        <td>
+                            <p class="form-control-static">
+                                {{application.name}}
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </wizard-step>
+    <wizard-step step-title="{{'ADDAPPLICATION_ApplicationSettings'|translate}}">
+        <section>
+            <header>
+                <h2>{{'ADDAPPLICATION_ApplicationSettings'|translate}}</h2>
+            </header>
+            <div class="row">
+                <div class="col-xs-12" ng-bind-html="'ADDAPPLICATION_ApplicationSettingsHelp'|translate|htmlSafe"></div>
+            </div><br />
+
+            <div class="panel-group"
+                 ng-form="Application.deployApplicationForm"
+                 form-validation="Application.deployApplicationForm._submitted"
+                 id="parentAppWizard"
+                 role="tablist"
+                 aria-multiselectable="false">
+                <div class="panel panel-default"
+                     ng-repeat="application in Application.addedApplications">
+                    <div class="panel-heading"
+                         role="tab"
+                         id="headId{{$index}}">
+                        <h4 class="panel-title">
+                            <a role="button"
+                               ng-class=":: $index === 0 ?  'in' :'collapsed'"
+                               data-toggle="collapse"
+                               data-parent="#parentAppWizard"
+                               data-target="#collapse{{$index}}"
+                               aria-expanded="{{:: $index === 0}}"
+                               aria-controls="collapse{{$index}}">
+                                <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                {{application.name}} ({{'ADDAPPLICATION_InstallOrder'|translate}}{{$index + 1}})
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse{{$index}}"
+                         ng-class="::{' in' : $index == 0}"
+                         class="panel-collapse collapse"
+                         role="tabpanel"
+                         aria-labelledby="headId{{$index}}">
+                        <div class="panel-body well">
+                            <span ng-if="!application.categories.length">
+                                {{'TEMPLATES_Nodataneededforthiscomponent'|translate}}
+                            </span>
+
+                            <div ng-repeat="category in application.categories">
+                                <span ng-if="!Application.categoryVisible(category, application)">
+                                    {{'TEMPLATES_Nodataneededforthiscomponent'|translate}}
+                                </span>
+                                <div ng-if="Application.categoryVisible(category, application)">
+
+
+
+
+                                    <!-- Groups of Settings -->
+                                    <div ng-repeat="group in category.settings | addApplicationSettingsFilter: application | groupFilter">
+                                        <!-- no group, individual setting -->
+                                        <div ng-if="!group.group">
+                                            <div ng-repeat="setting in category.settings | addApplicationSettingsFilter: application">
+                                                <div ng-switch="setting.datatype" class="form-group">
+                                                    <!--Custom Control: Network Config-->
+                                                    <network-configuration ng-switch-when="networkconfiguration"
+                                                                          id="networkconfiguration"
+                                                                          class="col-sm-12"
+                                                                          read-only-mode="false"
+                                                                          setting="setting"></network-configuration>
+                                                    <!--Custom Control: RAID Config-->
+                                                    <raid-configuration ng-switch-when="raidconfiguration"
+                                                                       id="raidconfiguration"
+                                                                       class="col-sm-12"
+                                                                       read-only-mode="false"
+                                                                       setting="setting"
+                                                                       templateinvalid="false"></raid-configuration>
+                                                    <!--Custom Control: Bios Config-->
+                                                    <bios-configuration ng-switch-when="biosconfiguration"
+                                                                        id="biosconfiguration"
+                                                                        class="col-sm-12"
+                                                                        read-only-mode="false"
+                                                                        setting="setting"></bios-configuration>
+                                                    <!-- Custom Control: VM Virtual Disk Config -->
+                                                    <vm-virtual-disk-configuration ng-switch-when="vmvirtualdiskconfiguration"
+                                                                                   id="vmvirtualdiskconfiguration"
+                                                                                   class="col-sm-12"
+                                                                                   read-only-mode="false"
+                                                                                   setting="setting"
+                                                                                   form="Application.deployApplicationForm"></vm-virtual-disk-configuration>
+                                                    <!-- Custom Control: Configure NIOC  -->
+                                                    <nioc-setting ng-switch-when="niocconfiguration"
+                                                                  read-only-mode="false"
+                                                                  setting="setting"
+                                                                  class="col-sm-12"
+                                                                  form="Application.deployApplicationForm"
+                                                                  errors="Application.errors"></nioc-setting>
+                                                    <!-- Custom Control: OS Credentials  -->
+                                                    <credentials-settings ng-switch-when="oscredential"
+                                                                          category="category"
+                                                                          setting="setting"
+                                                                          read-only-mode="false"
+                                                                          component="component"
+                                                                          errors="Application.errors"
+                                                                          form="Application.deployApplicationForm"
+                                                                          credentials="Application.credentials"></credentials-settings>
+                                                    <!-- Custom Control: Basic Setting -->
+                                                    <basic-setting ng-switch-default
+                                                                   category="category"
+                                                                   setting="setting"
+                                                                   read-only-mode="false"
+                                                                   component="application"
+                                                                   form="Application.deployApplicationForm"></basic-setting>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Groups -->
+                                        <div class="panel-heading"
+                                             role="tab"
+                                             ng-if="group.group"
+                                             id="headId{{$index}}_group_{{$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                             style="border-bottom: none;">
+                                            <a tabindex="0"
+                                               style="outline: none;"
+                                               role="button"
+                                               data-toggle="collapse"
+                                               data-target="#target{{$index}}_group_{{$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                               aria-expanded="{{:: $first}}"
+                                               ng-class=":: $first ?  'in' :'collapsed'"
+                                               aria-controls="device{{$index}}">
+                                                <ul class="list-inline" style="margin-bottom: 0;">
+                                                    <li style="color: #888; vertical-align: top;">
+                                                        <i class="collapsed-show ci-arrow-chev-right-2-med ci"></i>
+                                                        <i class="collapsed-hide ci-arrow-chev-down-2-med ci"></i>
+                                                    </li>
+                                                    <li>
+                                                        <h4 style="margin-top: 0; margin-bottom: 10px; border-bottom: none;">
+                                                            {{group.group}}
+                                                        </h4>
+                                                    </li>
+                                                </ul>
+                                            </a>
+                                            <div class="col-xs-12 panel-collapse collapse"
+                                                 ng-class="::{' in' : $first}"
+                                                 id="target{{$index}}_group_{{$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                                 aria-labelledby="headId{{$index}}_group_{{$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                                 role="tabpanel">
+
+                                                <div ng-repeat="setting in category.settings | addApplicationSettingsFilter: application"
+                                                     ng-if="setting.group === group.group">
+                                                    <div ng-switch="setting.datatype" class="form-group">
+                                                        <!--Custom Control: Network Config-->
+                                                        <network-configuration ng-switch-when="networkconfiguration"
+                                                                              id="networkconfiguration"
+                                                                              class="col-sm-12"
+                                                                              read-only-mode="false"
+                                                                              setting="setting"></network-configuration>
+                                                        <!--Custom Control: RAID Config-->
+                                                        <raid-configuration ng-switch-when="raidconfiguration"
+                                                                           id="raidconfiguration"
+                                                                           class="col-sm-12"
+                                                                           read-only-mode="false"
+                                                                           setting="setting" templateinvalid="false"></raid-configuration>
+                                                        <!--Custom Control: Bios Config-->
+                                                        <bios-configuration ng-switch-when="biosconfiguration"
+                                                                            id="biosconfiguration"
+                                                                            class="col-sm-12"
+                                                                            read-only-mode="false"
+                                                                            setting="setting"
+                                                                            form="Application.deployApplicationForm"></bios-configuration>
+                                                        <!-- Custom Control: VM Virtual Disk Config -->
+                                                        <vm-virtual-disk-configuration ng-switch-when="vmvirtualdiskconfiguration"
+                                                                                       id="vmvirtualdiskconfiguration"
+                                                                                       class="col-sm-12"
+                                                                                       read-only-mode="false"
+                                                                                       setting="setting"
+                                                                                       form="Application.deployApplicationForm"></vm-virtual-disk-configuration>
+                                                        <!-- Custom Control: Configure NIOC  -->
+                                                        <nioc-setting ng-switch-when="niocconfiguration"
+                                                                      class="col-sm-12"
+                                                                      read-only-mode="false"
+                                                                      setting="setting"
+                                                                      form="Application.deployApplicationForm"></nioc-setting>
+                                                        <!-- Custom Control: OS Credentials  -->
+                                                        <credentials-settings ng-switch-when="oscredential"
+                                                                              category="category"
+                                                                              setting="setting"
+                                                                              read-only-mode="false"
+                                                                              component="component"
+                                                                              form="Application.deployApplicationForm"
+                                                                              credentials="Application.credentials"
+                                                                              errors="Application.errors"></credentials-settings>
+                                                        <!-- Custom Control: Basic Setting -->
+                                                        <basic-setting ng-switch-default
+                                                                       category="category"
+                                                                       setting="setting"
+                                                                       read-only-mode="false"
+                                                                       component="application"
+                                                                       form="Application.deployApplicationForm"></basic-setting>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <span>{{'COMPONENTEDITOR_RequiredFieldsRemaining'|translate}} {{Application.requiredFieldsRemaining()}}</span>
+        </section>
+    </wizard-step>
+</wizard>

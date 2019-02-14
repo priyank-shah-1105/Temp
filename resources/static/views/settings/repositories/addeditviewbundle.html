@@ -1,0 +1,202 @@
+﻿<section id="page_add_bundle">
+    <error-display errors="c.errors" on-click="$root.ASM.RemoveError(error, c.errors)" on-expand-collapse=""></error-display>
+    <header>
+        <strong>
+            {{'SETTINGS_Repositories_Repository'|translate}}: {{c.repo.name}}
+        </strong>
+    </header>
+    <p>{{'SETTINGS_Repositories_CustomBundleDescription'|translate}}</p>
+
+    <form id="form_add_bundle"
+          class="form-horizontal"
+          role="form"
+          novalidate
+          form-validation="c.form._submitted"
+          name="c.form">
+        <fieldset>
+            <div class="form-group">
+                <label for="bundleName"
+                       class="col-md-2 control-label">
+                    {{'SETTINGS_Repositories_NameStar'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <input type="hidden"
+                           id="packageId"
+                           name="packageId"
+                           ng-model="c.bundle.packageId" />
+                    <input type="hidden"
+                           id="bundleId"
+                           name="bundleId"
+                           ng-model="c.bundle.bundleId" />
+                    <input type="text"
+                           id="bundleName"
+                           name="bundleName"
+                           class="form-control"
+                           ng-if="c.type !== 'view'"
+                           ng-model="c.bundle.bundleName"
+                           required />
+                    <span ng-if="c.type === 'view'">{{c.bundle.bundleName}}</span>
+                </div>
+                <div class="clearfix"></div>
+                <div class="text-danger col-md-offset-2 col-md-10" ng-if="c.form._submitted && c.form.bundleName.$error.required">
+                   {{'GENERIC_RequiredField' | translate}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="bundleDescription"
+                       class="col-md-2 control-label">
+                    {{'SETTINGS_Repositories_Description'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <input type="text"
+                           id="bundleDescription"
+                           class="form-control"
+                           ng-model="c.bundle.bundleDescription"
+                           ng-if="c.type !== 'view'" />
+                    <span ng-if="c.type === 'view'">
+                        {{c.bundle.bundleDescription}}
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="deviceType"
+                       class="col-md-2 control-label">
+                    {{'SETTINGS_Repositories_DeviceTypeStar'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <select id="deviceType"
+                            class="form-control"
+                            ng-if="c.type !== 'view'"
+                            name="deviceType"
+                            ng-model="c.bundle.deviceType"
+                            ng-options="o.id as o.name for o in c.bundleDevices"
+                            ng-change="c.bundleDeviceChanged()"
+                            required>
+                        <option value="">{{'GENERIC_select'|translate}}</option>
+                    </select>
+                    <span ng-if="c.type === 'view'">
+                        {{c.bundle.deviceType}}
+                    </span>
+                </div>
+                <div class="clearfix"></div>
+                <div class="text-danger col-md-offset-2 col-md-10" ng-if="c.form._submitted && c.form.deviceType.$error.required">
+                    {{'GENERIC_RequiredField' | translate}}
+                </div>
+            </div>
+            <div class="form-group" ng-if="c.bundle.deviceType">
+                <label for="deviceModel" class="col-md-2 control-label">
+                    {{'SETTINGS_Repositories_DeviceModelStar'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <select id="deviceModel"
+                            class="form-control"
+                            ng-if="c.type !== 'view'"
+                            name="deviceModel"
+                            ng-model="c.bundle.deviceModel"
+                            ng-options="o.id as o.name for o in c.bundleChildrenOptions"
+                            required>
+                        <option value="">{{'GENERIC_select' | translate}}</option>
+                    </select>
+                    <span ng-if="c.type === 'view'">
+                        {{c.bundle.deviceModel}}
+                    </span>
+                </div>
+                <div class="clearfix"></div>
+                <div class="text-danger col-md-offset-2 col-md-10" ng-if="c.form._submitted && c.form.deviceModel.$error.required">
+                    {{'GENERIC_RequiredField' | translate}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="bundleVersion" class="col-md-2 control-label">
+                    {{'SETTINGS_Repositories_VersionStar'|translate}}
+                    <i class="ci ci-info-circle-info text-primary"
+                       id="firmwareversion_tooltip"
+                       ng-if="c.bundle.deviceType.toLowerCase() === 'switch'"
+                       data-toggle="tooltip"
+                       data-placement="right"
+                       title="{{'SETTINGS_Repositories_FirmwareVersionToolTip' |translate}}"></i>
+                </label>
+                <div class="col-md-4">
+                    <input type="text"
+                           id="bundleVersion"
+                           class="form-control"
+                           name="bundleVersion"
+                           ng-if="c.type !== 'view'"
+                           ng-model="c.bundle.bundleVersion"
+                           required />
+                    <span ng-if="c.type === 'view'">
+                        {{c.bundle.bundleVersion}}
+                    </span>
+                </div>
+                <div class="clearfix"></div>
+                <div class="text-danger col-md-offset-2 col-md-10" ng-if="c.form._submitted && c.form.bundleVersion.$error.required">
+                    {{'GENERIC_RequiredField' | translate}}
+                </div>
+            </div>
+            <div class="form-group" ng-if="c.bundle.deviceType.toLowerCase() === 'switch'">
+                <label for="criticality" class="col-md-2 control-label">
+                    {{'SETTINGS_Repositories_CriticalityStar'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <select id="criticality"
+                            class="form-control"
+                            ng-model="c.bundle.criticality"
+                            name="criticality"
+                            ng-options="o.id as o.name for o in c.constants.firmwareCriticality"
+                            ng-if="c.type !== 'view'"
+                            required></select>
+                    <span ng-if="c.type === 'view'">{{c.bundle.criticality | criticality}}</span>
+                </div>
+                <div class="clearfix"></div>
+                <div class="text-danger col-md-offset-2 col-md-10" ng-if="c.form._submitted && c.form.criticality.$error.required">
+                    {{'GENERIC_RequiredField' | translate}}
+                </div>
+            </div>
+            <div class="form-group"
+                 ng-if="c.type !== 'add' &&  c.bundle.filename && c.bundle.deviceType.toLowerCase() === 'switch'">
+                <label for="criticality" class="col-md-2 control-label">
+                    {{'SETTINGS_Repositories_ExistingFileName'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <span>{{c.bundle.filename}}</span>
+                </div>
+            </div>
+            <div class="form-group"
+                 ng-show="c.type !== 'view' && c.bundle.deviceType.toLowerCase() === 'switch'">
+                <label for="firmwarepackagefile" class="col-md-2 control-label">
+                    {{'SETTINGS_Repositories_UploadFirmware'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <input uploader="uploader"
+                           nv-file-select
+                           id="firmwarepackagefile"
+                           type="file"
+                           text="Browse"
+                           class=""/>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="firmwareBundleSubmit"
+                        class="btn btn-primary"
+                        form="form_add_bundle"
+                        ng-if="c.type !== 'view'"
+                        ng-click="c.form._submitted = true; c.form.$valid  && c.save()">
+                    <span class="buttonLabel">
+                        {{'SETTINGS_Repositories_Save'|translate}}
+                    </span>
+                </button>
+            </li>
+            <li>
+                <button id="btnCloseBundleForm"
+                        class="btn btn-default"
+                        ng-click="c.close()">
+                    {{'SETTINGS_Repositories_Close'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

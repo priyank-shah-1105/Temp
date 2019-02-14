@@ -1,0 +1,120 @@
+﻿<section id="page_backupAndRestore">
+    <error-display errors="backupAndRestore.errors"
+                   on-click="$root.ASM.RemoveError(error, backupAndRestore.errors)"
+                   on-expand-collapse=""></error-display>
+    <header>
+        <h1>
+            {{'BACKUPANDRESTORE_Title' | translate }}
+        </h1>
+    </header>
+
+    <ul class="list-unstyled list-inline">
+        <li>
+            <button class="btn btn-default" id="backupNowLink" ng-click="backupAndRestore.backupNow()" ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                <i class="ci-save-disk"></i>
+                {{'BACKUPANDRESTORE_btnbackupnow' | translate }}
+            </button>
+        </li>
+        <li>
+            <button class="btn btn-default" id="restoreNowLink" ng-click="backupAndRestore.restoreNow()" ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                <i class="ci-popout-restore-o"></i>
+                {{'BACKUPANDRESTORE_btnrestorenow' | translate }}
+            </button>
+        </li>
+    </ul>
+    <div class="row">
+        <div class="col-lg-5">
+            <!-- Settings And Details -->
+            <article>
+                <header>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>
+                                {{'BACKUPANDRESTORE_settingsanddetailstitle'|translate}}
+                                <button id="editSettingsAndDetailsLink"
+                                        class="btn btn-link pull-right"
+                                        ng-click="backupAndRestore.editBackupSettingsAndDetails()"
+                                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                    <i class="ci-edit-pencil text-primary"></i>
+                                    {{'GENERIC_Edit' | translate }}
+                                </button>
+                            </h2>
+                        </div>
+                    </div>
+                </header>
+                <div class="well">
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="lastBackupDate">
+                            {{'BACKUPANDRESTORE_lastBackupDate'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="lastBackupDate">
+                            <datetime-display id="lastBackupDate" time="backupAndRestore.backupScheduleInfo.lastBackupDate" time-format="'LLL'"></datetime-display>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="lastBackupStatus">
+                            {{'BACKUPANDRESTORE_lastBackupStat'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="lastBackupStatus">
+                            {{backupAndRestore.backupScheduleInfo.lastBackupStatus}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="backupLocation">
+                            {{'BACKUPANDRESTORE_directoryPath'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="backupLocation">
+                            <span ng-if="backupAndRestore.backupSettings.backupLocation">
+                                {{backupAndRestore.backupSettings.backupLocation}}
+                            </span>
+                            <span ng-if="!backupAndRestore.backupSettings.backupLocation">
+                                {{"BACKUPNOW_NotConfigured" | translate}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="userName">
+                            {{'BACKUPANDRESTORE_directoryUserName'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="userName">
+                            {{backupAndRestore.backupSettings.userName}}
+                        </div>
+                    </div>
+
+                </div>
+            </article>
+
+            <!-- Automatically Scheduled Backups -->
+            <article>
+                <header>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>
+                                {{'BACKUPANDRESTORE_autoBackups'|translate}}
+                                <button class="btn btn-link pull-right"
+                                        id="schedulBackupLink"
+                                        ng-click="backupAndRestore.editScheduledBackupInfo()"
+                                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                    <i class="ci-edit-pencil text-primary"></i>
+                                    {{'GENERIC_Edit' | translate }}
+                                </button>
+                            </h2>
+                        </div>
+                    </div>
+                </header>
+                <div class="well">
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="backupScheduleInfo">
+                            {{'BACKUPANDRESTORE_autoBackups'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="backupScheduleInfo">
+                            {{backupAndRestore.backupScheduleInfo.enabled | able}}
+                        </div>
+                    </div>
+
+                </div>
+            </article>
+        </div>
+    </div>
+
+</section>

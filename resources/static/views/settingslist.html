@@ -1,0 +1,118 @@
+﻿
+<section id="page_settingslist" ng-if="!ASM.IsInRole('standard')">
+    <div class="col-xs-12">
+
+
+        <error-display errors="$rootScope.errors"
+                       on-click="$root.ASM.RemoveError(error)"
+                       on-expand-collapse=""></error-display>
+        <div class="row">
+
+            <div class="{{settingslist.fullscreen ? 'hidden' : 'col-xs-2'}}">
+                <nav role="navigation" style="margin-top: 50px; margin-right: 30px;">
+                    <ul class="nav nav-pills nav-stacked nav-left">
+                        <!--<li ng-class="{'active' : settingslist.isCurrentTab(settingslist.sections.addOnModule)}">
+                            <a href="javascript: void(0);" ng-click="settingslist.changeSection(settingslist.sections.addOnModule)">
+                                {{'SETTINGS_AddOnModule' | translate}}
+                            </a>
+                        </li>-->
+                        <li ng-class="{'active' : settingslist.isCurrentTab(settingslist.sections.backupAndRestore)}">
+                            <a href="javascript: void(0);" ng-click="settingslist.changeSection(settingslist.sections.backupAndRestore)">
+                                {{'SETTINGS_BackupRestore' | translate}}
+                            </a>
+                        </li>
+                        <li ng-class="{'active' : settingslist.isCurrentTab(settingslist.sections.credentialsManagement)}">
+                            <a href="javascript: void(0);" ng-click="settingslist.changeSection(settingslist.sections.credentialsManagement)">
+                                {{'SETTINGS_CredentialsManagement' | translate}}
+                            </a>
+                        </li>
+                        <li ng-class="{'active' : settingslist.isCurrentTab(settingslist.sections.gettingStarted)}" ng-if="ASM.IsInRole('administrator') || $root.ASM.IsInRole('readonly')">
+                            <a href="javascript: void(0);" ng-click="settingslist.getStarted()">
+                                {{'SETTINGS_GettingStarted' | translate}}
+                            </a>
+                        </li>
+                        <li ng-class="{'active' : settingslist.isCurrentTab(settingslist.sections.jobs)}">
+                            <a href="javascript: void(0);" ng-click="settingslist.changeSection(settingslist.sections.jobs)">
+                                {{'GENERIC_Jobs' | translate}}
+                            </a>
+                        </li>
+                        <li ng-class="{'active' : settingslist.isCurrentTab(settingslist.sections.logs)}">
+                            <a href="javascript: void(0);" ng-click="settingslist.changeSection(settingslist.sections.logs)">
+                                {{'SETTINGS_Logs' | translate}}
+                            </a>
+                        </li>
+                        <li ng-class="{'active' : settingslist.isCurrentTab(settingslist.sections.networks)}">
+                            <a href="javascript: void(0);" ng-click="settingslist.changeSection(settingslist.sections.networks)">
+                                {{'SETTINGS_Networks' | translate}}
+                            </a>
+                        </li>
+                        <li ng-class="{'active' : settingslist.isCurrentTab(settingslist.sections.repositories)}">
+                            <a href="javascript: void(0);" ng-click="settingslist.changeSection(settingslist.sections.repositories)">
+                                {{'SETTINGS_OSRCMRepositories' | translate}}
+                            </a>
+                        </li>
+                        <li ng-class="{'active' : settingslist.isCurrentTab(settingslist.sections.initialApplianceSetup)}" ng-if="ASM.IsInRole('administrator') && $root.ASM.showInitialSetup">
+                            <a href="javascript: void(0);" ng-click="settingslist.setupWizard()">
+                                {{'SETTINGS_InitialApplianceSetup' | translate}}
+                            </a>
+                        </li>
+                        <li ng-class="{'active' : settingslist.isCurrentTab(settingslist.sections.users)}">
+                            <a href="javascript: void(0);" ng-click="settingslist.changeSection(settingslist.sections.users)">
+                                {{'SETTINGS_Users' | translate}}
+                            </a>
+                        </li>
+                        <li ng-class="{'active' : settingslist.isCurrentTab(settingslist.sections.virtualApplianceManagement)}">
+                            <a href="javascript: void(0);" ng-click="settingslist.changeSection(settingslist.sections.virtualApplianceManagement)">
+                                {{'SETTINGS_VirtualApplianceManagement' | translate}}
+                            </a>
+                        </li>
+                        <!--<li ng-class="{'active' : settingslist.isCurrentTab(settingslist.sections.virtualIdentityPools)}">
+                            <a href="javascript: void(0);" ng-click="settingslist.changeSection(settingslist.sections.virtualIdentityPools)">
+                                {{'SETTINGS_VirtualIdPools' | translate}}
+                            </a>
+                        </li>-->
+                    </ul>
+                </nav>
+            </div>
+
+            <div id="SETTINGS_SearchTarget" class="{{settingslist.fullscreen ? 'col-xs-12' : 'col-xs-10'}}" >
+                <!--<div ng-if="settingslist.isCurrentTab(settingslist.sections.addOnModule)">
+                    <addon-modules></addon-modules>
+                </div>-->
+                <div ng-if="settingslist.isCurrentTab(settingslist.sections.backupAndRestore)">
+                    <backup-and-restore></backup-and-restore>
+                </div>
+                <div ng-if="settingslist.isCurrentTab(settingslist.sections.credentialsManagement)">
+                    <credentials-management></credentials-management>
+                </div>
+                <div ng-if="settingslist.isCurrentTab(settingslist.sections.gettingStarted)">
+                    <!-- GettingStarted -->
+                </div>
+                <div ng-if="settingslist.isCurrentTab(settingslist.sections.jobs)">
+                    <jobs></jobs>
+                </div>
+                <div ng-if="settingslist.isCurrentTab(settingslist.sections.logs)">
+                    <asmlogs></asmlogs>
+                </div>
+                <div ng-if="settingslist.isCurrentTab(settingslist.sections.networks)">
+                    <networks></networks>
+                </div>
+                <div ng-if="settingslist.isCurrentTab(settingslist.sections.repositories)">
+                    <listrepositories modal-or-tab="settingslist.modalOrTab"></listrepositories>
+                </div>
+                <div ng-if="settingslist.isCurrentTab(settingslist.sections.initialApplianceSetup)">
+                    <!-- InitialApplianceSetup -->
+                </div>
+                <div ng-if="settingslist.isCurrentTab(settingslist.sections.users)">
+                    <users></users>
+                </div>
+                <div ng-if="settingslist.isCurrentTab(settingslist.sections.virtualApplianceManagement)">
+                    <virtual-appliance-management modal-or-tab="settingslist.$routeParams.modalOrTab"></virtual-appliance-management>
+                </div>
+                <!--<div ng-if="settingslist.isCurrentTab(settingslist.sections.virtualIdentityPools)">
+                    <virtualidentitypools></virtualidentitypools>
+                </div>-->
+            </div>
+        </div>
+    </div>
+</section>

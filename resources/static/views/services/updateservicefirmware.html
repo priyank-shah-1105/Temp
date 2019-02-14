@@ -1,0 +1,134 @@
+﻿<section id="page_updateservicefirmware">
+    <error-display errors="UpdateServiceFirmware.errors"
+                   on-click="$root.ASM.RemoveError(error, UpdateServiceFirmware.errors)"
+                   on-expand-collapse=""></error-display>
+    <div class="col-sm-12">
+        <form id="form_updateservicefirmware"
+              class="form-horizontal"
+              role="form"
+              name="UpdateServiceFirmware.form"
+              form-validation="UpdateServiceFirmware.form._submitted">
+            <div class="form-group">
+                <div class="radio">
+                    <label>
+                        <input type="radio"
+                               name="scheduletype"
+                               value="updatenow"
+                               ng-model="UpdateServiceFirmware.update.scheduleType" />
+                        <strong>
+                            <span ng-bind-html="'UPDATE_SERVICE_FIRMWARE_UpdateNow_label' | translate | htmlSafe" />
+                        </strong>
+                        &nbsp;
+                        <!--<a class="ci ci-info-circle-info"
+                           data-toggle="tooltip"
+                           data-placement="right"
+                           title="{{'UPDATE_SERVICE_FIRMWARE_UpdateNow_tooltip' | translate}}">
+                        </a>-->
+                        <br />
+                        <span ng-bind-html="'UPDATE_SERVICE_FIRMWARE_UpdateNow_help' | translate | htmlSafe"></span>
+                    </label>
+                </div>
+                <!--<hr />-->
+                <br />
+            </div>
+            <!--<div class="form-group">
+                <div class="radio">
+                    <label>
+                        <input type="radio"
+                               name="scheduletype"
+                               value="nextreboot"
+                               ng-model="UpdateServiceFirmware.update.scheduleType" />
+                        <span ng-bind-html="'UPDATE_SERVICE_FIRMWARE_NextReboot' | translate | htmlSafe"></span>
+                    </label>
+                </div>
+                <hr />
+            </div>-->
+            <div class="form-group">
+                <div class="radio">
+                    <label>
+                        <input type="radio"
+                               name="scheduletype"
+                               value="schedule"
+                               ng-model="UpdateServiceFirmware.update.scheduleType" />
+                        <strong>
+                            <span ng-bind-html="'UPDATE_SERVICE_FIRMWARE_ScheduleUpdate_label' | translate | htmlSafe"></span>
+                        </strong>
+                        &nbsp;
+                        <!--<a class="ci ci-info-circle-info"
+                           data-toggle="tooltip"
+                           data-placement="right"
+                           title="{{'UPDATE_SERVICE_FIRMWARE_ScheduleUpdate_tooltip' | translate}}">
+                        </a>-->
+                        <br />
+                        <span ng-bind-html="'UPDATE_SERVICE_FIRMWARE_ScheduleUpdate_help' | translate | htmlSafe"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-11 col-sm-offset-1">
+                    <ul class="list-inline">
+                        <li>
+                            <div class="form-inline form-group">
+                                <label class="">
+                                    {{'UPDATE_SERVICE_FIRMWARE_ScheduleDate' | translate }}
+                                </label>
+                                &nbsp;
+                                <div class="input-group date" id="dpScheduleDate_service"
+                                     datetimepicker-options="{{UpdateServiceFirmware.datePicker.options}}"
+                                     datetimepicker
+                                     ng-model="UpdateServiceFirmware.datePicker.selectedDate">
+                                    <input type="text"
+                                           class="form-control"
+                                           ng-disabled="UpdateServiceFirmware.update.scheduleType !== 'schedule'"
+                                           placeholder="Select"
+                                           ng-model="UpdateServiceFirmware.invalidService.scheduleDate" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                                <div ng-if="UpdateServiceFirmware.form._submitted">
+                                    <span ng-if="UpdateServiceFirmware.update.scheduleType === 'schedule' && !UpdateServiceFirmware.dateIsValid()"
+                                          class="text-danger">
+                                        {{'UPDATE_SERVICE_FIRMWARE_DateError' | translate }}
+                                    </span>
+                                    <!--<span ng-if="!UpdateServiceFirmware.datePicker.selectedDate" class="text-danger">
+                                        {{ 'GENERIC_RequiredField' | translate }}
+                                    </span>-->
+                                </div>
+
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+        <div id="updateServiceFirmwareWarning">
+            <div class="outline-warning">
+                <span>
+                    <i class="ci-health-warning-tri-bang text-warning"></i>
+                    &nbsp;{{'UPDATE_SERVICE_FIRMWARE_TimeEstimate'|translate}}
+                </span>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+                <button id="submit_form_updateservicefirmware"
+                        class="btn btn-primary"
+                        type="submit"
+                        ng-click="UpdateServiceFirmware.form._submitted = true; UpdateServiceFirmware.formIsValid() && UpdateServiceFirmware.doSave()">
+                    {{'GENERIC_Apply' | translate }}
+                </button>
+            </li>
+            <li>
+                <button id="cancel_form_updateservicefirmware"
+                        class="btn btn-default"
+                        type="button"
+                        ng-click="UpdateServiceFirmware.close()">
+                    {{'GENERIC_Cancel' | translate }}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

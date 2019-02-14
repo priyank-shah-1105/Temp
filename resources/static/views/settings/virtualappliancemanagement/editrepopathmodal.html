@@ -1,0 +1,49 @@
+﻿<section id="page_repository">
+    <error-display errors="editRepoPathModalController.errors"
+                   on-click="editRepoPathModalController.ASM.RemoveError(error, editRepoPathModalController.errors)"
+                   on-expand-collapse=""></error-display>
+    <header>
+
+        <p>
+            {{'SETTINGS_EnterPathParagraph'|translate}}
+        </p>
+    </header>
+    <form id="repositoryForm"
+          class="form-horizontal"
+          role="form"
+          form-validation="">
+        <fieldset>
+            <div class="form-group">
+                <label class="col-md-4 control-label"
+                       for="updateRepositoryPath">
+                    {{'SETTINGS_UpdateRepositoryPath'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <input id="updateRepositoryPath"
+                           class="form-control"
+                           type="text"
+                           ng-model="editRepoPathModalController.applianceUpdateInfo.repositoryPath"/>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="submit_ntp_form"
+                        class="btn btn-primary"
+                        ng-click="editRepoPathModalController.save()"
+                        form="edit_ntp_form">
+                    {{'SETTINGS_Save'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="cancel_ntp_form"
+                        class="btn btn-default"
+                        ng-click="editRepoPathModalController.cancel()">
+                    {{'SETTINGS_Cancel'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

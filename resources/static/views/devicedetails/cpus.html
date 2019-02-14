@@ -1,0 +1,52 @@
+﻿<section id="device_cpus">
+    <table class="table"
+           st-table="deviceCpusController.device.cpudata"
+           st-safe-src="deviceCpusController.safeSource">
+        <thead>
+            <tr>
+                <th st-sort="'id'">
+                    {{'DEVICES_DETAILS_CPU_ID'|translate}}
+                </th>
+                <th st-sort="'manufacturer'" ng-if="deviceCpusController.deviceType !== 'Server'">
+                    {{'DEVICES_DETAILS_CPU_Manufacturer'|translate}}
+                </th>
+                <th st-sort="'model'">
+                    {{'DEVICES_DETAILS_CPU_Model'|translate}}
+                </th>
+                <th st-sort="'cores'">
+                    {{'DEVICES_DETAILS_CPU_NumberofCores'|translate}}
+                </th>
+                <th st-sort="'enabledcores'" ng-if="deviceCpusController.deviceType !== 'Server'">
+                    {{'DEVICES_DETAILS_CPU_EnabledCores'|translate}}
+                </th>
+                <th st-sort="'maxclockspeed'" ng-if="deviceCpusController.deviceType !== 'Server'">
+                    {{'DEVICES_DETAILS_CPU_MaxClockSpeed'|translate}}
+                </th>
+                <th st-sort="'currentspeed'" ng-if="deviceCpusController.deviceType !== 'Server'">
+                    {{'DEVICES_DETAILS_CPU_CurrentSpeed'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="cpu in deviceCpusController.device.cpudata">
+                <td>{{cpu.id}}</td>
+                <td ng-if="deviceCpusController.deviceType !== 'Server'">{{cpu.manufacturer}}</td>
+                <td>{{cpu.model}}</td>
+                <td>{{cpu.cores}}</td>
+                <td ng-if="deviceCpusController.deviceType !== 'Server'">{{cpu.enabledcores}}</td>
+                <td ng-if="deviceCpusController.deviceType !== 'Server'">{{cpu.maxclockspeed}}</td>
+                <td ng-if="deviceCpusController.deviceType !== 'Server'">{{cpu.currentspeed}}</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="{{deviceCpusController.device === 'Server' ? 3 : 7}}" class="text-center">
+                    <div id="pager-firmwarepackage"
+                         st-pagination="deviceCpusController.device.cpudata"
+                         st-items-by-page="20"
+                         st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</section>

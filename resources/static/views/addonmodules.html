@@ -1,0 +1,133 @@
+﻿
+<section id="page_addonmodules">
+    <h2>{{'SETTINGS_AddOnModule' | translate}}</h2>
+    <p>{{'SETTINGS_AddOnModuleDescription' | translate}}</p>
+
+    <ul class="list-unstyled list-inline">
+        <li>
+            <button id="modalTest new_addonmodule_link"
+                    class="btn btn-primary"
+                    ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                    ng-click="addonmodules.addModule()">
+                <i class="ci-action-add-plus-float"></i>
+                {{'GENERIC_Add' | translate}}
+            </button>
+        </li>
+    </ul>
+    <div class="row">
+        <div id="addonmodules" class="col-sm-8">
+            <table id="addonmodulesTable"
+                   class="table table-striped table-hover table-condensed"
+                   st-table="addonmodules.displayedresults" 
+                   st-safe-src="addonmodules.results">
+                <thead>
+                    <tr>
+                        <th class="deleteColumn" ng-if="$root.ASM.IsInRole('administrator')"></th>
+                        <th st-sort="name" tabindex="0">
+                            {{'GENERIC_Name' | translate}}
+                        </th>
+                        <th st-sort="description" tabindex="0">
+                            {{'GENERIC_Description' | translate}}
+                        </th>
+                        <th st-sort="version" tabindex="0">
+                            {{'GENERIC_Version' | translate}}
+                        </th>
+                        <th st-sort="isInUse"  tabindex="0">
+                            {{'GENERIC_InUse' | translate}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody ng-if="addonmodules.results.length != 0">
+                <tr ng-repeat="module in addonmodules.displayedresults" 
+                    ng-class="{'st-selected': addonmodules.selected == module}"
+                    ng-click="addonmodules.selected = module"
+                    id="addOnModulesRow_{{$index}}">
+                    <td class="deleteColumn" ng-if="$root.ASM.IsInRole('administrator')">
+                        <span class="sr-only">{{'GENERIC_Delete'|translate}}</span>
+                        <button ng-if="!module.isInUse"
+                                class="btn btn-link"
+                                id="delete_{{$index}}"
+                                ng-click="addonmodules.deleteModule(module)">
+                            <i class="ci-trash"></i>
+                        </button>
+                    </td>
+                        <td>
+                            {{module.name}}
+                        </td>
+                        <td>
+                            {{module.description}}
+                        </td>
+                        <td>
+                            {{module.version}}
+                        </td>
+                        <td>
+                            {{module.isInUse}}
+                        </td>
+                    </tr>
+                </tbody>
+
+                <tbody ng-if="addonmodules.results.length == 0">
+                    <tr>
+                        <td colspan="5">
+                            {{'SETTINGS_NoModules' | translate}}
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            <div st-pagination="addonmodules.displayedresults"
+                                 st-items-by-page="20" 
+                                 st-displayed-pages=""></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+
+        </div>
+        <div id="addonmoduleInfo" class="col-sm-4 well">
+            <h3>
+                {{addonmodules.selected.name}}
+            </h3>
+            <dl class="dl-horizontal well-section">
+                <dt>
+                    {{'SETTINGS_UploadedBy' | translate}}
+                </dt>
+                <dd>
+                    {{addonmodules.selected.uploadedBy}}
+                </dd>
+                <dt>
+                    {{'SETTINGS_UploadedOn' | translate}}
+                </dt>
+                <dd>
+                    <datetime-display time="addonmodules.selected.uploadedDate" time-format="'LLL'" />
+                </dd>
+                <dt ng-if="addonmodules.selected.templates.length > 0">
+                    {{'SETTINGS_InUseTemplates' | translate}}
+                </dt>
+                <dd ng-if="addonmodules.selected.templates.length > 0">
+                    <ul class="list-unstyled">
+                        <li ng-repeat="template in addonmodules.selected.templates">
+                            <a ng-href="/templatebuilder/{{template.id}}/edit">
+                                {{template.name}}
+                            </a>
+                        </li>
+                    </ul>
+                </dd>
+                <dt ng-if="addonmodules.selected.services.length > 0">
+                    {{'SETTINGS_InUseServices' | translate}}
+                </dt>
+                <dd ng-if="addonmodules.selected.services.length > 0">
+                    <ul class="list-unstyled">
+                        <li ng-repeat="service in addonmodules.selected.services">
+                            <a ng-href="/service/{{service.id}}/details">
+                                {{service.name}}
+                            </a>
+                        </li>
+                    </ul>
+                </dd>
+
+            </dl>
+        </div>
+    </div>
+</section>

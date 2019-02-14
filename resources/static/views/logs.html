@@ -1,0 +1,69 @@
+﻿<section id="logsSection">
+    <header>
+        <h1>
+            {{'LOGS_Title' | translate }}
+        </h1>
+    </header>
+
+    <ul class="list-inline list-unstyled">
+        <li>
+            <button id="exportAllLink" class="btn btn-default" ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard') || logs.viewModel.length == 0" ng-click="logs.doDownload()">
+                <i class="ci-arrow-bold-line-export-up"></i> {{'LOGS_ExportAll' | translate }}
+            </button>
+        </li>
+        <li>
+            <button id="purgeLogsLink" class="btn btn-default" ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard') || logs.viewModel.length == 0" ng-click="logs.doPurge()">
+                <i class="ci-state-critical-health"></i> {{'LOGS_Purge' | translate }}
+            </button>
+        </li>
+        <li>
+            <form class="form-inline">
+                <div class="form-group">
+                    <label>
+                        {{'LOGS_ViewCategories' | translate }}
+                    </label>&nbsp;
+
+                    <select class="form-control" id="ddlView" ng-disabled="logs.viewModel.length == 0" ng-model="logs.currentView"
+                            data-ng-options="category.name as category.name for category in logs.availableLogCategories">
+                            <!--data-ng-options="logs.name as logs.name for logs in logs.constants.availableLogCategories">-->
+                        <option value="">{{'GENERIC_All' | translate}}</option>
+                    </select>
+                </div>
+            </form>
+
+        </li>
+    </ul>
+
+
+    <table class="table table-striped table-hover master-body table-condensed" st-search-options="{model: logs.currentView, strict: true, field: 'category'}"
+           st-skip-natural="true" st-table="logs.displayedData" st-safe-src="logs.viewModel">
+        <thead>
+            <tr>
+                <th tabindex="0" id="thSeverity" st-sort="severity">{{'LOGS_THSeverity' | translate }}</th>
+                <th tabindex="0" st-sort="'category'">{{'LOGS_THCategory' | translate }}</th>
+                <th tabindex="0" st-sort="'description'">{{'LOGS_THDescription' | translate }}</th>
+                <th tabindex="0" st-sort-default="reverse" st-sort="'date'">{{'LOGS_THDate' | translate }}</th>
+                <th tabindex="0" st-sort="'user'">{{'LOGS_THUser' | translate }}</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr ng-repeat="logItem in logs.displayedData">
+                <td id="tdSeverity" class="ellipsis nowrap">
+                    <statusicon value="logItem.severity"></statusicon>
+                </td>
+                <td>{{logItem.category}}</td>
+                <td>{{logItem.description}}</td>
+                <td><datetime-display time="logItem.date" time-format="'LLL'" /></td>
+                <td>{{logItem.user}}</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="6" class="text-center">
+                    <div st-pagination="logs.displayedData" st-items-by-page="20" st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</section>

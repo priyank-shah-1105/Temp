@@ -1,0 +1,86 @@
+﻿<div class="clearfix row" style="margin-bottom: 10px;"
+     ng-if="alertHandlerController.errorObj.fldErrors && alertHandlerController.errorObj.fldErrors.length > 0"
+     id="{{_generatedId}}">
+    <div ng-if="alertHandlerController.errorObj.fldErrors.length == 1">
+        <div ng-repeat="error in alertHandlerController.errorObj.fldErrors track by $index">
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="actions.errorClicked(error)"><span aria-hidden="true">&times;</span></button>
+
+                <span>
+                    <i class="ci ci-health-warning-tri-bang"></i>
+                    <strong>{{'SERVICE_SVG_POPOVER_Warning'|translate}}</strong>
+                </span>
+
+                <span ng-bind-html="error.errorMessage | htmlSafe"></span>
+                <span ng-if="error.code">({{error.errorCode}})</span>
+
+                <a ng-click="alertHandlerController.expanded = !alertHandlerController.expanded" ng-if="error.errorDetails">
+                    {{"SERVICE_SVG_POPOVER_ViewDetails" | translate}}
+                </a>
+
+                <p style="margin-left: 1.5em;" id="error-{{$index}}" ng-bind-html="error.errorDetails | htmlSafe" ng-if="alertHandlerController.expanded"></p>
+
+            </div>
+        </div>
+    </div>
+    <div ng-if="alertHandlerController.errorObj.fldErrors.length > 1">
+        <div class="alert alert-dismissible" style="border-color: #f4f4f4; background-color: #f4f4f4;" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+            <ul class="list-inline">
+                <li>
+                    <h4 style="color: #808080;">{{'SERVICE_SVG_POPOVER_MultipleErrors'|translate}}</h4>
+                </li>
+            </ul>
+
+            <ul class="list-inline">
+                <li>
+                    <span style="color: #808080;" ng-click="alertHandlerController.expanded = !alertHandlerController.expanded" ng-if="!alertHandlerController.popoverView">
+                        <i title="Expand" class="ci ci-arrow-chev-right-2-med" ng-if="!alertHandlerController.expanded"></i>
+                        <i title="Collapse" class="ci ci-arrow-chev-down-2-med" ng-if="alertHandlerController.expanded"></i>
+                    </span>
+                </li>
+                <li>
+                    <statusicon value="'warning'"></statusicon>
+                    <span style="color: #808080" ng-bind-html="alertHandlerController.errorObj.errorMessage | htmlSafe"></span>
+                </li>
+                <li ng-if="alertHandlerController.popoverView">
+                    <a ng-click="alertHandlerController.viewDetails()">{{"SERVICE_SVG_POPOVER_ViewDetails" | translate}}</a>
+                </li>
+            </ul>
+
+
+            <ul class="list-unstyled" ng-if="alertHandlerController.expanded && !alertHandlerController.popoverView">
+                <li style="margin-left: 30px; margin-top: 10px;" ng-repeat="error in alertHandlerController.errorObj.fldErrors track by $index">
+
+                    <!--<statusicon value="error.severity"></statusicon>-->
+                    <span style="color: #808080;" ng-bind-html="error.errorMessage | htmlSafe"></span>
+                    <span style="color: #808080;" ng-if="error.errorCode">({{error.errorCode}})</span>
+
+                    <span ng-if="error.errorDetails" style="margin-left: 10px;">
+                        <a data-toggle="collapse" ng-click="actions.detailsClicked()" role="navigation" class="collapsed text-primary" data-target="#error-{{$index}}">
+                            {{'SERVICE_SVG_POPOVER_AlertDetails'|translate}}
+                        </a>
+                        <p style="margin-left: 1.5em; color: #808080;" class="collapse" id="error-{{$index}}" ng-bind-html="error.errorDetails | htmlSafe"></p>
+                    </span>
+
+                    <!--<div style="margin-left: 30px; margin-top: 10px;" ng-if="error.alertHandlerController.expanded && error.errors.length > 0" ng-repeat="suberror in error.errors">
+
+                        <span style="color: #808080;" ng-bind-html="suberror.message | htmlSafe"></span>
+                        <span style="color: #808080;" ng-if="suberror.code">({{suberror.code}})</span>
+
+                        <span ng-if="suberror.details" class="text-primary" style="margin-left: 10px;">
+                            <a data-toggle="collapse" ng-click="actions.detailsClicked()" role="navigation" class="collapsed text-primary" data-target="#error-{{$parent.$index}}-suberror-{{$index}}">
+                                {{'SERVICE_SVG_POPOVER_AlertDetails'|translate}}
+                            </a>
+                        </span>
+
+                        <p style="color: #808080;" class="collapse" id="error-{{$parent.$index}}-suberror-{{$index}}" ng-if="suberror.details" ng-bind-html="suberror.errorDetails | htmlSafe"></p>
+
+                    </div>-->
+
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

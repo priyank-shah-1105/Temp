@@ -1,0 +1,154 @@
+﻿<section id="page_proxySettings">
+    <error-display errors="editProxySettingsModalController.errors"
+                   on-click="editProxySettingsModalController.ASM.RemoveError(error, editProxySettingsModalController.errors)"
+                   on-expand-collapse=""></error-display>
+    <header>
+        <p>
+            {{'SETTINGS_EditProxyDetailsParagraph'|translate}}
+        </p>
+    </header>
+    <form id="proxySettingsForm"
+          role="form"
+          class="form-horizontal"
+          name="settingsForm"
+          form-validation="editProxySettingsModalController.submitted">
+        <fieldset>
+            <div class="form-group">
+                <label for="useProxySettings" class="col-md-4 control-label">
+                    {{'SETTINGS_UseHTTPProxySettings'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <input id="useProxySettings"
+                           name="useProxySettings"
+                           type="checkbox"
+                           ng-model="editProxySettingsModalController.settings.enableProxy"
+                           ng-checked="editProxySettingsModalController.settings.enableProxy"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="ipAddress" class="col-md-4 control-label">
+                    {{'SETTINGS_ServerAddressIpHost'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <input id="ipAddress"
+                           name="ipAddress"
+                           type="text"
+                           class="form-control"
+                           ng-model="editProxySettingsModalController.settings.proxyServer"
+                           ng-disabled="!editProxySettingsModalController.settings.enableProxy"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="portNumber" class="col-md-4 control-label">
+                    {{'SETTINGS_Port'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <input id="portNumber"
+                           name="portNumber"
+                           type="number"
+                           min="0"
+                           ng-change="editProxySettingsModalController.settings.proxyPort = editProxySettingsModalController.settings.proxyPort === null ? 0 : editProxySettingsModalController.settings.proxyPort"
+                           step="1"
+                           class="form-control"
+                           ng-model="editProxySettingsModalController.settings.proxyPort"
+                           ng-disabled="!editProxySettingsModalController.settings.enableProxy"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="useProxyCreds" class="col-md-4 control-label">
+                    {{'SETTINGS_UseProxyCredentials'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <input id="useProxyCreds"
+                           name="useProxyCreds"
+                           type="checkbox"
+                           ng-model="editProxySettingsModalController.settings.enableProxyCredentials"
+                           ng-checked="editProxySettingsModalController.settings.enableProxyCredentials"
+                           ng-disabled="!editProxySettingsModalController.settings.enableProxy"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="username" class="col-md-4 control-label">
+                    {{'SETTINGS_UserName'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <input id="username"
+                           name="username"
+                           type="text"
+                           class="form-control"
+                           ng-model="editProxySettingsModalController.settings.proxyUsername"
+                           ng-disabled="!editProxySettingsModalController.settings.enableProxy || !editProxySettingsModalController.settings.enableProxyCredentials"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password" class="col-md-4 control-label">
+                    {{'SETTINGS_Password'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input id="password"
+                               name="password"
+                               ng-model="editProxySettingsModalController.settings.proxyPassword"
+                               required
+                               class="form-control"
+                               type="password" password-viewer 
+                               placeholder=""
+                               ng-disabled="!editProxySettingsModalController.settings.enableProxy || !editProxySettingsModalController.settings.enableProxyCredentials"/>
+                    </div>
+                    <div class="text-danger" ng-if="editProxySettingsModalController.submitted">
+                        <div ng-if="settingsForm.password.$error.required">{{'SETTINGS_PasswordRequired'|translate}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="verifyPassword" class="col-md-4 control-label">
+                    {{'SETTINGS_ConfirmPassword'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input id="verifyPassword"
+                               name="verifyPassword"
+                               ng-match="editProxySettingsModalController.settings.proxyPassword"
+                               ng-model="editProxySettingsModalController.settings.proxyVerifyPassword"
+                               required
+                               class="form-control"
+                               type="password" password-viewer 
+                               placeholder=""
+                               ng-disabled="!editProxySettingsModalController.settings.enableProxy || !editProxySettingsModalController.settings.enableProxyCredentials"/>
+                     
+                    </div>
+                    <div class="text-danger" ng-if="editProxySettingsModalController.submitted">
+                        <div ng-if="!settingsForm.verifyPassword.$error.required && settingsForm.verifyPassword.$error.ngmatch">{{'SETTINGS_PasswordMatch'|translate}}</div>
+                        <div ng-if="settingsForm.verifyPassword.$error.required">{{'SETTINGS_VerifiedPassword'|translate}}</div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="btnTestProxy"
+                        class="btn btn-default"
+                        ng-disabled="!editProxySettingsModalController.settings.enableProxy"
+                        ng-click="editProxySettingsModalController.submitted = true; settingsForm.$valid && editProxySettingsModalController.testProxy()">
+                    {{'SETTINGS_TestProxy'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="submitProxySettings"
+                        class="btn btn-primary"
+                        ng-click="editProxySettingsModalController.submitted = true; settingsForm.$valid && editProxySettingsModalController.save()">
+                    {{'SETTINGS_Save'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="cancel_ntp_form"
+                        class="btn btn-default"
+                        ng-click="editProxySettingsModalController.cancel()">
+                    {{'SETTINGS_Cancel'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

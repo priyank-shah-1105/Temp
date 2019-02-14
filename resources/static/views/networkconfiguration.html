@@ -1,0 +1,177 @@
+﻿<section id="page_networkconfiguration" class="col-sm-12">
+    <div class="form-group">
+        <p class="col-sm-12">
+            {{'NETWORKCONFIGURATION_Help'|translate}}
+        </p>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <button type="button"
+                    id="{{networkConfigurationController.id}}"
+                    ng-if="networkConfigurationController.editMode"
+                    ng-click="networkConfigurationController.addInterface(networkConfigurationController.setting.value)"
+                    class="btn btn-primary">
+                {{'NETWORKCONFIGURATION_AddNewInterface'|translate}}
+            </button>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div class="accordion interfaceAccordion" ng-repeat="interface in networkConfigurationController.setting.value.interfaces">
+                <div class="page-header" style="cursor: pointer">
+                    <h3 data-toggle="collapse" data-target="{{'#InterfaceContent_' + $index}}">
+                        <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                        <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                        <span class="text-black-medium">{{'Interface ' + ($index + 1)}}</span>
+
+                        <span ng-if="networkConfigurationController.editMode">
+                            <button ng-if="!interface.deleteState"
+                                    ng-click="interface.deleteState = true"
+                                    class="btn btn-link"
+                                    type="button">
+                                <i class="ci-trash text-danger"></i>
+                            </button>
+                            <button ng-if="interface.deleteState"
+                                    ng-click="interface.deleteState = false"
+                                    class="btn btn-default"
+                                    type="button">
+                                {{'GENERIC_Cancel'|translate}}
+                            </button>
+                            <button ng-if="interface.deleteState"
+                                    ng-click="networkConfigurationController.setting.value.interfaces.splice(networkConfigurationController.setting.value.interfaces.indexOf(interface), 1)"
+                                    class="btn btn-danger"
+                                    type="button">
+                                {{'NETWORKCONFIGURATION_ConfirmDelete'|translate}}
+                            </button>
+                        </span>
+                    </h3>
+                </div>
+
+                <div class="collapse in interfaceContent" id="{{'InterfaceContent_' + $index}}">
+                    <div class="accordionbody">
+                        <section>
+                            <div class="greyBackground interfaceTopSection">
+                                <div class="form-group col-sm-8">
+                                    <label for="{{'fabricType' + $index}}" class="col-sm-4 control-label">
+                                        {{'NETWORKCONFIGURATION_FabricType'|translate}}
+                                    </label>
+                                    <div class="col-sm-8" id="fabricTypeInputs" ng-if="networkConfigurationController.editMode">
+                                        <div>
+                                            <label>
+                                                <input type="radio" name="{{'fabricType' + $index}}" ng-model="interface.fabrictype" value="ethernet" ng-show="false" />
+                                                {{'NETWORKCONFIGURATION_Ethernet'|translate}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-8" ng-if="!networkConfigurationController.editMode">
+                                        {{interface.fabrictype === 'fc' ? ('NETWORKCONFIGURATION_FibreChannel'|translate) : ('NETWORKCONFIGURATION_Ethernet'|translate)}}
+                                    </div>
+                                </div>
+                                <div ng-if="interface.fabrictype === 'ethernet'">
+                                    <div class="form-group col-sm-8">
+                                        <label for="nicTypeSelect" class="col-sm-4 control-label">
+                                            {{'NETWORKCONFIGURATION_PortLayout'|translate}}
+                                        </label>
+                                        <div class="col-sm-7">
+                                            <select id="{{networkConfigurationController.id}}" ng-if="networkConfigurationController.editMode" class="form-control ddlNicType" ng-model="interface.nictype" ng-options="item.id as item.name for item in networkConfigurationController.availableNicTypes"></select>
+                                            <list-lookup list="networkConfigurationController.availableNicTypes"
+                                                         ng-if="!networkConfigurationController.editMode"
+                                                         id="nicTypes"
+                                                         key="interface.nictype"
+                                                         property-name="'name'"></list-lookup>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-8">
+                                        <label for="redundancy" class="col-sm-4 control-label">
+                                            {{'NETWORKCONFIGURATION_Redundancy'|translate}}
+                                        </label>
+                                        <div class="col-sm-8" id="redundancy">
+                                            <div class="checkbox" ng-if="networkConfigurationController.editMode">
+                                                <label>
+                                                    <input type="checkbox" ng-model="interface.redundancy" />
+                                                    {{'NETWORKCONFIGURATION_DuplicatePortSettings'|translate}}
+                                                </label>
+                                            </div>
+                                            <div ng-if="!networkConfigurationController.editMode">
+                                                {{interface.redundancy | able}}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+                            <section ng-repeat="interface2 in interface.interfaces"
+                                     ng-if="($index < 2 || interface.nictype == '4x10Gb')
+                                        && !(interface.redundancy && $odd)
+                                        && interface.fabrictype == 'ethernet'">
+                                <header>
+                                    <h4>
+                                        <span>{{interface2.name}}</span>
+                                        <span ng-if="interface.redundancy && $index < 3">{{'/ ' + (interface.interfaces[$index + 1].name)}}</span>
+                                    </h4>
+                                </header>
+
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-sm-1">
+                                                {{'NETWORKCONFIGURATION_Partition'|translate}}
+                                            </th>
+                                            <th class="col-sm-7">
+                                                {{'NETWORKCONFIGURATION_NetworkVLAN'|translate}}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="partition in interface2.partitions"
+                                            ng-if="($index < 2 || interface.nictype == '2x10Gb') && ($first || interface.partitioned)">
+                                            <td>{{partition.name}}</td>
+                                            <td>
+                                                <div class="dropdown resourcedropdown">
+                                                    <button class="btn btn-default dropdown-toggle"
+                                                            type="button"
+                                                            data-toggle="dropdown">
+                                                        <span class="">
+                                                            <span ng-if="!partition.networks.length">
+                                                                {{'NETWORKS_ADD_SelectResources' | translate}}
+                                                            </span>
+                                                            <span ng-if="partition.networks.length">
+                                                                {{networkConfigurationController.DisplayNetworks(partition._networks)}}
+                                                            </span>
+                                                        </span>
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li ng-repeat="_network in partition._networks"
+                                                            role="presentation"
+                                                            ng-click="!networkConfigurationController.editMode || networkConfigurationController.toggleNetwork(partition, _network);$event.stopPropagation();">
+                                                            <span role="menuitem" tabindex="-1">
+                                                                <input type="checkbox"
+                                                                       ng-disabled="!networkConfigurationController.editMode"
+                                                                       ng-click="!networkConfigurationController.editMode || networkConfigurationController.toggleNetwork(partition, _network);$event.stopPropagation();"
+                                                                       ng-checked="_network.checked"
+                                                                       style="margin-left: 3px;" />
+                                                            </span>
+                                                            <span style="color: initial;">
+                                                                {{_network.name}}
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </section>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+</section>

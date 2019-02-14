@@ -1,0 +1,36 @@
+﻿<div id="device_powersupplies">
+    <table id="powersuppliesTable" class="table"
+           st-table="devicePowerSuppliesController.device.powersupplies"
+           st-safe-src="devicePowerSuppliesController.safeSource.powersupplies">
+        <thead>
+            <tr>
+                <th>
+                    {{'DEVICES_DETAILS_PowerSupplies_Name'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_PowerSupplies_PowerStatus'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_PowerSupplies_Capacity'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="ps in devicePowerSuppliesController.device.powersupplies">
+            <td>{{ps.name}}</td>
+            <td>{{ps.powerstatus}}</td>
+            <td>{{ps.capacity}}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-center">
+                    <div id="pager"
+                         st-pagination="devicePowerSuppliesController.device.powersupplies"
+                         st-items-by-page="20"
+                         st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

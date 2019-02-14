@@ -1,0 +1,53 @@
+﻿<section id="page_edit_pool">
+    <error-display errors="EditPoolController.errors" on-click="$root.ASM.RemoveError(error, EditPoolController.errors)" on-expand-collapse=""></error-display>
+    <form id="editPoolForm"
+          name="EditPoolController.form"
+          class="form-horizontal"
+          form-validation="EditPoolController.form._submitted"
+          novalidate>
+        <div class="form-group">
+            <label class="control-label col-md-5" ng-if="EditPoolController.type=='mac'">
+                {{'EDITPOOL_EditVirtualMac_IdentityCountToAdd' | translate }}
+            </label>
+            <label class="control-label col-md-5" ng-if="EditPoolController.type=='iqn'">
+                {{'EDITPOOL_EditVirtualIQN_IdentityCountToAdd' | translate }}
+            </label>
+            <label class="control-label col-md-5" ng-if="EditPoolController.type=='wwpn'">
+                {{'EDITPOOL_EditVirtualWWPN_IdentityCountToAdd' | translate }}
+            </label>
+            <label class="control-label col-md-5" ng-if="EditPoolController.type=='wwnn'">
+                {{'EDITPOOL_EditVirtualWWNN_IdentityCountToAdd' | translate }}
+            </label>
+            <div class="col-md-3">
+                <input id="txtIdentityCount" name="txtIdentityCount" type="number" min="0" step="1" class="form-control" required ng-model="EditPoolController.identitycount" />
+                <span ng-if="EditPoolController.form.txtIdentityCount.$error.required && EditPoolController.form._submitted == true" class="help-block">{{ 'EDITPOOL_Field_Required' | translate}}</span>
+                <span ng-if="EditPoolController.form.txtIdentityCount.$error.min && EditPoolController.form._submitted == true" class="help-block">{{ 'EDITPOOL_Field_Range' | translate}}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                <label>
+                    <input id="blnAutoGenerate" type="checkbox" class="checkbox checkbox-inline" ng-model="EditPoolController.autogenerate" />
+                    {{ 'EDITPOOL_Auto_Generate' | translate}}
+                </label>
+            </div>
+        </div>
+    </form>
+
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+                <!-- TODO: Add type="submit" and remove the view click subscription when James fixes HTML5 support for IE -->
+                <button id="submit_pool_form" class="btn btn-primary" form="editPoolForm" ng-click="EditPoolController.form._submitted = true; EditPoolController.doSave(EditPoolController.form.$invalid)">
+                    {{'GENERIC_Save' | translate }}
+                </button>
+            </li>
+            <li>
+                <button id="cancel_pool_form" class="btn btn-default" ng-click="EditPoolController.close()">
+                    {{'GENERIC_Cancel' | translate }}
+                </button>
+            </li>
+        </ul>
+    </footer>
+
+</section>

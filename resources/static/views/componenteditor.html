@@ -1,0 +1,582 @@
+﻿<section id="page_componenteditor">
+    <!-- TODO: ICONS -->
+    <section id="templateBuilderDetails"
+             ng-if="ComponentEditor.config.mode != 'import'">
+        <form class="form-horizontal"
+              novalidate
+              role="form">
+            <div>
+                <fieldset ng-show="ComponentEditor.config.action == 'add' && ComponentEditor.newComponent == undefined">
+                    <legend class="hidden">
+                        {{'COMPONENTEDITOR_SelectComponent'|translate}}
+                    </legend>
+                    <ul id="ulComponents" class="list-unstyled">
+                        <li class="form-group">
+                            <label class="col-sm-6 control-label">
+                                {{'COMPONENTEDITOR_SelectComponent'|translate}}
+                            </label>
+                            <div class="col-sm-6">
+                                <select ng-if="ComponentEditor.config.action == 'add'"
+                                        id="ddlComponents"
+                                        class="form-control"
+                                        ng-change="ComponentEditor.add()"
+                                        ng-options="item as item.name for item in ComponentEditor.config.availableComponents"
+                                        ng-model="ComponentEditor.newComponent">
+                                    <option value="">{{ComponentEditor.constants.genericSelectOption.name}}</option>
+                                </select>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="pull-right">
+                        <button type="button"
+                                id="btnCancelAddComponent"
+                                class="btn btn-default"
+                                ng-click="ComponentEditor.cancel()">
+                            {{'GENERIC_Cancel'|translate}}
+                        </button>
+                    </div>
+                </fieldset>
+                <fieldset ng-if="ComponentEditor.newComponent != null">
+                    <!-- Start Preliminary Form -->
+                    <ul class="list-unstyled"
+                        ng-form="ComponentEditor.preliminaryForm"
+                        id="preliminaryForm"
+                        form-validation="ComponentEditor.preliminaryForm._submitted">
+                        <li class="form-group" ng-if="ComponentEditor.type === 'template'">
+                            <label class="col-sm-6 control-label">
+                                {{'COMPONENTEDITOR_ComponentName'|translate}}
+                                <span ng-if="ComponentEditor.nameRequired()">*</span>
+                            </label>
+                            <div class="col-sm-6">
+                                <input ng-if="ComponentEditor.editMode"
+                                       id="txtComponentName"
+                                       name="componentName"
+                                       ng-required="ComponentEditor.nameRequired()"
+                                       class="form-control"
+                                       ng-model="ComponentEditor.newComponent.name" />
+                                <p id="P1"
+                                   ng-if="!ComponentEditor.editMode"
+                                   class="form-control-static">
+                                    {{ComponentEditor.newComponent.name}}
+                                </p>
+                                <div class="text-danger"
+                                     ng-if="ComponentEditor.preliminaryForm._submitted && ComponentEditor.preliminaryForm.$invalid">
+                                    <span ng-if="ComponentEditor.preliminaryForm.componentName.$errors.required">
+                                        {{'GENERIC_RequiredField'|translate}}
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="form-group"
+                            ng-if="ComponentEditor.editMode
+                                    && !(ComponentEditor.newComponent.type === 'cluster' || ComponentEditor.newComponent.type === 'scaleio')
+                                    && !ComponentEditor.multipleInstancesNotAllowed">
+                            <label class="col-sm-6 control-label">
+                                {{'COMPONENTEDITOR_Instances'|translate}}
+                            </label>
+                            <div class="col-sm-6">
+                                <input id="txtInstances"
+                                       class="form-control"
+                                       name="numInstances"
+                                       ng-if="!ComponentEditor.continueClicked"
+                                       type="number"
+                                       min="1"
+                                       max="30"
+                                       ng-model="ComponentEditor.instances" />
+                                <div class="text-danger" ng-if="ComponentEditor.preliminaryForm._showValidation">
+                                    <div ng-if="ComponentEditor.preliminaryForm.numInstances.$error.required">
+                                        {{'GENERIC_RequiredField'|translate}}
+                                    </div>
+                                    <div ng-if="ComponentEditor.preliminaryForm.numInstances.$error.min">
+                                        {{'VALIDATIONMESSAGES_minNumber' | translate:'{min:1}'}}
+                                    </div>
+                                    <div ng-if="ComponentEditor.preliminaryForm.numInstances.$error.max">
+                                        {{'VALIDATIONMESSAGES_maxNumber' | translate:'{max:30}'}}
+                                    </div>
+                                </div>
+                                <!-- Read only -->
+                                <span ng-if="ComponentEditor.continueClicked">{{ComponentEditor.instances}}</span>
+                            </div>
+                        </li>
+                        <!-- Associate Components -->
+                        <li class="form-group" ng-if="ComponentEditor.type === 'template'">
+                            <h4 class="col-sm-12">
+                                {{'COMPONENTEDITOR_RelatedComponents'|translate}}
+                            </h4>
+                            <div ng-if="ComponentEditor.newComponent.type
+                                 && (ComponentEditor.config.template.components | componentEditorLinkableType: ComponentEditor.newComponent.type).length">
+                                <div ng-if="!ComponentEditor.config.template.isLocked && ComponentEditor.editMode">
+                                    <p class="col-sm-12">
+                                        {{'COMPONENTEDITOR_RelatedComponentsHelp'|translate}}
+                                    </p>
+                                    <div class="col-sm-12">
+                                        <input type="radio"
+                                               name="association"
+                                               id="associateAll"
+                                               value="all"
+                                               ng-model="ComponentEditor.associateAllResources"
+                                               ng-click="ComponentEditor.checkAllComponents()"
+                                               ng-disabled="ComponentEditor.continueClicked" />
+                                        <label for="associateAll">
+                                            {{'COMPONENTEDITOR_AssociateAll'|translate}}
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <input type="radio"
+                                               name="association"
+                                               id="associateSelected"
+                                               value="selected"
+                                               ng-model="ComponentEditor.associateAllResources"
+                                               ng-disabled="ComponentEditor.continueClicked" />
+                                        <label for="associateSelected">
+                                            {{'COMPONENTEDITOR_AssociateSelected'|translate}}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 row">
+
+                                    <ul ng-if="!ComponentEditor.editMode" class="list-unstyled col-sm-12">
+                                        <li ng-repeat="rc in ComponentEditor.newComponent.relatedcomponents">
+                                            <span>
+                                                {{rc.name}}
+                                                <span ng-if="rc.instances > 1"
+                                                      translate="COMPONENTEDITOR_numInstances"
+                                                      translate-values="{ number : rc.instances }">
+                                                </span>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                    <ul ng-if="ComponentEditor.editMode"
+                                        class="list-unstyled col-sm-6"
+                                        style="height: 75px; overflow: auto">
+                                        <li ng-repeat="linkableComponent in ComponentEditor.config.template.components | componentEditorLinkableType: ComponentEditor.newComponent.type"
+                                            class="col-sm-5">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox"
+                                                           class="checkbox-component"
+                                                           ng-model="linkableComponent.isChecked"
+                                                           ng-checked="ComponentEditor.isRelated(linkableComponent.id)"
+                                                           ng-click="ComponentEditor.checkClicked(linkableComponent)"
+                                                           ng-disabled="ComponentEditor.associateAllResources == 'all' || ComponentEditor.continueClicked" />
+                                                    <span>
+                                                        {{linkableComponent.name}}
+                                                        <span ng-if="linkableComponent.instances > 1"
+                                                              translate="COMPONENTEDITOR_numInstances"
+                                                              translate-values="{ number : linkableComponent.instances }">
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <span class="col-sm-12"
+                                  ng-if="ComponentEditor.newComponent.type
+                                  &&  !(ComponentEditor.config.template.components | componentEditorLinkableType: ComponentEditor.newComponent.type).length">
+                                {{'COMPONENTEDITOR_NoComponentsToAssociate'|translate}}
+                            </span>
+                        </li>
+                        <li ng-if="!ComponentEditor.continueClicked">
+                            <div class="pull-right">
+                                <button type="button"
+                                        id="btnContinueToSettings"
+                                        ng-click="ComponentEditor.advance()"
+                                        class="btn btn-primary">
+                                    {{'GENERIC_Continue'|translate}}
+                                </button>
+
+                                <button type="button" id="btnCancelToSettings"
+                                        class="btn btn-default"
+                                        ng-click="ComponentEditor.cancel()">
+                                    {{'GENERIC_Cancel'|translate}}
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                    <!-- End Preliminary Form (ComponentEditor.preliminaryForm)-->
+                    <!-- Start main form (ComponentEditor.form) -->
+                    <div ng-if="ComponentEditor.continueClicked" id="formComponent" ng-form
+                         name="ComponentEditor.form"
+                         form-validation="ComponentEditor.form._submitted">
+                        <p>
+                            {{ComponentEditor.newComponent.helptext}}
+                        </p>
+
+                        <div ng-if="ComponentEditor.config.type == 'server'">
+                            <!-- VxFlex OS Storage Pool Capacity -->
+                            <hr />
+                            <div class="panel panel-default"
+                                 ng-repeat="category in ComponentEditor.scaleIOComponent.categories"
+                                 ng-if="ComponentEditor.type === 'service' && ComponentEditor.categoryVisible(category, ComponentEditor.scaleIOComponent)">
+                                <div class="panel-body well">
+                                    <div ng-repeat="templatesetting in category.settings | templatesettings: ComponentEditor.isService | settingsVisibleComponentEditorFilter:ComponentEditor.scaleIOComponent">
+                                        <!-- Custom Control: Basic Setting -->
+                                        <basic-setting category="category"
+                                                       setting="templatesetting"
+                                                       read-only-mode="!ComponentEditor.editMode"
+                                                       component="ComponentEditor.scaleIOComponent"
+                                                       form="ComponentEditor.form"></basic-setting>
+                                    </div>
+                                </div>
+                            </div>
+                            <!---END OF VxFlex Storage Pool Capacity-->
+
+                            <ul class="list-unstyled list-inline"
+                                ng-if="ComponentEditor.newComponent.allowClone
+                                        && !ComponentEditor.config.template.isLocked
+                                        && ComponentEditor.editMode">
+                                <li>
+                                    <button type="button"
+                                            id="btnCloneFromReference"
+                                            class="btn btn-primary"
+                                            ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                                            ng-click="ComponentEditor.importConfigurationFromReferenceServer()">
+                                        {{'COMPONENTEDITOR_ImportConfig'|translate}}
+                                    </button>
+                                </li>
+                                <!--<li>
+                                    <button type="button"
+                                            id="btnCloneFromTemplateComponent"
+                                            class="btn btn-primary"
+                                            ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                                            ng-click="ComponentEditor.importFromExistingTemplate()">
+                                        {{'COMPONENTEDITOR_ImportFromExisting'|translate}}
+                                    </button>
+                                </li>-->
+                                <!--<li>
+                                    <button type="button"
+                                            id="btnImportConfigFile"
+                                            class="btn btn-primary"
+                                            ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                                            ng-click="ComponentEditor.uploadServerConfigurationProfile()">
+                                        {{'COMPONENTEDITOR_UploadServer'|translate}}
+                                    </button>
+                                </li>-->
+                            </ul>
+
+                            <ul class="list-unstyled" ng-if="ComponentEditor.newComponent.referenceip">
+                                <li class="form-group">
+                                    <div class="col-sm-6">
+                                        <label class="control-label" for="referenceip">
+                                            {{'COMPONENTEDITOR_ReferenceServerIPAddress'|translate}}
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <a id="referenceip"
+                                           class="form-control-static"
+                                           ng-href="{{ComponentEditor.newComponent.referenceipurl}}"
+                                           target="_blank"
+                                           ng-if="ComponentEditor.newComponent.referenceipurl != ''">
+                                            <span>
+                                                {{ComponentEditor.newComponent.referenceip}}
+                                            </span>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <ul class="list-unstyled" ng-if="ComponentEditor.newComponent.configfilename">
+                                <li class="form-group">
+                                    <div class="col-sm-6">
+                                        <label class="control-label" for="configfilename">
+                                            {{'COMPONENTEDITOR_ImportConfigFileName'|translate}}
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span id="configfilename">
+                                            {{ComponentEditor.newComponent.configfilename}}
+                                        </span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <ul class="list-unstyled">
+                            <li class="form-group" ng-if="ComponentEditor.type === 'service'">
+                                <label class="col-sm-6 control-label">
+                                    {{'COMPONENTEDITOR_ComponentName'|translate}}
+                                    <span ng-if="ComponentEditor.nameRequired()">*</span>
+                                </label>
+                                <div class="col-sm-6">
+                                    <input ng-if="ComponentEditor.editMode"
+                                           id="txtComponentName"
+                                           name="componentName"
+                                           ng-required="ComponentEditor.nameRequired()"
+                                           class="form-control"
+                                           ng-model="ComponentEditor.newComponent.name" />
+                                    <p id="P1" ng-if="!ComponentEditor.editMode"
+                                       class="form-control-static">
+                                        {{ComponentEditor.newComponent.name}}
+                                    </p>
+                                    <div class="text-danger"
+                                         ng-if="ComponentEditor.form._submitted && ComponentEditor.form.$invalid">
+                                        {{'GENERIC_RequiredField'|translate}}
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="panel-group"
+                             id="parentComponentEditor"
+                             role="tablist"
+                             aria-multiselectable="false">
+                            <div class="panel panel-default"
+                                 ng-repeat="category in ComponentEditor.newComponent.categories"
+                                 ng-if="ComponentEditor.categoryVisible(category, ComponentEditor.newComponent)">
+                                <div class="panel-heading"
+                                     role="tab"
+                                     id="headId{{$index}}">
+                                    <h4 class="panel-title">
+                                        <a role="button"
+                                           ng-class=":: $index === 0 ?  'in' :'collapsed'"
+                                           data-toggle="collapse"
+                                           data-target="#collapse{{$index}}"
+                                           aria-expanded="{{:: $index === 0}}"
+                                           aria-controls="collapse{{$index}}"
+                                           ng-click="ComponentEditor.scrollTo('headId'+$index)">
+                                            <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                            <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                            {{category.name}}
+                                            <span class="pull-right text-danger"
+                                                  ng-if="ComponentEditor.form._submitted && ComponentEditor.GlobalServices.hasInvalidElement('collapse' + $index)">
+                                                {{'GENERIC_UpdateRequiredFields'|translate}}
+                                            </span>
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse{{$index}}"
+                                     class="panel-collapse collapse"
+                                     ng-class="::{' in' : $index == 0}"
+                                     role="tabpanel"
+                                     aria-labelledby="headId{{$index}}">
+                                    <div class="panel-body well">
+                                        <!-- Groups of Settings -->
+                                        <div ng-repeat="group in category.settings | templatesettings: ComponentEditor.isService | settingsVisibleComponentEditorFilter:ComponentEditor.newComponent | groupFilter">
+                                            <!-- no group, individual setting -->
+                                            <div ng-if="!group.group">
+                                                <div ng-repeat="templatesetting in category.settings | templatesettings: ComponentEditor.isService | settingsVisibleComponentEditorFilter:ComponentEditor.newComponent"
+                                                     ng-if="templatesetting.group === group.group">
+                                                    <div ng-switch="templatesetting.datatype" class="form-group">
+                                                        <!--Custom Control: Network Config-->
+                                                        <network-configuration ng-switch-when="networkconfiguration"
+                                                                               id="networkconfiguration"
+                                                                               read-only-mode="!ComponentEditor.editMode"
+                                                                               setting="templatesetting"></network-configuration>
+                                                        <!--Custom Control: RAID Config-->
+                                                        <raid-configuration ng-switch-when="raidconfiguration"
+                                                                            id="raidconfiguration"
+                                                                            read-only-mode="!ComponentEditor.editMode"
+                                                                            setting="templatesetting"
+                                                                            invalid-array="ComponentEditor.invalidFormElements"
+                                                                            form="ComponentEditor.form"></raid-configuration>
+                                                        <!--Custom Control: Bios Config-->
+                                                        <bios-configuration ng-switch-when="biosconfiguration"
+                                                                            id="biosconfiguration"
+                                                                            read-only-mode="!ComponentEditor.editMode"
+                                                                            setting="templatesetting"></bios-configuration>
+                                                        <!-- Custom Control: VM Virtual Disk Config -->
+                                                        <vm-virtual-disk-configuration ng-switch-when="vmvirtualdiskconfiguration"
+                                                                                       id="vmvirtualdiskconfiguration"
+                                                                                       read-only-mode="!ComponentEditor.editMode"
+                                                                                       setting="templatesetting"
+                                                                                       component="ComponentEditor.newComponent"
+                                                                                       invalid-array="ComponentEditor.invalidFormElements"
+                                                                                       form="ComponentEditor.form"></vm-virtual-disk-configuration>
+                                                        <!-- Custom Control: Configure NIOC  -->
+                                                        <nioc-setting ng-switch-when="niocconfiguration"
+                                                                      category="category"
+                                                                      invalid-array="ComponentEditor.invalidFormElements"
+                                                                      setting="templatesetting"
+                                                                      errors="ComponentEditor.errors"
+                                                                      read-only-mode="!ComponentEditor.editMode"
+                                                                      component="ComponentEditor.newComponent"
+                                                                      form="ComponentEditor.form"></nioc-setting>
+                                                        <!-- Custom Control: OS Credentials  -->
+                                                        <credentials-settings ng-switch-when="oscredential"
+                                                                              category="category"
+                                                                              setting="templatesetting"
+                                                                              read-only-mode="!ComponentEditor.editMode"
+                                                                              component="ComponentEditor.newComponent"
+                                                                              form="ComponentEditor.form"
+                                                                              credentials="ComponentEditor.credentials"></credentials-settings>
+                                                        <!-- Custom Control: Basic Setting -->
+                                                        <basic-setting ng-switch-default
+                                                                       category="category"
+                                                                       setting="templatesetting"
+                                                                       read-only-mode="!ComponentEditor.editMode"
+                                                                       component="ComponentEditor.newComponent"
+                                                                       form="ComponentEditor.form"></basic-setting>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Groups -->
+                                            <div class="panel-heading"
+                                                 role="tab"
+                                                 ng-if="group.group"
+                                                 id="headId{{$index}}_parent_{{$parent.$index}}"
+                                                 style="border-bottom:none;">
+                                                <a tabindex="0"
+                                                   style="outline: none;"
+                                                   role="button"
+                                                   data-toggle="collapse"
+                                                   data-target="#target{{$index}}_parent_{{$parent.$index}}"
+                                                   aria-expanded="{{:: $first}}"
+                                                   ng-class=":: $first ?  'in' :'collapsed'"
+                                                   aria-controls="device{{$index}}">
+                                                    <ul class="list-inline" style="margin-bottom:0;">
+                                                        <li style="color: #888; vertical-align: top;">
+                                                            <i class="collapsed-show ci-arrow-chev-right-2-med ci"></i>
+                                                            <i class="collapsed-hide ci-arrow-chev-down-2-med ci"></i>
+                                                        </li>
+                                                        <li>
+                                                            <h4 style="margin-top: 0; margin-bottom: 10px; border-bottom: none;">
+                                                                {{group.group}}
+                                                            </h4>
+                                                        </li>
+                                                    </ul>
+                                                </a>
+                                                <div class="col-xs-12 panel-collapse collapse"
+                                                     ng-class="::{' in' : $first}"
+                                                     id="target{{$index}}_parent_{{$parent.$index}}"
+                                                     aria-labelledby="headId{{$index}}_parent_{{$parent.$index}}"
+                                                     role="tabpanel">
+
+                                                    <div ng-repeat="templatesetting in (category.settings |templatesettings: ComponentEditor.isService |settingsVisibleComponentEditorFilter:ComponentEditor.newComponent)"
+                                                         ng-if="templatesetting.group === group.group">
+                                                        <div ng-switch="templatesetting.datatype" class="form-group">
+                                                            <!--Custom Control: Network Config-->
+                                                            <network-configuration ng-switch-when="networkconfiguration"
+                                                                                   id="networkconfiguration"
+                                                                                   class="col-sm-12"
+                                                                                   read-only-mode="!ComponentEditor.editMode"
+                                                                                   setting="templatesetting"></network-configuration>
+                                                            <!--Custom Control: RAID Config-->
+                                                            <raid-configuration ng-switch-when="raidconfiguration"
+                                                                                id="raidconfiguration"
+                                                                                class="col-sm-12"
+                                                                                read-only-mode="!ComponentEditor.editMode"
+                                                                                setting="templatesetting"
+                                                                                invalid-array="ComponentEditor.invalidFormElements"
+                                                                                form="ComponentEditor.form"></raid-configuration>
+                                                            <!--Custom Control: Bios Config-->
+                                                            <bios-configuration ng-switch-when="biosconfiguration"
+                                                                                id="biosconfiguration"
+                                                                                class="col-sm-12"
+                                                                                read-only-mode="!ComponentEditor.editMode"
+                                                                                setting="templatesetting"></bios-configuration>
+                                                            <!-- Custom Control: VM Virtual Disk Config -->
+                                                            <vm-virtual-disk-configuration ng-switch-when="vmvirtualdiskconfiguration"
+                                                                                           id="vmvirtualdiskconfiguration"
+                                                                                           class="col-sm-12"
+                                                                                           read-only-mode="!ComponentEditor.editMode"
+                                                                                           setting="templatesetting"
+                                                                                           component="ComponentEditor.newComponent"
+                                                                                           invalid-array="ComponentEditor.invalidFormElements"
+                                                                                           form="ComponentEditor.form"></vm-virtual-disk-configuration>
+                                                            <!-- Custom Control: Configure NIOC  -->
+                                                            <nioc-setting ng-switch-when="niocconfiguration"
+                                                                          category="category"
+                                                                          invalid-array="ComponentEditor.invalidFormElements"
+                                                                          setting="templatesetting"
+                                                                          errors="ComponentEditor.errors"
+                                                                          read-only-mode="!ComponentEditor.editMode"
+                                                                          class="col-sm-12"
+                                                                          component="ComponentEditor.newComponent"
+                                                                          form="ComponentEditor.form"></nioc-setting>
+                                                            <!-- Custom Control: OS Credentials  -->
+                                                            <credentials-setting ng-switch-when="oscredential"
+                                                                                 category="category"
+                                                                                 setting="templatesetting"
+                                                                                 read-only-mode="!ComponentEditor.editMode"
+                                                                                 component="ComponentEditor.newComponent"
+                                                                                 form="ComponentEditor.form"
+                                                                                 credentials="ComponentEditor.credentials"></credentials-setting>
+                                                            <!-- Custom Control: Basic Setting -->
+                                                            <basic-setting ng-switch-default
+                                                                           category="category"
+                                                                           setting="templatesetting"
+                                                                           component="ComponentEditor.newComponent"
+                                                                           read-only-mode="!ComponentEditor.editMode"
+                                                                           form="ComponentEditor.form"></basic-setting>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </form>
+
+        <footer ng-if="ComponentEditor.newComponent && ComponentEditor.continueClicked"
+                class="text-right">
+            <span ng-if="ComponentEditor.editMode">
+                {{'COMPONENTEDITOR_RequiredFieldsRemaining'|translate}}
+            </span>
+            <span ng-if="ComponentEditor.editMode">
+                {{ComponentEditor.requiredFieldsRemaining()}}
+            </span>
+            <span class="spinner" ng-if="ComponentEditor.saving"></span>
+            <button id="delete_component_form"
+                    class="btn btn-danger"
+                    ng-click="ComponentEditor.deleteComponent()"
+                    ng-if="ComponentEditor.editMode && ComponentEditor.action == 'edit'"
+                    ng-disabled="$root.ASM.IsInRole('readonly') || ComponentEditor.saving">
+                {{'GENERIC_Delete'|translate}}
+            </button>
+            <button id="back_component_form"
+                    class="btn btn-default"
+                    ng-click="ComponentEditor.continueClicked = false; ComponentEditor.backButton = true; ComponentEditor.chooseForm._submitted = false;"
+                    ng-if="ComponentEditor.type === 'template' && ComponentEditor.newComponent && ComponentEditor.continueClicked">
+                {{'GENERIC_Back'|translate}}
+            </button>
+            <button id="templatebuilder_validatesettings"
+                    class="btn btn-default"
+                    ng-click="ComponentEditor.form._submitted = true;
+                                (ComponentEditor.form.$invalid
+                                && !ComponentEditor.GlobalServices.scrollToInvalidElement('page_componenteditor'))
+                                || ComponentEditor.validateSettings()"
+                    ng-if="ComponentEditor.editMode
+                    && (
+                        ComponentEditor.newComponent
+                        && ComponentEditor.newComponent.type == 'server'
+                        && ComponentEditor.newComponent.allowClone
+                        )"
+                    ng-disabled="$root.ASM.IsInRole('readonly') || ComponentEditor.saving">
+                {{'COMPONENTEDITOR_ValidateSettings'|translate}}
+            </button>
+            <button id="submit_confirm_form"
+                    class="btn btn-primary"
+                    ng-click="ComponentEditor.addComponent()"
+                    form="formComponent"
+                    ng-if="ComponentEditor.editMode"
+                    ng-disabled="$root.ASM.IsInRole('readonly')
+                                || ComponentEditor.saving">
+                <span ng-if="ComponentEditor.action == 'add'">
+                    {{'GENERIC_Save'|translate}}
+                </span>
+                <span ng-if="ComponentEditor.action == 'edit'"
+                      ng-click="ComponentEditor.form._submitted = true;
+                                (ComponentEditor.form.$invalid
+                                && !ComponentEditor.GlobalServices.scrollToInvalidElement('page_componenteditor'))
+                                || ComponentEditor.requiredFieldsRemaining()
+                                || ComponentEditor.updateComponent()">
+                    {{'GENERIC_Save'|translate}}
+                </span>
+            </button>
+            <button id="cancel_confirm_form"
+                    class="btn btn-default"
+                    ng-disabled="ComponentEditor.saving"
+                    ng-click="ComponentEditor.cancel()">
+                {{'GENERIC_Cancel'|translate}}
+            </button>
+        </footer>
+
+
+    </section>
+</section>

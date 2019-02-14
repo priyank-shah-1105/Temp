@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html ng-app="app" ng-strict-di>
+<head>
+    <title ng-bind="$root.pageTitle"></title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <script type="text/javascript">
+        window.cacheKey = "VTHGGOTZ";
+    </script>
+
+    <script src="js/dell-clarity-components/dell-clarity-vendor.min.js?v=VTHGGOTZ"></script>
+    <script src="js/dell-clarity-components/dell-clarity-components.min.js?v=VTHGGOTZ"></script>
+    <script src="js/dell-clarity-components/dell-clarity-components.tmpl.min.js?v=VTHGGOTZ"></script>
+
+    <!-- External dependencies. -->
+    <script src="js/libs.min.js?v=VTHGGOTZ"></script>
+    <script src="js/scripts.min.js?v=VTHGGOTZ"></script>
+
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="icon" type="image/ico" href="images/favicon.ico" />
+
+    <link rel="stylesheet" href="css/dell-ui-clarity/dell-ui-clarity.min.css?v=VTHGGOTZ" />
+    <link rel="stylesheet" href="js/dell-clarity-components/dell-clarity-components.min.css?v=VTHGGOTZ" />
+    <link rel="stylesheet" href="css/app/app.min.css?v=VTHGGOTZ" />
+
+</head>
+<body ng-controller="AppController" style="padding-right: 0;" class="{{$root.pageTemplate}}">
+    <masthead menu-items="navigation" icon-class="'ci-logo-asm'" pin-menu="true" application-title="appTitle" on-help="help">
+        <masthead-header>
+
+            <ul class="list-unstyled list-inline">
+                <li><status></status></li>
+                <li ng-if="!hideSearch" class=hidden-sm>
+                    <masthead-search on-search="onSearch(searchTerm)">
+
+                            <search-results>
+                                <div class="indexSearchResults">
+                                    <h2 style="margin-top: 0; margin-bottom: 15px;">
+                                        <i class="ci-search-discover-mag-glass"></i>
+                                        {{'INDEX_ResultsFor'|translate}}
+                                        &quot;{{data.searchTerm}}&quot;
+                                    </h2>
+
+                                    <div class="alert alert-info" ng-show="data.searching">
+                                        <p>
+                                            <spinner color="white"></spinner> &nbsp; {{'INDEX_Searching'|translate}}
+                                        </p>
+                                    </div>
+
+                                    <div class="" ng-show="!data.searching && data.searchResults.totalResults == 0">
+                                        <br />
+                                        <div style="display: block; text-align: center; vertical-align: central;">
+                                            <h1><i class="ci-action-circle-remove-slash-o "></i></h1>
+                                            <p>{{'INDEX_NoResultsFound'|translate}}</p>
+                                        </div>
+                                    </div>
+
+                                    <div style="height: 262px; overflow-y: auto; overflow-x: auto;" ng-show="!data.searching && data.searchResults.totalResults > 0">
+                                        <div ng-repeat="category in data.searchResults.categories">
+                                            <h3 style="font-size: 14px; margin-top: 0;" ng-if="category.totalItems > 0">
+                                                <i class="{{category.icon}}"></i>
+                                                {{category.name}} ({{category.totalItems}} of {{category.unlimitedItems}})
+                                            </h3>
+                                            <ul style="margin-left: 20px; margin-bottom: 15px;" class="list-unstyled search-result-items">
+                                                <li ng-repeat="item in category.items" style="font-size: 12px;">
+                                                    <statusicon ng-if="category.name != 'Templates' && item.status" value="item.status"></statusicon>
+                                                    <!--<i ng-if="category.name == 'Templates' && !item.status" class="text-warning ci-health-warning-tri-bang"></i>-->
+                                                    <statusicon ng-if="category.name == 'Templates' && !item.status" value="'yellow'"></statusicon>
+                                                    <statusicon style="margin-left: 12px;" ng-if="category.name == 'Templates' && item.status" value="'white'"></statusicon>
+                                                    <a id="#searchindexLink" class="searchindexLink" href="{{item.target}}">{{limitString(item.name, 50)}}</a>
+                                                    <div id="#searchindexDesc" class="searchindexDesc" style="margin-left: 20px; padding-left: 5px;" ng-if="item.description">{{limitString(item.description, 50)}}</div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <!--class="search-bar text-center"-->
+                                    <div class="" style="display: block; background-color: #eee; text-align: center; padding: 10px; margin-top: 20px;" ng-show="!data.searching && data.searchResults.totalResults > 0">
+                                        <a href="#/Search?term={{data.searchResults.searchedTerm}}">
+                                            <i class="ci-popout-expand-arrow-up-2-o"></i> {{'INDEX_ViewAllResults'|translate}} ({{data.searchResults.totalUnlimitedResults}})
+                                        </a>
+                                    </div>
+
+                                    <br />
+                                </div>
+                            </search-results>
+
+                    </masthead-search>
+                </li>
+                <!--<li ng-if="!hideAlerts">
+            <masthead-alerts alerts="data.alerts"></masthead-alerts>
+        </li>-->
+                <li>
+                    <button type="button" class="btn dropdown-toggle userButton customButton" data-toggle="dropdown" aria-expanded="false" ng-click="actions.hideNav()"><i class="ci-user-2" style="margin-right: 0"></i>{{currentUserName}}</button>
+                    <ul class="arrowright dropdown-menu" role="menu">
+                        <li>
+                            <masthead-user user-name="data.currentUser.userName" user-avatar="">
+                                <span>{{$root.ASM.CurrentUser.username}} ({{$root.ASM.CurrentUser.rolename}})</span>
+                            </masthead-user>
+                        </li>
+                        <li>
+                            <button class="btn btn-link" style="color:black" ng-click="logout()">{{'INDEX_Logout' | translate}}</button>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <button type="button" class="btn dropdown-toggle userButton customButton" data-toggle="dropdown" aria-expanded="false" ng-click="actions.help(); actions.hideNav()"><i class="ci-info-circle-help" style="margin-right: 0"></i></button>
+                    <ul class="arrowright dropdown-menu" role="menu">
+                        <li>
+                            <button class="btn btn-link" style="color:black" ng-click="about()">{{'GENERIC_About'|translate}}</button>
+                        </li>
+                        <li>
+                            <button class="btn btn-link" style="color:black" ng-click="help()">{{'GENERIC_Help'|translate}}</button>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+        </masthead-header>
+        <masthead-menu>
+
+            <div style="width: 162px;" class="btn-group-vertical" role="group" aria-label="...">
+                <div class="btn-group" ng-if="$root.ASM.IsInRole('administrator') || $root.ASM.IsInRole('readonly')">
+                    <a ng-href="#/gettingstarted" id="getting-started-button" class="btn btn-primary">
+                        {{'MENU_GettingStarted'|translate}}
+                    </a>
+                    <br />
+                </div>
+
+                <section id="index_common_tasks">
+
+                    <div class="btn-group">
+                        <button id="common-tasks" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            {{'DASHBOARD_QuickActions'|translate}} <i class="ci-arrow-chev-down-2-med" style="margin-left: 7px; margin-right: 3px; top: 2px; position: relative;"></i>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><button class="btn btn-link" id="deployLink" ng-click="deployNewService()" ng-disabled="!templatesAvailable || $root.ASM.IsInRole('readonly')">{{'INDEX_DeployNewService' | translate }}</button></li>
+                            <li><button class="btn btn-link" id="btnMenuCreateTemplate" ng-disabled="!$root.ASM.IsInRole('administrator')" ng-click="createTemplate()">{{'GETTINGSTARTED_step5btn' | translate}}</button></li>
+                            <li><button class="btn btn-link" id="btnMenuAddExistingTemplate" ng-disabled="!$root.ASM.IsInRole('administrator')" ng-click="addExistingService()">{{'INDEX_AddExistingService' | translate}}</button></li>
+                        </ul>
+                    </div>
+                </section>
+
+            </div>
+
+            <div ng-if="$root.ASM.IsInRole('administrator') || $root.ASM.IsInRole('readonly')" style="margin-top: 15px;">
+                <i style="color: #007db8;" class="ci-settings-sliders-vert-2"></i><a href="#/settings" class="ng-binding">{{'INDEX_Settings' | translate}}</a>
+            </div>
+
+
+
+        </masthead-menu>
+        <masthead-pinned-menu class="pinned-extras">
+
+            <div class="btn-group" ng-if="$root.ASM.IsInRole('administrator') || $root.ASM.IsInRole('readonly')" style="float: left; margin-top: -6px; margin-right: 15px;">
+                <a ng-href="#/gettingstarted" id="getting-started-button" class="btn btn-default">
+                    {{'MENU_GettingStarted'|translate}}
+                </a>
+            </div>
+
+            <div class="btn-group" style="float: left; margin-top: -6px; margin-right: 15px;">
+                <button id="common-tasks" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    {{'DASHBOARD_QuickActions'|translate}} <i class="ci-arrow-chev-down-2-med" style="margin-left: 7px; margin-right: 3px; top: 2px; position: relative;"></i>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><button class="btn btn-link" id="deployLink" ng-click="deployNewService()" ng-disabled="!templatesAvailable || $root.ASM.IsInRole('readonly')">{{'INDEX_DeployNewService' | translate }}</button></li>
+                    <li><button class="btn btn-link" id="btnMenuCreateTemplate" ng-disabled="!$root.ASM.IsInRole('administrator')" ng-click="createTemplate()">{{'GETTINGSTARTED_step5btn' | translate}}</button></li>
+                    <li><button class="btn btn-link" id="btnMenuAddExistingTemplate" ng-disabled="!$root.ASM.IsInRole('administrator')" ng-click="addExistingService()">{{'INDEX_AddExistingService' | translate}}</button></li>
+                </ul>
+            </div>
+
+            <div class="panel panel-default" ng-if="$root.ASM.IsInRole('administrator') || $root.ASM.IsInRole('readonly')" style="margin-top: -12px;">
+                <div class="panel-heading" role="tab" style="margin-right: 10px;">
+                    <h4 class="panel-title hoverItem">
+                        <i class="ci-settings-sliders-vert-2"></i> <a href="#/settings" class="ng-binding">{{'INDEX_Settings' | translate}}</a> <a id="settings_menu" role="button" class="collapsed" data-parent="#pinaccordion" data-toggle="collapse" data-target="#pin-settings" aria-expanded="true">
+                            <i class="ci-arrow-chev-down-2-med"></i> <i class="ci-arrow-chev-up-2-med"></i>
+                        </a>
+                    </h4>
+                </div>
+                <div id="pin-settings" class="panel-collapse collapse" role="tabpanel" style="right: 0;">
+                    <div class="panel-body">
+                        <ul class="list-unstyled subnav">
+                            <!--<li class="sub-menu-item ng-scope"><button ng-click="goTo('settings/AddOnModule/true')" class="sub-menu-button btn btn-link ">{{'SETTINGS_AddOnModule' | translate}}</button></li>-->
+                            <li class="sub-menu-item ng-scope"><button ng-click="goTo('settings/BackupAndRestore/true')" class="sub-menu-button btn btn-link ">{{'SETTINGS_BackupRestore' | translate}}</button></li>
+                            <li class="sub-menu-item ng-scope"><button ng-click="goTo('settings/CredentialsManagement/true')" class="sub-menu-button btn btn-link ">{{'SETTINGS_CredentialsManagement' | translate}}</button></li>
+                            <li class="sub-menu-item ng-scope"><button ng-click="goTo('gettingstarted')" class="sub-menu-button btn btn-link ">{{'SETTINGS_GettingStarted' | translate}}</button></li>
+                            <li class="sub-menu-item ng-scope"><button ng-click="goTo('settings/Jobs/true')" class="sub-menu-button btn btn-link ">{{'GENERIC_Jobs' | translate}}</button></li>
+                            <li class="sub-menu-item ng-scope"><button ng-click="goTo('settings/Logs/true')" class="sub-menu-button btn btn-link ">{{'SETTINGS_Logs' | translate}}</button></li>
+                            <li class="sub-menu-item ng-scope"><button ng-click="goTo('settings/Networks/true')" class="sub-menu-button btn btn-link ">{{'SETTINGS_Networks' | translate}}</button></li>
+                            <li class="sub-menu-item ng-scope"><button ng-click="goTo('settings/Repositories/true')" class="sub-menu-button btn btn-link ">{{'SETTINGS_OSRCMRepositories' | translate}}</button></li>
+                            <li ng-if="$root.ASM.showInitialSetup" class="sub-menu-item ng-scope"><button ng-click="setupWizard()" class="sub-menu-button btn btn-link ">{{'SETTINGS_InitialApplianceSetup' | translate}}</button></li>
+                            <li class="sub-menu-item ng-scope"><button ng-click="goTo('settings/Users/true')" class="sub-menu-button btn btn-link ">{{'SETTINGS_Users' | translate}}</button></li>
+                            <li class="sub-menu-item ng-scope"><button ng-click="goTo('settings/VirtualApplianceManagement/true')" class="sub-menu-button btn btn-link ">{{'SETTINGS_VirtualApplianceManagement' | translate}}</button></li>
+                            <!--<li class="sub-menu-item ng-scope"><button ng-click="goTo('settings/VirtualIdentityPools/true')" class="sub-menu-button btn btn-link ">{{'SETTINGS_VirtualIdPools' | translate}}</button></li>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+ 
+
+            <span style="border-left: 1px solid #007db8; position: relative; top: 0; float: right; width: 20px;">&nbsp;</span>
+        </masthead-pinned-menu>
+    </masthead>
+
+    <div class="container-fluid" ng-class="{'pinnav-padding' : pinnav === true}" style="padding-top: 50px;">
+        <div id="global-alerts" style="" class="row"></div>
+        <storage-alert-banner ng-if="$root.ASM.CurrentUser && $root.ASM.gettingStarted.storageUtilization" 
+                              user-preference="$root.ASM.CurrentUser.userPreference"
+                              storage-utilization="$root.ASM.gettingStarted.storageUtilization"></storage-alert-banner>
+        <rcm-banner ng-if="$root.ASM.CurrentUser && $root.ASM.gettingStarted" 
+                    user-preference="$root.ASM.CurrentUser.userPreference" 
+                    rcm-version-alert="$root.ASM.gettingStarted.rcmVersionAlert"></rcm-banner>
+        <virtual-appliance-version-banner ng-if="$root.ASM.CurrentUser && $root.ASM.gettingStarted"
+                    user-preference="$root.ASM.CurrentUser.userPreference"
+                    virtual-appliance-alert="$root.ASM.gettingStarted.newVirtualApplianceVersionAlert"></virtual-appliance-version-banner>
+        <error-display errors="$root.errors" on-click="$root.ASM.RemoveError(error)" on-expand-collapse="" scroll-to-top="true"></error-display>
+        <div id="content-main" ng-viewport></div>
+    </div>
+
+    <div id="modalArea"></div>
+</body>
+</html>

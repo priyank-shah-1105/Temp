@@ -1,0 +1,60 @@
+﻿<div class="addModule">
+    <error-display errors="AddAttachmentModal.errors"
+                   on-click="$root.ASM.RemoveError(error, AddAttachmentModal.errors)"
+                   on-expand-collapse=""></error-display>
+    <div>
+        <form name="AddAttachmentModal.addOnModuleUpload" 
+              id="addonmoduleUpload"
+              form-validation="AddAttachmentModal.addOnModuleUpload._submitted">
+            <div class="form-group">
+                <b>{{'TEMPLATES_AttachmentSizeReq' | translate}}</b>
+                <div class="col-sm-4" id="fileWrapper">
+                    <input required
+                           uploader="uploader"
+                           nv-file-select
+                           id="templateattachmentfile"
+                           type="file"
+                           text="Browse"
+                           class=""
+                           name="templateattachmentfile" />
+                </div>
+                <!--<div class="col-sm-2">
+                    <div ng-show="uploader.isHTML5">
+                        <div class="progress" style="margin-bottom: 0;">
+                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                        </div>
+                    </div>
+                </div>-->
+                <div class="clearfix"></div>
+
+                <div class="text-danger col-xs-12" ng-if="AddAttachmentModal.addOnModuleUpload._submitted">
+                    <div ng-if="!AddAttachmentModal.repoFile">
+                        {{'GENERIC_RequiredField'|translate}}
+                    </div>
+                    <div ng-if="AddAttachmentModal.tooBigError">
+                        {{'TEMPLATES_fileTooLarge'|translate}}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br />
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+                <button type="button"
+                        class="btn btn-primary"
+                        ng-click="AddAttachmentModal.addOnModuleUpload._submitted = true;
+                                    AddAttachmentModal.repoFile && AddAttachmentModal.save()"
+                        id="addonmoduleconfirm">
+                    {{'GENERIC_Save' | translate}}
+                </button>
+            </li>
+            <li>
+                <button type="button" class="btn btn-default" ng-click="AddAttachmentModal.cancel()" id="addonmodulecancel">
+                    {{'GENERIC_Cancel' | translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</div>

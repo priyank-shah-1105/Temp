@@ -1,0 +1,172 @@
+﻿<section id="page_edit_user">
+    <form id="edit_user_form"
+          class="form-horizontal"
+          name="editDeviceModalController.userForm"
+          form-validation="editDeviceModalController.userForm._submitted">
+        <div class="form-group">
+            <label for="user_username" class="col-md-3 control-label">
+                {{ 'CREATE_EDIT_DEVICE_USERS_UserName' | translate }}*
+            </label>
+            <div class="col-md-3">
+                <input id="user_username"
+                       type="text"
+                       class="form-control"
+                       name="userName"
+                       ng-if="editDeviceModalController.mode === 'create'"
+                       ng-model="editDeviceModalController.user.username"
+                       required
+                       maxlength="16" />
+                <p class="form-control-static" ng-if="editDeviceModalController.mode === 'edit'">
+                    {{editDeviceModalController.user.username}}
+                </p>
+                <span class="text-danger" ng-if="editDeviceModalController.userForm._submitted">
+                    <span ng-if="editDeviceModalController.userForm.userName.$error.required">
+                        {{'GENERIC_RequiredField' | translate}}
+                    </span>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password" class="col-md-3 control-label">
+                {{ 'GENERIC_Password' | translate }}*
+            </label>
+            <div class="col-md-2">
+                <div class="input-group">
+                    <input id="password"
+                           name="password"
+                           ng-model="editDeviceModalController.user.password"
+                           required
+                           class="form-control"
+                           type="password" password-viewer 
+                           placeholder="" />
+                   
+                    <span class="text-danger" ng-if="editDeviceModalController.userForm._submitted">
+                        <span ng-if="editDeviceModalController.userForm.password.$error.required">
+                            {{'GENERIC_RequiredField' | translate}}
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="user_confirm_password" class="col-md-3 control-label">
+                {{ 'CREATE_EDIT_DEVICE_USERS_ConfirmPassword' | translate }}*
+            </label>
+            <div class="col-md-2">
+                <div class="input-group">
+                    <input id="confirmPassword"
+                           name="confirmPassword"
+                           ng-match="editDeviceModalController.user.password"
+                           ng-model="editDeviceModalController.user.confirmpassword"
+                           required
+                           class="form-control"
+                           type="password" password-viewer  />
+                   
+                    <span class="text-danger" ng-if="editDeviceModalController.userForm._submitted">
+                        <span ng-if="editDeviceModalController.userForm.confirmPassword.$error.required">
+                            {{'GENERIC_RequiredField' | translate}}
+                        </span>
+                        <span ng-if="editDeviceModalController.userForm.confirmPassword.$error.ngmatch
+                              && !editDeviceModalController.userForm.confirmPassword.$error.required">
+                            {{'SETTINGS_DirectoryServicesWizardPassword_Match' | translate}}
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" ng-if="editDeviceModalController.type === 'cmc'">
+            <label for="role" class="col-md-3 control-label">
+                {{ 'GENERIC_Group' | translate }}
+            </label>
+            <div class="col-md-3">
+                <select id="role"
+                        class="form-control"
+                        name="role"
+                        ng-options="role.id as role.name for role in editDeviceModalController.options.availableCMCUserRoles"
+                        ng-model="editDeviceModalController.user.role"
+                        required>
+                    <option value="">{{'GENERIC_select' | translate}}</option>
+                </select>
+                <span class="text-danger" ng-if="editDeviceModalController.userForm._submitted">
+                    <span ng-if="editDeviceModalController.userForm.role.$error.required">
+                        {{'GENERIC_RequiredField' | translate}}
+                    </span>
+                </span>
+            </div>
+        </div>
+        <div class="form-group" ng-if="editDeviceModalController.type === 'idrac'">
+            <label for="lan" class="col-md-3 control-label">
+                {{ 'GENERIC_Role' | translate }}*
+            </label>
+            <div class="col-md-3">
+                <select id="lan"
+                        name="lan"
+                        class="form-control"
+                        ng-options="role.id as role.name for role in editDeviceModalController.options.availableLanRoles"
+                        ng-model="editDeviceModalController.user.lan"
+                        required>
+                    <option value="">{{'GENERIC_select' | translate}}</option>
+                </select>
+                <span class="text-danger" ng-if="editDeviceModalController.userForm._submitted">
+                    <span ng-if="editDeviceModalController.userForm.role.$error.required">
+                        {{'GENERIC_RequiredField' | translate}}
+                    </span>
+                </span>
+            </div>
+        </div>
+        <div class="form-group" ng-if="editDeviceModalController.type === 'idrac'">
+            <label for="idracRole" class="col-md-3 control-label">
+                {{ 'CREATE_EDIT_DEVICE_USERS_LANRole' | translate }}*
+            </label>
+            <div class="col-md-3">
+                <select id="idracRole"
+                        class="form-control"
+                        name="idracRole"
+                        ng-model="editDeviceModalController.user.idracrole"
+                        ng-options="role.id as role.name for role in editDeviceModalController.options.availableiDracUserRoles"
+                        required>
+                    <option value="">{{'GENERIC_select' | translate}}</option>
+                </select>
+                <span class="text-danger" ng-if="editDeviceModalController.userForm._submitted">
+                    <span ng-if="editDeviceModalController.userForm.idracRole.$error.required">
+                        {{'GENERIC_RequiredField' | translate}}
+                    </span>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="user_enabled" class="col-md-3 control-label">
+                {{ 'CREATE_EDIT_DEVICE_USERS_EnableUser' | translate }}
+            </label>
+            <div class="col-sm-9">
+                <div>
+                    <label>
+                        <input id="user_enabled"
+                               type="checkbox"
+                               ng-model="editDeviceModalController.user.enabled" />
+                    </label>
+                </div>
+            </div>
+        </div>
+    </form>
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+                <button type="button"
+                        class="btn btn-primary"
+                        ng-click="editDeviceModalController.userForm._submitted = true; editDeviceModalController.userForm.$valid && editDeviceModalController.close()"
+                        id="usersFormSave">
+                    {{'GENERIC_Save' | translate}}
+                </button>
+            </li>
+            <li>
+                <button type="button"
+                        class="btn btn-default"
+                        ng-click="editDeviceModalController.cancel()"
+                        id="usersFormCancel">
+                    {{'GENERIC_Cancel' | translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

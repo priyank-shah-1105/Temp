@@ -1,0 +1,149 @@
+﻿<section id="page_scheduledBackup">
+    <error-display errors="editScheduledBackup.errors"
+                   on-click="$root.ASM.RemoveError(error, editScheduledBackup.errors)"
+                   on-expand-collapse=""></error-display>
+    <form name="editScheduledBackup.form" 
+          class="form-horizontal"
+          form-validation="editScheduledBackup.form._submitted">
+        <fieldset>
+            <div class="form-group">
+                <label for="enableBackupList" class="col-md-4 control-label">
+                    {{'BACKUPANDRESTORE_scheduledbackup_title' | translate }}
+                </label>
+                <div class="col-md-4">
+                    <ul id="enableBackupList" class="list-unstyled list-inline">
+                        <li>
+                            <input id="backupEnabled" 
+                                   name="enableDisableBackup" 
+                                   type="radio" 
+                                   value="true" 
+                                   ng-model="editScheduledBackup.backupScheduleInfo.enabled"/>
+                            <label for="backupEnabled">
+                                {{'GENERIC_Enabled' | translate }}
+                            </label>
+                        </li>
+                        <li>
+                            <input id="backupDisabled" 
+                                   name="enableDisableBackup" 
+                                   type="radio" 
+                                   value="false" 
+                                   ng-model="editScheduledBackup.backupScheduleInfo.enabled"/>
+                            <label for="backupDisabled">
+                                {{'GENERIC_Disabled' | translate }}
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <div class="form-group">
+                    <label for="backupDays" class="col-md-4 control-label">
+                        {{'BACKUPANDRESTORE_daysforbackup' | translate }}
+                    </label>
+                    <div class="col-md-5">
+                        <ul id="backupDays" class="list-unstyled list-inline">
+                            <li>
+                                <input id="Sunday" 
+                                       type="checkbox" 
+                                       ng-model="editScheduledBackup.backupScheduleInfo.sunday" 
+                                       ng-disabled="editScheduledBackup.backupScheduleInfo.enabled == 'false'"/>
+                                <label for="Sunday">
+                                    {{'GENERIC_DayOfWeek_Sunday' | translate }}
+                                </label>
+                            </li>
+                            <li>
+                                <input id="Monday" 
+                                       type="checkbox" 
+                                       ng-model="editScheduledBackup.backupScheduleInfo.monday" 
+                                       ng-disabled="editScheduledBackup.backupScheduleInfo.enabled == 'false'"/>
+                                <label for="Monday">
+                                    {{'GENERIC_DayOfWeek_Monday' | translate }}
+                                </label>
+                            </li>
+                            <li>
+                                <input id="Tuesday" 
+                                       type="checkbox" 
+                                       ng-model="editScheduledBackup.backupScheduleInfo.tuesday" 
+                                       ng-disabled="editScheduledBackup.backupScheduleInfo.enabled == 'false'"/>
+                                <label for="Tuesday">
+                                    {{'GENERIC_DayOfWeek_Tuesday' | translate }}
+                                </label>
+                            </li>
+                            <li>
+                                <input id="Wednesday" 
+                                       type="checkbox" 
+                                       ng-model="editScheduledBackup.backupScheduleInfo.wednesday" 
+                                       ng-disabled="editScheduledBackup.backupScheduleInfo.enabled == 'false'"/>
+                                <label for="Wednesday">
+                                    {{'GENERIC_DayOfWeek_Wednesday' | translate }}
+                                </label>
+                            </li>
+                            <li>
+                                <input id="Thursday" 
+                                       type="checkbox" 
+                                       ng-model="editScheduledBackup.backupScheduleInfo.thursday" 
+                                       ng-disabled="editScheduledBackup.backupScheduleInfo.enabled == 'false'"/>
+                                <label for="Thursday">
+                                    {{'GENERIC_DayOfWeek_Thursday' | translate }}
+                                </label>
+                            </li>
+                            <li>
+                                <input id="Friday" 
+                                       type="checkbox" 
+                                       ng-model="editScheduledBackup.backupScheduleInfo.friday" 
+                                       ng-disabled="editScheduledBackup.backupScheduleInfo.enabled == 'false'"/>
+                                <label for="Friday">
+                                    {{'GENERIC_DayOfWeek_Friday' | translate }}
+                                </label>
+                            </li>
+                            <li>
+                                <input id="Saturday" 
+                                       type="checkbox" 
+                                       ng-model="editScheduledBackup.backupScheduleInfo.saturday" 
+                                       ng-disabled="editScheduledBackup.backupScheduleInfo.enabled == 'false'"/>
+                                <label for="Saturday">
+                                    {{'GENERIC_DayOfWeek_Saturday' | translate }}
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="txtTimeOfBackup" class="col-md-4 control-label">
+                        {{'BACKUPANDRESTORE_timeforbackup' | translate }}
+                    </label>
+                    <div class="col-md-4">
+                        <select ng-disabled="editScheduledBackup.backupScheduleInfo.enabled == 'false'"
+                                id="txtTimeOfBackup"
+                                class="form-control"
+                                name="timeOfBackup"
+                                ng-required="editScheduledBackup.timeRequired()"
+                                ng-options="option as option for option in editScheduledBackup.timeOptions"
+                                ng-model="editScheduledBackup.time">
+                            <option value="">{{'GENERIC_select' | translate}}</option>
+                        </select>
+                        <div ng-if="editScheduledBackup.form._submitted" class="text-danger">
+                            <div ng-if="editScheduledBackup.form.timeOfBackup.$error.required">
+                                {{'GENERIC_RequiredField'|translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <footer class="text-right">
+        <button id="backupScheduleSubmit" 
+                class="btn btn-primary" 
+                type="button" 
+                ng-click="editScheduledBackup.form._submitted = true; 
+                editScheduledBackup.form.$valid && editScheduledBackup.save()">
+            {{'GENERIC_Save' | translate }}
+        </button>
+        <button id="backupModalClose" 
+                class="btn btn-default" 
+                ng-click="editScheduledBackup.close()">
+            {{'GENERIC_Cancel' | translate }}
+        </button>
+    </footer>
+</section>

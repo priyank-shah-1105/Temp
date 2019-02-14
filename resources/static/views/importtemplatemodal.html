@@ -1,0 +1,21 @@
+﻿<section id="page_importtemplate">
+    <error-display errors="importtemplate.errors"
+                   on-click="$root.ASM.RemoveError(error, importtemplate.errors)"
+                   on-expand-collapse=""></error-display>
+    <div class="col-sm-6">
+        {{'IMPORTTEMPLATE_SelectATemplate'|translate}}
+    </div>
+    <div class="col-sm-6">
+        <select class="form-control" ng-model="importtemplate.selectedId" ng-options="item.id as item.name for item in importtemplate.templates">
+            <option value="">{{'GENERIC_select'|translate}}</option>
+        </select>
+    </div>
+    <br/>
+    <br/>
+    <button ng-click="importtemplate.cancel()" class="btn btn-default pull-right">
+        {{'GENERIC_Cancel'|translate}}
+    </button>
+    <button ng-click="importtemplate.import()" ng-disabled="!importtemplate.selectedId" class="btn btn-primary pull-right">
+        {{'GENERIC_Import'|translate}}
+    </button>
+</section>

@@ -1,0 +1,85 @@
+﻿<section id="page_vxflexalertconnector_modal">
+    <error-display errors="vxRackFlexAlertConnectorModalController.errors"
+                   on-click="vxRackFlexAlertConnectorModalController.ASM.RemoveError(error, vxRackFlexAlertConnectorModalController.errors)"
+                   on-expand-collapse=""></error-display>
+
+    <fieldset ng-if="vxRackFlexAlertConnectorModalController.connectionType == null">
+        <statusicon value="'yellow'"></statusicon>
+        {{"SETTINGS_VirtualApplianceManagement_PrerequisitesDescList" | translate}}
+        <ul class="">
+            <li>
+                {{"SETTINGS_VirtualApplianceManagement_PrerequisitesDescListItem1" | translate}}
+            </li>
+            <li>
+                {{"SETTINGS_VirtualApplianceManagement_PrerequisitesDescListItem1_1" | translate}}
+            </li>
+            <li>
+                {{"SETTINGS_VirtualApplianceManagement_PrerequisitesDescListItem2" | translate}}
+            </li>
+            <li>
+                {{"SETTINGS_VirtualApplianceManagement_PrerequisitesDescListItem3" | translate}}
+            </li>
+            <li>
+                {{"SETTINGS_VirtualApplianceManagement_PrerequisitesDescListItem4" | translate}}
+            </li>
+            <li>
+                {{"SETTINGS_VirtualApplianceManagement_PrerequisitesDescListItem5" | translate}}
+            </li>
+        </ul>
+
+        <div class="form-group">
+            <div class="col-xs-12">
+                <h3>
+                    {{"SETTINGS_VirtualApplianceManagement_AlertConnectorSettings" | translate}}
+                </h3>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="vxconnectionType" class="col-md-4 control-label">
+                {{'SETTINGS_VirtualApplianceManagement_ConnectionType'|translate}}
+            </label>
+            <div class="col-md-8">
+                <select id="vxconnectionType"
+                        ng-if="!vxRackFlexAlertConnectorModalController.readOnly"
+                        class="form-control"
+                        name="vxconnectionType"
+                        ng-model="vxRackFlexAlertConnectorModalController.connectionType"
+                        ng-options="connection.id as connection.name for connection in vxRackFlexAlertConnectorModalController.connectionTypeOptions">
+                    <option value="">{{'GENERIC_select'|translate}}</option>
+                </select>
+                <p ng-if="vxRackFlexAlertConnectorComponentController.readOnly" class="form-control-static">
+                    <list-lookup list="vxRackFlexAlertConnectorModalController.connectionTypeOptions"
+                                 key="vxRackFlexAlertConnectorModalController.settings.connectionType"
+                                 property-name="'name'"></list-lookup>
+                </p>
+            </div>
+        </div>
+    </fieldset>
+    <vx-rack-flex-alert-connector-component settings="vxRackFlexAlertConnectorModalController.settings"
+                               errors="vxRackFlexAlertConnectorModalController.errors"
+                               form="vxRackFlexAlertConnectorModalController.settingsForm"
+                               form-submitted="vxRackFlexAlertConnectorModalController.submitted"
+                               connection-type="vxRackFlexAlertConnectorModalController.connectionType"
+                               ng-if="vxRackFlexAlertConnectorModalController.settings && vxRackFlexAlertConnectorModalController.connectionType">
+    </vx-rack-flex-alert-connector-component>
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="btnCancel"
+                        class="btn btn-default"
+                        ng-click="vxRackFlexAlertConnectorModalController.cancel()">
+                    {{'SETTINGS_Cancel'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="submitDhcpSettings"
+                        class="btn btn-primary"
+                        ng-click="vxRackFlexAlertConnectorModalController.submitted = true; vxRackFlexAlertConnectorModalController.settingsForm.$valid && vxRackFlexAlertConnectorModalController.save()"
+                        form="edit_ntp_form"
+                        ng-disabled="vxRackFlexAlertConnectorModalController.connectionType == null">
+                    {{'SETTINGS_Save'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

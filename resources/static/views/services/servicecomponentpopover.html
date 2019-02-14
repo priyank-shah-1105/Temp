@@ -1,0 +1,110 @@
+﻿<section id="Service_component_popover">
+    <div class="row"
+         ng-if="serviceComponentPopoverController.selectedComponent.deviceTypeListData.ipaddressurl
+                && serviceComponentPopoverController.selectedComponent.type !== 'vm'">
+        <div class="col-xs-6">
+            <label>
+                {{ 'SERVICE_DETAIL_ManagementIPAddress' | translate }}
+            </label>
+        </div>
+        <div class="col-xs-6">
+            <button class="btn btn-link"
+                    target="_blank"
+                    style="padding-left:0;padding-bottom: 0px;"
+                    href="{{serviceComponentPopoverController.selectedComponent.deviceTypeListData.ipaddressurl}}"
+                    ng-disabled="$root.ASM.IsInRole('readonly')">
+                {{serviceComponentPopoverController.selectedComponent.deviceTypeListData.ipAddress}}
+            </button>
+        </div>
+    </div>
+    <div class="row"
+         ng-if="serviceComponentPopoverController.selectedComponent.deviceTypeListData.hypervisorIPAddress
+                && serviceComponentPopoverController.selectedComponent.type !== 'vm'">
+        <div class="col-xs-6">
+            <label>{{ 'SERVICE_DETAIL_OS_IP_Address' | translate }}</label>
+        </div>
+        <div class="col-xs-6">
+            <button class="btn btn-link"
+                    target="_blank"
+                    style="padding-left: 0; padding-bottom: 0px;"
+                    href="{{serviceComponentPopoverController.selectedComponent.deviceTypeListData.hypervisorIPAddress}}"
+                    ng-disabled="$root.ASM.IsInRole('readonly')">
+                {{serviceComponentPopoverController.selectedComponent.deviceTypeListData.hypervisorIPAddress}}
+            </button>
+        </div>
+    </div>
+    <div class="row"
+         ng-if="serviceComponentPopoverController.selectedComponent.type !== 'vm'
+         && serviceComponentPopoverController.selectedComponent.type !=='cluster'">
+        <div class="col-xs-6">
+            <label>{{ 'SERVICE_DETAIL_ResourceHealth' | translate }}</label>
+        </div>
+        <div class="col-xs-6">
+            <statusicon value="serviceComponentPopoverController.selectedComponent.componentStatus.health"></statusicon>
+            {{serviceComponentPopoverController.selectedComponent.componentStatus.health | resourceHealth }}
+        </div>
+    </div>
+    <div class="row"
+         ng-if="serviceComponentPopoverController.selectedComponent.type !== 'vm'
+                && serviceComponentPopoverController.selectedComponent.type !== 'cluster'">
+        <div class="col-xs-6">
+            <label> {{ 'SERVICE_DETAIL_FirmwareCompliance' | translate }}</label>
+        </div>
+        <div class="col-xs-6">
+            <span ng-if="serviceComponentPopoverController.selectedComponent.deviceTypeListData.compliant == 'compliant'">
+                <statusicon value="'green'"></statusicon>
+                <list-lookup list="serviceComponentPopoverController.constants.firmwareStatus"
+                             id="firmwareStatus"
+                             key="serviceComponentPopoverController.selectedComponent.deviceTypeListData.compliant"
+                             property-name="'name'"></list-lookup>
+            </span>
+            <span ng-if="serviceComponentPopoverController.selectedComponent.deviceTypeListData.compliant != 'compliant'">
+                <statusicon value="'yellow'"></statusicon>
+                <button class="btn btn-link" 
+                        style="padding-left: 0;"
+                        ng-click="serviceComponentPopoverController.openFirmwareReport()"
+                        id="getFirmwareReportLink"
+                        ng-disabled="!serviceComponentPopoverController.service.manageFirmware">
+                    <list-lookup list="serviceComponentPopoverController.constants.firmwareStatus"
+                                 id="firmwareStatus"
+                                 key="serviceComponentPopoverController.selectedComponent.deviceTypeListData.compliant"
+                                 property-name="'name'"></list-lookup>
+                </button>
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <label>
+                {{ 'SERVICE_DETAIL_DeploymentStatus' | translate }}
+            </label>
+        </div>
+        <div class="col-xs-6">
+            <span ng-repeat="state in serviceComponentPopoverController.constants.componentStatus" ng-if="state.id === (serviceComponentPopoverController.selectedComponent.componentStatus.status | lowercase)">
+                <statusicon value="state.color"></statusicon> {{state.name}}
+            </span>
+        </div>
+    </div>
+    <br />
+    <footer>
+        <ul class="list-inline">
+            <li>
+                <button class="btn btn-primary" ng-click="serviceComponentPopoverController.viewLogs(serviceComponentPopoverController.selectedComponent)">
+                    {{'SERVICE_DETAIL_View_Logs'|translate}}
+                </button>
+            </li>
+            <!--<li ng-if="serviceComponentPopoverController.selectedComponent.type == 'server' && serviceComponentPopoverController.service.canMigrate">
+                <button class="btn btn-primary" ng-click="serviceComponentPopoverController.doMigrate()"
+                        ng-disabled="serviceComponentPopoverController.service.canMigrate && !$root.ASM.IsInRole('readonly')"
+                        id="{{'component_migrate_' + serviceComponentPopoverController.selectedComponent.id}}">
+                    {{'MIGRATE_SERVER_Title'|translate}}
+                </button>
+            </li>-->
+            <li ng-if="serviceComponentPopoverController.selectedComponent.type == 'server'">
+                <button class="btn btn-primary" ng-click="serviceComponentPopoverController.portviewServer(serviceComponentPopoverController.selectedComponent)">
+                    {{'DEVICE_PortView' | translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

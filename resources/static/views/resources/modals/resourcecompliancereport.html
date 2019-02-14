@@ -1,0 +1,164 @@
+﻿<section id="page_resourceComplianceReport">
+    <error-display errors="resourceComplianceReportController.errors" on-click="$root.ASM.RemoveError(error, resourceComplianceReportController.errors)" on-expand-collapse=""></error-display>
+    <div ng-if="resourceComplianceReportController.resource && resourceComplianceReportController.reportObj">
+        <p>
+            {{resourceComplianceReportController.resource.deviceType | deviceType}}:&nbsp;&nbsp;
+            <span>{{resourceComplianceReportController.resource.model}}</span>
+        </p>
+        <p>
+            {{'GENERIC_IpAddress'|translate}}:&nbsp;&nbsp;<span>{{resourceComplianceReportController.resource.ipAddress}}</span>
+        </p>
+        <p>
+            {{'SERVICES_FirmwareCompliance'|translate}}&nbsp;&nbsp;
+            <span ng-switch="resourceComplianceReportController.compliant">
+                <span ng-switch-when="green">
+                    <statusicon value="'GREEN'"></statusicon>
+                </span>
+                <span ng-switch-when="yellow">
+                    <a data-toggle="tooltip"
+                       title="{{'SERVICES_FirmwareCompliance_Warning_Tooltip'|translate}}"
+                       data-trigger="hover"
+                       id="ComplianceStatusIcon">
+                        <statusicon value="'YELLOW'"></statusicon>
+                    </a>
+                </span>
+                <span ng-switch-when="red">
+                    <a data-toggle="tooltip"
+                       title="{{'SERVICES_FirmwareCompliance_Critical_Tooltip'|translate}}"
+                       data-trigger="hover"
+                       id="ComplianceStatusIcon">
+                        <statusicon value="'RED'"></statusicon>
+                    </a>
+                </span>
+            </span>
+            <span>{{resourceComplianceReportController.report.firmwareCompliantText}}</span>
+        </p>
+    </div>
+    <div>
+        <label style="margin-right:20px;">{{'GENERIC_View'|translate}}</label>
+        <div class="radio-inline">
+            <label for="firmware">
+                <input type="radio"
+                       name="radComponentSelection"
+                       id="firmware"
+                       ng-model="resourceComplianceReportController.componentSelection"
+                       ng-value="'fw'" />
+                <strong>{{'DEVICES_DETAILS_FIRMWARE_Components'|translate}}</strong>
+            </label>
+        </div>
+        <div class="radio-inline">
+            <label for="software">
+                <input type="radio"
+                       name="radComponentSelection"
+                       id="software"
+                       ng-model="resourceComplianceReportController.componentSelection"
+                       ng-value="'sw'" />
+                <strong>{{'DEVICES_DETAILS_SOFTWARE_Components'|translate}}</strong>
+            </label>
+        </div>
+        <table id="resourceFirmwareReportTable"
+               ng-if="resourceComplianceReportController.componentSelection =='fw'"
+               class="table table-striped table-hover"
+               st-table="resourceComplianceReportController.reportObj.firmwareComponents"
+               st-safe-src="resourceComplianceReportController.reportObj.firmwareComponentsSafe">
+            <thead>
+                <tr>
+                    <th st-sort="name">
+                        {{'SERVICES_FirmwareCompReport_ResourceTable_Firmware_Component'|translate}}
+                    </th>
+                    <th st-sort="currentversion.firmwareversion">
+                        {{'SERVICES_FirmwareCompReport_ResourceTable_Firmware_CurrentVersion'|translate}}
+                    </th>
+                    <th st-sort="targetversion.firmwareversion" colspan="2">
+                        {{'SERVICES_FirmwareCompReport_ResourceTable_Firmware_ExpectedVersion'|translate}}
+                    </th>
+                    <th st-sort="currentversion.firmwarelastupdatetime">
+                        {{'SERVICES_FirmwareCompReport_ResourceTable_Firmware_LastUpdated'|translate}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="firmware in resourceComplianceReportController.reportObj.firmwareComponents">
+                    <td>{{firmware.name}}</td>
+                    <td>{{firmware.currentversion.firmwareversion}}</td>
+                    <td class="icon-col">
+                        <span ng-show="!firmware.compliant">
+                            <statusicon value="'YELLOW'"></statusicon>
+                        </span>
+                    </td>
+                    <td>
+                        <span>{{firmware.targetversion.firmwareversion}}</span>
+                    </td>
+                    <td><datetime-display time="firmware.currentversion.firmwarelastupdatetime" time-format="'LL'" /></td>
+                </tr>
+            </tbody>
+        </table>
+        <table id="resourceSoftwareReportTable"
+               ng-if="resourceComplianceReportController.componentSelection=='sw'"
+               class="table table-striped table-hover"
+               st-table="resourceComplianceReportController.reportObj.softwareComponents"
+               st-safe-src="resourceComplianceReportController.reportObj.softwareComponentsSafe">
+            <thead>
+                <tr>
+                    <th st-sort="name">
+                        {{'SERVICES_FirmwareCompReport_ResourceTable_Software_Component'|translate}}
+                    </th>
+                    <th st-sort="vendor">
+                        {{'SERVICES_FirmwareCompReport_ResourceTable_Software_Vendor'|translate}}
+                    </th>
+                    <th st-sort="currentversion.softwareversion">
+                        {{'SERVICES_FirmwareCompReport_ResourceTable_Software_CurrentVersion'|translate}}
+                    </th>
+                    <th st-sort="targetversion.softwareversion" colspan="2">
+                        {{'SERVICES_FirmwareCompReport_ResourceTable_Software_ExpectedVersion'|translate}}
+                    </th>
+                    <th st-sort="_softwareLastUpdatetime">
+                        {{'SERVICES_FirmwareCompReport_ResourceTable_Software_LastUpdate'|translate}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="software in resourceComplianceReportController.reportObj.softwareComponents">
+                    <td>{{software.name}}</td>
+                    <td>{{software.vendor}}</td>
+                    <td>{{software.currentversion.softwareversion}}</td>
+                    <td class="icon-col">
+                        <span ng-show="!software.compliant">
+                            <statusicon value="'YELLOW'"></statusicon>
+                        </span>
+                    </td>
+                    <td>
+                        <span>{{software.targetversion.softwareversion}}</span>
+                    </td>
+                    <td><datetime-display time="software.currentversion.softwarelastupdatetime " time-format="'LL'" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <ul class="list-inline">
+            <li class="pull-right">
+                <button id="firmwareReportOkButton"
+                        class="btn btn-default pull-right"
+                        ng-click="resourceComplianceReportController.cancel()">
+                    {{'GENERIC_Close'|translate}}
+                </button>
+            </li>
+            <li class="pull-right">
+                <button type="button"
+                        ng-click="resourceComplianceReportController.updateResource()"
+                        id="lnkUpdateFirmware"
+                        ng-disabled="resourceComplianceReportController.updateDisabled"
+                        class="btn btn-primary">
+                    {{'DEVICES_UpdateResource'|translate}}
+                </button>
+            </li>
+            <li class="footer-message pull-right"
+                ng-if="resourceComplianceReportController.resource
+                        && resourceComplianceReportController.isStorage(resourceComplianceReportController.resource)">
+            </li>
+        </ul>
+    </footer>
+
+</section>

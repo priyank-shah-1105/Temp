@@ -1,0 +1,773 @@
+﻿<section id="page_applianceManagement">
+    <error-display errors="$rootScope.errors"
+                   on-click="$root.ASM.RemoveError(error)"
+                   on-expand-collapse=""></error-display>
+    <header>
+        <h1>{{'SETTINGS_VirtualApplianceManagement'|translate}}</h1>
+    </header>
+    <ul class="list-unstyled list-inline">
+        <li>
+            <button id="updateApplianceLink"
+                    class="btn btn-default"
+                    tabindex="0"
+                    ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                    ng-click="virtualApplianceManagementController.updateVirtualAppliance()">
+                <i class="ci ci-arrow-box-updates"></i>
+                {{'SETTINGS_UpdateVirtualAppliance'|translate}}
+            </button>
+        </li>
+        <li>
+            <button id="generateTroubleshootLink"
+                    class="btn btn-default"
+                    ng-click="virtualApplianceManagementController.generateTroubleBundle_modal()"
+                    ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                    tabindex="0">
+                <i class="ci ci ci-doc-blank-comment-add"></i>
+                {{'SETTINGS_GenerateTroubleshoot'|translate}}
+            </button>
+        </li>
+    </ul>
+    <div class="row">
+        <div class="col-lg-5">
+            <!-- Time Zone and NTP Settings -->
+            <article>
+                <header>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>
+                                {{'SETTINGS_TimeZoneNTPSettings'|translate}}
+                                <button class="btn btn-link pull-right"
+                                        id="lnkEditNTP"
+                                        ng-click="virtualApplianceManagementController.ntpModal()"
+                                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                    <i class="ci-edit-pencil text-primary"></i>
+                                    {{'NETWORKS_Edit'|translate}}
+                                </button>
+                            </h2>
+                        </div>
+                    </div>
+                </header>
+                <div class="well">
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="timeZone">
+                            {{'SETTINGS_TimeZone'|translate}}
+                        </label>
+                        <div class="col-sm-7">
+                            <p class="form-control-static"
+                               id="timeZone"
+                               ng-repeat="zone in virtualApplianceManagementController.allSettings.timeZones | filter:{'id': virtualApplianceManagementController.allSettings.ntpTimeZoneSettings.timeZone }:true">
+                                {{zone.name}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="ntpServer">
+                            {{'SETTINGS_PreferredNTPServer'|translate}}
+                        </label>
+                        <div class="col-sm-7">
+                            <p class="form-control-static" id="ntpServer">
+                                {{virtualApplianceManagementController.allSettings.ntpTimeZoneSettings.preferredNTPServer}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="secondaryNtpServer">
+                            {{'SETTINGS_SecondaryNTPServer'|translate}}
+                        </label>
+                        <div class="col-sm-7">
+                            <p class="form-control-static" id="secondaryNtpServer">
+                                <!--{{'SETUPWIZARD_NTPSettingsSecondaryServer'|translate}}-->
+                                {{virtualApplianceManagementController.allSettings.ntpTimeZoneSettings.secondaryNTPServer}}
+
+
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </article>
+            <!-- Update Repository Path -->
+            <article>
+                <header>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>
+                                {{'SETTINGS_UpdateRepositoryPath'|translate}}
+                                <button class="btn btn-link pull-right"
+                                        id="editRepositoryPathLink"
+                                        ng-click="virtualApplianceManagementController.editRepoPath()"
+                                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                    <i class="ci-edit-pencil text-primary"></i>
+                                    {{'NETWORKS_Edit'|translate}}
+                                </button>
+                            </h2>
+                        </div>
+                    </div>
+                </header>
+                <div class="well">
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="currentVersion">
+                            {{'SETTINGS_CurrentVirtualApplianceVersion'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="currentVersion">
+                            {{virtualApplianceManagementController.allSettings.applianceUpdateInfo.currentVersion}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="availableVersion">
+                            {{'SETTINGS_AvailableVirtualApplianceVersion'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="availableVersion">
+                            {{virtualApplianceManagementController.allSettings.applianceUpdateInfo.availableVersion}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="repositoryPath">
+                            {{'SETTINGS_RepositoryPath'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="repositoryPath">
+                            <span ng-if="virtualApplianceManagementController.allSettings.applianceUpdateInfo.source === 'local'">
+                                {{virtualApplianceManagementController.allSettings.applianceUpdateInfo.repositoryPath}}
+                            </span>
+                            <span ng-if="virtualApplianceManagementController.allSettings.applianceUpdateInfo.source === 'remoteservice'">
+                                {{"SETTINGS_SecureRemoteServices" | translate}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="virtualApplianceManagementController.allSettings.applianceUpdateInfo.availableVersion">
+                        <br />
+                        <div class="col-sm-12">
+                            <p ng-bind-html="'SETTINGS_ReleaseNotesOnFollowingPage'|translate |htmlSafe"></p>
+                            <p>
+                                <a ng-href="{{virtualApplianceManagementController.allSettings.applianceUpdateInfo.releaseNotesLink}}" target="_blank">
+                                    {{virtualApplianceManagementController.allSettings.applianceUpdateInfo.releaseNotesLink}}
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <!-- Proxy Settings -->
+            <article>
+                <header>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>
+                                {{'SETTINGS_SummaryProxySettings'|translate}}
+                                <button class="btn btn-link pull-right" id="editProxySettingsLink"
+                                        ng-click="virtualApplianceManagementController.editProxySettings()"
+                                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                    <i class="ci-edit-pencil text-primary"></i>
+                                    {{'NETWORKS_Edit'|translate}}
+                                </button>
+                            </h2>
+                        </div>
+                    </div>
+                </header>
+                <div class="well">
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="enableProxy">
+                            {{'SETTINGS_UseHTTPProxySettings'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="enableProxy">
+                            {{virtualApplianceManagementController.allSettings.httpProxySettings.enableProxy | able}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="virtualApplianceManagementController.allSettings.httpProxySettings.enableProxy">
+                        <label class="control-label col-sm-5" for="proxyServer">
+                            {{'SETTINGS_ServerAddressIpHost'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="proxyServer">
+                            {{virtualApplianceManagementController.allSettings.httpProxySettings.proxyServer}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="virtualApplianceManagementController.allSettings.httpProxySettings.enableProxy">
+                        <label class="control-label col-sm-5" for="proxyPort">
+                            {{'SETTINGS_Port'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="proxyPort">
+                            {{virtualApplianceManagementController.allSettings.httpProxySettings.proxyPort}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="virtualApplianceManagementController.allSettings.httpProxySettings.enableProxy">
+                        <label class="control-label col-sm-5" for="enableProxyCredentials">
+                            {{'SETUPWIZARD_ProxySettingsUseCredentials'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="enableProxyCredentials">
+                            {{virtualApplianceManagementController.allSettings.httpProxySettings.enableProxyCredentials | able}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="virtualApplianceManagementController.allSettings.httpProxySettings.enableProxy && virtualApplianceManagementController.allSettings.httpProxySettings.enableProxyCredentials">
+                        <label class="control-label col-sm-5" for="proxyUsername">
+                            {{'STARTSCREEN_USERNAME_LABEL'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="proxyUsername">
+                            {{virtualApplianceManagementController.allSettings.httpProxySettings.proxyUsername}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="virtualApplianceManagementController.allSettings.httpProxySettings.enableProxy && virtualApplianceManagementController.allSettings.httpProxySettings.enableProxyCredentials">
+                        <label class="control-label col-sm-5" for="proxyPassword">
+                            {{'STARTSCREEN_PASSWORD_LABEL'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="proxyPassword">
+                            <span ng-repeat="letter in virtualApplianceManagementController.allSettings.httpProxySettings.proxyPassword track by $index">*</span>
+                        </div>
+                    </div>
+
+                </div>
+            </article>
+            <!-- DHCP Settings -->
+            <article>
+                <header>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>
+                                {{'SETUPWIZARD_DHCPSettingsTitle'|translate}}
+                                <button class="btn btn-link pull-right"
+                                        id="editDhcpSettings"
+                                        ng-click="virtualApplianceManagementController.editDhcp()"
+                                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                    <i class="ci-edit-pencil text-primary"></i>
+                                    {{'NETWORKS_Edit'|translate}}
+                                </button>
+                            </h2>
+                        </div>
+                    </div>
+                </header>
+                <div class="well">
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="enableDhcpServer">
+                            {{'SETUPWIZARD_DHCPSettingsEnable'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="enableDhcpServer">
+                            {{virtualApplianceManagementController.allSettings.dhcpSettings.enableDhcpServer | able}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="virtualApplianceManagementController.allSettings.dhcpSettings.enableDhcpServer">
+                        <label class="control-label col-sm-5" for="subnet">
+                            {{'SETUPWIZARD_DHCPSettingsSubnet'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="subnet">
+                            {{virtualApplianceManagementController.allSettings.dhcpSettings.subnet}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="virtualApplianceManagementController.allSettings.dhcpSettings.enableDhcpServer">
+                        <label class="control-label col-sm-5" for="netmask">
+                            {{'SETUPWIZARD_DHCPSettingsNetMask'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="netmask">
+                            {{virtualApplianceManagementController.allSettings.dhcpSettings.netmask}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="virtualApplianceManagementController.allSettings.dhcpSettings.enableDhcpServer">
+                        <label class="control-label col-sm-5" for="startingIpAddress">
+                            {{'SETUPWIZARD_DHCPSettingsStartingIP'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="startingIpAddress">
+                            {{virtualApplianceManagementController.allSettings.dhcpSettings.startingIpAddress}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="virtualApplianceManagementController.allSettings.dhcpSettings.enableDhcpServer">
+                        <label class="control-label col-sm-5" for="endingIpAddress">
+                            {{'SETUPWIZARD_DHCPSettingsEndingIP'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="endingIpAddress">
+                            {{virtualApplianceManagementController.allSettings.dhcpSettings.endingIpAddress}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="virtualApplianceManagementController.allSettings.dhcpSettings.enableDhcpServer">
+                        <label class="control-label col-sm-5" for="defaultLeaseTime">
+                            {{'SETUPWIZARD_DHCPSettingsDefaultLeaseTime'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="defaultLeaseTime">
+                            {{virtualApplianceManagementController.allSettings.dhcpSettings.defaultLeaseTimeDays}}:
+                            {{virtualApplianceManagementController.allSettings.dhcpSettings.defaultLeaseTimeHours}}:
+                            {{virtualApplianceManagementController.allSettings.dhcpSettings.defaultLeaseTimeMinutes}}:
+                            {{virtualApplianceManagementController.allSettings.dhcpSettings.defaultLeaseTimeSeconds}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="virtualApplianceManagementController.allSettings.dhcpSettings.enableDhcpServer">
+                        <label class="control-label col-sm-5" for="maxLeaseTime">
+                            {{'SETUPWIZARD_DHCPSettingsMaxLeaseTime'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="maxLeaseTime">
+                            {{virtualApplianceManagementController.allSettings.dhcpSettings.maxLeaseTimeDays}}:
+                            {{virtualApplianceManagementController.allSettings.dhcpSettings.maxLeaseTimeHours}}:
+                            {{virtualApplianceManagementController.allSettings.dhcpSettings.maxLeaseTimeMinutes}}:
+                            {{virtualApplianceManagementController.allSettings.dhcpSettings.maxLeaseTimeSeconds}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="virtualApplianceManagementController.allSettings.dhcpSettings.enableDhcpServer">
+                        <label class="control-label col-sm-5" for="enableDhcpServer">
+                            {{'SETUPWIZARD_DHCPSettingsGateway'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="enableDhcpServer">
+                            {{virtualApplianceManagementController.allSettings.dhcpSettings.gateway}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="virtualApplianceManagementController.allSettings.dhcpSettings.enableDhcpServer">
+                        <label class="control-label col-sm-5" for="dns">
+                            {{'SETUPWIZARD_DHCPSettingsDNS'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="dns">
+                            {{virtualApplianceManagementController.allSettings.dhcpSettings.dns}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="virtualApplianceManagementController.allSettings.dhcpSettings.enableDhcpServer">
+                        <label class="control-label col-sm-5" for="domain">
+                            {{'SETUPWIZARD_DHCPSettingsDomain'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="domain">
+                            {{virtualApplianceManagementController.allSettings.dhcpSettings.domain}}
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- SNMP TRAP FORWARDING -->
+            <article>
+                <header>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>
+                                SNMP TRAP FORWARDING
+                                <button class="btn btn-link pull-right" id="editSNMPsettings"
+                                        ng-click="virtualApplianceManagementController.generateSNMPModal()"
+                                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                    <i class="ci-edit-pencil text-primary"></i>
+                                    {{'NETWORKS_Edit'|translate}}
+                                </button>
+                            </h2>
+                        </div>
+                    </div>
+                </header>
+                <!--<div class="well">-->
+                    <!--<div class="row">-->
+                        <!--<label class="control-label col-sm-5" for="enableProxy">-->
+                            <!--{{'SETTINGS_UseHTTPProxySettings'|translate}}-->
+                        <!--</label>-->
+                        <!--<div class="col-sm-7" id="enableProxy">-->
+                            <!--{{virtualApplianceManagementController.allSettings.httpProxySettings.enableProxy | able}}-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="row" ng-if="virtualApplianceManagementController.allSettings.httpProxySettings.enableProxy">-->
+                        <!--<label class="control-label col-sm-5" for="proxyServer">-->
+                            <!--{{'SETTINGS_ServerAddressIpHost'|translate}}-->
+                        <!--</label>-->
+                        <!--<div class="col-sm-7" id="proxyServer">-->
+                            <!--{{virtualApplianceManagementController.allSettings.httpProxySettings.proxyServer}}-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="row" ng-if="virtualApplianceManagementController.allSettings.httpProxySettings.enableProxy">-->
+                        <!--<label class="control-label col-sm-5" for="proxyPort">-->
+                            <!--{{'SETTINGS_Port'|translate}}-->
+                        <!--</label>-->
+                        <!--<div class="col-sm-7" id="proxyPort">-->
+                            <!--{{virtualApplianceManagementController.allSettings.httpProxySettings.proxyPort}}-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="row" ng-if="virtualApplianceManagementController.allSettings.httpProxySettings.enableProxy">-->
+                        <!--<label class="control-label col-sm-5" for="enableProxyCredentials">-->
+                            <!--{{'SETUPWIZARD_ProxySettingsUseCredentials'|translate}}-->
+                        <!--</label>-->
+                        <!--<div class="col-sm-7" id="enableProxyCredentials">-->
+                            <!--{{virtualApplianceManagementController.allSettings.httpProxySettings.enableProxyCredentials | able}}-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="row" ng-if="virtualApplianceManagementController.allSettings.httpProxySettings.enableProxy && virtualApplianceManagementController.allSettings.httpProxySettings.enableProxyCredentials">-->
+                        <!--<label class="control-label col-sm-5" for="proxyUsername">-->
+                            <!--{{'STARTSCREEN_USERNAME_LABEL'|translate}}-->
+                        <!--</label>-->
+                        <!--<div class="col-sm-7" id="proxyUsername">-->
+                            <!--{{virtualApplianceManagementController.allSettings.httpProxySettings.proxyUsername}}-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="row" ng-if="virtualApplianceManagementController.allSettings.httpProxySettings.enableProxy && virtualApplianceManagementController.allSettings.httpProxySettings.enableProxyCredentials">-->
+                        <!--<label class="control-label col-sm-5" for="proxyPassword">-->
+                            <!--{{'STARTSCREEN_PASSWORD_LABEL'|translate}}-->
+                        <!--</label>-->
+                        <!--<div class="col-sm-7" id="proxyPassword">-->
+                            <!--<span ng-repeat="letter in virtualApplianceManagementController.allSettings.httpProxySettings.proxyPassword track by $index">*</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                <!--</div>-->
+            </article>
+
+
+        </div>
+        <!-- Column 2 -->
+        <div class="col-lg-offset-1 col-lg-5">
+            <!-- VxRack FLEX Alert Connector -->
+            <article>
+                <header>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>
+                                {{'SETTINGS_VirtualApplianceManagement_VxRackFLEXAlertConnector'|translate}}
+                                <button class="btn btn-link pull-right"
+                                        id="editVxRackSettings"
+                                        ng-click="virtualApplianceManagementController.editVxRack()"
+                                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                    <span ng-if="virtualApplianceManagementController.vxRackNotAvailable()">
+                                        <i class="ci-action-add-plus-float text-primary"></i>
+                                        {{'SETTINGS_VirtualApplianceManagement_Add'|translate}}
+                                    </span>
+                                    <span ng-if="!virtualApplianceManagementController.vxRackNotAvailable()">
+                                        <i class="ci-edit-pencil text-primary"></i>
+                                        {{'NETWORKS_Edit'|translate}}
+                                    </span>
+                                </button>
+                            </h2>
+                        </div>
+                    </div>
+                </header>
+                <div class="well">
+                    <div class="row">
+                        <div class="control-label col-sm-12"> 
+                            <button class="btn btn-link" 
+                                    ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard') || virtualApplianceManagementController.vxRackNotAvailable() || !virtualApplianceManagementController.configServerEabled"
+                                    ng-click="virtualApplianceManagementController.configureServersForAlertConnector()">
+                                <i class="ci-arrow-curve-forward-right-refresh"></i>
+                                {{'SETTINGS_VirtualApplianceManagement_ConfigureServersforAlertConnector'|translate}}
+                                <a class="ci ci-info-circle-info text-primary"
+                                   popover
+                                   data-trigger="hover"
+                                   data-content-template="ConfigureServersForAlertConnectorTooltip.html">
+                                </a>
+                            </button>
+                            <button class="btn text-danger pull-right text-right btn-link" 
+                                    ng-click="virtualApplianceManagementController.deregisterVxRack()"
+                                    ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                                    ng-if="!virtualApplianceManagementController.vxRackNotAvailable()">
+                                {{"SETTINGS_VirtualApplianceManagement_Deregister" | translate}}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <hr />
+                        </div>
+                    </div>
+                    <div ng-if="!virtualApplianceManagementController.vxRackNotAvailable()">
+                        <div class="row">
+                            <label class="control-label col-sm-5" for="VxRack_Type">
+                                {{'SETTINGS_VirtualApplianceManagement_Type'|translate}}
+                            </label>
+                            <div class="col-sm-7" id="VxRack_Type">
+                                <list-lookup list="virtualApplianceManagementController.connectionTypeOptions"
+                                             key="virtualApplianceManagementController.allSettings.vxRackSettings.connectionType"
+                                             property-name="'name'"></list-lookup>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-sm-5" for="VxRack_state">
+                                {{'SETTINGS_VirtualApplianceManagement_State'|translate}}
+                            </label>
+                            <div class="col-sm-7" id="VxRack_state">
+                                <div>
+                                    <!-- Read state/ not edit -->
+                                    <div ng-if="!virtualApplianceManagementController.vxRackEditMode">
+                                        <list-lookup list="virtualApplianceManagementController.possibleVxRackStates"
+                                                     key="virtualApplianceManagementController.allSettings.vxRackSettings.state"
+                                                     property-name="'readName'"></list-lookup>
+                                        <!-- Suspended -->
+                                        <span ng-if="virtualApplianceManagementController.vxRackSuspended()">
+                                            ({{virtualApplianceManagementController.allSettings.vxRackSettings.suspendedUntil}})
+                                        </span>
+                                        <button class="btn btn-link"
+                                                id="editVxRackState"
+                                                ng-click="virtualApplianceManagementController.vxRackEditMode = true"
+                                                ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                                                ng-if="virtualApplianceManagementController.allSettings.vxRackSettings.state != 'None' && virtualApplianceManagementController.allSettings.vxRackSettings.state !== 'Error'">
+                                            <i class="ci-edit-pencil text-primary"></i>
+                                        </button>
+                                    </div>
+                                    <!-- Edit state -->
+                                    <select ng-if="virtualApplianceManagementController.vxRackEditMode"
+                                            class="form-control"
+                                            name="editVxRackStateEditor"
+                                            id="editVxRackStateEditor"
+                                            ng-disabled="virtualApplianceManagementController.allSettings.vxRackSettings.state === 'Error'"
+                                            ng-model="virtualApplianceManagementController.allSettings.vxRackSettings.state"
+                                            ng-options="option.id as option.name for option in virtualApplianceManagementController.vxRackStateOptions"
+                                            ng-change="virtualApplianceManagementController.vxRackEditMode = false; virtualApplianceManagementController.saveVxRackSettings()"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-sm-5" for="VxRack_SoftwareUniqueId">
+                                {{'SETTINGS_VirtualApplianceManagement_SoftwareUniqueId'|translate}}
+                            </label>
+                            <div class="col-sm-7" id="VxRack_SoftwareUniqueId">
+                                <span ng-if="!virtualApplianceManagementController.vxRackNotAvailable()">
+                                    {{virtualApplianceManagementController.allSettings.vxRackSettings.elmsSoftwareId}}
+                                </span>
+                                <span ng-if="virtualApplianceManagementController.vxRackNotAvailable()">
+                                    {{"SETTINGS_VirtualApplianceManagement_None" | translate}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-sm-5" for="VxRack_model">
+                                {{'SETTINGS_VirtualApplianceManagement_Model'|translate}}
+                            </label>
+                            <div class="col-sm-7" id="VxRack_model">
+                                <span ng-if="!virtualApplianceManagementController.vxRackNotAvailable()">
+                                    {{virtualApplianceManagementController.allSettings.vxRackSettings.model}}
+                                </span>
+                                <span ng-if="virtualApplianceManagementController.vxRackNotAvailable()">
+                                    {{"SETTINGS_VirtualApplianceManagement_None" | translate}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-sm-5" for="VxRack_srsAddress">
+                                {{'SETTINGS_VirtualApplianceManagement_SRSGatewayHostOrPhoneHomeIp'|translate}}
+                            </label>
+                            <div class="col-sm-7" id="VxRack_srsAddress">
+                                <span ng-if="!virtualApplianceManagementController.vxRackNotAvailable()">
+                                    <span ng-if="virtualApplianceManagementController.allSettings.vxRackSettings.connectionType == 'srs'">
+                                        {{virtualApplianceManagementController.allSettings.vxRackSettings.srsGatewayHostIp }}
+                                    </span>
+                                    <span ng-if="virtualApplianceManagementController.allSettings.vxRackSettings.connectionType == 'phonehome'">
+                                        {{virtualApplianceManagementController.allSettings.vxRackSettings.phoneHomeIp }}
+                                    </span>
+                                </span>
+
+                                <span ng-if="virtualApplianceManagementController.vxRackNotAvailable()">
+                                    {{"SETTINGS_VirtualApplianceManagement_None" | translate}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-sm-5" for="VxRack_status">
+                                {{'SETTINGS_VirtualApplianceManagement_Status'|translate}}
+                            </label>
+                            <div class="col-sm-7" id="VxRack_status">
+                                <span ng-if="!virtualApplianceManagementController.vxRackNotAvailable()">
+                                    {{virtualApplianceManagementController.allSettings.vxRackSettings.status}}
+                                </span>
+                                <span ng-if="virtualApplianceManagementController.vxRackNotAvailable()">
+                                    {{"SETTINGS_VirtualApplianceManagement_None" | translate}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="virtualApplianceManagementController.vxRackNotAvailable()" class="text-center">
+                        {{"SETTINGS_VirtualApplianceManagement_Not_Configured" | translate}}
+                    </div>
+                </div>
+            </article>
+            <!-- SSL Certificates -->
+            <article>
+                <header>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>
+                                {{'SETTINGS_SSLCertificates'|translate}}
+                            </h2>
+                        </div>
+                    </div>
+                </header>
+                <div class="well">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <ul class="list-inline">
+                                <li>
+                                    <button id="generateSigningCertLink"
+                                            class="btn btn-link"
+                                            ng-click="virtualApplianceManagementController.generateCert()"
+                                            ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                        <i class="ci ci-doc-blank-comment-add"></i>
+                                        {{'SETTINGS_GenerateSigningRequest' | translate}}
+                                    </button>
+                                </li>
+                                <li>
+                                    <button id="uploadCertLink"
+                                            class="btn btn-link"
+                                            ng-click="virtualApplianceManagementController.uploadCert()"
+                                            ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                        <i class="ci ci-arrow-box-updates"></i>
+                                        {{'SETTINGS_Upload'|translate}}
+                                    </button>
+                                </li>
+                                <li ng-if="virtualApplianceManagementController.allSettings.applianceCertInfo.downloadCSRDisplay">
+                                    <button id="idButtonDownloadCSR"
+                                            class="btn btn-link"
+                                            ng-click="virtualApplianceManagementController.downloadCert()"
+                                            ng-disabled="$root.ASM.IsInRole$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                        <i class="ci ci-arrow-box-download"></i>
+                                        {{'SETTINGS_DownloadCertificateSigReq' | translate}}
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3>
+                                {{'SETTINGS_CertificateDetails'|translate}}
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="issuedTo">
+                            {{'SETTINGS_IssuedTo'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="issuedTo">
+                            {{virtualApplianceManagementController.allSettings.applianceCertInfo.issuedTo}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="issuedBy">
+                            {{'SETTINGS_IssuedBy'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="issuedBy">
+                            {{virtualApplianceManagementController.allSettings.applianceCertInfo.issuedBy}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="validFrom">
+                            {{'SETTINGS_ValidFrom'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="validFrom">
+                            {{virtualApplianceManagementController.allSettings.applianceCertInfo.validFrom |date:'MMMM d, y h:mm:ss a'}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="validTo">
+                            {{'SETTINGS_ValidTo'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="validTo">
+                            {{virtualApplianceManagementController.allSettings.applianceCertInfo.validTo |date:'MMMM d, y h:mm:ss a'}}
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <!-- License Management -->
+            <article>
+                <header>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>
+                                {{'SETTINGS_LicenseManagement'|translate}}
+                                <button class="btn btn-link pull-right"
+                                        id="editLicenseManagementLink"
+                                        ng-click="virtualApplianceManagementController.addLicense()"
+                                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                    <i class="ci-action-add-plus-float text-primary"></i>
+                                    {{'SETTINGS_Add'|translate}}
+                                </button>
+                            </h2>
+                        </div>
+                    </div>
+                </header>
+                <div class="well">
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="type">
+                            {{'SETTINGS_LicenseType'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="type">
+                            {{virtualApplianceManagementController.allSettings.licenseData.type}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="totalnodes">
+                            {{'SETTINGS_NumberofResources'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="totalnodes">
+                            {{virtualApplianceManagementController.allSettings.licenseData.totalnodes}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="usednodes">
+                            {{'SETTINGS_NumberofUsedResources'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="usednodes">
+                            {{virtualApplianceManagementController.allSettings.licenseData.usednodes}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="availablenodes">
+                            {{'SETTINGS_NumberofAvailableResources'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="availablenodes">
+                            {{virtualApplianceManagementController.allSettings.licenseData.availablenodes}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="virtualApplianceManagementController.allSettings.licenseData.expirationdate">
+                        <label class="control-label col-sm-5" for="expirationdate">
+                            {{'SETUPWIZARD_LicensingExpirationDate'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="expirationdate">
+                            {{virtualApplianceManagementController.allSettings.licenseData.expirationdate | date:'MMMM d, y h:mm:ss a'}}
+                        </div>
+                    </div>
+
+                </div>
+            </article>
+            <!-- Service Tag -->
+            <article>
+                <header>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>
+                                {{'SETTINGS_ASMServiceTag'|translate}}
+                                <button class="btn btn-link pull-right"
+                                        id="editServiceTagLink"
+                                        ng-click="virtualApplianceManagementController.editServiceTag()"
+                                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                    <i class="ci-edit-pencil text-primary"></i>
+                                    {{'SETTINGS_Edit'|translate}}
+                                </button>
+                            </h2>
+                        </div>
+                    </div>
+                </header>
+                <div class="well">
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="serviceTag">
+                            {{'SETTINGS_ASMServiceTag'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="serviceTag">
+                            {{virtualApplianceManagementController.allSettings.aboutData.serviceTag || 'GENERIC_None' | translate}}
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <!-- IP Verification -->
+            <article>
+                <header>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>
+                                {{'SETTINGS_IPVerificationPortNumber'|translate}}
+                                <button class="btn btn-link pull-right"
+                                        id="editIpVerificationLink"
+                                        ng-click="virtualApplianceManagementController.editIpVerification()"
+                                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                    <i class="ci-edit-pencil text-primary"></i>
+                                    {{'SETTINGS_Edit'|translate}}
+                                </button>
+                            </h2>
+                        </div>
+                    </div>
+                </header>
+                <div class="well">
+                    <div class="row">
+                        <label class="control-label col-sm-5" for="ipVerificationPorts">
+                            {{'SETTINGS_EditIPVerification_PortNumbersUsedforIPVerification'|translate}}
+                        </label>
+                        <div class="col-sm-7" id="ipVerificationPorts">
+                            {{virtualApplianceManagementController.allSettings.ipVerification.ipVerificationPorts || 'GENERIC_None' | translate}}
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+    <script type="text/ng-template" id="ConfigureServersForAlertConnectorTooltip.html">
+        <div class="popover-body" ng-bind-html="'SETTINGS_VirtualApplianceManagement_ConfigureServersForAlertConnectorTooltip' | translate | htmlSafe"></div>
+    </script>
+</section>

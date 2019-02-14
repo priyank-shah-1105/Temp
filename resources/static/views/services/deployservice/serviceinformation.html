@@ -1,0 +1,191 @@
+﻿<div id="modal_createTemplate">
+    <form id="form_createtemplate"
+          class="form-horizontal"
+          role="form"
+          name="serviceInformationController.form"
+          form-validation="serviceInformationController.form._submitted"
+          novalidate>
+        <fieldset>
+            <div class="form-group" ng-if="serviceInformationController.deploying">
+                <label class="col-sm-4 control-label">
+                    {{'SERVICES_NEW_SERVICE_SelectPublishedTemplateStar' | translate}}
+                </label>
+                <div class="col-sm-4">
+                    <select id="selectedTemplate"
+                            class="form-control"
+                            required
+                            name="selectedTemplate"
+                            ng-change="serviceInformationController.getTemplate(serviceInformationController.selectedDropdownTemplate.id)"
+                            ng-model="serviceInformationController.selectedDropdownTemplate"
+                            ng-options="template as template.name for template in serviceInformationController.templates">
+                        <option value="">{{serviceInformationController.constants.genericSelectOption.name}}</option>
+                    </select>
+                    <div ng-if="serviceInformationController.form._submitted" class="text-danger">
+                        <div ng-if="serviceInformationController.form.selectedTemplate.$error.required">
+                            {{'GENERIC_RequiredField'|translate}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    {{'SERVICES_NEW_SERVICE_ServiceNameStar' | translate}}
+                </label>
+                <div class="col-sm-4">
+                    <input type="text"
+                           id="serviceName"
+                           class="form-control"
+                           required
+                           name="serviceName"
+                           ng-model="serviceInformationController.service[serviceInformationController.deploying ? 'serviceName' : 'name']" />
+                    <div ng-if="serviceInformationController.form._submitted" class="text-danger">
+                        <div ng-if="serviceInformationController.form.serviceName.$error.required">
+                            {{'GENERIC_RequiredField'|translate}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    {{'SERVICES_NEW_SERVICE_ServiceDescription' | translate}}
+                </label>
+                <div class="col-sm-4">
+                    <textarea type="text"
+                              id="description"
+                              class="form-control"
+                              name="description"
+                              maxlength="1024"
+                              ng-model="serviceInformationController.service[serviceInformationController.deploying ? 'serviceDescription' : 'description']"></textarea>
+                    <div ng-if="serviceInformationController.form._submitted" class="text-danger">
+                        <div ng-if="serviceInformationController.form.description.$error.maxlength">
+                            {{'VALIDATIONMESSAGES_maxlength'|translate:'{length: 1024}'}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="form-group" ng-if="serviceInformationController.deploying">
+                <label class="col-sm-4 control-label">
+                    {{'SERVICES_NEW_SERVICE_NumberofDeployments' | translate}}
+                </label>
+                <div class="col-sm-4">
+                    <input type="number"
+                           id="numDeployments"
+                           class="form-control"
+                           name="numDeployments"
+                           ng-init="serviceInformationController.service.numberOfDeployments = 1"
+                           min="1"
+                           max="50"
+                           ng-model="serviceInformationController.service.numberOfDeployments" />
+                    <div ng-if="serviceInformationController.form._submitted" class="text-danger">
+                        <div ng-if="serviceInformationController.form.numDeployments.$error.min">
+                            {{'VALIDATIONMESSAGES_maxlength'|translate:'{min: 1}'}}
+                        </div>
+                        <div ng-if="serviceInformationController.form.numDeployments.$error.max">
+                            {{'VALIDATIONMESSAGES_maxlength'|translate:'{max: 50}'}}
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            
+            <div class="form-group" ng-if="!$root.ASM.IsInRole('standard')">
+                <label class="col-sm-4 control-label" for="firmwarepackage{{serviceInformationController.uniqueId}}">
+                    <!--{{ 'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_updateFirmwareonServerswhenDeployed' | translate }}-->
+                    <!--{{ 'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_PerformRCMUpdates' | translate }}-->
+                    {{ 'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_ReleaseCertificationMatrix' | translate }} *
+                </label>
+                <div class="col-sm-4" ng-if="!serviceInformationController.readOnly">
+                    <!--<div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio"
+                                           name="manageFirmware"
+                                           ng-model="serviceInformationController.service.manageFirmware"
+                                           id="manageFirmware{{serviceInformationController.uniqueId}}"
+                                           ng-value="true">
+                                    {{ 'GENERIC_Yes' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>-->
+                    <div class="form-group" ng-if="serviceInformationController.service.manageFirmware">
+                        <div class="col-xs-12">
+                            <select id="firmwarepackage{{serviceInformationController.uniqueId}}"
+                                    class="form-control"
+                                    name="firmwarePackage"
+                                    ng-model="serviceInformationController.service.firmwarePackageId"
+                                    ng-options="package.id as package.name for package in serviceInformationController.firmwares"
+                                    required>
+                                <option value="">{{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_SelectRepo' |translate}}</option>
+                            </select>
+                            <div ng-if="serviceInformationController.form._submitted" class="text-danger">
+                                <div ng-if="serviceInformationController.form.firmwarePackage.$error.required">
+                                    {{'GENERIC_RequiredField' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio"
+                                           name="manageFirmware"
+                                           ng-model="serviceInformationController.service.manageFirmware"
+                                           id="manageFirmware{{serviceInformationController.uniqueId}}"
+                                           ng-value="false">
+                                    {{ 'GENERIC_No' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>-->
+                </div>
+                <!--<div class="col-sm-4" ng-if="!serviceInformationController.readOnly">
+                    {{ 'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_firmwareOnSharedDevices' | translate}}
+                </div>-->
+                <div class="col-sm-4" ng-if="serviceInformationController.readOnly">
+                    {{serviceInformationController.service.manageFirmware | yesNo}}
+                    <span ng-if="serviceInformationController.service.manageFirmware">
+                        -
+                        <list-lookup list="serviceInformationController.firmwares"
+                                     key="serviceInformationController.service.firmwarePackageId"
+                                     property-name="'name'"></list-lookup>
+                    </span>
+                </div>
+            </div>
+
+        
+            <!-- 
+            allStandardUsers property has a getter of get_allStandardusers(context) and a setter of updateAllStandardUsersProp(context)
+                -->
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    {{ 'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_WhoShouldHaveAccess' | translate }}
+                </label>
+                <div class="col-sm-8">
+                    <select id="grantedUsers"
+                            class="form-control"
+                            name="grantedUsers"
+                            ng-change="serviceInformationController.updateAllStandardUsersProp(serviceInformationController.service)"
+                            ng-model="serviceInformationController.service._allStandardUsers"
+                            required>
+                        <option value="">{{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_Select' |translate}}</option>
+                        <option value="admins">{{'TEMPLATES_AdminsOnly' |translate}}</option>
+                        <option value="specific">{{'TEMPLATES_SpecificStandardUsers' |translate}}</option>
+                        <option value="allStandard">{{'TEMPLATES_AllStandardUsers' |translate}}</option>
+                    </select>
+                    <div ng-if="serviceInformationController.form._submitted" class="text-danger">
+                        <div ng-if="serviceInformationController.form.grantedUsers.$error.required">
+                            {{'GENERIC_RequiredField' | translate}}
+                        </div>
+                    </div>
+                    <!--ng-if specific standard users-->
+                    <div ng-if="serviceInformationController.service._allStandardUsers === 'specific'" class="form-group">
+                        <add-users users-list="serviceInformationController.service.assignedUsers"></add-users>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+

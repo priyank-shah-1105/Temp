@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>I/O module configuration</title><link rel="prev" href="GUID-D8071F08-4F4A-419A-8BC5-B7DB4D1DAD8A.html" /><link rel="next" href="GUID-670BECDF-BFCC-4B10-ABDF-6C360CA811B6.html" /><link href="static/screen.css?mSUyqg2y" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-3E7F5240-5A9A-498F-BD6E-D3241D166BAB" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">Active System Manager Release 8.4</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>I/O module configuration</h1>
+<p>Use this page to configure uplinks on the MXL Switches
+and IOAs within one or more chassis.</p>
+<div class="note" id="GUID-7B764F52-AD76-4ACA-AAA3-200323DBE9D8"><span class="notelabel">NOTE: </span>ASM supports
+configuration of uplinks on MXL Switches and IOAs. It supports VLT
+workload network configuration too.</div>
+<div class="note" id="GUID-E034E9BA-0EF4-4BB0-BC83-31D8E0EE0B9A"><span class="notelabel">NOTE: </span>MXL is a 10Gb/40Gb
+Ethernet blade switch used in our M1000E chassis.  During the ASM
+onboarding process we can configure management IP address, credentials,
+basic management settings, and configure an uplink to the top of rack
+networking device for the chassis. <p>An I/O module is a switch for a Blade chassis.</p></div>
+<p>From this page, you can:<ul id="GUID-704E5E64-E445-45B7-A684-23B4DD83CB64">
+<li id="LI_A65117414C3A485EAFCF3C81360979A0"><p>Define the uplinks.  For more information,
+see <a data-scope="local" href="GUID-3C2E9886-1281-45A8-91AA-6A30E46CA0BF.html" title="">Defining Uplinks</a>.</p></li>
+<li id="LI_EC2EA1B5AA0D4187B91ECA3A6A9D9952"><p>Upload switch configuration file.
+ For more information, see <a data-scope="local" href="GUID-07343F6B-1358-4951-A712-B0120C96DB0A.html" title="">Upload Switch Configuration
+File</a></p></li>
+<li id="LI_DF85C9B22C374358912D4D7E4699DC1E"><p>Enable VLT. For more information,
+see<a data-scope="local" href="GUID-4002F8CF-DE05-4F47-B676-1F01C6DB6CBE.html" title=""> VLT Enabled</a></p></li>
+<li id="LI_65451C38B5D84099A578527AC73F686C"><p>Configure the uplinks in one of the
+following ways:</p><ul id="GUID-9E348DD5-52B4-4E72-8225-EBB8D2D66AF4">
+<li id="LI_DFF9FAA57EB44E0A957E497C7028B06C"><p>Configure the same ports as uplink
+ports in all the chassis. See <a data-scope="local" href="GUID-BD59BCD8-562F-4C6F-BA2A-3F026EAEDB16.html" title="">Configure the uplink
+ports differently in all the chassis</a></p> </li>
+<li id="LI_635C958313994BF59BA2D1626C3A4124"><p>Configure the uplink ports differently
+in all the chassis. See <a data-scope="local" href="GUID-BD59BCD8-562F-4C6F-BA2A-3F026EAEDB16.html" title="">ConfigureChassis:
+Configuring Uplink Ports on Each I/O Module Independently</a></p></li>
+</ul></li><li id="LI_7C45025D048843E38E082E74FD269472">Set the spanning tree mode by selecting any one of the following options from the <b>Spanning Tree Mode</b> drop-down menu:<ul id="UL_C463D940F48E4539BDB7DEB11F9034FE"><li id="LI_9D211D9A61B744EE8DF128458521A84E"> <b>RSTP</b> (Rapid Spanning Tree Protocol)</li><li id="LI_40926E37A7874FC2918B355B01D343C4"><b>MSTP</b> (Multiple Spanning Tree Protocol)</li><li id="LI_BDC0A1DFAB1745C08F8A5BE486185244"> <b>PVST</b>  (Per VLAN Spanning Tree Protocol)</li><li id="LI_B2C5B084AE554B1DAB2ECDD35D1B46A5"> <b>None</b> </li></ul></li>
+</ul></p>
+<div class="note" id="GUID-F502BA38-330E-4E9D-8D62-57990C9D783A"><span class="notelabel">NOTE: </span>The <span class="uicontrol">Spanning Tree Mode</span> option is applicable only for Dell networking  MXL switches in Dell PowerEdge M1000e.</div><dl class="relations"><dt>Related Tasks</dt><dd class="choice_list"><ul data-inset="false" data-role="listview" data-theme="a"><li><a href="GUID-BD59BCD8-562F-4C6F-BA2A-3F026EAEDB16.html">Configuring
+The uplinks on Each I/O Module Independently</a></li><li><a href="GUID-670BECDF-BFCC-4B10-ABDF-6C360CA811B6.html">Configuring
+uplink ports</a></li><li><a href="GUID-3C2E9886-1281-45A8-91AA-6A30E46CA0BF.html">Defining uplinks</a></li></ul></dd></dl></article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?MavHWBUW"></script></body></html>

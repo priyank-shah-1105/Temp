@@ -1,0 +1,1060 @@
+﻿<section>
+
+    <div ng-if="deviceConfig.config.configurationmode === 'onboarding'">
+        <!-- used in:  Discover Resources Wizard -->
+        <div class="panel-group"
+             id=""
+             role="tablist"
+             aria-multiselectable="true">
+
+            <div class="panel panel-default">
+                <div class="panel-heading"
+                     role="tab"
+                     id="{{deviceConfig.view.editMode()}}onboardingHead1">
+                    <h4 class="panel-title">
+                        <a role="button"
+                           class=""
+                           data-toggle="collapse"
+                           data-parent="#{{deviceConfig.view.editMode()}}onboardingParent"
+                           data-target="#{{deviceConfig.view.editMode()}}onboardingDrawer1"
+                           aria-expanded="true"
+                           aria-controls="{{deviceConfig.view.editMode()}}onboardingDrawer1">
+                            <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                            <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                            {{'CONFIGURECHASSIS_DEVICE_CONFIG_Manage_Credentials'|translate}}
+                        </a>
+                    </h4>
+                </div>
+                <div id="{{deviceConfig.view.editMode()}}onboardingDrawer1"
+                     class="panel-collapse collapse in"
+                     role="tabpanel"
+                     aria-labelledby="{{deviceConfig.view.editMode()}}onboardingHead1">
+                    <div class="panel-body well">
+                        <form class="form-horizontal"
+                              style="margin-top: 10px;"
+                              name="deviceConfig.forms.manageCredentials"
+                              novalidate
+                              form-validation="deviceConfig.forms.manageCredentials._submitted">
+                            <div class="form-group">
+                                <label for="credentials" class="col-sm-3 control-label">
+                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_Credentials_Chassis' | translate }}
+                                </label>
+                                <div class="col-sm-4">
+                                    <select id="{{deviceConfig.view.editMode()}}credentials"
+                                            required
+                                            name="credentials"
+                                            class="form-control"
+                                            ng-model="deviceConfig.config.chassisCredentialId"
+                                            ng-options="item.id as item.credentialsName for item in deviceConfig.credentials.chassis">
+                                        <option value="">{{'GENERIC_select'|translate}}</option>
+                                    </select>
+                                    <div class="text-danger" ng-if="deviceConfig.forms.manageCredentials._submitted">
+                                        <div ng-if="deviceConfig.forms.manageCredentials.credentials.$error.required">
+                                            {{'GENERIC_RequiredField'|translate}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button id="{{deviceConfig.view.editMode()}}lnkEditCredential"
+                                            class="btn btn-default"
+                                            ng-click="deviceConfig.doManageCredentials('edit', 'chassis')"
+                                            ng-if="deviceConfig.config.chassisCredentialId">
+                                        {{ 'GENERIC_Edit' | translate }}
+                                    </button>
+                                    <button id="{{deviceConfig.view.editMode()}}lnkAddCredential"
+                                            class="btn btn-default"
+                                            ng-click="deviceConfig.doManageCredentials('create', 'chassis')">
+                                        {{ 'GENERIC_CreateNew' | translate }}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bladeCredential" class="col-sm-3 control-label">
+                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_Credentials_Blade' | translate }}
+                                </label>
+                                <div class="col-sm-4">
+                                    <select class="form-control"
+                                            required
+                                            id="{{deviceConfig.view.editMode()}}bladeCredential"
+                                            name="bladeCredential"
+                                            ng-model="deviceConfig.config.bladeCredentialId"
+                                            ng-options="item.id as item.credentialsName for item in deviceConfig.credentials.server">
+                                        <option value="">{{'GENERIC_select'|translate}}</option>
+                                    </select>
+                                    <div class="text-danger" ng-if="deviceConfig.forms.manageCredentials._submitted">
+                                        <div ng-if="deviceConfig.forms.manageCredentials.bladeCredential.$error.required">
+                                            {{'GENERIC_RequiredField'|translate}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button id="{{deviceConfig.view.editMode()}}lnkEditBladeCredential"
+                                            class="btn btn-default"
+                                            ng-click="deviceConfig.doManageCredentials('edit', 'server')"
+                                            ng-if="deviceConfig.config.bladeCredentialId">
+                                        {{ 'GENERIC_Edit' | translate }}
+                                    </button>
+                                    <button id="{{deviceConfig.view.editMode()}}lnkNewBladeCredential"
+                                            class="btn btn-default"
+                                            ng-click="deviceConfig.doManageCredentials('create', 'server')">
+                                        {{ 'GENERIC_CreateNew' | translate }}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="iomcredentials" class="col-sm-3 control-label">
+                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_Credentials_IOM' | translate }}
+                                </label>
+                                <div class="col-sm-4">
+                                    <select id="{{deviceConfig.view.editMode()}}iomcredentials"
+                                            name="iomcredentials"
+                                            required
+                                            class="form-control"
+                                            ng-model="deviceConfig.config.iomCredentialId"
+                                            ng-options="item.id as item.credentialsName for item in deviceConfig.credentials.iom">
+                                        <option value="">{{'GENERIC_select'|translate}}</option>
+                                    </select>
+                                    <div class="text-danger" ng-if="deviceConfig.forms.manageCredentials._submitted">
+                                        <div ng-if="deviceConfig.forms.manageCredentials.iomcredentials.$error.required">
+                                            {{'GENERIC_RequiredField'|translate}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button id="{{deviceConfig.view.editMode()}}lnkEditIOMCredential"
+                                            class="btn btn-default"
+                                            ng-click="deviceConfig.doManageCredentials('edit', 'iom')"
+                                            ng-if="deviceConfig.config.iomCredentialId">
+                                        {{ 'GENERIC_Edit' | translate }}
+                                    </button>
+                                    <button id="{{deviceConfig.view.editMode()}}lnkNewIOMCredential"
+                                            class="btn btn-default"
+                                            ng-click="deviceConfig.doManageCredentials('create', 'iom')">
+                                        {{ 'GENERIC_CreateNew' | translate }}
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading"
+                     role="tab"
+                     id="{{deviceConfig.view.editMode()}}onboardingHead2">
+                    <h4 class="panel-title">
+                        <a role="button"
+                           class="collapsed"
+                           data-toggle="collapse"
+                           data-parent="#{{deviceConfig.view.editMode()}}onboardingParent"
+                           data-target="#{{deviceConfig.view.editMode()}}onboardingDrawer2"
+                           aria-expanded="false"
+                           aria-controls="{{deviceConfig.view.editMode()}}onboardingDrawer2">
+                            <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                            <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                            {{'CONFIGURECHASSIS_DEVICE_CONFIG_IPAddressing'|translate}}
+                        </a>
+                    </h4>
+                </div>
+                <div id="{{deviceConfig.view.editMode()}}onboardingDrawer2"
+                     class="panel-collapse collapse"
+                     role="tabpanel"
+                     aria-labelledby="{{deviceConfig.view.editMode()}}onboardingHead2">
+                    <div class="panel-body well">
+                        <h3>
+                            {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_IPAddressing_Chassis' | translate }}
+                        </h3>
+
+                        <div class="radio">
+                            <label>
+                                <input id="{{deviceConfig.view.editMode()}}chassisuseip"
+                                       type="radio"
+                                       name="chassis_addressingmode"
+                                       value="existing"
+                                       ng-model="deviceConfig.config.chassisaddressingmode"
+                                       class="" />
+                                {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_IPAddressing_Chassis_Use_Existing' | translate }}
+                            </label>
+                        </div>
+
+                        <form class="form-inline"
+                              name="deviceConfig.forms.ipAddressingChassis"
+                              novalidate
+                              form-validation="">
+                            <div class="form-group">
+                                <div class="radio">
+                                    <label>
+                                        <input id="{{deviceConfig.view.editMode()}}chassisusestatic"
+                                               type="radio"
+                                               name="chassis_addressingmode"
+                                               value="static"
+                                               ng-model="deviceConfig.config.chassisaddressingmode" />
+                                        {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_IPAddressing_Chassis_Assign_Static' | translate }}
+                                    </label>
+                                </div>
+                                <select id="{{deviceConfig.view.editMode()}}chassis_selectednetwork"
+                                        class="form-control inline-control"
+                                        name="chassis_selectednetwork"
+                                        ng-disabled="deviceConfig.config.chassisaddressingmode !== 'static'"
+                                        ng-model="deviceConfig.config.chassisnetworkid"
+                                        ng-options="item.id as item.name for item in deviceConfig.networks"
+                                        style="width: 137px; height: 30px;">
+                                    <option value="">{{'GENERIC_select'|translate}}</option>
+                                </select>
+
+                                <button type="button"
+                                        id="{{deviceConfig.view.editMode()}}btnCreateNetwork_Chassis"
+                                        ng-disabled="deviceConfig.config.chassisaddressingmode !== 'static'"
+                                        ng-click="deviceConfig.doIPAddressing('create', 'chassis')"
+                                        class="btn btn-default">
+                                    {{ 'GENERIC_New' | translate }}
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Servers-->
+                        <h3>
+                            {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_IPAddressing_Servers' | translate }}
+                        </h3>
+                        <div class="radio">
+                            <label>
+                                <input id="{{deviceConfig.view.editMode()}}serveruseip"
+                                       type="radio"
+                                       name="server_addressingmode"
+                                       value="existing"
+                                       ng-model="deviceConfig.config.serveraddressingmode" />
+                                {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_IPAddressing_Servers_Use_Existing' | translate }}
+                            </label>
+                        </div>
+
+                        <div class="radio">
+                            <label>
+                                <input id="{{deviceConfig.view.editMode()}}serverusedhcp"
+                                       type="radio"
+                                       name="server_addressingmode"
+                                       value="dhcp"
+                                       ng-model="deviceConfig.config.serveraddressingmode" />
+                                {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_IPAddressing_Servers_Assign_DHCP' | translate }}
+                            </label>
+                        </div>
+
+                        <form class="form-inline"
+                              name="deviceConfig.forms.ipAddressingServers"
+                              novalidate>
+                            <div class="form-group">
+                                <div class="radio">
+                                    <label>
+                                        <input id="{{deviceConfig.view.editMode()}}serverusestatic"
+                                               type="radio"
+                                               name="server_addressingmode"
+                                               value="static"
+                                               ng-model="deviceConfig.config.serveraddressingmode"
+                                               class="" />
+                                        {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_IPAddressing_Servers_Assign_Static' | translate }}
+                                    </label>
+                                </div>
+
+                                <select id="{{deviceConfig.view.editMode()}}server_selectednetwork"
+                                        class="form-control inline-control"
+                                        ng-disabled="deviceConfig.config.serveraddressingmode!=='static'"
+                                        ng-model="deviceConfig.config.servernetworkid"
+                                        ng-options="item.id as item.name for item in deviceConfig.networks"
+                                        style="width: 137px; height: 30px;">
+                                    <option value="">{{'GENERIC_select'|translate}}</option>
+                                </select>
+                                <button type="button"
+                                        id="{{deviceConfig.view.editMode()}}btnCreateNetwork_Server"
+                                        ng-disabled="deviceConfig.config.serveraddressingmode!=='static'"
+                                        ng-click="deviceConfig.doIPAddressing('create', 'server')"
+                                        class="btn btn-default">
+                                    {{ 'GENERIC_New' | translate }}
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- IOMs -->
+                        <h3>
+                            {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_IPAddressing_IOM' | translate }}
+                        </h3>
+                        <div class="radio">
+                            <label>
+                                <input id="{{deviceConfig.view.editMode()}}iomuseip"
+                                       type="radio"
+                                       name="iom_addressingmode"
+                                       value="existing"
+                                       ng-model="deviceConfig.config.iomaddressingmode"
+                                       class="" />
+                                {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_IPAddressing_IOM_Use_Existing' | translate }}
+                            </label>
+                        </div>
+
+                        <div class="radio">
+                            <label>
+                                <input id="{{deviceConfig.view.editMode()}}iomusedhcp"
+                                       type="radio"
+                                       name="iom_addressingmode"
+                                       value="dhcp"
+                                       ng-model="deviceConfig.config.iomaddressingmode"
+                                       class="" />
+                                {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_IPAddressing_IOM_Assign_DHCP' | translate }}
+                            </label>
+                        </div>
+
+                        <form class="form-inline"
+                              name="deviceConfig.forms.ipAddressingIom"
+                              novalidate
+                              form-validation="">
+                            <div class="form-group">
+                                <input id="{{deviceConfig.view.editMode()}}iomusestatic"
+                                       type="radio"
+                                       name="iom_addressingmode"
+                                       value="static"
+                                       ng-model="deviceConfig.config.iomaddressingmode"
+                                       class="" />
+                                <label for="iomusestatic" class="">
+                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_IPAddressing_IOM_Assign_Static' | translate }}
+                                </label>
+                                <select id="{{deviceConfig.view.editMode()}}iom_selectednetwork"
+                                        class="form-control inline-control"
+                                        ng-disabled="deviceConfig.config.iomaddressingmode!=='static'"
+                                        ng-model="deviceConfig.config.iomnetworkid"
+                                        ng-options="item.id as item.name for item in deviceConfig.networks"
+                                        style="width: 137px; height: 30px;">
+                                    <option value="">{{'GENERIC_select'|translate}}</option>
+                                </select>
+                                <button type="button"
+                                        id="{{deviceConfig.view.editMode()}}btnCreateNetwork_IOM"
+                                        ng-disabled="deviceConfig.config.iomaddressingmode!=='static'"
+                                        ng-click="deviceConfig.doIPAddressing('create', 'iom')"
+                                        class="btn btn-default">
+                                    {{ 'GENERIC_New' | translate }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div ng-if="deviceConfig.view.onboardingVisible()" id="{{deviceConfig.view.editMode()}}deviceConfigOnboarding">
+        <!-- used in:  Configure Resources Wizard, in 2 steps:  Chassis Configuration and Summary -->
+        <div class="panel-group"
+             id=""
+             role="tablist"
+             aria-multiselectable="true">
+            <!-- Users -->
+            <div class="panel panel-default" ng-if="deviceConfig.view.onboarding.users.visible()">
+                <div class="panel-heading"
+                     role="tab"
+                     id="{{deviceConfig.view.editMode()}}head1">
+                    <h4 class="panel-title">
+                        <a role="button"
+                           class=""
+                           data-toggle="collapse"
+                           data-parent="#{{deviceConfig.view.editMode()}}parent"
+                           data-target="#{{deviceConfig.view.editMode()}}collapse1"
+                           aria-expanded="false"
+                           aria-controls="{{deviceConfig.view.editMode()}}collapse1">
+                            <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                            <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                            {{'CONFIGURECHASSIS_DEVICE_CONFIG_Users'|translate}}
+                        </a>
+                    </h4>
+                </div>
+                <div id="{{deviceConfig.view.editMode()}}collapse1"
+                     class="panel-collapse collapse in"
+                     role="tabpanel"
+                     aria-labelledby="{{deviceConfig.view.editMode()}}head1">
+                    <div class="panel-body well">
+                        <form class="form-horizontal"
+                              name="deviceConfig.forms.cmc"
+                              form-validation="">
+                            <div class="form-group" ng-if="deviceConfig.editMode || deviceConfig.config.users.length">
+                                <div class="col-sm-12">
+                                    <h3 class="toolTip-Dynamic">
+                                        {{'CONFIGURECHASSIS_DEVICE_CONFIG_CMCUsers'|translate}}
+                                    </h3>
+                                    <ul class="list-unstyled list-inline" ng-if="deviceConfig.editMode">
+                                        <li>
+                                            <button id="{{deviceConfig.view.editMode()}}new_user_link"
+                                                    class="btn btn-default"
+                                                    ng-click="deviceConfig.createUser('cmc','create', user)"
+                                                    ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                                <i class="ci-action-add-plus-float"></i>
+                                                {{ 'GENERIC_Create' | translate }}
+                                            </button>
+                                        </li>
+                                    </ul>
+                                    <table id="{{deviceConfig.view.editMode()}}usersTable" class="table table-striped table-hover master-body">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    {{ 'GENERIC_UserName' | translate }}
+                                                </th>
+                                                <th>
+                                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_Group' | translate }}
+                                                </th>
+                                                <th>
+                                                    {{ 'GENERIC_Enabled' | translate }}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-if="deviceConfig.config.users.length === 0">
+                                            <tr>
+                                                <td colspan="4">
+                                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_Nousershavebeenentered' | translate }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody>
+                                            <tr ng-repeat="user in deviceConfig.config.users">
+                                                <td>{{user.username}}</td>
+                                                <td>
+                                                    {{user.role}}
+                                                </td>
+                                                <td>
+                                                    <ul class="list-inline">
+                                                        <li>
+                                                            {{user.enabled | able}}
+                                                        </li>
+                                                        <li class="pull-right" ng-if="deviceConfig.editMode">
+                                                            <button type="button"
+                                                                    id="{{deviceConfig.view.editMode()}}delete_user_link"
+                                                                    ng-click="deviceConfig.deleteUser(deviceConfig.config.users, user)"
+                                                                    ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                                                                    class="btn btn-default">
+                                                                <i class="ci-trash"></i>
+                                                                {{ 'GENERIC_Delete' | translate }}
+                                                            </button>
+                                                        </li>
+                                                        <li class="pull-right" ng-if="deviceConfig.editMode">
+                                                            <button type="button"
+                                                                    id="{{deviceConfig.view.editMode()}}edit_user_link"
+                                                                    ng-click="deviceConfig.createUser('cmc','edit', user)"
+                                                                    ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                                                                    class="btn btn-default">
+                                                                <i class="ci-doc-blank-pencil-edit-o"></i>
+                                                                {{ 'GENERIC_Edit' | translate }}
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-if="deviceConfig.editMode || deviceConfig.config.idracuserlist.length">
+                                <div class="col-sm-12">
+                                    <h3 class="toolTip-Dynamic">
+                                        {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_iDRACUsers' | translate }}
+                                    </h3>
+                                    <ul ng-if="deviceConfig.editMode" class="list-unstyled list-inline">
+                                        <li>
+                                            <button id="{{deviceConfig.view.editMode()}}new_idracuser_link"
+                                                    class="btn btn-default"
+                                                    ng-click="deviceConfig.createUser('idrac','create')"
+                                                    ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                                <i class="ci-action-add-plus-float"></i>
+                                                {{ 'GENERIC_Create' | translate }}
+                                            </button>
+                                        </li>
+                                    </ul>
+                                    <div>
+                                        <table id="{{deviceConfig.view.editMode()}}idracUserListTable" class="table table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        {{ 'GENERIC_UserName' | translate }}
+                                                    </th>
+                                                    <th>
+                                                        {{ 'GENERIC_Role' | translate }}
+                                                    </th>
+                                                    <th>
+                                                        {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_LANRole' | translate }}
+                                                    </th>
+                                                    <th>
+                                                        {{ 'GENERIC_Enabled' | translate }}
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody ng-if="deviceConfig.config.idracuserlist.length === 0">
+                                                <tr>
+                                                    <td colspan="5">
+                                                        {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_Nousershavebeenentered' | translate }}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tbody ng-if="deviceConfig.config.idracuserlist.length > 0">
+                                                <tr ng-repeat="user in deviceConfig.config.idracuserlist">
+                                                    <td>
+                                                        {{user.username}}
+                                                    </td>
+                                                    <td>
+                                                        {{user.idracrole}}
+                                                    </td>
+                                                    <td>
+                                                        {{user.lan}}
+                                                    </td>
+                                                    <td>
+                                                        <ul class="list-inline">
+                                                            <li>
+                                                                {{user.enabled | able}}
+                                                            </li>
+                                                            <li class="pull-right" ng-if="deviceConfig.editMode">
+                                                                <button type="button"
+                                                                        id="{{deviceConfig.view.editMode()}}delete_idracuser"
+                                                                        ng-click="deviceConfig.deleteUser(deviceConfig.config.idracuserlist, user)"
+                                                                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                                                                        class="btn btn-default">
+                                                                    <i class="ci-trash"></i>
+                                                                    {{ 'GENERIC_Delete' | translate }}
+                                                                </button>
+                                                            </li>
+                                                            <li class="pull-right" ng-if="deviceConfig.editMode">
+                                                                <button type="button"
+                                                                        id="{{deviceConfig.view.editMode()}}edit_idracuser_link"
+                                                                        ng-click="deviceConfig.createUser('idrac','edit', user)"
+                                                                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                                                                        class="btn btn-default">
+                                                                    <i class="ci-doc-blank-pencil-edit-o"></i>
+                                                                    {{ 'GENERIC_Edit' | translate }}
+                                                                </button>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Monitoring -->
+            <div class="panel panel-default" ng-if="deviceConfig.view.onboarding.monitoring.visible()">
+                <div class="panel-heading"
+                     role="tab"
+                     id="{{deviceConfig.view.editMode()}}head2">
+                    <h4 class="panel-title">
+                        <a role="button"
+                           class="collapsed"
+                           ng-class="{'collapsed': deviceConfig.view.onboarding.users.visible() }"
+                           data-toggle="collapse"
+                           data-parent="#{{deviceConfig.view.editMode()}}parent"
+                           data-target="#{{deviceConfig.view.editMode()}}collapse2"
+                           aria-expanded="false"
+                           aria-controls="{{deviceConfig.view.editMode()}}collapse2">
+                            <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                            <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                            {{'CONFIGURECHASSIS_DEVICE_CONFIG_Monitoring'|translate}}
+                        </a>
+                    </h4>
+                </div>
+                <div id="{{deviceConfig.view.editMode()}}collapse2"
+                     class="panel-collapse collapse"
+                     ng-class="{'in': !deviceConfig.view.onboarding.users.visible() }"
+                     role="tabpanel"
+                     aria-labelledby="{{deviceConfig.view.editMode()}}head2">
+                    <div class="panel-body well">
+                        <form class="form-horizontal" name="deviceConfig.forms.alerts"
+                              form-validation="">
+                            <div class="form-group" ng-if="deviceConfig.editMode || deviceConfig.config.trapSettings.length">
+                                <div class="col-sm-12">
+                                    <h3>
+                                        {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_AlertDestinations' | translate }}
+                                    </h3>
+                                    <button ng-if="deviceConfig.editMode"
+                                            class="btn btn-primary"
+                                            id="{{deviceConfig.view.editMode()}}alertDestinationAdd"
+                                            ng-click="deviceConfig.config.trapSettings.push({})">
+                                        <i class="ci-action-add-plus-float"></i>
+                                        {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_AddAlertDestination' | translate }}
+                                    </button>
+                                    <table id="{{deviceConfig.view.editMode()}}alertDestTable" class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th ng-if="deviceConfig.editMode">
+                                                </th>
+                                                <th>
+                                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_DestinationIPAddress' | translate }}
+                                                </th>
+                                                <th>
+                                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_CommunityString' | translate }}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-if="deviceConfig.config.trapSettings.length === 0">
+                                            <tr>
+                                                <td colspan="7">
+                                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_Notrapsettingshavebeenentered' | translate }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody>
+                                            <tr ng-if="deviceConfig.editMode" ng-repeat="trap in deviceConfig.config.trapSettings">
+                                                <td>
+                                                    <a>
+                                                        <i class="ci-trash" ng-click="deviceConfig.config.trapSettings.splice(deviceConfig.config.trapSettings.indexOf(trap),1)"></i>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <input id="{{deviceConfig.view.editMode()}}destinationIpAddressValue"
+                                                           class="form-control"
+                                                           ip-validator
+                                                           type="text"
+                                                           ng-model="trap.destinationIpAddress" />
+                                                </td>
+                                                <td>
+                                                    <input id="{{deviceConfig.view.editMode()}}communityStringValue"
+                                                           class="form-control"
+                                                           type="text"
+                                                           ng-model="trap.communityString" />
+                                                </td>
+                                            </tr>
+                                            <tr ng-if="!deviceConfig.editMode" ng-repeat="trap in deviceConfig.config.trapSettings">
+                                                <td>
+                                                    {{trap.destinationIpAddress}}
+                                                </td>
+                                                <td>
+                                                    {{trap.communityString}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-if="deviceConfig.editMode || deviceConfig.config.smtpServer">
+                                <div class="col-sm-12">
+                                    <hr ng-if="(deviceConfig.editMode || deviceConfig.config.smtpServer) && deviceConfig.config.trapSettings.length" />
+                                    <h3>
+                                        {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_EmailAlertSettings' | translate }}
+                                    </h3>
+                                </div>
+                                <label for="idsmtpServer"
+                                       class="control-label col-sm-4 toolTip-Dynamic">
+                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_SMTPServer' | translate }}
+                                </label>
+                                <div class="col-sm-4">
+                                    <input ng-if="deviceConfig.editMode"
+                                           id="{{deviceConfig.view.editMode()}}idsmtpServer"
+                                           ng-model="deviceConfig.config.smtpServer"
+                                           class="form-control"
+                                           type="text" />
+                                    <span ng-if="!deviceConfig.editMode">
+                                        {{deviceConfig.config.smtpServer}}
+                                    </span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button ng-if="deviceConfig.editMode" class="btn btn-primary"
+                                            id="{{deviceConfig.view.editMode()}}destinationEmailAdd"
+                                            ng-click="deviceConfig.config.destinationEmails.push({})">
+                                        <i class="ci-action-add-plus-float"></i>
+                                        {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_AddEmailAlert' | translate }}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-if="deviceConfig.editMode || deviceConfig.config.destinationEmails.length">
+                                <div class="col-sm-12">
+                                    <table id="{{deviceConfig.view.editMode()}}alertMailsTable" class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th ng-if="deviceConfig.editMode"></th>
+                                                <th>
+                                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_DestinationEmailAddress' | translate }}
+                                                </th>
+                                                <th>
+                                                    {{ 'GENERIC_Name' | translate }}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-if="deviceConfig.config.destinationEmails.length === 0">
+                                            <tr>
+                                                <td colspan="3">
+                                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_Nodestinationemailshavebeenentered' | translate }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody>
+                                            <tr ng-if="deviceConfig.editMode" ng-repeat="alert in deviceConfig.config.destinationEmails">
+                                                <td>
+                                                    <button class="btn btn-link" ng-click="deviceConfig.config.destinationEmails.splice(deviceConfig.config.destinationEmails.indexOf(alert),1)">
+                                                        <i class="ci-trash"></i>
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <input id="{{deviceConfig.view.editMode()}}destinationEmailEmail"
+                                                           class="form-control"
+                                                           type="email"
+                                                           ng-model="alert.email" />
+                                                </td>
+                                                <td>
+                                                    <input id="{{deviceConfig.view.editMode()}}destinationEmailName"
+                                                           class="form-control"
+                                                           type="text"
+                                                           ng-model="alert.name" />
+                                                </td>
+                                            </tr>
+                                            <tr ng-if="!deviceConfig.editMode" ng-repeat="alert in deviceConfig.config.destinationEmails">
+                                                <td>
+                                                    {{alert.email}}
+                                                </td>
+                                                <td>
+                                                    {{alert.name}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-if="deviceConfig.editMode || deviceConfig.config.syslogDestination">
+                                <div class="col-sm-12">
+                                    <hr ng-if="deviceConfig.editMode || (deviceConfig.config.syslogDestination && (deviceConfig.config.trapSettings.length || deviceConfig.config.destinationEmails.length || deviceConfig.config.smtpServer))" />
+                                    <h3>
+                                        {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_SyslogConfig' | translate }}
+                                    </h3>
+                                </div>
+                                <label for="syslogDestination" class="control-label col-sm-4">
+                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_SyslogDestinationIPAddress' | translate }}
+                                </label>
+                                <div class="col-sm-4">
+                                    <input ng-if="deviceConfig.editMode"
+                                           id="{{deviceConfig.view.editMode()}}syslogDestination"
+                                           ng-model="deviceConfig.config.syslogDestination"
+                                           class="form-control"
+                                           type="text" />
+                                    <span ng-if="!deviceConfig.editMode">
+                                        {{deviceConfig.config.syslogDestination}}
+                                    </span>
+                                </div>
+                                <div class="col-sm-4"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- NTP -->
+            <div class="panel panel-default" ng-if="deviceConfig.view.onboarding.ntp.visible()">
+                <div class="panel-heading"
+                     role="tab"
+                     id="{{deviceConfig.view.editMode()}}head3">
+                    <h4 class="panel-title">
+                        <a role="button"
+                           class=""
+                           ng-class="{'collapsed': deviceConfig.view.onboarding.users.visible() || deviceConfig.view.onboarding.monitoring.visible() }"
+                           data-toggle="collapse"
+                           data-parent="#{{deviceConfig.view.editMode()}}parent"
+                           data-target="#{{deviceConfig.view.editMode()}}collapse3"
+                           aria-expanded="false"
+                           aria-controls="{{deviceConfig.view.editMode()}}collapse3">
+                            <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                            <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                            {{'CONFIGURECHASSIS_DEVICE_CONFIG_NTP'|translate}}
+                        </a>
+                    </h4>
+                </div>
+                <div id="{{deviceConfig.view.editMode()}}collapse3"
+                     class="panel-collapse collapse"
+                     ng-class="{'in': !deviceConfig.view.onboarding.users.visible() && !deviceConfig.view.onboarding.monitoring.visible() }"
+                     role="tabpanel"
+                     aria-labelledby="{{deviceConfig.view.editMode()}}head3">
+                    <div class="panel-body well">
+                        <form name="deviceConfig.forms.ntpForm"
+                              class="form-horizontal"
+                              form-validation="deviceConfig.forms.ntpForm._submitted">
+                            <div class="form-group">
+                                <label for="timeZone" class="control-label col-sm-4">
+                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_TimeZoneStar' | translate }}
+                                </label>
+                                <div class="col-sm-4">
+                                    <select id="{{deviceConfig.view.editMode()}}timeZone"
+                                            name="timeZone"
+                                            required
+                                            ng-if="deviceConfig.editMode"
+                                            class="form-control"
+                                            ng-model="deviceConfig.config.timeZone"
+                                            ng-options="timezone.id as timezone.name for timezone in deviceConfig.timeZones">
+                                        <option value="">{{'GENERIC_select' | translate}}</option>
+                                    </select>
+                                    <div class="text-danger" ng-if="deviceConfig.editMode && deviceConfig.forms.ntpForm._submitted">
+                                        <div ng-if="deviceConfig.forms.ntpForm.timeZone.$error.required">
+                                            {{'GENERIC_RequiredField'|translate}}
+                                        </div>
+                                    </div>
+                                    <span ng-if="!deviceConfig.editMode" ng-repeat="timezone in deviceConfig.timeZones | filter:{id : deviceConfig.config.timeZone}:true">
+                                        {{timezone.name}},
+                                    </span>
+                                </div>
+                                <div class="col-sm-4"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="enableNTPServer" class="control-label col-sm-4">
+                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_EnableNTPServer' | translate }}
+                                </label>
+                                <div class="col-sm-4">
+                                    <input ng-if="deviceConfig.editMode"
+                                           id="{{deviceConfig.view.editMode()}}enableNTPServer"
+                                           class="inline-control"
+                                           type="checkbox"
+                                           name="enableNTPServer"
+                                           ng-model="deviceConfig.config.enableNTPServer" />
+                                    <span ng-if="!deviceConfig.editMode">
+                                        {{deviceConfig.config.enableNTPServer | yesNo}}
+                                    </span>
+                                </div>
+                                <div class="col-sm-4"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="preferredNTPServer" class="control-label col-sm-4">
+                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_PreferredNTPServerStar' | translate }}
+                                </label>
+                                <div class="col-sm-4">
+                                    <input id="{{deviceConfig.view.editMode()}}preferredNTPServer"
+                                           class="form-control"
+                                           type="text"
+                                           ng-required="deviceConfig.config.enableNTPServer === true"
+                                           ng-if="deviceConfig.editMode"
+                                           name="preferredNTPServer"
+                                           ng-model="deviceConfig.config.preferredNTPServer"
+                                           ng-disabled="!deviceConfig.config.enableNTPServer === true"
+                                           placeholder="{{'CONFIGURECHASSIS_DEVICE_CONFIG_PreferredNTPServerStar_placeholder' | translate}}" />
+                                    <div class="text-danger" ng-if="deviceConfig.editMode && deviceConfig.forms.ntpForm._submitted">
+                                        <div ng-if="deviceConfig.forms.ntpForm.preferredNTPServer.$error.required">
+                                            {{'GENERIC_RequiredField'|translate}}
+                                        </div>
+                                    </div>
+                                    <span ng-if="!deviceConfig.editMode">
+                                        {{deviceConfig.config.preferredNTPServer}}
+                                    </span>
+                                </div>
+                                <div class="col-sm-4"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="secondaryNTPServer" class="control-label col-sm-4">
+                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_SecondaryNTPServerOptional' | translate }}
+                                </label>
+                                <div class="col-sm-4">
+                                    <input id="{{deviceConfig.view.editMode()}}secondaryNTPServer"
+                                           class="form-control"
+                                           ng-if="deviceConfig.editMode"
+                                           type="text"
+                                           name="secondaryNTPServer"
+                                           ng-model="deviceConfig.config.secondaryNTPServer"
+                                           ng-disabled="!deviceConfig.config.enableNTPServer === true"
+                                           placeholder="{{'CONFIGURECHASSIS_DEVICE_CONFIG_SecondaryNTPServerOptional_placeholder' | translate}}" />
+                                    <span ng-if="!deviceConfig.editMode">
+                                        {{deviceConfig.config.secondaryNTPServer}}
+                                    </span>
+                                </div>
+                                <div class="col-sm-4"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Power -->
+            <div class="panel panel-default" ng-if="deviceConfig.view.onboarding.power.visible()">
+                <div class="panel-heading"
+                     role="tab"
+                     id="{{deviceConfig.view.editMode()}}head4">
+                    <h4 class="panel-title">
+                        <a role="button"
+                           class=""
+                           ng-class="{'collapsed': deviceConfig.view.onboarding.users.visible() || deviceConfig.view.onboarding.monitoring.visible() || deviceConfig.view.onboarding.ntp.visible() }"
+                           data-toggle="collapse"
+                           data-parent="#{{deviceConfig.view.editMode()}}parent"
+                           data-target="#{{deviceConfig.view.editMode()}}collapse4"
+                           aria-expanded="false"
+                           aria-controls="{{deviceConfig.view.editMode()}}collapse4">
+                            <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                            <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                            {{'CONFIGURECHASSIS_DEVICE_CONFIG_PowerConfig'|translate}}
+                        </a>
+                    </h4>
+                </div>
+                <div id="{{deviceConfig.view.editMode()}}collapse4"
+                     class="panel-collapse collapse"
+                     ng-class="{'in': !deviceConfig.view.onboarding.users.visible() && !deviceConfig.view.onboarding.monitoring.visible() && !deviceConfig.view.onboarding.ntp.visible() }"
+                     role="tabpanel"
+                     aria-labelledby="{{deviceConfig.view.editMode()}}head4">
+                    <div class="panel-body well">
+                        <form class="form-horizontal"
+                              name="deviceConfig.forms.redundancy"
+                              form-validation="">
+                            <div class="form-group">
+                                <label for="policy" class="control-label col-sm-4">
+                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_RedundancyPolicy' | translate }}
+                                </label>
+                                <div class="col-sm-4">
+                                    <select id="{{deviceConfig.view.editMode()}}policy"
+                                            name="policy"
+                                            class="form-control"
+                                            ng-if="deviceConfig.editMode"
+                                            ng-model="deviceConfig.config.redundancyPolicy"
+                                            ng-options="policy.id as policy.name for policy in deviceConfig.redundancyPolicies">
+                                        <option value="">{{'GENERIC_select' | translate}}</option>
+                                        <!--ng-options="policy.id as policy.name for policy in deviceConfig.constants.availableRedundancyPolicies | policyFilter:deviceConfig.devices">-->
+                                    </select>
+                                    <span ng-if="!deviceConfig.editMode" ng-repeat="policy in deviceConfig.constants.availableRedundancyPolicies | filter:{id : deviceConfig.config.redundancyPolicy}">
+                                        {{policy.name}}
+                                    </span>
+                                </div>
+                                <div class="col-sm-4"></div>
+                            </div>
+                            <div class="form-group" ng-if="!deviceConfig.hasFxChassis() && (deviceConfig.editMode || deviceConfig.config.serverPerformanceOverPowerRedundancy || deviceConfig.config.enableDynamicPowerSupplyEngagement)">
+                                <label for="redundancy" class="control-label col-sm-4">
+                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_ServerPerformance' | translate }}
+                                </label>
+                                <div class="col-sm-4">
+                                    <input id="{{deviceConfig.view.editMode()}}redundancy"
+                                           ng-if="deviceConfig.editMode"
+                                           ng-model="deviceConfig.config.serverPerformanceOverPowerRedundancy"
+                                           type="checkbox"
+                                           name="serverPerformanceOverPowerRedundancy"
+                                           class="checkbox" />
+                                    <span ng-if="!deviceConfig.editMode">
+                                        {{deviceConfig.config.serverPerformanceOverPowerRedundancy | yesNo}}
+                                    </span>
+                                </div>
+                                <div class="col-sm-4"></div>
+                            </div>
+                            <div ng-if="!deviceConfig.hasFxChassis()" class="form-group">
+                                <label for="engagement" class="control-label col-sm-4">
+                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_DynamicSupply' | translate }}
+                                </label>
+                                <div class="col-sm-4">
+                                    <input id="{{deviceConfig.view.editMode()}}engagement"
+                                           ng-if="deviceConfig.editMode"
+                                           name="enableDynamicPowerSupplyEngagement"
+                                           ng-model="deviceConfig.config.enableDynamicPowerSupplyEngagement"
+                                           type="checkbox"
+                                           class="checkbox" />
+                                    <span ng-if="!deviceConfig.editMode">
+                                        {{deviceConfig.config.enableDynamicPowerSupplyEngagement | yesNo}}
+                                    </span>
+                                </div>
+                                <div class="col-sm-4"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Networking -->
+            <div class="panel panel-default" ng-if="deviceConfig.view.onboarding.networking.visible()">
+                <div class="panel-heading"
+                     role="tab"
+                     id="{{deviceConfig.view.editMode()}}head5">
+                    <h4 class="panel-title">
+                        <a role="button"
+                           class=""
+                           ng-class="{'collapsed': deviceConfig.view.onboarding.users.visible() || deviceConfig.view.onboarding.monitoring.visible() || deviceConfig.view.onboarding.ntp.visible() || deviceConfig.view.onboarding.power.visible()}"
+                           data-toggle="collapse"
+                           data-parent="#{{deviceConfig.view.editMode()}}parent"
+                           data-target="#{{deviceConfig.view.editMode()}}collapse5"
+                           aria-expanded="false"
+                           aria-controls="{{deviceConfig.view.editMode()}}collapse5">
+                            <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                            <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                            {{'CONFIGURECHASSIS_DEVICE_CONFIG_Networking'|translate}}
+                        </a>
+                    </h4>
+                </div>
+                <div id="{{deviceConfig.view.editMode()}}collapse5"
+                     class="panel-collapse collapse"
+                     ng-class="{'in': !deviceConfig.view.onboarding.users.visible() && !deviceConfig.view.onboarding.monitoring.visible() && !deviceConfig.view.onboarding.ntp.visible() && !deviceConfig.view.onboarding.power.visible()}"
+                     role="tabpanel"
+                     aria-labelledby="{{deviceConfig.view.editMode()}}head5">
+                    <div class="panel-body well">
+                        <form class="form-horizontal" name="deviceConfig.forms.dns">
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <h3>
+                                        {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_DNSNetworkConfiguration' | translate }}
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="registerDNS" class="control-label col-sm-4">
+                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_RegisterChassisControlleronDNS' | translate }}
+                                </label>
+                                <div class="col-sm-4">
+                                    <input id="{{deviceConfig.view.editMode()}}registerDNS"
+                                           ng-if="deviceConfig.editMode"
+                                           ng-model="deviceConfig.config.registerChassisManagementControllerOnDns"
+                                           class="inline-control"
+                                           type="checkbox" />
+                                    <span ng-if="!deviceConfig.editMode">
+                                        {{deviceConfig.config.registerChassisManagementControllerOnDns | yesNo}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="registeriDracDNS" class="control-label col-sm-4">
+                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_RegisteriDRAConDNS' | translate }}
+                                </label>
+                                <div class="col-sm-4">
+                                    <input id="{{deviceConfig.view.editMode()}}registeriDracDNS"
+                                           ng-if="deviceConfig.editMode"
+                                           ng-model="deviceConfig.config.registeriDracOnDns"
+                                           class="inline-control"
+                                           type="checkbox" />
+                                    <span ng-if="!deviceConfig.editMode">
+                                        {{deviceConfig.config.registeriDracOnDns | yesNo}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="enableipmi" class="control-label col-sm-4">
+                                    {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_EnableIPMIoverLAN' | translate }}
+                                </label>
+                                <div class="col-sm-4">
+                                    <input id="{{deviceConfig.view.editMode()}}enableipmi"
+                                           ng-if="deviceConfig.editMode"
+                                           ng-model="deviceConfig.config.enableipmi"
+                                           class="inline-control"
+                                           type="checkbox" />
+                                    <span ng-if="!deviceConfig.editMode">
+                                        {{deviceConfig.config.enableipmi | yesNo}}
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="!deviceConfig.view.onboardingVisible() && deviceConfig.config.configurationmode !== 'onboarding' && deviceConfig.numConfigurableDevices() !== 0">
+        {{ 'CONFIGURECHASSIS_DEVICE_CONFIG_NotConfigured' | translate }}
+    </div>
+
+</section>

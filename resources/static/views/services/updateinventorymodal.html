@@ -1,0 +1,173 @@
+﻿<section id="Services_UpdateInventory">
+    <error-display errors="updateInventoryModalController.errors"
+                   on-click="$root.ASM.RemoveError(error, updateInventoryModalController.errors)"
+                   on-expand-collapse=""></error-display>
+    <wizard on-finish="updateInventoryModalController.finishWizard()"
+            on-cancel="updateInventoryModalController.cancel()">
+        <wizard-step step-title="{{'SERVICES_UPDATE_RESOURCES_InventorySummary'|translate}}" id="InventorySummary"
+                     invalid ="updateInventoryModalController.inventoryUpdateDisabled">
+            <h1>{{ 'SERVICE_ADD_EXISTING_SummaryForService' | translate:{ serviceName: updateInventoryModalController.service.serviceName } }}</h1>
+            <div>{{'SERVICE_ADD_EXISTING_SummaryDescription'|translate}}</div>
+            <br />
+            <ul class="list-inline" ng-if="!updateInventoryModalController.inventoryUpdateDisabled">
+                <li>
+                    <strong>{{'SERVICE_ADD_EXISTING_ASMClusterInventory'|translate}}: </strong>
+                </li>
+                <li>
+                    {{'SERVICE_ADD_EXISTING_Clusters'|translate}}:
+                    {{updateInventoryModalController.service.available.clusters + updateInventoryModalController.service.available.scaleios}}/{{updateInventoryModalController.service.count_cluster}}
+                    <statusicon value="'warning'" ng-if="updateInventoryModalController.service.available.clusters + updateInventoryModalController.service.available.scaleios != updateInventoryModalController.service.count_cluster"></statusicon>
+                </li>
+                <li>
+                    {{'SERVICE_ADD_EXISTING_PhysicalServers'|translate}}:
+                    {{updateInventoryModalController.service.available.servers}}/{{updateInventoryModalController.service.count_server}}
+                    <statusicon value="'warning'" ng-if="updateInventoryModalController.service.available.servers != updateInventoryModalController.service.count_server"></statusicon>
+                </li>
+                <!--<li>
+                    {{'SERVICE_ADD_EXISTING_ScaleIOGateway'|translate}}:
+                    {{updateInventoryModalController.service.available.scaleios}}/{{updateInventoryModalController.service.count_scaleio}}
+                    <statusicon value="'warning'" ng-if="updateInventoryModalController.service.available.scaleios != updateInventoryModalController.service.count_scaleio"></statusicon>
+                </li>-->
+                <li ng-if="updateInventoryModalController.isAnythingNew()" style="font-weight:bold;">
+                    <i class="ci-state-shape-blank-tri"
+                       style="color:#bed430"></i>
+                    <span ng-if="updateInventoryModalController.service.newThings.clusters">
+                        <span translate="SERVICES_UPDATE_RESOURCES_NewDevice_Cluster" translate-values="{ num : updateInventoryModalController.service.newThings.clusters + updateInventoryModalController.service.newThings.scaleios}"></span>
+                        <span ng-if="updateInventoryModalController.service.newThings.servers || updateInventoryModalController.service.newThings.storages">,</span>
+                    </span>
+                    <span ng-if="updateInventoryModalController.service.newThings.servers">
+                        <span translate="SERVICES_UPDATE_RESOURCES_NewDevice_Server" translate-values="{ num : updateInventoryModalController.service.newThings.servers }"></span>
+                        <span ng-if="updateInventoryModalController.service.newThings.storages">,</span>
+                    </span>
+                    <!--<span ng-if="updateInventoryModalController.service.newThings.scaleios">
+                        <span translate="SERVICES_UPDATE_RESOURCES_NewDevice_VxFlex" translate-values="{ num : updateInventoryModalController.service.newThings.scaleios }"></span>
+                        <span ng-if="updateInventoryModalController.service.newThings.storages">,</span>
+                    </span>-->
+                    <span ng-if="updateInventoryModalController.service.newThings.storages">
+                        <span translate="SERVICES_UPDATE_RESOURCES_NewDevice_Storage" translate-values="{ num : updateInventoryModalController.service.newThings.storages }"></span>
+                    </span>
+                </li>
+            </ul>
+            <resource-tables ng-if="updateInventoryModalController.service"
+                             mode="inventory"
+                             resources="updateInventoryModalController.serviceCopy"></resource-tables>
+        </wizard-step>
+        <wizard-step step-title="{{'SERVICES_UPDATE_RESOURCES_OSCredentials'|translate}}" id="OSCredentials"
+                     on-enter="updateInventoryModalController.loadCredentials = true;"
+                     on-next="updateInventoryModalController.validateOsCredentials()">
+            <ng-form name="updateInventoryModalController.forms.osCredentials"
+                     form-validation="updateInventoryModalController.forms.osCredentials._submitted"
+                     ng-if="updateInventoryModalController.loadCredentials">
+
+                <!-- OS credentials and the selectable credentials are fetched by this directive and passed back -->
+                <os-credentials os-credentials="updateInventoryModalController.osCredentials"
+                                service="updateInventoryModalController.service"
+                                form="updateInventoryModalController.forms.osCredentials"
+                                errors="updateInventoryModalController.errors"
+                                credentials="updateInventoryModalController.credentials"
+                                credential-types="updateInventoryModalController.credentialTypes"></os-credentials>
+
+            </ng-form>
+
+        </wizard-step>
+        <wizard-step step-title="{{'SERVICES_UPDATE_RESOURCES_Summary'|translate}}" id="UpdateResourcesSummary">
+            <form class="form-horizontal col-md-8">
+                <div class="form-group">
+                    <h3 class="col-xs-12">{{"SERVICE_ADD_EXISTING_ServiceInformation" | translate}}</h3>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-6">{{"GENERIC_Name" | translate}}</label>
+                    <div class="col-md-6">{{updateInventoryModalController.service.name | noUpdate}}</div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-6">{{"SERVICE_ADD_EXISTING_Type" | translate}}</label>
+                    <div class="col-md-6">
+                        <list-lookup list="updateInventoryModalController.types"
+                                     id="selectedType_{{server.id}}"
+                                     key="updateInventoryModalController.service.type"
+                                     property-name="'name'"></list-lookup>
+                        <span ng-if="!updateInventoryModalController.service.type">
+                            {{"GENERIC_NoUpdate" | translate}}
+                        </span>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <h3 class="col-xs-12">{{"SERVICE_ADD_EXISTING_Service_NewResources" | translate}}</h3>
+                </div>
+
+                <!-- Clusters -->
+                <div class="form-group">
+                    <label class="col-md-12">{{"SERVICE_ADD_EXISTING_Service_Clusters" | translate}}</label>
+                </div>
+                <div class="form-group" ng-repeat="cluster in updateInventoryModalController.getNewComponents(updateInventoryModalController.service.clusterlist)">
+                    <div class="col-md-12">{{cluster.datacentername}}</div>
+                </div>
+                <div class="form-group" ng-if="!updateInventoryModalController.getNewComponents(updateInventoryModalController.service.clusterlist).length">
+                    <div class="col-md-12">{{"GENERIC_NoUpdate" | translate}}</div>
+                </div>
+
+                <!-- Storage -->
+                <div class="form-group">
+                    <label class="col-md-12">{{"SERVICE_ADD_EXISTING_Service_Storages" | translate}}</label>
+                </div>
+                <div class="form-group" ng-repeat="storage in updateInventoryModalController.getNewComponents(updateInventoryModalController.service.storagelist)">
+                    <div class="col-md-12">{{storage.ipAddress}}</div>
+                </div>
+                <div class="form-group" ng-if="!updateInventoryModalController.getNewComponents(updateInventoryModalController.service.storagelist).length">
+                    <div class="col-md-12">{{"GENERIC_NoUpdate" | translate}}</div>
+                </div>
+
+
+                <!-- Physical Servers -->
+                <div class="form-group">
+                    <label class="col-md-12">{{"SERVICE_ADD_EXISTING_Service_Servers" | translate}}</label>
+                </div>
+                <div class="form-group" ng-repeat="server in updateInventoryModalController.getNewComponents(updateInventoryModalController.service.serverlist)">
+                    <div class="col-md-12">{{server.hostname}}</div>
+                </div>
+                <div class="form-group" ng-if="!updateInventoryModalController.getNewComponents(updateInventoryModalController.service.serverlist).length">
+                    <div class="col-md-12">{{"GENERIC_NoUpdate" | translate}}</div>
+                </div>
+
+                <div ng-if="updateInventoryModalController.osCredentials.length > 0">
+                    <div class="form-group">
+                        <h3 class="col-xs-12">{{"SERVICE_ADD_EXISTING_Service_OSCredentials" | translate}}</h3>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-4">{{"SERVICE_ADD_EXISTING_Service_OS_Credentials_TH_Name" | translate}}</label>
+                        <label class="col-xs-4">{{"SERVICE_ADD_EXISTING_Service_OS_Credentials_TH_Credentials" | translate}}</label>
+                    </div>
+                    <div ng-repeat="credentialType in updateInventoryModalController.credentialTypes">
+                        <div class="form-group">
+                            <label class="col-md-12">{{credentialType.name}}</label>
+                        </div>
+
+                        <div class="form-group" ng-repeat="server in updateInventoryModalController.osCredentials | filter: {'type': credentialType.type}">
+                            <div class="col-md-4">{{server.name}}</div>
+                            <div class="col-md-4">
+                                <list-lookup list="updateInventoryModalController.credentials"
+                                             id="selectedType_summary_server_{{server.id}}"
+                                             key="server.credentialId"
+                                             property-name="'credentialsName'"></list-lookup>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-if="!(updateInventoryModalController.osCredentials | filter: {'type': credentialType.type}).length">
+                            <div class="col-md-12">{{"GENERIC_NoUpdate" | translate}}</div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+            </form>
+        </wizard-step>
+
+    </wizard>
+
+</section>

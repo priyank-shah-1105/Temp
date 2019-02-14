@@ -1,0 +1,49 @@
+﻿<div id="device_iomodule">
+    <table id="iomoduleTable" class="table"
+           st-table="deviceIOModuleController.device.ioms"
+           st-safe-src="deviceIOModuleController.safeSource.ioms">
+        <thead>
+            <tr>
+                <th>
+                    {{'DEVICES_DETAILS_IOModules_ManagementIP'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_IOModules_ServiceTag'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_IOModules_SystemModel'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_IOModules_Ports'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_IOModules_State'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="iom in deviceIOModuleController.device.ioms">
+            <td>
+                <a id="ipLink" class="btn btn-link" ng-href="{{iom.ipaddressurl}}" target="_blank" ng-show="iom.ipaddressurl != null">
+                    <span>{{iom.ipaddress}}</span>
+                </a>
+                <span id="ipaddress" ng-show="iom.ipaddressurl == null">{{iom.ipaddress}}</span>
+            </td>
+            <td>{{iom.servicetag}}</td>
+            <td>{{iom.systemmodel}}</td>
+            <td>{{iom.numberofports}}</td>
+            <td>{{iom.state}}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5" class="text-center">
+                    <div id="pager"
+                         st-pagination="deviceIOModuleController.device.ioms"
+                         st-items-by-page="20"
+                         st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Importing Active
+Directory users</title><link rel="prev" href="GUID-031B9C79-C79C-4A3A-848B-FC4E045EB693.html" /><link rel="next" href="GUID-3820906D-846E-4A8A-BD74-222B96F2412C.html" /><link href="static/screen.css?fAL4Y+sp" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-07289072-3699-4567-AA67-8D7AF94880A0" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">VxFlex Manager</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Importing Active
+Directory users</h1><p>Before importing
+Active Directory users to VxFlex Manager, you must create at least one directory service
+using VxFlex Manager. VxFlex Manager roles are not automatically mapped to Active
+Directory user roles. You must assign an appropriate
+role to each imported user. After the import, these users can log in to VxFlex Manager.</p>
+<div class="context" id="GUID-9BC2B9F1-ACF8-49E6-96D7-43E5DEB1AB66"><p>The format to log in is: &lt;<kbd>Directory
+Service Name</kbd>&gt;/ &lt;<kbd>user name</kbd>&gt;,
+and then type the password.</p><p> If an imported user
+is deleted from Active Directory, that user is not automatically deleted
+from VxFlex Manager. The deleted user cannot log in to VxFlex Manager,
+and you must remove the user manually from the user list. Importing an already
+imported user does not have any effect. The user role also remains
+the same.</p></div>
+<ol class="steps" id="GUID-63B01295-F5D0-4B21-A30D-FCC191EA10D0">
+<li id="STEP_2CC0F9279AFA49A9A4410B7FD6DD73B0"><p>On the menu bar, click <span class="uicontrol">Settings</span> and then click <span class="uicontrol">Users</span>.</p></li>
+<li id="STEP_F51F17B445B3415A90208217DF1907E6"><p>On the <span class="uicontrol">Users </span> tab, click <span class="uicontrol">Import Active Directory Users</span>.</p>
+<p>The <b>Import Active Directory
+Users </b>page is displayed. </p>
+</li>
+<li id="STEP_10324D4F3BE64A499298231CCDD2A5E0"><p>Select a specific directory source from the <span class="uicontrol">Directory Source</span> drop-down list to import the users from
+the selected directory source.</p></li>
+<li id="STEP_98A9CD242FD949B6AC58F78C5C151E0C"><p>Under the <span class="uicontrol">Available Users/Groups </span> section, enter a user or group name in the <span class="uicontrol">Find a User/Group</span> field to search for a user or group in the selected directory.</p>
+<p><p>You can select any one of the following options from the <span class="uicontrol">View</span> drop-down list to filter the search results:<ul id="GUID-EB252AEB-ACB8-4A37-823E-629D7F65F8C7">
+<li id="LI_06AF3CA8B59942918333CF11C381D7F0"><span class="uicontrol">All</span> — displays both users
+and groups</li><li id="LI_95B1F6D4190B41F098FE667479D903ED"><span class="uicontrol">Users</span>— displays only users</li><li id="LI_DC6EF968282843698D995E2B508FDB5C"><span class="uicontrol">Groups</span> — displays only groups</li>
+</ul></p></p>
+</li>
+<li id="STEP_227D4187F7FA46EE9C088AA432E2E26B"><p>Select the users or group you want to import
+and click the forward arrow <b>(&gt;&gt;)</b> button.</p>
+ The selected users or groups are added to
+the <span class="uicontrol">Users/Groups to the imported</span> section.
+</li>
+<li id="STEP_269E82B5FD884E60A24CACD3FD5F17B1"><p>To assign a role to all the users or groups,
+select the users or groups and select any one of the following roles
+from the <span class="uicontrol">User Role</span> drop-down list: <span class="uicontrol">Read Only</span>, <span class="uicontrol">Standard </span>, or <span class="uicontrol">Administrator</span>.</p>
+
+
+<ul id="CHOICES_67C4D4A2CAB34342AC89F440EF84F146"><li id="CHOICE_FEB257EDBDED4541BF4C093A961E57D5">To apply
+specific roles, select the role from the<span class="uicontrol"> Role</span> drop-down list beside the user or group name.</li><li id="CHOICE_BC49CF21421C4DCA8E3F8247789FFE4D">To view the imported group, select <span class="uicontrol"> All Groups</span> from the<span class="uicontrol"> Filter by Group</span> drop-down list.</li></ul><p><p> In a single
+import operation, if you import a user individually and as part of
+group, the role assigned to the user individually precedes the role
+assigned to the group.</p></p></li>
+</ol>
+</article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?5ZiewaI5"></script></body></html>

@@ -1,0 +1,31 @@
+﻿<section id="page_Licensing_Confirmation" >
+    <!--{{'SETTINGS_UploadingWarning'|translate}}
+    <ul>
+        <li>{{'SETTINGS_LoggedInusers'|translate}}: {{uploadCertificateConfirmModalController.currentUsers}}</li>
+        <li>{{'SETTINGS_InProgressJobs'|translate}}: {{uploadCertificateConfirmModalController.pendingjobs}}</li>
+        <li>{{'SETTINGS_ScheduledJobs'|translate}}: {{uploadCertificateConfirmModalController.scheduledJobs}}</li>
+    </ul>
+        <div>{{'SETTINGS_SureYouWantToUploadSSL'|translate}}</div>-->
+    <div ng-bind-html="uploadCertificateConfirmModalController.message| htmlSafe"></div>
+    
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="submitProxySettings"
+                        class="btn btn-primary"
+                        ng-click="uploadCertificateConfirmModalController.close()"
+                        form="settingsForm">
+                    {{'SETTINGS_Yes'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="cancel_ntp_form"
+                        class="btn btn-default"
+                        ng-click="uploadCertificateConfirmModalController.cancel()">
+                    {{'SETTINGS_No'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>
+

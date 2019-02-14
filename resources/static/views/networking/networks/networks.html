@@ -1,0 +1,355 @@
+﻿<div class="master-details" id="page_networks">
+
+    <section class="master" id="settings_networks">
+        <header>
+            <h1>
+                {{'GENERIC_Networks'|translate}}
+            </h1>
+        </header>
+
+        <div>
+            <ul class="list-inline list-unstyled">
+                <li>
+                    <button id="lnkCreate"
+                        class="btn btn-default"
+                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')" 
+                        ng-click="networks.doUpdates('create')">
+                        <i class="ci-action-add-plus-float"></i>
+                        {{'NETWORKS_Define'|translate}}
+                    </button>
+                </li>
+                <li>
+                    <button id="lnkEdit" class="btn btn-default"
+                        ng-disabled="networks.displayedNetworkData.length == 0 || $root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')" 
+                        ng-click="networks.doUpdates('edit')">
+                        <i class="ci-edit-pencil"></i>
+                        {{'NETWORKS_Edit'|translate}}
+                    </button>
+                </li>
+                <li>
+                    <button id="delete_network_link" 
+                        class="btn btn-default"
+                        ng-disabled="networks.displayedNetworkData.length == 0 || $root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')" 
+                        ng-click="networks.deleteNetwork(); $event.stopPropagation();">
+                        <i class="ci-trash"></i>
+                        {{'NETWORKS_Delete'|translate}}
+                    </button>
+                </li>
+                <li>
+                    <button id="exportAllLink" class="btn btn-default"
+                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')" 
+                        ng-click="networks.doDownload('networks')">
+                        <i class="ci-arrow-bold-line-export-up"></i>
+                        {{'NETWORKS_ExportAll'|translate}}
+                    </button>
+                </li>
+                <li class="pull-right">
+                    <button id="refresh_networks_link" 
+                        class="btn btn-link" 
+                        ng-click="networks.refresh(); $event.stopPropagation();">
+                        <i class="ci-arrow-curve-forward-right-refresh"></i>
+                    </button>
+                </li>
+            </ul>
+            <table id="networks_table" class="table table-hover master-body table-condensed" st-table="networks.displayedNetworkData" st-safe-src="networks.networkData">
+                <thead>
+                    <tr>
+                        <th tabindex="0" st-sort="name" st-sort-default="true">
+                            {{'NETWORKS_TH_Name'|translate}}
+                        </th>
+                        <!--<th tabindex="0" st-sort="description">
+                            {{'NETWORKS_TH_Description'|translate}}
+                        </th>-->
+                        <th tabindex="0" st-sort="_networkName">
+                            {{'NETWORKS_TH_NetworkType'|translate}}
+                            <i class="ci ci-info-circle-info text-primary"
+                               data-toggle="tooltip"
+                               data-placement="right"
+                               title="{{'NETWORKS_TH_NetworkTypeTooltipText' | translate}}">
+                            </i>
+                        </th>
+                        <th tabindex="0" st-sort="vlanid">
+                            {{'NETWORKS_TH_VLANID'|translate}}
+                        </th>
+                        <th tabindex="0" st-sort="staticordhcp">
+                            {{'NETWORKS_TH_IPAddressSetting'|translate}}
+                        </th>
+                        <th tabindex="0">
+                            {{'NETWORKS_TH_StartingIPAddress'|translate}}
+                        </th>
+                        <th tabindex="0">
+                            {{'NETWORKS_TH_EndingIPAddress'|translate}}
+                        </th>
+                        <th>
+                            {{'GENERIC_Role' | translate}}
+                        </th>
+                        <th tabindex="0">
+                            {{'NETWORKS_TH_IPAddressesinUse'|translate}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody ng-if="networks.displayedNetworkData.length != 0">
+                <tr tabindex="0" ng-repeat="network in networks.displayedNetworkData" 
+                    ng-class="{'st-selected': networks.selectedNetwork.id == network.id}" 
+                    ng-click="networks.click_tableRow(network)">
+                        <td>
+                            {{network.name}}
+                        </td>
+                        <!--<td>
+                            {{network.description}}
+                        </td>-->
+                        <td>
+                            {{network._networkName}}
+                        </td>
+                        <td>
+                            {{network.vlanid}}
+                        </td>
+                        <td>
+                            {{network.staticordhcp}}
+                        </td>
+                        <td ng-if="network.ipaddressranges.length <= 5">
+                            <div ng-repeat="ipRange in network.ipaddressranges">{{ipRange.startingIpAddress}}</div>
+                        </td>
+                        <td ng-if="network.ipaddressranges.length <= 5">
+                            <div ng-repeat="ipRange in network.ipaddressranges">{{ipRange.endingIpAddress}}</div>
+                        </td>
+                        <td ng-if="network.ipaddressranges.length <= 5">
+                            <div ng-repeat="ipRange in network.ipaddressranges">
+                                <list-lookup list="networks.constants.ipAddressRangeRole"
+                                             key="ipRange.role"
+                                             property-name="'name'">
+                                </list-lookup>
+                            </div>
+                        </td>
+                        <td ng-if="network.ipaddressranges.length <= 5">
+                            <div ng-repeat="ipRange in network.ipaddressranges">
+                                <button class="btn btn-link" tabindex="0" class="filterDetails" ng-click="networks.click_IPAddressRange(network, ipRange); $event.stopPropagation();">
+                                    {{ipRange.inUseIPAddresses}}/{{ipRange.totalIPAddresses}}
+                                </button>
+                            </div>
+                        </td>
+                        <td ng-if="network.ipaddressranges.length > 5">
+                            <span tabindex="0" id="btnToggle" ng-init="network.collapsed = true" ng-click="network.collapsed = !network.collapsed">
+                                <i ng-if="network.collapsed" class="ci-arrow-chev-right-3-thick"></i>
+                                <i ng-if="!network.collapsed" class="ci-arrow-chev-down-3-thick"></i>
+                                <span>{{network.ipaddressranges.length}}</span>
+                            </span>
+                            <div ng-show="!network.collapsed" ng-repeat="ipRange in network.ipaddressranges">{{ipRange.startingIpAddress}}</div>
+                        </td>
+                        <td ng-if="network.ipaddressranges.length > 5">
+                            <div ng-show="!network.collapsed">
+                                <br />
+                                <div ng-repeat="ipRange in network.ipaddressranges">{{ipRange.endingIpAddress}}</div>
+                            </div>
+                        </td>
+                        <td ng-if="network.ipaddressranges.length > 5">
+                            <div ng-show="!network.collapsed">
+                                <br />
+                                <div ng-repeat="ipRange in network.ipaddressranges">
+                                    <list-lookup list="networks.constants.ipAddressRangeRole"
+                                                 key="ipRange.role"
+                                                 property-name="'name'">
+                                    </list-lookup>
+                                </div>
+                            </div>
+                        </td>
+                        <td ng-if="network.ipaddressranges.length > 5">
+                            <div ng-show="!network.collapsed">
+                                <br />
+                                <div ng-repeat="ipRange in network.ipaddressranges">
+                                    <a tabindex="0" 
+                                       class="filterDetails" 
+                                       ng-click="networks.click_IPAddressRange(network, ipRange); $event.stopPropagation();">
+                                        {{ipRange.inUseIPAddresses}}/{{ipRange.totalIPAddresses}}
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-if="networks.displayedNetworkData.length == 0">
+                    <tr>
+                        <td colspan="8">
+                            {{'NETWORKS_Empty'|translate}}
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="8" class="text-center">
+                            <div st-pagination="networks.displayedNetworkData" st-items-by-page="20" st-displayed-pages=""></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </section>
+
+    <section ng-if="networks.networkData.length != 0" class="col-md-12 details well">
+        <header>
+            <b>{{networks.selectedNetwork.name}} {{'NETWORKS_Details'|translate}}</b>
+            <button id="exportAllNetworkDetailsLink" 
+                    class="btn btn-link" 
+                    ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')" 
+                    ng-click="networks.doDownload('networkdetails')">
+                <i class="ci-arrow-bold-line-export-up"></i>
+                {{'NETWORKS_ExportNetworkDetails'|translate}}
+            </button>
+        </header>
+
+        <div class="">
+            <div ng-class="{'col-md-8': networks.selectedNetwork.staticordhcp == 'DHCP'}">
+                <hr />
+                <table id="network_details_table" class="table table-hover details-body" st-table="networks.selectedNetwork" st-safe-src="">
+                    <thead>
+                        <tr>
+                            <th ng-if="networks.selectedNetwork.staticordhcp == 'Static'" tabindex="0">
+                                {{'NETWORKS_SubnetMask'|translate}}
+                            </th>
+                            <th ng-if="networks.selectedNetwork.staticordhcp == 'Static'" tabindex="0">
+                                {{'NETWORKS_Gateway'|translate}}
+                            </th>
+                            <th ng-if="networks.selectedNetwork.staticordhcp == 'Static'" tabindex="0">
+                                {{'NETWORKS_PrimaryDNS'|translate}}
+                            </th>
+                            <th ng-if="networks.selectedNetwork.staticordhcp == 'Static'" tabindex="0">
+                                {{'NETWORKS_SecondaryDNS'|translate}}
+                            </th>
+                            <th ng-if="networks.selectedNetwork.staticordhcp == 'Static'" tabindex="0">
+                                {{'NETWORKS_DNSSuffix'|translate}}
+                            </th>
+                            <th tabindex="0">
+                                {{'NETWORKS_LastUpdatedBy'|translate}}
+                            </th>
+                            <th tabindex="0">
+                                {{'NETWORKS_DateLastUpdated'|translate}}
+                            </th>
+                            <th tabindex="0">
+                                {{'NETWORKS_CreatedBy'|translate}}
+                            </th>
+                            <th tabindex="0">
+                                {{'NETWORKS_DateCreated'|translate}}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr tabindex="0">
+                            <td ng-if="networks.selectedNetwork.staticordhcp == 'Static'">
+                                {{networks.selectedNetwork.subnet}}
+                            </td>
+                            <td ng-if="networks.selectedNetwork.staticordhcp == 'Static'">
+                                {{networks.selectedNetwork.gateway}}
+                            </td>
+                            <td ng-if="networks.selectedNetwork.staticordhcp == 'Static'">
+                                {{networks.selectedNetwork.primarydns}}
+                            </td>
+                            <td ng-if="networks.selectedNetwork.staticordhcp == 'Static'">
+                                {{networks.selectedNetwork.secondarydns}}
+                            </td>
+                            <td ng-if="networks.selectedNetwork.staticordhcp == 'Static'">
+                                {{networks.selectedNetwork.dnssuffix}}
+                            </td>
+                            <td>
+                                {{networks.selectedNetwork.updatedBy}}
+                            </td>
+                            <td>
+                                <datetime-display time="networks.selectedNetwork.updatedDate" time-format="'LLL'" />
+                            </td>
+                            <td>
+                                {{networks.selectedNetwork.createdBy}}
+                            </td>
+                            <td>
+                                <datetime-display time="networks.selectedNetwork.createdDate" time-format="'LLL'" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr />
+            </div>
+
+            <div ng-if="networks.selectedNetwork.staticordhcp == 'Static'" class="col-md-8 details-body well">
+                <header>
+                    <b>
+                        {{'NETWORKS_StaticIPAddressDetails'|translate}}
+                        <span ng-show="networks.startingIpAddress != ''">({{networks.startingIpAddress}}-{{networks.endingIpAddress}})</span>
+                    </b><br />
+                    {{networks.inUseIPAddresses_display}} of {{networks.totalIPAddresses_display}} {{'NETWORKS_IPAddressesinUse'|translate}}
+                    &nbsp;&nbsp;&nbsp;&nbsp;{{'NETWORKS_View'|translate}}
+                    <select id="ddlStaticIPAddressDetailsView" ng-model="networks.currentView" ng-change="networks.updateClientFilter()"
+                            data-ng-options="view.id as view.name for view in networks.StaticIPAddressDetailsViews">
+                    </select>
+                    </header>
+                <hr />
+                <table id="network_details_static_ip_table" class="table table-hover details-body" st-table="networks.selectedNetwork.staticipaddressdetails_displayed" st-safe-src="networks.selectedNetwork.staticipaddressdetails">
+                    <thead>
+                        <tr>
+                            <th tabindex="0">
+                                {{'NETWORKS_State'|translate}}
+                            </th>
+                            <th tabindex="0">
+                                {{'NETWORKS_IPAddress'|translate}}
+                            </th>
+                            <th>
+                                {{'GENERIC_Role' | translate}}
+                            </th>
+                            <th tabindex="0">
+                                {{'NETWORKS_ServiceUsingIPAddress'|translate}}
+                            </th>
+                            <th tabindex="0">
+                                {{'NETWORKS_ResourceUsingIPAddress'|translate}}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody ng-if="networks.selectedNetwork.staticipaddressdetails.length != 0">
+                        <tr tabindex="0" ng-repeat="ip in networks.selectedNetwork.staticipaddressdetails_displayed">
+                            <td>
+                                {{ip.state | staticIPState}}
+                            </td>
+                            <td>
+                                {{ip.ipAddress}}
+                            </td>
+                            <td>
+                                <list-lookup list="networks.constants.ipAddressRangeRole"
+                                             key="ip.role"
+                                             property-name="'name'">
+                                </list-lookup>
+                            </td>
+                            <td>
+                                <a id="serviceName{{$index}}" class="btn btn-link" ng-href="#/service/{{ip.serviceId}}/details">
+                                    {{ip.serviceName}}
+                                </a>
+                            </td>
+                            <td>
+                                <a id="resourceName{{$index}}"
+                                   ng-if="ip.deviceId && ip.deviceType !='vcenter'"
+                                   class="btn btn-link"
+                                   ng-href="#/device/{{ip.deviceId}}/{{ip.deviceType}}">
+                                    {{ip.deviceName}}
+                                </a>
+                                <span ng-if="!ip.deviceId || ip.deviceType == 'vcenter'">
+                                    {{ip.deviceName}}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-if="networks.selectedNetwork.staticipaddressdetails.length == 0">
+                        <tr>
+                            <td colspan="4">
+                                {{'NETWORKS_Empty'|translate}}
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="text-center">
+                                <div st-pagination="networks.selectedNetwork.staticipaddressdetails_displayed " st-items-by-page="20" st-displayed-pages=""></div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+        </div>
+
+    </section>
+</div>

@@ -1,0 +1,77 @@
+﻿<div id="modal_jobs">
+    <error-display errors="jobs.errors"
+                   on-click="$root.ASM.RemoveError(error, jobs.errors)"
+                   on-expand-collapse=""></error-display>
+
+        <table id="JobsGrid" class="table table-striped table-hover" st-table="jobs.displayedresults" st-safe-src="jobs.results">
+            <thead>
+                <tr>
+
+                    <th st-sort="status" tabindex="0">
+                        {{'GENERIC_State' | translate}}
+                    </th>
+                    <th st-sort="name" tabindex="0">
+                        {{'SETTINGS_Jobs' | translate}}
+                    </th>
+                    <th st-sort="startDate" st-sort-default="reverse" tabindex="0">
+                        {{'GENERIC_StartTime' | translate}}
+                    </th>
+                    <th>
+                    </th>
+                    <th tabindex="0">
+                        {{'SETTINGS_TimeElapsed' | translate}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody ng-if="jobs.results.length != 0">
+                <tr ng-repeat="job in jobs.displayedresults" ng-class="{'st-selected': job.isSelected == true}">
+
+                    <td>
+                        {{job.status | jobState}}
+                    </td>
+                    <td>
+                        {{job.name}}
+                    </td>
+                    <td>
+                        <datetime-display time="job.startDate" time-format="'LLL'" />
+                    </td>
+                    <td>
+                        <datetime-display ng-if="job.endDate" time="job.endDate" time-format="'LLL'" />
+                    </td>
+                    <td>
+                        {{job.elapsedTime}}
+                    </td>
+                </tr>
+            </tbody>
+
+            <tbody ng-if="jobs.results.length == 0">
+                <tr>
+                    <td colspan="6">
+                        {{'SETTINGS_NoJobs' | translate}}
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <div st-pagination="jobs.displayedresults" st-items-by-page="20" st-displayed-pages=""></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+
+
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <!--<li>
+                <button type="button" class="btn btn-primary" ng-click="jobs.cancel()">{{'GENERIC_Ok' | translate}}</button>
+            </li>-->
+            <!--<li>
+                <button type="button" class="btn btn-default" ng-click="createUser.cancel()" id="controllerEditAssetTagModalCancelButton">
+                    {{'GENERIC_Cancel' | translate}}
+                </button>
+            </li>-->
+        </ul>
+    </footer>
+</div>

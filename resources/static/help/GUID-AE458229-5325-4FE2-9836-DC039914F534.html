@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Terminology</title><link rel="prev" href="GUID-9614E572-0714-4DDE-A3E3-4ED2845F5A2D.html" /><link rel="next" href="GUID-FD84FAA0-DA39-4AC4-9AA5-ACB96DD67DD6.html" /><link href="static/screen.css?fAL4Y+sp" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-AE458229-5325-4FE2-9836-DC039914F534" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">VxFlex Manager</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Terminology</h1><p></p>
+<p>The following table describes important VxFlex Manager terms and concepts.<table class="table frame-all" id="TABLE_C595316169014E67A031D08624AB141F"><thead><tr><td>Term</td><td>Definition</td></tr></thead><tbody><tr><td>Resource</td><td>In VxFlex Manager, resources are the physical and virtual elements 
+
+
+
+in VxRack FLEX such as network switches, nodes, virtual
+machine managers (VMware vCenter), and element managers (OpenManage Enterprise). VxFlex Manager
+maintains an inventory of the various attributes and components of
+these resources. It uses this inventory for configuration
+operations. 
+</td></tr><tr><td>Template</td><td>VxFlex Manager uses templates to capture the requirements of IT services
+deployed in the datacenter. An administrator defines requirements
+once in a template and it is then used to automate configuration of
+resources. Using a template in an automated process ensures
+consistency and repeatability. Templates are not instantiated until
+a deployment of resources is requested.
+<p>Templates let you supply unique IT business service end-state
+requirements to be used in pre-defined automation workflows. A
+template contains all resources for its supporting service(s). You
+build a template by selecting the necessary components and
+specifying the appropriate quantity and configuration for each
+resource.
+</p></td></tr><tr><td>Service</td><td>A
+service deployment is the process of automating the configuration
+of physical and virtual resources.
+When you require a new IT service, an administrator selects an
+appropriate template and triggers an automated deployment. <p>A service contains specific resources, which VxFlex Manager selects and
+configures according the requirements defined in the template.
+Overall system health is determined using the deployment status,
+compliance, and health of components in a service. VxFlex Manager determines
+a component&#39;s deployment status by comparing its automated
+deployment to the template requirements for that resource.
+</p><p>For IT administrators, lifecycle management of a service includes
+compliance, capacity, and decommissioning operations. The service,
+not the template, is the representation of the instantiated IT
+service. If an IT service requires a change in capacity, the
+service can be used to add or remove resources.
+</p><p>You can remove a service that is no longer required. VxFlex Manager supports two types of removal. You can delete the entire service, which deletes the deployment information and also makes any required configuration changes for components associated with the service. Alternatively, you can remove just the deployment information for the service without making any configuration changes to the deployed components.</p>
+
+</td></tr><tr><td>RCM compliance</td><td>VxFlex Manager monitors current firmware and software levels  and compares
+them to the RCM, which contains the baseline firmware and software
+versions. VxFlex Manager shows any deviation from the baseline in the
+compliance status of the resources. You can use VxFlex Manager to initiate
+updates to bring the resources to a compliant state.
+</td></tr><tr><td>Repository</td><td>As part of RCM compliance, the RCM packages must be collected to a
+location from which updates can be performed. You can create more
+than one repository, selecting one for the default. This default
+repository is used to calculate compliance for all undeployed
+resources. VxFlex Manager lets you specify other repositories for deployed
+resources.
+<p>The operating system is included with the RCM, and you can select the operating system you want to use from the RCM. </p></td></tr></tbody></table></p>
+</article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?5ZiewaI5"></script></body></html>

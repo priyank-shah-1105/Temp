@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Configuring
+The uplinks on Each I/O Module Independently</title><link rel="prev" href="GUID-3C2E9886-1281-45A8-91AA-6A30E46CA0BF.html" /><link rel="next" href="GUID-4002F8CF-DE05-4F47-B676-1F01C6DB6CBE.html" /><link href="static/screen.css?mSUyqg2y" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-BD59BCD8-562F-4C6F-BA2A-3F026EAEDB16" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">Active System Manager Release 8.4</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Configuring
+The uplinks on Each I/O Module Independently</h1>
+<ol class="steps" id="GUID-8FA6C239-47CE-46FF-82EF-987D43BD704F">
+<li id="STEP_B2123DB4420341F39CC9DA50BA5F0CD9"><p>On the <span class="uicontrol">I/ O Module Configuration</span> page, select the <span class="uicontrol">Configure Uplinks </span>check
+box.</p></li>
+<li id="STEP_96800D92DD5C497ABBE381E6AB16E079"><p>Select <span class="uicontrol">Configuring The uplinks on
+Each I/O Module Independently</span> option.</p></li>
+<li id="STEP_7D2619E93A354A8E99680F2F9710309E"><p>In the Configure Uplinks area, perform one
+of the following actions:</p>
+<p><ul id="GUID-3E89738B-8541-4E13-B75C-154CE5D0707F">
+<li id="LI_7A119E7E369D4474856EA9EBAF0BDBE4"><p>Select the <span class="uicontrol">Configure the
+uplinks on each I/O Module Independently</span> check box to
+configure different ports as uplink ports in each I/O module.</p><p>The table lists ports that are available in each I/O module
+in separate columns.</p></li>
+<li id="LI_BFE2C68BE5754D45977B42EE4CE5F4A0"><p>Clear the <span class="uicontrol">Configure the
+uplinks on each I/O Module Independently</span> check box to
+configure the same ports as uplink ports across all I/O modules.</p><p>The table displays the following information:<ul id="GUID-E0258278-8E1B-494B-9E38-6EB5478C9704">
+<li id="LI_B05155520F1A4F159CF2734EF9F228C8"><p>IO modules (Model Name) that is present
+in each fabric.</p></li>
+<li id="LI_F405793D02D84821986F292CBC9BE23A"><p>Ports that are available in each IO
+module.</p></li>
+</ul></p></li>
+</ul></p>
+</li>
+<li id="STEP_782F4B796A6A41A68F349A43BF96184A"><p>In the table, select the <span class="uicontrol">Quadport
+Mode</span> check box if you want to run the port in Quad mode. </p>
+<p>When a 40 GbE port is run in quad mode, it provides
+four 10 GB Ethernet interfaces that number sequentially starting with
+the port number of the 40GbE interface. For example, when <span class="uicontrol">Quadport mode</span> is enabled on the GbE port number 33, it
+makes four 10GbE links with the port numbers 33, 34, 35, and 36. </p>
+</li>
+<li id="STEP_C2B0F3B04699437AA29A62F0C144F016"><p>From the drop-down list next to the corresponding
+port numbers, select the Uplink that you want to configure on each
+port. </p>
+<p><div class="note" id="GUID-8CC0EC32-E44F-4779-B642-533C2A1144C7"><span class="notelabel">NOTE: </span>Uplink is an interconnect (also called port-channel, or grouping
+of ports) which is created on a switch by creating a connection to
+other switches in a networking environment.  ASM can configure uplinks
+on MXLs, I/O Aggregators, FN410S, and FN2210S switches (I/O modules). </div></p>
+</li>
+<li id="STEP_EBEBE8BD8B234A1B8AD6AA58468FD5D0"><p>Click <span class="uicontrol">Next</span>.</p>
+<p><div class="note" id="GUID-1B80DD69-8AF6-474D-92CF-9CEFE7B19719"><span class="notelabel">NOTE: </span>Uplink is an external connection from chassis switch to customer network environment.  Customer is still required to configure corresponding ports and uplinks on the top of rack switches, ASM only configures the chassis.</div></p>
+</li>
+</ol>
+</article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?MavHWBUW"></script></body></html>

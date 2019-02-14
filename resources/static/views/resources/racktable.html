@@ -1,0 +1,50 @@
+﻿<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th ng-if="rackTableController.mode === 'edit'">
+                <input type="checkbox" 
+                       ng-checked="rackTableController.getAllChecked()" 
+                       ng-disabled="rackTableController.pending"
+                       ng-click="rackTableController.selectAll()" />
+            </th>
+            <th>
+                {{'GENERIC_IpAddress'|translate}}
+            </th>
+            <th>
+                {{'GENERIC_AssetServiceTag'|translate}}
+            </th>
+            <th>
+                {{'GENERIC_Model'|translate}}
+                <!--<i class="ci ci-info-circle-info text-primary"
+                   data-toggle="tooltip"
+                   data-placement="right"
+                   title="{{'DEVICES_ModelToolTipText' | translate}}"></i>-->
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="config in rackTableController.rackList">
+            <td ng-if="rackTableController.mode === 'edit'">
+                <input type="checkbox"
+                       ng-disabled="rackTableController.pending"
+                       ng-model="config.configureDevice" />
+            </td>
+            <td>
+                {{config.ipaddress}}
+            </td>
+            <td>
+                {{config.deviceid}}
+            </td>
+            <td>
+                {{config.model}}
+            </td>
+        </tr>
+    </tbody>
+    <tbody ng-if="rackTableController.rackList.length ===  0 && !rackTableController.pending">
+        <tr>
+            <td colspan="{{rackTableController.mode === 'edit' ? 4 : 3}}">
+                {{'DISCOVERY_EmptyResourceList'|translate}}
+            </td>
+        </tr>
+    </tbody>
+</table>

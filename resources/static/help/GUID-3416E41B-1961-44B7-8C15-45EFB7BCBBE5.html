@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Configuring
+global chassis settings</title><link rel="prev" href="GUID-74403F65-DED9-4BBF-A6C0-B89A67EB011E.html" /><link rel="next" href="GUID-55862FC4-5A15-4830-9C05-E6DDD2B91EC8.html" /><link href="static/screen.css?mSUyqg2y" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-3416E41B-1961-44B7-8C15-45EFB7BCBBE5" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">Active System Manager Release 8.4</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Configuring
+global chassis settings</h1>
+<ol class="steps" id="GUID-C46B6C30-88DD-479A-ACEB-C7E054FA1DF3">
+<li id="STEP_5F30EABF994E432BAAADC2AFA00A8D8C"><p>On the <span class="uicontrol">Chassis Configuration</span> page of the Configure Chassis wizard, select one or more chassis
+that you want to configure. </p></li>
+<li id="STEP_6DBF743D698F43BB921DA41077200DB3"><p>Under Select Chassis for Initial Configuration,
+select one or more chassis that you want to configure.</p></li>
+<li id="STEP_ED0D188A6D70416FA5931EE0342EE5CD"><p>Under <span class="uicontrol">Global Settings</span>, in the <span class="uicontrol">Users</span> section, configure more CMC and iDRAC local users.</p>
+<p><ol id="GUID-E2AB6099-7E98-4AD8-88B9-0EC0A86901D2">
+<li id="LI_92254FBB20A348DD87FEB6D86DA1A977"><p>To add new Chassis Management Controller
+(CMC) user, under CMC Users, click <span class="uicontrol">Create</span>.
+For more information, see <a data-scope="local" href="GUID-759745A8-B4D3-4B28-804E-26F31824EC72.html" title="">Adding or Editing
+a Chassis Management Controller (CMC) User</a>.</p><p>To edit a user account, select a CMC user from the list, and click<span class="uicontrol"> Edit</span>. To delete a user account, select the user accounts
+from the list, and click <span class="uicontrol">Delete</span>.</p></li>
+<li id="LI_129B898C371F412DA2082626173FE2D0"><p>To add new Integrated Dell Remote
+Access Controller (iDRAC) user, under iDRAC Users, click <span class="uicontrol">Create</span>. For more information, see <a data-scope="local" href="GUID-DC1CAE28-9E4B-4DA4-BCDB-EFB5A011D180.html" title="">Adding Or Editing
+An Integrated Dell Remote Access Controller (iDRAC) User</a>.</p></li>
+</ol></p>
+</li>
+<li id="STEP_1947AA6FAF744C56A2772E67FF8A9FF1"><p>Under <span class="uicontrol">Global Settings</span>, in the<span class="uicontrol"> Monitoring</span> section, configure the
+following settings:</p>
+<p><ol id="GUID-63D01694-346E-4EA0-9D4C-36AD13375D61">
+<li id="LI_BCAEED3C1CFC45A8867CF81734830D45"><p>	To set SNMP trap alert destination,
+perform the following steps:</p><ol id="GUID-E011778B-A094-4E5D-961D-621A51F949AA">
+<li id="LI_14F0BF6A0EDD4ADFB34B75AA6F4FE0DA"><p>Under <span class="uicontrol">Alert Destinations</span>, to add an SNMP trap alert destination for chassis, click <span class="uicontrol">Create</span>.</p><p>To edit Alert Destinations,
+select an alert destination from the list, and click<span class="uicontrol"> Edit</span>. To delete an alert destination, select an alert destination from
+the list, and click <span class="uicontrol">Delete</span>.</p></li>
+<li id="LI_017EE212A3AE4CF4B03433393CFDC4C0"><p>Enter a valid <span class="uicontrol">Destination
+IP Address</span>. Use the quad-dot IPv4 format (for example,
+10.10.10.10) or Fully Qualified Domain Name (for example, <span class="filepath">dell.com</span>).</p></li>
+<li id="LI_B5DE94DCE3BC469E8E2D10B8A69B1EF3"><p>Enter the <span class="uicontrol">Community String</span> to which the destination management station belongs.</p></li>
+</ol></li>
+<li id="LI_F005D312CC6A4DDE9D57E57ED5FFC19E"><p>In the <span class="uicontrol">Email Alert Settings</span> section, to configure the CMC to send email alerts to one or more
+email addresses:<ol id="GUID-3CE5E591-25B2-4223-91D6-7244125CD3CD">
+<li id="LI_68F0D835CC944AF38D636B10E7374755"><p>In the <span class="uicontrol">SMTP Server</span> box, enter the IP address or host name of an SMTP Server that receives
+email alerts.</p></li>
+<li id="LI_89DAF4C433ED4D53B74BC1A96BA3C91E"><p>Click <span class="uicontrol">Create</span> and enter the following:</p><ul id="GUID-08DCACB7-5150-46B4-B6D5-DA2A27FA181D">
+<li id="LI_082BE48C51FC4DE8985144DC9A435C6D"><p>In the <span class="uicontrol">Name</span> box, enter the source email name from which the email alerts are
+sent.</p></li>
+<li id="LI_9EFCA1EBD263494D938D788F128D82CA"><p>Enter one or more <span class="uicontrol">Destination
+Email Addresses</span>.</p></li>
+</ul></li>
+</ol></p></li>
+<li id="LI_6CDF31FAC6D74E4BA04C79FE28A8F733"><p>In the <span class="uicontrol">Syslog Configuration
+(for I/O Modules only) </span>section, enter the <span class="uicontrol">Syslog
+Destination IP Address</span> to send I/O module log messages
+to a Syslog Destination.</p></li>
+</ol></p>
+</li>
+<li id="STEP_B4AFF767E65D4F61B869D3D2B3A17388"><p>Under <span class="uicontrol">Global Settings</span>, in the <span class="uicontrol">NTP</span> section:</p>
+<p><ol id="GUID-B40A47D4-2B1D-4527-9C74-9D76F8444473">
+<li id="LI_2EE48D266E7846989712F06A7C04B746"><p>Enter the <span class="uicontrol">Time Zone</span> in which the chassis is located. </p></li>
+<li id="LI_0CAD10F9B2C34E23B2EBC16888A31CA6"><p>To synchronize the chassis clock
+with an NTP server, select <span class="uicontrol">Enable NTP Server</span> check box and enter the host names or IP addresses of the <span class="uicontrol">Primary NTP Server</span> and<span class="uicontrol"> Secondary NTP Server</span> (Optional).</p></li>
+</ol></p>
+</li>
+<li id="STEP_EFFF832F4FBB4BFBA542BE86C75652EE"><p>Under <span class="uicontrol">Global Settings</span>, in the <span class="uicontrol">Power Config</span> section:</p>
+<p><ol id="GUID-11BD7CB8-2692-4A58-8C13-6C8F6817D212">
+<li id="LI_693D94407EF145BF9738AFAA3F76576E"><p>From the <span class="uicontrol">Redundancy Policy</span> drop-down list, select one of the power redundancy policies that
+you want to configure on the chassis:</p><ul id="GUID-84544FA0-D2A0-4F71-AD68-4464840EC9CA">
+<li id="LI_1E42D04EC25A4DBF8FA1BEA32D2131A2"><p><span class="uicontrol">No Redundancy</span> — The chassis is not configured with power redundancy.</p></li>
+<li id="LI_90D6FF8E5991473DA15DC37ABD28716D"><p><span class="uicontrol">Power Supply Redundancy</span> — A PSU in the chassis is kept as a spare, ensuring that the failure
+of any one PSU does not cause the servers or chassis to power down.</p></li>
+<li id="LI_AF4F29A63D9D4ECCA538BE5F1B58DEC3"><p><span class="uicontrol">Grid Redundancy</span> — This policy divides the available PSUs into two power grids. PSU
+1 is power grid 1 and PSU 2 is power grid 2. For maximum power, the
+PSUs should have the same capacity. If a grid or PSU fails, then the
+power is provided by the remaining PSU.</p></li>
+</ul></li>
+<li id="LI_BA11720DB07E4EC1845B1BFABBC69BDF"><p>Optionally, select <span class="uicontrol">Server
+Performance Over Power Redundancy</span> check box to favor server
+performance and power up over maintaining power redundancy.</p></li>
+<li id="LI_84A2330CED2847F980D0010E92CBC818"><p>Optionally, select <span class="uicontrol">Enable
+Dynamic Power Supply Engagement</span> check box to allow the
+chassis controller to put underutilized PSUs into standby mode based
+on the redundancy policy and system power requirements.</p></li>
+</ol></p>
+</li>
+<li id="STEP_EBCC7A60555442B8AC375B69E60FE7BC"><p>Under <span class="uicontrol">Global Settings</span>, in the <span class="uicontrol">Networking</span> section:</p>
+<p><ol id="GUID-E2A717D1-84AA-41F6-ADB3-D7E7C3997D0A">
+<li id="LI_2C0077438CCB4706A5134F3AEBCA21B4"><p>Optionally, select <span class="uicontrol">Register
+Chassis Controller on DNS</span> check box to enable users to
+access the Chassis Management Controller (CMC) with a user-friendly
+name, instead of an IP address. </p></li>
+<li id="LI_BDEEBB442A1947CDAF48C8621FC64138"><p>Optionally, select <span class="uicontrol">Register
+iDRAC on DNS</span> check box to enable users to access the Integrated
+Dell Remote Access Controller (iDRAC) with a user-friendly name, instead
+of an IP address.</p></li>
+<li id="LI_3C796F8429A1400ABEB6D69D078F8652"><p>Optionally, select <span class="uicontrol">Enable
+IPMI over LAN</span> check box to enable or disable the IPMI
+over LAN channel for each iDRAC present in the chassis.</p></li>
+</ol></p>
+</li>
+<li id="STEP_65BDECB7292A47E2B26093AABBD2B8EF"><p>To configure the unique chassis settings, click <span class="uicontrol">Next</span>.</p></li>
+</ol>
+<dl class="relations"><dt>Related Tasks</dt><dd class="choice_list"><ul data-inset="false" data-role="listview" data-theme="a"><li><a href="GUID-759745A8-B4D3-4B28-804E-26F31824EC72.html">Adding or editing
+Chassis Management Controller (CMC) user</a></li><li><a href="GUID-DC1CAE28-9E4B-4DA4-BCDB-EFB5A011D180.html">Adding or editing
+Integrated Dell Remote Access Controller (iDRAC) user</a></li></ul></dd></dl></article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?MavHWBUW"></script></body></html>

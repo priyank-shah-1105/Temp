@@ -1,0 +1,49 @@
+﻿<section id="tile"
+         class="tileArea"
+         ng-class="{'active':tileController.selectedItem === tile}"
+         ng-click="tileController.clearToolTips()">
+    <span tabindex="0"
+          ng-style="tileController.disabled === true && {'opacity': '.5', 'cursor' : 'not-allowed'};"
+          ng-mouseleave="hover = false"
+          ng-mouseenter="hover = true"
+          style="cursor:pointer"
+          class="text-center {{tileController.actions.getClasses(tileController.tileInfo)}}"
+          ng-class="{'hover' : hover && !tileController.disabled}">
+        <i tabindex="-1"
+           class="application component-icon-off"></i>
+        <i tabindex="-1"
+           class="vm component-icon-off"></i>
+        <i tabindex="-1"
+           class="ci-device-tower-three-cluster cluster component-icon-off"
+           data-toggle="tooltip"
+           title="{{'GENERIC_Cluster' | translate}}"
+           ng-class="{ 'component-icon-on' :
+           (tileController.tileInfo.containsCluster && tileController.isTemplate)
+           || (tileController.tileInfo.count_cluster && tileController.isService)}"></i>
+        <i tabindex="-1"
+           class="ci-device-tower server component-icon-off"
+           data-toggle="tooltip"
+           title="{{'GENERIC_Server' | translate}}"
+           ng-class="{ 'component-icon-on' :
+           (tileController.tileInfo.containsServer && tileController.isTemplate)
+           || (tileController.tileInfo.count_server && tileController.isService)}"></i>
+        <i tabindex="-1"
+           data-toggle="tooltip"
+           title="{{'GENERIC_Storage' | translate}}"
+           class="ci-storage-volume-half-full-2 storage component-icon-off"
+           ng-class="{ 'component-icon-on' :
+           (tileController.tileInfo.containsStorage && tileController.isTemplate) || 
+           (tileController.tileInfo.count_storage && tileController.isService)}"></i>
+        <span ng-if="tileController.isTemplate
+              && tileController.tileInfo.draft === true
+              && tileController.tileInfo.isLocked === false">
+            {{'TEMPLATES_DRAFT'|translate}}
+        </span>
+
+
+
+
+        <span ng-if="!tileController.isTemplate" ng-class="tileController.tileInfo.health"></span>
+        <span ng-if="tileController.isTemplate && !tileController.tileInfo.isTemplateValid" class="yellow"></span>
+    </span>
+</section>

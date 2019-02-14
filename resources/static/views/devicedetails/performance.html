@@ -1,0 +1,146 @@
+﻿<section id="device_performance">
+    <div class="alert alert-info" ng-if="devicePerformanceController.noData">
+        <div class="row">
+            <div class="col-xs-12">
+                <ul class="list-inline">
+                    <li class="col-xs-1">
+                        <i class="ci ci-info-circle-info" style="font-size: 25px"></i>
+                    </li>
+                    <li class="col-xs-11">
+                        <p>
+                            {{'DEVICES_EMC_SCALEIO_Nodataavailable'|translate}}
+                        </p>
+                        <p style="margin-top: 10px;">
+                            {{'DEVICES_EMC_SCALEIO_NoDataDescription'|translate}}
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <h4>
+            <i class="ci-arrows-compare"></i>
+            {{"DEVICES_EMC_SCALEIO_IOWorkload" | translate}}</h4>
+            <h2 class="text-primary">
+                {{devicePerformanceController.workload.currentIOWorkload}}
+            </h2>
+            <h2 class="text-primary">
+                {{devicePerformanceController.workload.currentIOPS}}
+            </h2>
+        </div>
+        <div class="col-md-10">
+            <!-- IOP -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <h3>
+                        <i class="ci-performance-gauge"></i>
+                        {{"DEVICES_EMC_SCALEIO_IOPS" | translate}}
+                    </h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-2 pull-right">
+                    <select class="form-control" 
+                            ng-change="devicePerformanceController.refresh()"
+                            ng-model="devicePerformanceController.iopSelectedTimeFrame"
+                            ng-options="timeFrame.index as timeFrame.name for timeFrame in devicePerformanceController.timeFrames"
+                            id="iopTimeframeSelection"></select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>{{"DEVICES_EMC_SCALEIO_TotalIOPS" | translate}}</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="chart-container">
+                        <highchart ng-if="devicePerformanceController.usages.iop.total" config="devicePerformanceController.usages.iop.total"></highchart>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>{{"DEVICES_EMC_SCALEIO_ReadIOPS" | translate}}</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="chart-container">
+                        <highchart ng-if="devicePerformanceController.usages.iop.read" config="devicePerformanceController.usages.iop.read"></highchart>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>{{"DEVICES_EMC_SCALEIO_WriteIOPS" | translate}}</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="chart-container">
+                        <highchart ng-if="devicePerformanceController.usages.iop.write" config="devicePerformanceController.usages.iop.write"></highchart>
+                    </div>
+                </div>
+            </div>
+            <!-- Bandwidth -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <h3>
+                        <i class="ci-diagnostics-health"></i>
+                        {{"DEVICES_EMC_SCALEIO_Bandwidth" | translate}}
+                    </h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-2 pull-right">
+                    <select class="form-control"
+                            ng-change="devicePerformanceController.refresh()"
+                            ng-model="devicePerformanceController.bandWidthSelectedTimeFrame"
+                            ng-options="timeFrame.index as timeFrame.name for timeFrame in devicePerformanceController.timeFrames"
+                            id="bandwidthTimeframeSelection"></select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>{{"DEVICES_EMC_SCALEIO_TotalBandwidth" | translate}}</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="chart-container">
+                        <highchart ng-if="devicePerformanceController.usages.bandwidth.total" config="devicePerformanceController.usages.bandwidth.total"></highchart>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>{{"DEVICES_EMC_SCALEIO_ReadBandwith" | translate}}</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="chart-container">
+                        <highchart ng-if="devicePerformanceController.usages.bandwidth.read" config="devicePerformanceController.usages.bandwidth.read"></highchart>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>{{"DEVICES_EMC_SCALEIO_WriteBandwidth" | translate}}</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="chart-container">
+                        <highchart ng-if="devicePerformanceController.usages.bandwidth.write" config="devicePerformanceController.usages.bandwidth.write"></highchart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,105 @@
+﻿<section id="page_exporttemplate">
+    <error-display errors="ExportTemplateController.errors" on-click="$root.ASM.RemoveError(error, ExportTemplateController.errors)" on-expand-collapse=""></error-display>
+    <header>
+        <p>
+            {{'TEMPLATEEXPORT_Information' | translate}}
+        </p>
+    </header>
+
+    <form id="form_exporttemplate" 
+          name="form_exporttemplate" 
+          class="form-horizontal" 
+          role="form" 
+          novalidate 
+          action="templates/exporttemplate" 
+          method="post" 
+          enctype="multipart/form-data" 
+          autocomplete="off"
+          form-validation="ExportTemplateController.submitForm">
+        <fieldset>
+            <legend>
+            </legend>
+            <ul id="ul1" class="list-unstyled">
+                <li class="form-group">
+                    <label class="col-sm-4 control-label">
+                        {{'TEMPLATEEXPORT_File_Name' | translate}}
+                    </label>
+                    <div class="col-sm-4">
+                        <!--
+                        jek 4.22.2016 - when templateId is hidden, the value does not get posted back to the server...
+                        -->
+                        <input type="text" id="templateId" name="templateId"
+                               ng-model="ExportTemplateController.form.templateId"
+                               style="border-style:none; background-color:transparent; width:0; height:0;" />
+                        <input type="text" id="fileName" name="fileName" class="form-control"
+                               required ng-model="ExportTemplateController.form.fileName" />
+                        <span ng-if="form_exporttemplate.fileName.$error.required && ExportTemplateController.submitForm == true" class="help-block">
+                            {{'TEMPLATEEXPORT_File_Name_Required' | translate}}
+                        </span>
+                    </div>
+                </li>
+                <li class="form-group">
+                    <label class="col-sm-4 control-label" for="useEncPwdFromBackup">
+                        {{'TEMPLATEEXPORT_Use_Encryption_Password' | translate}}
+                    </label>
+                    <div class="col-sm-4">
+                        <input type="checkbox" id="useEncPwdFromBackup" name="useEncPwdFromBackup" value="true"
+                                ng-model="ExportTemplateController.form.useEncPwdFromBackup" />
+                    </div>
+                </li>
+                <li class="form-group" ng-if="!ExportTemplateController.form.useEncPwdFromBackup">
+                    <label class="col-sm-4 control-label">
+                        {{'TEMPLATEEXPORT_Set_File_Encryption_Password' | translate}}
+                    </label>
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <input id="encryptionPassword"
+                                   name="encryptionPassword"
+                                   ng-model="ExportTemplateController.form.encryptionPassword"
+                                   class="form-control"
+                                   type="password"
+                                   placeholder="" password-viewer />
+                        </div>
+                    </div>
+                </li>
+                <li class="form-group" ng-if="!ExportTemplateController.form.useEncPwdFromBackup">
+                    <label for="verifyEncryptPassword" class="col-sm-4 control-label">
+                        {{'TEMPLATEEXPORT_Confirm_Encryption_Password' | translate}}
+                    </label>
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <input id="verifyEncryptPassword"
+                                   name="verifyEncryptPassword"
+                                   ng-model="ExportTemplateController.form.encryptionVPassword"
+                                   class="form-control"
+                                   type="password"
+                                   ng-match="ExportTemplateController.form.encryptionPassword"
+                                   placeholder="" password-viewer />
+                        </div>
+                        <span ng-if="form_exporttemplate.verifyEncryptPassword.$error.passwordMatch && ExportTemplateController.submitForm == true" class="help-block">
+                            {{'TEMPLATEEXPORT_Confirm_Encryption_Password_Match' | translate}}
+                        </span>
+                    </div>
+                </li>
+
+            </ul>
+        </fieldset>
+
+    </form>
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="submit_form_exporttemplate" class="btn btn-primary"
+                        ng-click="ExportTemplateController.submitForm=true;form_exporttemplate.$invalid || ExportTemplateController.doExport()">
+                    {{'GENERIC_Export' | translate}}
+                </button>
+            </li>
+            <li>
+                <button id="cancel_form_exporttemplate" class="btn btn-default" ng-click="ExportTemplateController.close()">
+                    {{'GENERIC_Cancel' | translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+
+</section>

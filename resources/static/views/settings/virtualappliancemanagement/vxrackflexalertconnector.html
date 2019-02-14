@@ -1,0 +1,256 @@
+﻿<section id="page_dhcpSettings">
+    <p><strong>{{"SETTINGS_VirtualApplianceManagement_PrerequisitesLabel"| translate}}</strong>{{"SETTINGS_VirtualApplianceManagement_PrerequisitesDescription" | translate}}</p>
+    <div class="alert alert-warning" role="alert" style="background-color:white;color:black;">
+        <strong>
+            <statusicon value="'yellow'"></statusicon>
+ {{"SETTINGS_VirtualApplianceManagement_WarningBannerWarning" | translate}}
+        </strong>
+        {{ "SETTINGS_VirtualApplianceManagement_WarningBannerWarningDescription" | translate }}
+    </div>
+    <error-display errors="vxRackFlexAlertConnectorModalController.errors"
+                   on-click="vxRackFlexAlertConnectorModalController.ASM.RemoveError(error, vxRackFlexAlertConnectorModalController.errors)"
+                   on-expand-collapse=""></error-display>
+    <form id="vxRackSettingsForm"
+          name="settingsForm"
+          class="form-horizontal"
+          form-validation="vxRackFlexAlertConnectorModalController.submitted">
+        <fieldset>
+            <!-- OpenManage Enterprise (OME) Settings -->
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <h3>{{"SETTINGS_VirtualApplianceManagement_OpenManageEnterpriseOMESetting" | translate}}</h3>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="vxHostIp" class="col-md-4 control-label">
+                    {{'SETTINGS_VirtualApplianceManagement_IPorFQDN'|translate}}
+                </label>
+                <div class="col-md-8">
+                    <input id="vxHostIp"
+                           type="text"
+                           class="form-control"
+                           name="vxHostIp"
+                           ng-model="vxRackFlexAlertConnectorModalController.settings.hostIp"
+                           ng-checked="vxRackFlexAlertConnectorModalController.settings.hostIp" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="vxUsername" class="col-md-4 control-label">
+                    {{'SETTINGS_VirtualApplianceManagement_Username'|translate}}
+                </label>
+                <div class="col-md-8">
+                    <input id="vxUsername"
+                           type="text"
+                           class="form-control"
+                           name="vxUsername"
+                           ng-model="vxRackFlexAlertConnectorModalController.settings.username" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="vxomePassword" class="col-md-4 control-label">
+                    {{'SETTINGS_VirtualApplianceManagement_omePassword'|translate}}
+                </label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input id="vxomePassword"
+                               name="vxomePassword"
+                               ng-model="vxRackFlexAlertConnectorModalController.settings.omePassword"
+                               class="form-control"
+                               type="password"
+                               password-viewer="{{vxRackFlexAlertConnectorModalController.editingOmePassword}}" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="vxalertFilter" class="col-md-4 control-label">
+                    {{'SETTINGS_VirtualApplianceManagement_AlertFilter'|translate}}
+                    <i class="ci ci-info-circle-info text-primary"
+                       data-toggle="tooltip"
+                       data-placement="right"
+                       title="{{'SETTINGS_VirtualApplianceManagement_AlertFilterTooltip' |translate}}"></i>
+                </label>
+                <div class="col-md-8">
+                    <select id="vxalertFilter"
+                            class="form-control"
+                            name="vxalertFilter"
+                            ng-model="vxRackFlexAlertConnectorModalController.settings.alertFilter"
+                            ng-options="filter.id as filter.name for filter in vxRackFlexAlertConnectorModalController.alertFilterOptions">
+                        <option value="">{{'GENERIC_select'|translate}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="vxalertPollingIntervalHours" class="col-md-4 control-label">
+                    {{'SETTINGS_VirtualApplianceManagement_AlertPollingInterval'|translate}}
+                    <i class="ci ci-info-circle-info text-primary"
+                       data-toggle="tooltip"
+                       data-placement="right"
+                       title="{{'SETTINGS_VirtualApplianceManagement_AlertPollingIntervalTooltip' |translate}}"></i>
+                </label>
+                <div class="col-md-2">
+                    <select id="vxalertPollingIntervalHours"
+                            class="form-control"
+                            name="vxalertPollingIntervalHours"
+                            ng-model="vxRackFlexAlertConnectorModalController.settings.alertPollingIntervalHours"
+                            ng-options="n for n in vxRackFlexAlertConnectorModalController.hours" />
+                </div>
+                <div class="col-md-2">{{"SETTINGS_VirtualApplianceManagement_alertPollingIntervalLabelHours" | translate}}</div>
+                <div class="col-md-2">
+                    <select id="vxalertPollingIntervalMinutes"
+                            class="form-control"
+                            name="vxalertPollingIntervalMinutes"
+                            ng-model="vxRackFlexAlertConnectorModalController.settings.alertPollingIntervalMinutes"
+                            ng-options="n for n in vxRackFlexAlertConnectorModalController.getAlertMinutes(vxRackFlexAlertConnectorModalController.settings.alertPollingIntervalHours)" />
+                </div>
+                <div class="col-md-2">{{"SETTINGS_VirtualApplianceManagement_alertPollingIntervalMinutes" | translate}}</div>
+            </div>
+            <!-- Device Registration -->
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <h3>{{"SETTINGS_VirtualApplianceManagement_DeviceRegistration" | translate}}</h3>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="vxdeviceType" class="col-md-4 control-label">
+                    {{'SETTINGS_VirtualApplianceManagement_DeviceType'|translate}}
+                </label>
+                <div class="col-md-8">
+                    <select id="vxdeviceType"
+                            class="form-control"
+                            disabled="disabled"
+                            name="vxdeviceType"
+                            ng-model="vxRackFlexAlertConnectorModalController.settings.deviceType"
+                            ng-options="device.id as device.name for device in vxRackFlexAlertConnectorModalController.deviceTypeOptions">
+                        <option value="">{{'GENERIC_select'|translate}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="vxelmsSoftwareId" class="col-md-4 control-label">
+                    {{'SETTINGS_VirtualApplianceManagement_EnterpriseLicenseManagementSystems'|translate}}
+                    <a class="ci ci-info-circle-info text-primary"
+                       popover
+                       data-trigger="hover"
+                       data-content-template="ELMSTooltip.html"></a>
+                </label>
+                <div class="col-md-8">
+                    <input id="vxelmsSoftwareId"
+                           type="text"
+                           class="form-control"
+                           name="vxelmsSoftwareId"
+                           ng-model="vxRackFlexAlertConnectorModalController.settings.elmsSoftwareId" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="vxsolutionSerialNumber" class="col-md-4 control-label">
+                    {{'SETTINGS_VirtualApplianceManagement_SolutionSerialNumber'|translate}}
+                    <i class="ci ci-info-circle-info text-primary"
+                       data-toggle="tooltip"
+                       data-placement="right"
+                       title="{{'SETTINGS_VirtualApplianceManagement_Unique8' |translate}}"></i>
+                </label>
+                <div class="col-md-8">
+                    <input id="vxsolutionSerialNumber"
+                           type="text"
+                           class="form-control"
+                           name="vxsolutionSerialNumber"
+                           ng-model="vxRackFlexAlertConnectorModalController.settings.solutionSerialNumber" />
+                </div>
+            </div>
+            <!-- Secure Remote Services (SRS) Information -->
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <h3>
+                        {{"SETTINGS_VirtualApplianceManagement_SecureRemoteServices" | translate}}
+                        <i class="ci ci-info-circle-info text-primary"
+                           data-toggle="tooltip"
+                           data-placement="right"
+                           title="{{'SETTINGS_VirtualApplianceManagement_SecureRemoteServicesTooltip' |translate}}"></i>
+                    </h3>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="vxsrsGatewayHostIp" class="col-md-4 control-label">
+                    {{'SETTINGS_VirtualApplianceManagement_SRSGatewayHostIPorFQDN'|translate}}
+                </label>
+                <div class="col-md-8">
+                    <input id="vxsrsGatewayHostIp"
+                           type="text"
+                           class="form-control"
+                           name="vxsrsGatewayHostIp"
+                           ng-model="vxRackFlexAlertConnectorModalController.settings.srsGatewayHostIp" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="vxsrsGatewayHostPort" class="col-md-4 control-label">
+                    {{'SETTINGS_VirtualApplianceManagement_SRSGatewayHostPort'|translate}}
+                    <i class="ci ci-info-circle-info text-primary"
+                       data-toggle="tooltip"
+                       data-placement="right"
+                       title="{{'SETTINGS_VirtualApplianceManagement_SRSHostPortTooltip' |translate}}"></i>
+                </label>
+                <div class="col-md-8">
+                    <input id="vxsrsGatewayHostPort"
+                           class="form-control"
+                           type="number"
+                           name="vxsrsGatewayHostPort"
+                           disabled="disabled"
+                           ng-model="vxRackFlexAlertConnectorModalController.settings.srsGatewayHostPort" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="vxuserId" class="col-md-4 control-label">
+                    {{'SETTINGS_VirtualApplianceManagement_UserID'|translate}}
+                    <i class="ci ci-info-circle-info text-primary"
+                       data-toggle="tooltip"
+                       data-placement="right"
+                       title="{{'SETTINGS_VirtualApplianceManagement_UserIdTooltip' |translate}}"></i>
+                </label>
+                <div class="col-md-8">
+                    <input id="vxuserId"
+                           class="form-control"
+                           type="text"
+                           name="vxuserId"
+                           ng-model="vxRackFlexAlertConnectorModalController.settings.userId" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="vxsrsPassword" class="col-md-4 control-label">
+                    {{'SETTINGS_VirtualApplianceManagement_PasswordorNTToken'|translate}}
+                </label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input id="vxsrsPassword"
+                               name="vxsrsPassword"
+                               ng-model="vxRackFlexAlertConnectorModalController.settings.srsPassword"
+                               class="form-control"
+                               type="password"
+                               password-viewer="{{vxRackFlexAlertConnectorModalController.editingSrs}}" />
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="btnCancel"
+                        class="btn btn-default"
+                        ng-click="vxRackFlexAlertConnectorModalController.cancel()">
+                    {{'SETTINGS_Cancel'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="submitDhcpSettings"
+                        class="btn btn-primary"
+                        ng-click="vxRackFlexAlertConnectorModalController.submitted = true; settingsForm.$valid && vxRackFlexAlertConnectorModalController.save()"
+                        form="edit_ntp_form">
+                    {{'SETTINGS_Save'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+    <script type="text/ng-template" id="ELMSTooltip.html">
+        <div class="popover-body" ng-bind-html="'SETTINGS_VirtualApplianceManagement_ElmsTooltip' | translate | htmlSafe"></div>
+    </script>
+</section>

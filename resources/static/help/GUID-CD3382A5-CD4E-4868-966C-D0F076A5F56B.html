@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Troubleshooting</title><link rel="prev" href="GUID-8F43E4AB-F935-48F5-8FF1-0F01DD0523D3.html" /><link rel="next" href="GUID-CD3382A5-CD4E-4868-966C-D0F076A5F56B.html" /><link href="static/screen.css?iBUcq7Nt" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-CD3382A5-CD4E-4868-966C-D0F076A5F56B" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">VxFlex Manager</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Troubleshooting</h1>
+<p>This topic includes details for resolving common issues
+encountered in VxFlex Manager.</p>
+<div class="topic" id="CONCEPT-133-01862ADE_unique_1"><h1>LC operation
+times out while deploying server profile to a server </h1>
+<p>While updating the server configuration using config
+XML, the LC job remains in the RUNNING state and eventually gets timed
+out. This is observed in case there is &quot;bootseq&quot; attribute in the
+request XML. This is identified as an issue in LC and fix for this
+is available along with 13th generation of Dell serevers</p>
+<p>To resolve this issue, remove the content &quot;bootseq&quot;
+attribute from the config XML.</p>
+</div><div class="topic" id="CONCEPT-138-018687A7_unique_1"><h1>Unable to log
+in to VxFlex Manager using active directory using &quot;&quot;</h1>
+<p>You cannot log in to VxFlex Manager using Active Directory with
+the domain name and user name separated by back slash &quot;\&quot;.</p>
+<p>To log in to VxFlex Manager using Active Directory, use forward
+slash &quot;/&quot;. For example: &lt;domain&gt;/ &lt;username&gt;.</p>
+<div class="note" id="GUID-59E3F593-B5D7-4A8C-813E-757CB073DB30_unique_1"><span class="notelabel">NOTE: </span>Domain is the
+name for the Active Directory service you have created in VxFlex Manager.</div>
+</div><div class="topic" id="CONCEPT-139-01869F48_unique_1"><h1>Chain booting
+issue occurs while booting microkernel in a multi-hop DHCP environment</h1>
+<p>The chain booting error occurs if the DHCP server
+is configured in a different subnet or network or connected to a different
+switch.</p>
+<p>In such scenarios, the DHCP network is tagged.</p>
+<p>To resolve this issue, in switch configuration, modify
+the native VLAN of server or computer facing ports to PXE VLAN.</p>
+<p>Sample native VLAN configuration in Dell PowerConnect
+switch:</p>
+<p><i>interface Gi1/0/2</i></p>
+<p><i>spanning-tree portfast </i></p>
+<p><i>switchport mode general </i></p>
+<p><i>switchport mode general </i></p>
+<p><i>switchport general allowed </i></p>
+<p><i>vlan add 3000 </i></p>
+<p><i>switchport general allowed </i></p>
+<p><i>vlan add 20,30,40 tagged</i></p>
+<p><i>exit</i></p>
+<p>In the above example:<ul id="GUID-75274A61-A4D4-4BA4-99D2-6BF96A85EA07_unique_1">
+<li id="LI_B661CCC07907496890C7D40734F4107A_unique_1">3000: Indicates
+Native PXE VLAN</li>
+<li id="LI_45ACE596AF524E94B3DA3A8B641D2303_unique_1">20,30,40:
+Indicates Management or vMotion or ISCSI</li>
+</ul></p>
+<p>In case of production environments with large networks,
+routers may be configured with IP helper addresses to point to a DHCP
+on another network.</p>
+</div><div class="topic" id="CONCEPT-1311-01873F30_unique_1"><h1>Scaling down
+a server that is part of a cluster with HA and DRS disabled does not
+remove the server from vCenter. The associated virtual machines may
+also appear in a Disconnected state.</h1>
+<p>It is recommended that before you scale down a server,
+you must migrate the VMs to a different host if HA and DRS are not
+enabled on the cluster. </p>
+</div><div class="topic" id="CONCEPT-1113-026FBAAC_unique_1"><h1>Firmware update
+on a server fails with a POST error</h1>
+<p>Ensure that the <b>F1/F2 Prompt on Error</b> option
+in the BIOS is set to disabled.</p>
+</div></article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?ovL/lALt"></script></body></html>

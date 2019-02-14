@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Configuring a Release Certification Matrix</title><link rel="prev" href="GUID-00C6E147-FF71-4EE3-851E-7EFFD89AD400.html" /><link rel="next" href="GUID-74B9EE18-16EE-4A35-99FA-5E449BDCA479.html" /><link href="static/screen.css?fAL4Y+sp" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-F4A1D04F-0649-41C4-8EA1-0B79610504AF" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">VxFlex Manager</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Configuring a Release Certification Matrix</h1>
+<p>The user interface displays the following information about the firmware repositories:<ul id="GUID-E364545E-B908-4CCC-8D13-A3F8CFBE0C4C">
+<li id="LI_54BA850EB69645E6AD5020828D2ACA70_unique_1"><span class="uicontrol">State </span>— Displays the following
+states:<ul id="UL_BDB72C34247542C484FEC9F0316820D9_unique_1">
+<li id="LI_96AF6323EDF744D289B99C3AAA00373F_unique_1">Available — Indicates that the Release Certification Matrix (RCM) is downloaded and copied successfully.</li>
+<li id="LI_E54C6B2E880D4096A4EED97064CC2AA8_unique_1">Pending — Indicates that the RCM download
+process is in progress.</li>
+<li id="LI_4338BBB0615E4F39B8B52D23C8B7F7CC_unique_1">Error — Indicates that there is an issue downloading
+the RCM.</li>
+</ul></li>
+<li id="LI_A989DB5C4D8448929D132C5F896EAA1A_unique_1"><span class="uicontrol">RCM Name</span> — Displays the name
+of the RCM.</li>
+<li id="LI_8183B311C1C8486E9E0B401FB34521EF_unique_1"><span class="uicontrol">Source</span> — Displays the
+share path of the RCM in a file share.</li>
+<li id="LI_630723B81E8D44BA921E085194221552"><span class="uicontrol">Available Actions</span>—Select any one of the following options:<ul id="UL_9BE2EACA801943919E40BD33BCEE50AC"><li id="LI_4CE95DA15B65418790CBC61006477AB0"><span class="uicontrol">Delete</span>—Select this option to delete the RCM.</li><li id="LI_FE0C554D44424F15A80876F1F000CB40"><span class="uicontrol">Resynchronize</span>—Select this option to resynchronize an RCM that is in an <span class="uicontrol">Error</span> state.</li></ul></li>
+</ul></p>
+<p>Select the RCM to view the following information
+about the firmware package:<ul id="GUID-D9139A68-B6C7-49E8-B570-A20A78F16521">
+<li id="LI_0405FA71DA634C0A91AE34CED3A3497F"><span class="uicontrol">Bundles</span> — Displays the number
+of bundles available in the firmware package.</li>
+<li id="LI_D95805AC3B0F449E9C1E3A5E1B71E7E6"><span class="uicontrol">Components</span>—Displays the number of software components available in the firmware package.</li>
+<li id="LI_0D884AC59C5E49A2A9B542B6316E560D"><span class="uicontrol">Created On</span>—Displays the date when the RCM is created.</li>
+<li id="LI_5AD9A586A8AC4F6AA9F173379BE8A720"><span class="uicontrol">Last Updated</span>—Displays the date when the RCM was last updated.</li>
+<li id="LI_E7121514B49840048F5D99B3C0D079D7"><span class="uicontrol">Services Affected</span>—Displays the services in which the firmware is used.</li>
+</ul></p>
+<p>From this page, you can:</p>
+<ul id="GUID-1A27E448-38FE-4489-AA84-92611A284D83">
+<li id="LI_29D62AF674A9404184FC7E0D2607C922">Add a new RCM.</li><li id="LI_4E40B847EE2A4999B72ADDD70BFA5583">Select <span class="uicontrol">Default Release Certification Matrix (RCM)</span> and choose an RCM from the drop-down list to set  it as the default for compliance.</li>
+<li id="LI_81471270AD82450686FF308CF23C7546">Select an RCM from the list, and click the
+delete icon in the same row to remove the RCM.<p id="GUID-48489637-6FCF-41A8-AFC0-FAF31EC293F5">If you remove an RCM,
+the RCM is deleted from the appliance not from the file share.</p><p id="GUID-8B7EADB7-289C-4BF4-9824-A7FF2805B9C5">The embedded
+RCM may not be removed.</p></li>
+
+<li id="LI_9CA95EECAE4A4AC098642C159556755B">Select an RCM from the list, and, in the right pane,
+click <span class="uicontrol">View Bundles</span> to view the firmware and
+software bundles available in the RCM.</li>
+</ul>
+<dl class="relations"><dt>Related Tasks</dt><dd class="choice_list"><ul data-inset="false" data-role="listview" data-theme="a"><li><a href="GUID-74B9EE18-16EE-4A35-99FA-5E449BDCA479.html">Adding an RCM</a></li><li><a href="GUID-95330B4B-072A-46E6-B0C7-2D085959F921.html">Viewing firmware
+and software bundles details</a></li></ul></dd></dl></article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?5ZiewaI5"></script></body></html>

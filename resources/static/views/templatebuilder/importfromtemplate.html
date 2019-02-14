@@ -1,0 +1,55 @@
+﻿<section id="page_importfromtemplate">
+    <error-display errors="importFromTemplateController.errors"
+                   on-click="$root.ASM.RemoveError(error, importFromTemplateController.errors)"
+                   on-expand-collapse=""></error-display>
+    <p>
+        {{ importFromTemplateController.templates.length ? 'TEMPLATEBUILDER_Import_From_Template_Help' : 'TEMPLATEBUILDER_Import_From_Template_No_Components' | translate }}
+    </p>
+
+    <div class="form-group">
+        <label class="col-md-4 control-label">
+            <spinner ng-if="importFromTemplateController.loading"></spinner>
+        </label>
+    </div>
+
+    <ul class="list-unstyled" ng-repeat="template in importFromTemplateController.templates">
+        <li>
+            <h3>
+                {{'TEMPLATEBUILDER_Import_From_Template_Template'|translate}}
+                {{template.name}}
+            </h3>
+            <div class="radio" 
+                ng-repeat="component in template.components" 
+                ng-click="importFromTemplateController.selectedComponent = component; importFromTemplateController.selectedTemplate = template">
+                <label>
+                    <input type="radio"
+                           name="chkComponent"
+                           ng-checked="importFromTemplateController.selectedComponent.id === component.id" />
+                        {{component.name}}
+                </label>
+            </div>
+        </li>
+    </ul>
+
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+                <button id="submit_form_importfromtemplate" 
+                        class="btn btn-primary"
+                        ng-disabled="!importFromTemplateController.selectedComponent"
+                        ng-click="importFromTemplateController.save()">
+                    {{'GENERIC_select' | translate }}
+                </button>
+            </li>
+            <li>
+                <button id="cancel_form_importfromtemplate" 
+                        class="btn btn-default" 
+                        ng-click="importFromTemplateController.cancel()">
+                    {{'GENERIC_Cancel' | translate }}
+                </button>
+            </li>
+        </ul>
+    </footer>
+
+
+</section>

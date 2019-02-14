@@ -1,0 +1,245 @@
+﻿<section id="modal_importActiveDirectoryUsers">
+    <error-display errors="ImportUsersModal.errors" on-click="$root.ASM.RemoveError(error, ImportUsersModal.errors)" on-expand-collapse=""></error-display>
+    <div>
+        <p>
+            {{'SETTINGS_InUserServices' | translate}}
+        </p>
+        <div>
+            <ul class="list-unstyled list-inline">
+                <li class="col-sm-2">
+                    <p class="form-control-static">
+                        {{'SETTINGS_ActiveDirectoryDirectorySrc' | translate}}
+                    </p>
+                </li>
+                <li class="col-sm-5">
+                    <select id="directoryddl" class="form-control" ng-options="item.serverName as item.serverName for item in ImportUsersModal.directories" ng-model="ImportUsersModal.selectedDirectory" />
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <div style="clear: both;"></div>
+    <br />
+    <ul class="list-unstyled list-inline">
+        <li class="col-sm-5">
+            <form class="userSelection form-inline">
+                <div>
+                    <p class="form-control-static">
+                        <b>
+                            {{'SETTINGS_ActiveDirectoryAvailableUsers' | translate}}
+                        </b>
+                    </p>
+                    <span class="pull-right">
+                        <select class="form-control" id="userGroupSelector" ng-model="ImportUsersModal.viewBy">
+                            <option selected value="usersgroups">
+                                {{'SETTINGS_ActiveDirectoryAll' | translate}}
+                            </option>
+                            <option value="users">
+                                {{'SETTINGS_ActiveDirectoryUsers' | translate}}
+                            </option>
+                            <option value="groups">
+                                {{'SETTINGS_ActiveDirectoryGroups' | translate}}
+                            </option>
+
+                        </select>
+                    </span>
+                    <p class="form-control-static pull-right" for="usersAndGroupsSelect" style="margin-right: 10px;">
+                        {{'SETTINGS_ActiveDirectoryView' | translate}}
+                    </p>
+
+                </div>
+            </form>
+            <hr />
+            <div>
+                <ul class="list-unstyled list-inline">
+                    <li class="col-sm-4">
+                        <form class="form-inline">
+                            <p class="form-control-static">
+                                {{'SETTINGS_ActiveDirectoryFindUser' | translate}}
+                                <a class="ci ci-info-circle-info text-primary"
+                                   popover
+                                   data-content="{{'SETTINGS_ActiveDirectoryFindUser_Data_Entry_Hint' | translate}}"
+                                   title="{{'SETTINGS_ActiveDirectoryFindUser' | translate}}">
+                                </a>
+                            </p>
+                        </form>
+                    </li>
+                    <li class="col-sm-8" style="padding-right: 0 !important">
+                        <div class="input-group add-on pull-right">
+                            <input class="form-control"
+                                   ng-model="ImportUsersModal.searchText"
+                                   ng-keyup="$event.keyCode == 13 ? ImportUsersModal.refresh() : null"
+                                   placeholder="{{'SETTINGS_ActiveDirectoryEnterName' | translate}}" id="searchUserGroups"
+                                   name="searchText" />
+                            <!--<span class="help-block">{{'SETTINGS_ActiveDirectoryFindUser_Data_Entry_Hint'|translate}}</span>-->
+                        </div>
+                    </li>
+                    <li class="pull-right col-sm-3">
+                    </li>
+                    <li class="pull-right col-sm-1">
+                    </li>
+                </ul>
+
+                <div class="clearfix"></div>
+                <div class="leftUsers userColumns">
+                    <table id="users_table1" class="table table-striped" st-table="ImportUsersModal.displayedleftcol" st-safe-src="ImportUsersModal.leftcol">
+                        <thead>
+                            <tr>
+                                <th style="width: 1px;">
+                                    <input ng-click="ImportUsersModal.leftCheckAll()" id="selectAllUsers" type="checkbox" ng-model="ImportUsersModal.leftCheckAllBox" />
+                                </th>
+                                <th>
+                                    {{'GENERIC_Name' | translate}}
+                                </th>
+                                <th>
+                                    {{'GENERIC_Email' | translate}}
+                                </th>
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in ImportUsersModal.displayedleftcol">
+                                <td>
+                                    <input type="checkbox" class="chkUser" ng-model="item.isSelected" />
+                                </td>
+                                <td>
+                                    <span ng-if="item.firstname">{{item.firstname}}</span>
+                                    <span ng-if="item.name">{{item.name}}</span>
+                                </td>
+                                <td>
+                                    <span ng-if="item.email">{{item.email}}</span>
+                                </td>
+                                <td>
+                                    <button ng-click="ImportUsersModal.viewdetails(item)" class="btn btn-link importUsers_viewDetails">
+                                        {{'GENERIC_ViewDetails' | translate}}
+                                    </button>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                        <tbody ng-if="ImportUsersModal.displayedleftcol.length == 0">
+                            <tr style="height: 50px;"></tr>
+                            <tr>
+                                <td colspan="4" style="background-color: #f2f2f2; border-top: none">
+                                    {{'SETTINGS_ActiveDirectoryNoUsersOrGroups' | translate}}
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot ng-if="ImportUsersModal.displayedleftcol.length >= 1">
+                            <tr>
+                                <td colspan="5">
+                                    <div st-pagination="ImportUsersModal.displayedleftcol" st-items-by-page="20" st-displayed-pages=""></div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </li>
+
+        <li id="user_selector" class="col-sm-1">
+            <button id="shiftToRight" ng-click="ImportUsersModal.moveRight()">>></button><br />
+            <br />
+            <button id="delete_user_link" ng-click="ImportUsersModal.moveLeft()"><<</button>
+        </li>
+        <li class="col-sm-6">
+            <form class="userSelection form-inline">
+                <p class="userSelection form-control-static">
+                    <b>
+                        {{'SETTINGS_ActiveDirectoryImported' | translate}}
+                    </b>
+                </p>
+            </form>
+            <hr />
+            <div class="roleSelection">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <p class="form-control-static">
+                            {{'SETTINGS_ActiveDirectoryUserRole' | translate}}
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <select id="user_role" class="form-control" ng-options="item.id as item.name for item in ImportUsersModal.importRoles" ng-model="ImportUsersModal.selectedRoleId"></select>
+                    </div>
+                    <div class="form-group">
+                        <button id="btnApplyRole" class="btn btn-primary" ng-click="ImportUsersModal.changeRoles()" ng-disabled="ImportUsersModal.selectedRightItems().length == 0">{{'GENERIC_Apply' | translate}}</button>
+                    </div>
+                </form>
+
+            </div>
+            <div class="clearfix"></div>
+            <div class="rightUsers userColumns">
+                <table id="users_table2" class="table table-striped table-hover master-body" st-table="ImportUsersModal.rightcol">
+                    <thead>
+                        <tr>
+                            <th style="width: 1px;">
+                                <input id="selectAllImportUsers" ng-click="ImportUsersModal.rightCheckAll()" ng-model="ImportUsersModal.rightCheckAllBox" type="checkbox" />
+                            </th>
+                            <th>
+                                {{'GENERIC_Name' | translate}}
+                            </th>
+                            <th>
+                                {{'GENERIC_Email' | translate}}
+                            </th>
+                            <th>
+                                {{'GENERIC_Role' | translate}}
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="rightitem in ImportUsersModal.rightcol">
+                            <td>
+                                <input type="checkbox" class="chkUser" ng-model="rightitem.isSelected" />
+                            </td>
+                            <td>
+                                <span ng-if="rightitem.firstname">{{rightitem.firstname}}</span>
+                                <span ng-if="rightitem.name">{{rightitem.name}}</span>
+                            </td>
+                            <td>
+                                <span ng-if="rightitem.email">{{rightitem.email}}</span>
+                            </td>
+                            <td>
+                                <select id="" class="form-control" ng-options="item.id as item.name for item in ImportUsersModal.importRoles" ng-model="rightitem.roleId"></select>
+                            </td>
+                            <td>
+                                <button ng-click="ImportUsersModal.viewdetails(rightitem)" class="btn btn-link importUsers_viewDetails">
+                                    {{'GENERIC_ViewDetails' | translate}}
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot ng-if="ImportUsersModal.rightcol.length >= 1">
+                        <tr>
+                            <td colspan="5">
+                                <span>
+                                    {{ImportUsersModal.getItemsFoundTranslation(ImportUsersModal.rightcol.length,ImportUsersModal.rightcol.length)}}
+                                </span>
+                                <span style="margin-left: 30px;">
+                                    {{ImportUsersModal.getItemsSelectedTranslation(ImportUsersModal.selectedRightItems().length)}}
+                                </span>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </li>
+    </ul>
+    <div class="clearfix"></div>
+
+    <footer>
+        <br />
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+
+                <button type="button" class="btn btn-primary" ng-click="ImportUsersModal.saveUsers()" ng-disabled="ImportUsersModal.noRoles().length >= 1 || ImportUsersModal.rightcol.length == 0" id="save_import_user_form">{{'GENERIC_Save' | translate}}</button>
+            </li>
+            <li>
+                <button type="button" class="btn btn-default" ng-click="ImportUsersModal.cancel()" id="">
+                    {{'GENERIC_Cancel' | translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

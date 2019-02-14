@@ -1,0 +1,22 @@
+﻿<section id="page_downloadSigningCert" class="col-sm-12">
+    <form id="">
+        <p>
+            {{'SETTINGS_CertDownloadInstructions'|translate}}
+        </p>
+        <div class="well">
+            <pre id="txtCSR">{{downloadCertModalController.cert.certificateSigReq}}</pre>
+        </div>
+    </form>
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="cancelBtn"
+                        class="btn btn-primary"
+                        ng-click="downloadCertModalController.cancel()">
+                    {{'SETTINGS_Close'|translate}}
+                </button>
+            </li>
+        </ul>
+
+    </footer>
+</section>

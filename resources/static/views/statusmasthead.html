@@ -1,0 +1,149 @@
+﻿<div class="globalAlerts">
+    <div style="line-height: 49px; margin-left: 15px;">
+        <button style="padding: 5px 6px; margin-top: 0; text-decoration: none; width: auto;" class="btn btn-link customButton alertButton" ng-click="status.showStatuses = !status.showStatuses;">
+            <i class="ci-doc-clipboard-list-o text-white"></i> {{status.getJobsInProgressTranslation(status.jobsinprogress)}}
+        </button>
+    </div>
+
+    <span class="backdrop" ng-show="status.showStatuses||false" ng-click="status.showStatuses=false"></span>
+
+    <div class="alertResults arrowright dropdown-menu" style="width: 500px;" ng-show="status.showStatuses">
+        <h2><i class="ci-doc-clipboard-clock"></i> {{status.getJobsInProgressTranslation(status.jobsinprogress)}}</h2>
+        <!--<div>
+            <div class="inProgress">
+                <strong ng-if="!status.oobe.initialConfigurationCompleted">{{'GETTINGSTARTED_initialhardwareconfiginprogress'|translate}}</strong>
+            </div>
+        </div>-->
+        <div style="padding-left: 15px;" ng-show="status.oobe.discoveryCompleted === false" class="clearfix">
+            <h3 class="text-primary"><i class="ci-search-files-clipboard text-primary"></i> {{'GETTINGSTARTED_discoveryjobs'|translate}}</h3>
+            <div class="row">
+                <ul class="list-unstyled"
+                    style="padding-left: 15px;"
+                    id="discoveryprogress">
+                    <li>
+                        <div class="col-sm-12">
+                            <label>
+                                <i class="success ci-health-square-check"></i>
+                                {{'GETTINGSTARTED_discoveredresources'|translate}}
+                            </label>
+                            <span class="resourceCount">{{status.oobe.discoveredResources}}</span>
+                        </div>
+                    </li>
+                    <li ng-if="status.oobe.pendingResources > 0">
+                        <div class="col-sm-7">
+                            <label>
+                                <i class="info ci-state-standby-clock"></i>
+                                {{'GETTINGSTARTED_pendingresources'|translate}}
+                            </label>
+                            <span class="resourceCount">{{status.oobe.pendingResources}}</span>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="progress" style="margin-top: 5px; height: 11px;">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+                    <li>
+                        <div class="col-sm-12">
+                            <label>
+                                <i class="critical ci-action-circle-remove"></i>
+                                {{'GETTINGSTARTED_errorresources'|translate}}
+                            </label>
+                            <span class="resourceCount">{{status.oobe.errorsResources}}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <!--<h3><i class="ci-arrow-box-download text-primary"></i> Firmware Updates</h3>-->
+        <!--<ul class="list-unstyled">
+            <li>
+                {{status.}} Update in-progress
+            </li>
+            <li>
+                {{status.}} Completed today
+            </li>
+        </ul>-->
+        <div ng-if="status.oobe.discoveryCompleted && status.jobsinprogress <= 0" class="clearfix" style="text-align: center;">
+            <h4><i class="ci-doc-clipboard-clock"></i> {{status.getJobsInProgressTranslation(status.jobsinprogress)}}</h4>
+        </div>
+        <div ng-if="status.jobsinprogress > 0" class="clearfix" style="padding-left: 15px;">
+            <h3 class="text-primary"><i class="ci-app-checklist text-primary"></i> {{'GETTINGSTARTED_updatesinprogress'|translate}}</h3>
+            <ul class="list-unstyled" style="padding-left: 15px;">
+                <!--<li>
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <spinner></spinner> &nbsp;{{status.jobsinprogress}} <span ng-if="status.jobsinprogress == 1">Job</span><span ng-if="status.jobsinprogress >= 2">Jobs</span>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="progress" style="margin-top: 5px; height: 11px;">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>-->
+                <li ng-if="!status.oobe.initialConfigurationCompleted">
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <spinner></spinner> &nbsp; <span>{{'GETTINGSTARTED_initialhardwareconfiginprogress'|translate}}</span>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="progress" style="margin-top: 5px; height: 11px;">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li ng-if="!status.oobe.firmwareUpdateCompleted">
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <spinner></spinner> &nbsp; <span>{{'GETTINGSTARTED_firmwaresoftwareupdating'|translate}}</span>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="progress" style="margin-top: 5px; height: 11px;">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li ng-if="!status.oobe.inventoryUpdateCompleted">
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <spinner></spinner> &nbsp; <span>{{'GETTINGSTARTED_inventoryupdating'|translate}}</span>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="progress" style="margin-top: 5px; height: 11px;">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li ng-if="!status.oobe.deploymentCompleted">
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <spinner></spinner> &nbsp; <span>{{'GETTINGSTARTED_deploymentupdating'|translate}}</span>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="progress" style="margin-top: 5px; height: 11px;">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div style="display: block; background-color: #eee; text-align: center; padding: 10px; margin-top: 20px;" ng-if="!ASM.IsInRole('standard')">
+            <a ng-href="#/settings/Jobs/true">
+                {{'GETTINGSTARTED_jobs_ViewJobsPage'|translate}}
+            </a>
+        </div>
+    </div>
+</div>

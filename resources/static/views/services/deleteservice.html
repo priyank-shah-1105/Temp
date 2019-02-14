@@ -1,0 +1,209 @@
+﻿<section id="page_delete_service">
+    <error-display errors="DeleteServiceModal.errors" on-click="$root.ASM.RemoveError(error, DeleteServiceModal.errors)" on-expand-collapse=""></error-display>
+
+    <fieldset role="form" class="form-horizontal" ng-if="DeleteServiceModal.removalType == null">
+        <div class="alert alert-warning">
+            <i class="ci-health-warning-tri-bang text-default"></i>
+            {{"SERVICE_DETAIL_RemoveService_Warning" | translate}}
+        </div>
+        <br />
+        <div class="form-group">
+            <label class="col-md-4 control-label">
+                <strong>
+                    {{"SERVICE_DETAIL_RemoveService_Types_InfoText" | translate}}
+                </strong>
+             </label>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-12 control-label">
+                <strong>
+                    {{"SERVICE_DETAIL_DELETE_SERVICE_DeleteService" | translate}}
+                </strong>:
+                {{"SERVICE_DETAIL_DeleteService_Text" | translate}}
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-12 control-label">
+                <strong>
+                    {{"SERVICE_DETAIL_RemoveService" | translate}}
+                </strong>:
+                {{"SERVICE_DETAIL_RemoveService_Text" | translate}}
+             </label>
+        </div>
+
+        <div class="form-group">
+            <label for="removalType" class="col-md-4 control-label">
+                {{'SERVICE_DETAIL_Service_Removal_Type'|translate}}
+            </label>
+            <div class="col-md-8">
+                <select id="removalType"
+                        class="form-control"
+                        name="removalType"
+                        ng-model="DeleteServiceModal.removalType"
+                        ng-change="DeleteServiceModal.setRemovalType()"
+                        ng-options="removalType.id as removalType.name for removalType in DeleteServiceModal.removalTypeOptions">
+                    <option value="">{{'GENERIC_select'|translate}}</option>
+                </select>
+            </div>
+        </div>
+    </fieldset>
+
+    <form id="form_deleteservice" ng-if="DeleteServiceModal.removalType === 'delete'"
+          name="DeleteServiceModal.form"
+          role="form"
+          class="form-horizontal"
+          novalidate
+          form-validation="DeleteServiceModal.form._submitted">
+        <div class="form-group" style="margin-bottom: 0; margin-top: 10px;" ng-if="DeleteServiceModal.serverlist.length >= 1">
+            <div class="col-sm-12">
+                <input ng-disabled="true" type="checkbox" id="deleteservers" ng-model="DeleteServiceModal.deleteRequest.deleteServers" ng-init="DeleteServiceModal.deleteRequest.deleteServers = true" />
+                {{'SERVICE_DETAIL_DELETE_SERVICE_ReturnServers' | translate}}
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 5px; margin-top: 5px; margin-left: 7px" ng-if="DeleteServiceModal.serverlist.length >= 1">
+            <div class="col-sm-12">
+                {{'SERVICE_DETAIL_DELETE_SERVICE_ServerDescription' | translate}}
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 0; margin-top: 10px;" ng-if="DeleteServiceModal.vmlist.length >= 1">
+            <div class="col-sm-12">
+                <input type="checkbox" ng-disabled="true" id="deletevms" ng-model="DeleteServiceModal.deleteRequest.deleteVMs" ng-init="DeleteServiceModal.deleteRequest.deleteVMs = true" />
+                {{'SERVICE_DETAIL_DELETE_SERVICE_DeleteVms' | translate}}
+            </div>
+        </div>
+        <div class="form-group" ng-if="DeleteServiceModal.deleteRequest.deleteVMs === true" style="margin-bottom: 0; margin-left: 8px">
+            <div class="col-sm-11" ng-repeat="vm in DeleteServiceModal.vmlist">
+                <input type="checkbox" ng-disabled="true" ng-model="vm.isSelected" ng-init="vm.isSelected = true" />
+                <span>{{vm.name}}</span>
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 0; margin-top: 10px;" ng-if="DeleteServiceModal.clusterlist.length > 0 && (DeleteServiceModal.serverlist.length > 0 || DeleteServiceModal.storagelist.length > 0)">
+            <div class="col-sm-12">
+                <input type="checkbox" ng-disabled="DeleteServiceModal.pending()" ng-model="DeleteServiceModal.deleteRequest.deleteClusters" ng-init="DeleteServiceModal.deleteRequest.deleteClusters = false" id="deleteclusters" />
+                {{'SERVICE_DETAIL_DELETE_SERVICE_DeleteCluster' | translate}}
+            </div>
+        </div>
+        <div class="form-group" ng-if="DeleteServiceModal.deleteRequest.deleteClusters === true" style="margin-bottom: 0; margin-left: 8px">
+            <div class="col-sm-11" ng-repeat="cluster in DeleteServiceModal.clusterlist">
+                <input type="checkbox" ng-disabled="DeleteServiceModal.pending()" ng-model="cluster.isSelected" ng-init="cluster.isSelected = false" />
+                <span>{{cluster.name}}</span>
+            </div>
+        </div>
+        <!--<div class="form-group" style="margin-bottom: 0; margin-top: 10px;" ng-if="DeleteServiceModal.storagelist.length >= 1">
+            <div class="col-sm-12">
+                <input type="checkbox" ng-disabled="DeleteServiceModal.pending()" id="deletestoragevolumes" ng-model="DeleteServiceModal.deleteRequest.deleteStorageVolumes" ng-init="DeleteServiceModal.deleteRequest.deleteStorageVolumes = false" />
+                {{'SERVICE_DETAIL_DELETE_SERVICE_DeleteStorage' | translate}}
+            </div>
+        </div>
+        <div class="form-group" ng-if="DeleteServiceModal.deleteRequest.deleteStorageVolumes === true" style="margin-bottom: 0; margin-left: 8px">
+            <div class="col-sm-11" ng-repeat="storage in DeleteServiceModal.storagelist">
+                <input type="checkbox" ng-disabled="DeleteServiceModal.pending()" ng-model="storage.isSelected" ng-init="storage.isSelected = false" />
+                <span>{{storage.name}}</span>
+            </div>
+        </div>-->
+        <!-- Scaleio -->
+        <div class="form-group" style="margin-bottom: 0; margin-top: 10px;" ng-if="DeleteServiceModal.scaleiolist.length >= 1">
+            <div class="col-sm-12">
+                <input type="checkbox" ng-disabled="DeleteServiceModal.pending()" id="deletescaleios" ng-model="DeleteServiceModal.deleteRequest.deleteScaleios" />
+                {{'SERVICE_DETAIL_DELETE_SERVICE_DeleteScaleios' | translate}}
+            </div>
+        </div>
+        <div class="form-group" ng-if="DeleteServiceModal.deleteRequest.deleteScaleios" style="margin-bottom: 0; margin-left: 8px">
+            <div class="col-sm-11" ng-repeat="scaleio in DeleteServiceModal.scaleiolist">
+                <input type="checkbox" ng-disabled="DeleteServiceModal.pending()" ng-model="scaleio.isSelected" />
+                <span>{{scaleio.name}}</span>
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 0; margin-top: 10px;">
+            <div class="col-sm-12">
+                {{'SERVICE_DETAIL_DELETE_SERVICE_Footnote' | translate}}
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 0; margin-top: 20px;">
+            <div class="col-sm-12">
+                {{'SERVICE_DETAIL_DELETE_SERVICE_Warning' | translate}}
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 0; margin-top: 10px;">
+            <label class="col-md-2 control-label">
+                {{'SERVICE_DETAIL_DELETE_SERVICE_Confirm' | translate}}
+            </label>
+            <input type="text" ng-model="DeleteServiceModal.confirmDelete" id="confirmDelete" class="col-md-4"/>
+        </div>
+    </form>
+
+    <!--REMOVE SERVICE-->
+    <form id="form_removeservice" ng-if="DeleteServiceModal.removalType === 'remove'"
+          name="DeleteServiceModal.form"
+          role="form"
+          class="form-horizontal"
+          novalidate
+          form-validation="DeleteServiceModal.form._submitted">
+
+        <div class="form-group">
+                <input type="checkbox" id="removeService" ng-checked="true" ng-disabled="true" />
+            <label for="removeService">
+                {{'SERVICE_DETAIL_RemoveService_From_VxFM' | translate}}
+            </label>    
+        </div>
+
+        <div class="form-group">
+            <div class="radio">
+                <label for="keepServers" class="col-md-4 control-label">
+                    <input id="keepServers"
+                           type="radio"
+                           name="serversInInventory"
+                           value="keep"
+                           ng-model="DeleteServiceModal.serversInInventory" />
+                    {{'SERVICE_DETAIL_LeaveServersInInventory'|translate}}
+                </label>
+                <div class="col-md-8">
+                    <select id="resourceState"
+                            class="form-control"
+                            ng-model="DeleteServiceModal.resourceState"
+                            ng-options="item.id as item.name for item in DeleteServiceModal.constants.availableManagedStates"
+                            ng-disabled="DeleteServiceModal.serversInInventory == 'remove'"
+                            ng-required="DeleteServiceModal.serversInInventory == 'keep'">
+                        <option value="">{{'GENERIC_select'|translate}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="radio">
+                <label for="removeServers">
+                    <input id="removeServers"
+                           type="radio"
+                           name="serversInInventory"
+                           value="remove"
+                           ng-model="DeleteServiceModal.serversInInventory"/>
+                    {{'SERVICE_DETAIL_RemoveServersFromInventory'|translate}}
+                </label>
+            </div>
+        </div>
+    </form>
+
+        <footer>
+            <ul class="list-unstyled list-inline text-right">
+                <li ng-if="DeleteServiceModal.removalType !== null">
+                    <button ng-if="DeleteServiceModal.removalType === 'delete'" id="submit_form_delete_resources" class="btn btn-danger" ng-disabled="DeleteServiceModal.confirmDelete !== 'DELETE SERVICE' || deleteResources.disableDeleteButton()" form="form_deleteservice"
+                            ng-click="DeleteServiceModal.form._submitted = true; DeleteServiceModal.delete(DeleteServiceModal.form.$invalid)">
+                        {{'GENERIC_Delete'|translate}}
+                    </button>
+
+                    <button ng-if="DeleteServiceModal.removalType === 'remove'" id="btnRemove" class="btn btn-danger" ng-click="DeleteServiceModal.form._submitted = true; DeleteServiceModal.remove(DeleteServiceModal.form.$invalid)" form="form_removeservice">
+                        {{'GENERIC_Remove'|translate}}
+                    </button>
+                </li>
+                <li>
+                    <button id="cancel_form_edit_resources" class="btn btn-default" ng-click="DeleteServiceModal.close()">
+                        {{'GENERIC_Cancel'|translate}}
+                    </button>
+                </li>
+            </ul>
+        </footer>
+
+</section>

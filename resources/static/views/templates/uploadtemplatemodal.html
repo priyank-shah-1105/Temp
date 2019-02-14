@@ -1,0 +1,475 @@
+﻿<wizard on-finish="UploadTemplateModal.finishWizard()"
+        on-cancel="UploadTemplateModal.cancel()">
+    <error-display errors="UploadTemplateModal.errors"
+                   on-click="$root.ASM.RemoveError(error, UploadTemplateModal.errors)"
+                   on-expand-collapse=""></error-display>
+    <wizard-step step-title="File/Template Information"
+                 on-next="UploadTemplateModal.validateStep1()">
+        <form id="form_uploadtemplate"
+              novalidate
+              class="form-horizontal"
+              name="UploadTemplateModal.forms.step1"
+              role="form"
+              form-validation="UploadTemplateModal.forms.step1._submitted">
+            <h2>
+                {{'TEMPLATES_UploadExternalModal_FileInformation'|translate}}
+            </h2>
+            <ul class="list-unstyled well">
+                <li class="form-group">
+                    <label for="templatefile" class="col-sm-4 control-label">
+                        {{'TEMPLATES_UploadExternalModal_SelectTemplate' | translate}}
+                    </label>
+                    <div class="col-md-8">
+                        <div id="fileWrapper">
+                            <input required
+                                   uploader="uploader"
+                                   nv-file-select
+                                   ng-model="UploadTemplateModal.fileModel"
+                                   id="templatefile"
+                                   type="file"
+                                   text="Browse"
+                                   name="templatefile" />
+                        </div>
+                        <div class="text-danger" ng-if="UploadTemplateModal.forms.step1._submitted">
+                            <div ng-if="UploadTemplateModal.forms.step1.templatefile.$error.required">
+                                {{'GENERIC_RequiredField'|translate}}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="form-group">
+                    <label class="col-sm-4 control-label" for="useEncPwdFromBackup">
+                        {{'TEMPLATES_UploadExternalModal_UseBackupPassword' | translate}}
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="checkbox"
+                               ng-model="UploadTemplateModal.useEncPwdFromBackup"
+                               id="useEncPwdFromBackup"
+                               name="useEncPwdFromBackup"
+                               value="true" />
+                    </div>
+                </li>
+                <li class="form-group" ng-if="!UploadTemplateModal.useEncPwdFromBackup">
+                    <label class="col-sm-4 control-label">
+                        {{'TEMPLATES_UploadExternalModal_EncryptionPassword' | translate}}*
+                    </label>
+                    <div class="col-sm-4">
+                        <div class="">
+                            <div class="input-group">
+                                <input id="encryptionPassword"
+                                       name="encryptionPassword"
+                                       ng-model="UploadTemplateModal.encryptionPassword"
+                                       required
+                                       class="form-control"
+                                       type="password" password-viewer 
+                                       placeholder="" />
+                             
+                            </div>
+                        </div>
+                        <div class="text-danger" ng-if="UploadTemplateModal.forms.step1._submitted">
+                            <div ng-if="UploadTemplateModal.forms.step1.encryptionPassword.$error.required">
+                                {{'GENERIC_RequiredField'|translate}}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <h2>
+                {{'TEMPLATES_UploadExternalModal_TemplateInfo' | translate}}
+            </h2>
+            <ul id="ul2" class="list-unstyled well">
+                <template-information template="UploadTemplateModal.template" 
+                                      errors="UploadTemplateModal.errors" 
+                                      form="UploadTemplateModal.forms.step1" 
+                                      read-only="false"
+                                      templates="UploadTemplateModal.templates"
+                                      ng-if="UploadTemplateModal.loadTemplateInfo"></template-information>
+            </ul>
+        </form>
+    </wizard-step>
+
+    <wizard-step step-title="{{'TEMPLATES_UploadExternalModal_AdditionalSettings'|translate}}" on-enter="UploadTemplateModal.enterStep2()">
+
+        <h2>
+            {{'TEMPLATES_UploadExternalModal_AdditionalSettings' | translate}}
+        </h2>
+        <p>
+            {{'TEMPLATES_UploadExternalModal_AdditionalSettingsDesc' | translate}}
+        </p>
+
+        <form class="form-horizontal"
+              role="form"
+              id="additionalsettingsFrom"
+              name="UploadTemplateModal.forms.step2"
+              form-validation="UploadTemplateModal.forms.step2._submitted">
+
+            <div class="panel-group" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-default" ng-if="UploadTemplateModal.template.configureTemplateConfiguration.networkSettings != null && UploadTemplateModal.template.configureTemplateConfiguration.networkSettings.length > 0">
+                    <div class="panel-heading" role="tab" id="headingOne">
+                        <h4 class="panel-title">
+                            <a role="button" class="" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                {{'TEMPLATES_UploadExternalModal_NetworkSettings' | translate}}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                        <div class="panel-body well">
+                            <p>
+                                {{'TEMPLATES_UploadExternalModal_NetworkDesc' | translate}}
+                            </p>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            {{'TEMPLATES_UploadExternalModal_NetworkName' | translate}}
+                                        </th>
+                                        <th>
+                                            {{'TEMPLATES_UploadExternalModal_NetworkType' | translate}}
+                                        </th>
+                                        <th>
+                                            {{'TEMPLATES_UploadExternalModal_SelectNewNetwork' | translate}}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="network in UploadTemplateModal.template.configureTemplateConfiguration.networkSettings">
+                                        <td>
+                                            {{network.name}}
+                                            &nbsp;
+                                            <button ng-click="UploadTemplateModal.viewComponents(network)" class="btn btn-link viewComponentsLink">
+                                                {{'TEMPLATES_UploadExternalModal_ViewComponents' | translate}}
+                                            </button>
+                                        </td>
+                                        <td>{{network.type}}</td>
+                                        <td>
+                                            <select class="form-control" ng-options="option.id as option.name for option in network.options" ng-model="network.value">
+                                                <option value="">{{'GENERIC_select'|translate}}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default" ng-if="UploadTemplateModal.template.configureTemplateConfiguration.osSettings != null">
+                    <div class="panel-heading" role="tab" id="headingTwo">
+                        <h4 class="panel-title">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                {{'TEMPLATES_UploadExternalModal_OsSettings' | translate}}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                        <div class="panel-body well">
+                            <p>
+                                {{'TEMPLATES_UploadExternalModal_OsSettingsDesc' | translate}}
+                            </p>
+                            <ul class="list-unstyled">
+                                <li class="form-group">
+                                    <label class="col-sm-4 control-label" for="svmOSCredential">
+                                        {{'TEMPLATES_UploadExternalModal_OSCredential' | translate}}*
+                                        <i class="ci ci-info-circle-info text-primary"
+                                           id="tootip_svmOSCredential"
+                                           data-toggle="tooltip"
+                                           data-placement="right"
+                                           title="{{'TEMPLATES_UploadExternalModal_Tooltip_NotSVM' |translate}}"></i>
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <select class="form-control"
+                                                name="adminOSCredential"
+                                                id="adminOSCredential"
+                                                ng-required="true"
+                                                ng-options="credential.id as credential.credentialsName for credential in UploadTemplateModal.credentials"
+                                                ng-model="UploadTemplateModal.template.configureTemplateConfiguration.osSettings.adminOSCredential">
+                                            <option value="">{{'GENERIC_select'|translate}}</option>
+                                        </select>
+                                        <span class="text-danger" ng-if="UploadTemplateModal.forms.step2._submitted">
+                                            <span ng-if="UploadTemplateModal.forms.step2.adminOSCredential.$error.required">
+                                                {{'GENERIC_RequiredField' | translate}}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button ng-click="UploadTemplateModal.addCredential(UploadTemplateModal.template.configureTemplateConfiguration.osSettings, 'adminOSCredential')"
+                                                id="addCredential_adminOSCredential"
+                                                class="btn btn-link text-primary">
+                                            <i class="ci ci-action-add-plus-float"></i>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="form-group" ng-if="UploadTemplateModal.template.configureTemplateConfiguration.osSettings.hyperconverged">
+                                    <label class="col-sm-4 control-label" for="svmAdminOSCredential">
+                                        {{'TEMPLATES_UploadExternalModal_svmAdminOSCredential' | translate}}*
+                                        <i class="ci ci-info-circle-info text-primary"
+                                           id="tootip_svmOSCredential"
+                                           data-toggle="tooltip"
+                                           data-placement="right"
+                                           title="{{'TEMPLATES_UploadExternalModal_Tooltip_SVM' |translate}}"></i>
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <select class="form-control"
+                                                name="svmAdminOSCredential"
+                                                id="svmAdminOSCredential"
+                                                ng-required="true"
+                                                ng-options="credential.id as credential.credentialsName for credential in UploadTemplateModal.credentials"
+                                                ng-model="UploadTemplateModal.template.configureTemplateConfiguration.osSettings.svmAdminOSCredential">
+                                            <option value="">{{'GENERIC_select'|translate}}</option>
+                                        </select>
+                                        <span class="text-danger" ng-if="UploadTemplateModal.forms.step2._submitted">
+                                            <span ng-if="UploadTemplateModal.forms.step2.svmAdminOSCredential.$error.required">
+                                                {{'GENERIC_RequiredField' | translate}}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button ng-click="UploadTemplateModal.addCredential(UploadTemplateModal.template.configureTemplateConfiguration.osSettings, 'svmAdminOSCredential')"
+                                                id="addCredential_svmAdminOSCredential"
+                                                class="btn btn-link text-primary">
+                                            <i class="ci ci-action-add-plus-float"></i>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                            <table class="table table-striped" ng-if="UploadTemplateModal.template.configureTemplateConfiguration.osSettings.osRepositories.length > 0">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            {{'TEMPLATES_OriginalOsRepo' | translate}}
+                                        </th>
+                                        <th>
+                                            {{'TEMPLATES_SelectNewRepo' | translate}}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="os in UploadTemplateModal.template.configureTemplateConfiguration.osSettings.osRepositories">
+                                        <td>
+                                            {{os.name}}
+                                            &nbsp;
+                                            <button ng-click="UploadTemplateModal.viewComponents(os)" class="btn btn-link viewComponentsLink">
+                                                {{'TEMPLATES_UploadExternalModal_ViewComponents' | translate}}
+                                            </button>
+
+                                        </td>
+                                        <td>
+                                            <select ng-options="option.id as option.name for option in os.options" ng-model="os.value" class="form-control">
+                                                <option value="">{{'GENERIC_select'|translate}}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default" ng-if="UploadTemplateModal.template.configureTemplateConfiguration.clusterSettings != null && UploadTemplateModal.template.configureTemplateConfiguration.clusterSettings.length  > 0">
+                    <div class="panel-heading" role="tab" id="headingThree">
+                        <h4 class="panel-title">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                {{'TEMPLATES_ClusterSettings' | translate}}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                        <div class="panel-body well">
+                            <p>
+                                {{'TEMPLATES_ClusterDesc' | translate}}
+                            </p>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            {{'TEMPLATES_OriginalVmManager' | translate}}
+                                        </th>
+                                        <th>
+                                            {{'TEMPLATES_ClusterType' | translate}}
+                                        </th>
+                                        <th>
+                                            {{'TEMPLATES_SelectNewVMManager' | translate}}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="cluster in UploadTemplateModal.template.configureTemplateConfiguration.clusterSettings">
+                                        <td>
+                                            {{cluster.name}}
+                                            &nbsp;
+                                            <button ng-click="UploadTemplateModal.viewComponents(cluster)" class="btn btn-link viewComponentsLink">
+                                                {{'TEMPLATES_UploadExternalModal_ViewComponents' | translate}}
+                                            </button>
+                                        </td>
+                                        <td>{{cluster.type}}</td>
+                                        <td>
+                                            <select ng-options="option.id as option.name for option in cluster.options" ng-model="cluster.value" class="form-control">
+                                                <option value="">{{'GENERIC_select'|translate}}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="panel panel-default" ng-if="UploadTemplateModal.template.configureTemplateConfiguration.scaleIOSettings != null && UploadTemplateModal.template.configureTemplateConfiguration.scaleIOSettings.length > 0">
+                    <div class="panel-heading" role="tab" id="headingFive">
+                        <h4 class="panel-title">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                {{"TEMPLATES_UploadExternalModal_VxFlex_VxFlexOSGatewaySettings" | translate}}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+                        <div class="panel-body well">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            {{'TEMPLATES_UploadExternalModal_VxFlex_OriginalTargetVxFlexOSGateway' | translate}}
+                                        </th>
+                                        <th>
+                                            {{'TEMPLATES_UploadExternalModal_VxFlex_SelectNewTargetVXFlexOSGateway' | translate}}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="storage in UploadTemplateModal.template.configureTemplateConfiguration.scaleIOSettings">
+                                        <td>
+                                            {{storage.name}}
+                                            &nbsp;
+                                            <button ng-click="UploadTemplateModal.viewComponents(storage)" class="btn btn-link viewComponentsLink">
+                                                {{'TEMPLATES_UploadExternalModal_ViewComponents' | translate}}
+                                            </button>
+
+                                        </td>
+                                        <td>
+                                            <select ng-options="option.id as option.name for option in storage.options" ng-model="storage.value" class="form-control">
+                                                <option value="">{{'GENERIC_select'|translate}}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default" ng-if="UploadTemplateModal.template.configureTemplateConfiguration.serverPoolSettings != null && UploadTemplateModal.template.configureTemplateConfiguration.serverPoolSettings.length > 0">
+                    <div class="panel-heading" role="tab" id="headingFour">
+                        <h4 class="panel-title">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                {{'TEMPLATES_ServerPoolSettings' | translate}}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                        <div class="panel-body well">
+                            <p>
+                                {{'TEMPLATES_ServerPoolDesc' | translate}}
+                            </p>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            {{'TEMPLATES_OriginalServerPool' | translate}}
+                                        </th>
+                                        <th>
+                                            {{'TEMPLATES_SelectNewServerPool' | translate}}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="pool in UploadTemplateModal.template.configureTemplateConfiguration.serverPoolSettings">
+                                        <td>
+                                            <span>{{pool.name}}</span>
+                                            &nbsp;
+                                            <button ng-click="UploadTemplateModal.viewComponents(pool)" class="btn btn-link viewComponentsLink">
+                                                {{'TEMPLATES_UploadExternalModal_ViewComponents' | translate}}
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <select ng-options="option.id as option.name for option in pool.options" ng-model="pool.value" class="form-control">
+                                                <option value="">{{'GENERIC_select'|translate}}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default" ng-if="UploadTemplateModal.template.configureTemplateConfiguration.storageSettings != null && UploadTemplateModal.template.configureTemplateConfiguration.storageSettings.length > 0">
+                    <div class="panel-heading" role="tab" id="headingFive">
+                        <h4 class="panel-title">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                {{'TEMPLATES_UploadExternalModal_StorageSettings' | translate}}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+                        <div class="panel-body well">
+                            <p>
+                                {{'TEMPLATES_UploadExternalModal_StorageDesc' | translate}}
+                            </p>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            {{'TEMPLATES_UploadExternalModal_OriginalStorageArray' | translate}}
+                                        </th>
+                                        <th>
+                                            {{'TEMPLATES_UploadExternalModal_StorageType' | translate}}
+                                        </th>
+                                        <th>
+                                            {{'TEMPLATES_UploadExternalModal_SelectNewStorageArray' | translate}}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="storage in UploadTemplateModal.template.configureTemplateConfiguration.storageSettings">
+                                        <td>
+                                            {{storage.name}}
+                                            &nbsp;
+                                            <button ng-click="UploadTemplateModal.viewComponents(storage)" class="btn btn-link viewComponentsLink">
+                                                {{'TEMPLATES_UploadExternalModal_ViewComponents' | translate}}
+                                            </button>
+
+                                        </td>
+                                        <td>
+                                            {{storage.type}}
+                                        </td>
+                                        <td>
+                                            <select ng-options="option.id as option.name for option in storage.options" ng-model="storage.value" class="form-control">
+                                                <option value="">{{'GENERIC_select'|translate}}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                
+
+            </div>
+        </form>
+    </wizard-step>
+</wizard>

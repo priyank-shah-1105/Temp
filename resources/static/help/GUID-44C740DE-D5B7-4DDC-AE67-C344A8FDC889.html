@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Adding IP Address
+and Credentials to Chassis</title><link rel="prev" href="GUID-4B948DC5-05D0-4B66-A887-1EA4C980EF58.html" /><link rel="next" href="GUID-B0D6DE23-D2B8-4535-8152-9F12C50B65AF.html" /><link href="static/screen.css?mSUyqg2y" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-44C740DE-D5B7-4DDC-AE67-C344A8FDC889" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">VxRack FLEX Manager</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Adding IP Address
+and Credentials to Chassis</h1>
+<div class="context" id="GUID-D1D2009C-FE2C-469B-A0B3-F70AC592A3B8">On the<span class="wintitle"> Initial Chassis Configuration</span> page, you can
+configure the IP address and credentials to the chassis and the associated
+servers and I/O module during discovery. However, you can configure
+the global chassis settings and other unique settings for chassis,
+servers, and I/O modules using the Configure Resource wizard. <div class="note" id="GUID-6CEC9977-935C-4372-A4CD-B7C470C8486A"><span class="notelabel">NOTE: </span> The Chassis Configuration
+page in the Discover Resources wizard is displayed only when the resources
+that you discovered include one or more chassis.</div></div>
+<ol class="steps" id="GUID-FFA2A64D-B7C5-4625-B9E1-9BA3649DF19F">
+<li><p>On the<span class="wintitle"> Initial Chassis
+Configuration</span> page, in the<span class="uicontrol"> IP Addressing </span>section, perform the following actions:</p>
+<p><ol id="GUID-2D8141E0-C048-4645-B7F6-E24C0AE96EB0">
+<li><p>Under Chassis, select one of the following
+methods for obtaining IP addresses for the chassis:</p><ul id="GUID-D916883D-294E-4C7C-9E7F-36861F103B30">
+<li><p><span class="uicontrol">Use existing chassis IP
+address</span> — ASM does not change the IP address of the chassis.</p><div class="note" id="GUID-6355C618-F226-482E-9C8C-D2A4ACADC3A1"><span class="notelabel">NOTE: </span>This option
+is valid only for chassis that have been previously configured and
+deployed inside or outside of ASM. Do not choose this option for new
+chassis.</div> <p><span class="uicontrol">Assign static IP address
+from the network</span> — Assign a static IP address from the
+pool of IP addresses in a management network. To add a network, click <span class="uicontrol">New</span> and complete the <span class="wintitle">Define Network</span> page.</p></li>
+</ul></li>
+<li><p>Under Servers, select one of the
+following methods for obtaining IP addresses for the chassis:</p><ul id="GUID-6669B0AF-BAD0-47A3-B1DE-BB43F1108F33">
+<li><p><span class="uicontrol">Use existing chassis IP
+address</span> — ASM does not change the IP address of the chassis.</p><div class="note" id="GUID-6355C618-F226-482E-9C8C-D2A4ACADC3A1"><span class="notelabel">NOTE: </span>This option
+is valid only for servers that have been previously configured and
+deployed inside or outside of ASM. Do not choose this option for new
+chassis.</div> </li>
+<li><p><span class="uicontrol">Assign IP address via DHCP</span> — Use DHCP to automatically allocate an IP address. This option
+is not valid for chassis.</p></li>
+<li><p><span class="uicontrol">Assign static IP address
+from the network</span> — Assign a static IP address from the
+pool of IP addresses in a management network. To add a network, click <span class="uicontrol">New</span> and complete the <span class="wintitle">Define Network </span>page.</p></li>
+</ul></li>
+<li><p>Under I/O Modules, select one of the
+following methods for obtaining IP addresses for the chassis:</p><ul id="GUID-5E23C1ED-9B4A-4315-AB94-6B8968024B52">
+<li><p><span class="uicontrol">Use existing chassis IP
+address</span> — ASM does not change the IP address of the device.</p><div class="note" id="GUID-6355C618-F226-482E-9C8C-D2A4ACADC3A1"><span class="notelabel">NOTE: </span>This option
+is valid only for I/O modules that have been previously configured
+and deployed inside or outside of Active System Manager. Do not choose
+this option for new devices.</div> </li>
+<li><p><span class="uicontrol">Assign IP address via
+DHCP</span> — Use DHCP to automatically allocate an IP address.
+This option is not valid for chassis.</p></li>
+<li><p><span class="uicontrol">Assign static IP address
+from the network</span> — Assign a static IP address from the
+pool of IP addresses in a management network. To add a network, click <span class="uicontrol">New</span> and complete the <span class="wintitle">Define Network </span>page.</p></li>
+</ul></li>
+</ol></p>
+</li>
+<li><p>In the Credentials section, perform the following
+actions to select or modify the root credentials for chassis and associated
+servers and I/O modules:</p>
+<p><ol id="GUID-FF8106F7-80BB-49CE-A891-FF2E84E7ACBC">
+<li><p>From the <span class="uicontrol">Chassis Credentials</span> drop-down list, select the credentials for accessing the chassis.
+To create a root credential, click <span class="uicontrol">Create New</span>. To edit a credential, select the credential from the <span class="uicontrol">Chassis Credentials</span> drop-down list and click <span class="uicontrol">Edit</span>.</p></li>
+<li><p>From the <span class="uicontrol">Blade Credentials</span> drop-down list, select the credentials for accessing blade server
+within the chassis. To create a root credential, click <span class="uicontrol">Create New</span>. To edit a credential, select the credential
+from the <span class="uicontrol">Blade Credentials</span> drop-down list and
+click <span class="uicontrol">Edit</span>.</p></li>
+<li><p>From the <span class="uicontrol">I/O Module Credentials</span> drop-down list, select the credentials for accessing I/O modules
+within the chassis. To create a root credential, click <span class="uicontrol">Create New</span>. To edit a credential, select the credential
+from the <span class="uicontrol">I/O Module Credentials</span> drop-down list
+and click <span class="uicontrol">Edit</span>.</p></li>
+</ol></p>
+</li>
+<li><p>Click <span class="uicontrol">Next</span>.</p></li>
+</ol>
+</article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?UzZSRggC"></script></body></html>

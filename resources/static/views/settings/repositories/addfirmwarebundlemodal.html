@@ -1,0 +1,197 @@
+﻿<section id="page_create_firmwarepackage">
+    <error-display errors="addFirmwareBundleModalController.errors"
+                   on-click="$root.ASM.RemoveError(error, addFirmwareBundleModalController.errors)"
+                   on-expand-collapse=""></error-display>
+    <form class="form-horizontal"
+          id="firmwarepackageUpload"
+          method="post"
+          name="addFirmwareBundleModalController.firmwarepackageUpload"
+          enctype="multipart/form-data"
+          form-validation="addFirmwareBundleModalController.firmwarepackageUpload._submitted">
+        <div class="form-group">
+            <div class="radio">
+                <label for="createfromfile">
+                    <input type="radio"
+                           id="createfromfile"
+                           name="packageSourceOptions"
+                           value="import"
+                           ng-model="addFirmwareBundleModalController.repo.packageSource" 
+                           ng-disabled="addFirmwareBundleModalController.disabled"/>
+                    {{'SETTINGS_Repositories_LoadRCMfromConfigured'|translate}}
+                    <a title=""
+                       popover
+                       data-content-template="LoadFromSRSInfo.html"
+                       data-trigger="hover">
+                        <i class="ci ci-info-circle-info"></i>
+                    </a>
+                </label>
+                <div class="col-sm-11 col-sm-offset-1" ng-if="addFirmwareBundleModalController.repo.packageSource === 'import'">
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <span ng-if="addFirmwareBundleModalController.disabled">
+                                <i>{{"SETTINGS_Repositories_DellEMCSecureRemoteServices" | translate}}</i>
+                            </span>
+                            <ul class="list-inline" ng-if="!addFirmwareBundleModalController.disabled">
+                                <li class="col-md-2">
+                                    <label for="selectedRcm" class="control-label">
+                                        {{"SETTINGS_Repositories_AvailableRCMs" | translate}}*
+                                    </label>
+                                </li>
+                                <li ng-if="addFirmwareBundleModalController.rcmList.length === 0"
+                                    class="col-md-4 text-default">
+                                    {{"SETTINGS_Repositories_TherearenoRCMversionsavailable" | translate}}
+                                </li>
+                                <li ng-if="addFirmwareBundleModalController.rcmList.length > 0"
+                                    class="col-md-4">
+                                    <div class="">
+                                        <select ng-model="addFirmwareBundleModalController.repo.selectedRcm"
+                                                ng-options="option.id as option.name for option in addFirmwareBundleModalController.rcmList"
+                                                class="form-control"
+                                                name="selectedRcm"
+                                                required
+                                                id="selectedRcm">
+                                            <option value="">
+                                                {{'GENERIC_select' | translate}}
+                                            </option>
+                                        </select>
+                                        <span ng-show="addFirmwareBundleModalController.firmwarepackageUpload._submitted
+                                            && addFirmwareBundleModalController.repo.packageSource == 'import'
+                                            && addFirmwareBundleModalController.firmwarepackageUpload.selectedRcm.$error.required"
+                                              class="text-danger">
+                                            {{'NETWORKS_Edit_Field_Required' | translate}}
+                                        </span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="radio">
+                <label for="networkpath">
+                    <input id="networkpath"
+                           type="radio"
+                           name="packageSourceOptions"
+                           value="network"
+                           ng-model="addFirmwareBundleModalController.repo.packageSource" />
+                    {{'SETTINGS_Repositories_Loadrepositoryfromnetworkpath'|translate}}
+                </label>
+                <div class="col-sm-11 col-sm-offset-1" ng-if="addFirmwareBundleModalController.repo.packageSource === 'network'">
+                    <div class="form-group">
+                        <label for="filepath" class="col-md-2 control-label">
+                            {{'SETTINGS_Repositories_Filepath'|translate}}*
+                            <a title=""
+                               popover
+                               data-content-template="RepositoriesFilePathExample.html"
+                               data-trigger="hover">
+                                <i class="ci ci-info-circle-info"></i>
+                            </a>
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text"
+                                   id="filepath"
+                                   class="form-control"
+                                   name="filepath"
+                                   ng-model="addFirmwareBundleModalController.repo.filepath"
+                                   required />
+                            <span ng-show="addFirmwareBundleModalController.firmwarepackageUpload._submitted
+                                  && addFirmwareBundleModalController.repo.packageSource == 'network'
+                                  && addFirmwareBundleModalController.firmwarepackageUpload.filepath.$error.required"
+                                  class="text-danger">
+                                {{'NETWORKS_Edit_Field_Required' | translate}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="username" class="col-md-2 control-label">
+                            {{'SETTINGS_Repositories_Username'|translate}}
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text"
+                                   name="username"
+                                   id="username"
+                                   class="form-control"
+                                   ng-model="addFirmwareBundleModalController.repo.username" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-md-2 control-label">
+                            {{'SETTINGS_Repositories_Password'|translate}}
+                        </label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input id="password"
+                                       name="password"
+                                       ng-model="addFirmwareBundleModalController.repo.password"
+                                       class="form-control"
+                                       type="password" password-viewer />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <!--ng-disabled="!addFirmwareBundleModalController.firmwarepackageUpload.$valid"-->
+                            <button id="btnTestConnection"
+                                    class="btn btn-default pull-right"
+                                    ng-click="addFirmwareBundleModalController.firmwarepackageUpload._submitted = true; addFirmwareBundleModalController.firmwarepackageUpload.$valid && addFirmwareBundleModalController.testConnection()">
+                                {{'SETTINGS_Repositories_TestConnection'|translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <input id="makeDefault"
+                           type="checkbox"
+                           ng-model="addFirmwareBundleModalController.repo.defaultpackage" />
+                    {{'SETTINGS_Repositories_MakeDefault'|translate}}
+                </label>
+            </div>
+        </div>
+    </form>
+    <br />
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="firmwarepackageSubmit"
+                        class="btn btn-primary"
+                        ng-disabled="(addFirmwareBundleModalController.repo.packageSource === 'import' && addFirmwareBundleModalController.rcmList.length === 0)"
+                        ng-click="addFirmwareBundleModalController.firmwarepackageUpload._submitted = true;
+                        ((addFirmwareBundleModalController.repo.packageSource === 'import' && addFirmwareBundleModalController.firmwarepackageUpload.$valid)
+                        ||
+                        (addFirmwareBundleModalController.repo.packageSource === 'network' && addFirmwareBundleModalController.firmwarepackageUpload.$valid))
+                        && addFirmwareBundleModalController.save()">
+                    {{'SETTINGS_Repositories_Save'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="btnCancel"
+                        class="btn btn-default"
+                        ng-click="addFirmwareBundleModalController.cancel()">
+                    {{'SETTINGS_Repositories_Cancel'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+    <script type="text/ng-template" id="LoadFromSRSInfo.html">
+        <!--this does not fire the ng-click, so the body was implemented in parts below-->
+        <!--<div class="popover-body" ng-bind-html="'SETTINGS_Repositories_LoadFromSRSInfo' | translate | htmlSafe"></div>-->
+        <div class="popover-body">
+            <span ng-bind-html="'SETTINGS_Repositories_LoadFromSRSInfo_part1' | translate | htmlSafe"></span>
+            <a id="goToSettingsLink1"
+               ng-click="addFirmwareBundleModalController.goToSettings()">
+                {{'SETTINGS_Repositories_LoadFromSRSSettingsLink' | translate}}
+            </a>
+            <span style="margin-left: -3px;" ng-bind-html="'SETTINGS_Repositories_LoadFromSRSInfo_part2' | translate | htmlSafe"></span>
+        </div>
+    </script>
+    <script type="text/ng-template" id="RepositoriesFilePathExample.html">
+        <div class="popover-body" ng-bind-html="'SETTINGS_Repositories_FilePathExample' | translate | htmlSafe"></div>
+    </script>
+</section>

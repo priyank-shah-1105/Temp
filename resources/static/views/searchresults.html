@@ -1,0 +1,404 @@
+﻿<section id="page_SearchResults">
+    <error-display errors="$rootScope.errors"
+                   on-click="$root.ASM.RemoveError(error)"
+                   on-expand-collapse=""></error-display>
+
+    <header>
+        <a ng-click="searchResults.goPreviousPage()" >
+            <i class="ci-arrow-circle-back-left-o"></i> {{'SEARCHRESULTS_BackToPrevPage'|translate}}
+        </a>
+        <h1>
+            {{'GENERIC_SearchResults'|translate}} <span ng-show="!searchResults.searching && searchResults.showResults">({{searchResults.searchResults.totalResults}})</span>
+        </h1>
+    </header>
+
+    <div class="row">
+        <div class="">
+            <section class="col-xs-2">
+                <div class="searchControls">
+                    <br />
+                    <div class="searchBox">
+                        <!--removed this from the first 2 images:  ng-hide="searchResults.searchTerm != ''"-->
+                        <i ng-hide="" id="searchimg" class="ci-search-discover-mag-glass" style="display: inline;"></i>
+                        <i ng-hide="" id="searchimgfocus" class="ci-search-discover-mag-glass" style="display: none;"></i>
+                        <input id="searchInput" class="searchField" ng-model="searchResults.searchTerm" placeholder="{{'GENERIC_Search'|translate}}" ng-change="searchResults.searchInput_searchChange()"
+                                ng-focus="searchResults.searchInput_onFocus()" ng-blur="searchResults.searchInput_onBlur()" autofocus="autofocus">
+                        <i ng-hide="searchResults.searchTerm == ''" id="searchimgclear" class="ci-state-critical-health" style="cursor: pointer;" ng-click="searchResults.clearSearch(true)"></i>
+                    </div>
+
+                    <!--<div style="position: relative; top: 35px; min-height: 35px;">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div ng-show="searchResults.searchTerm != ''">
+                                    <span>&quot;{{searchResults.searchTerm}}&quot; - {{searchResults.searching}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>-->
+
+                    <div class="" style="position: relative; top: 35px; min-height: 35px;">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div ng-show="searchResults.searching">
+                                    <spinner></spinner> &nbsp; {{'INDEX_Searching'|translate}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 style="position: relative; top: 35px;"><i class="ci-filter"></i> {{'GENERIC_FilterResults'|translate}}</h3>
+
+                    <ul class="list-unstyled" style="position: relative; top: 35px;">
+                        <li style="margin-bottom: 5px;">
+                            <input type="checkbox" ng-model="searchResults.allCategories" name="categories" ng-click="searchResults.allCheck()" ng-disabled="searchResults.searching"/>
+                            <span style="margin-left: 3px;">{{'GENERIC_All'|translate}}</span>
+                        </li>
+                        <!--ng-show="!searchResults.searching && searchResults.searchResults.totalResults > 0"-->
+                        <li ng-repeat="category in searchResults.searchResults.categories" style="margin-bottom: 5px;">
+                            <input type="checkbox" ng-model="category.showcategory" name="categories" ng-click="searchResults.categoryCheck(category)" ng-disabled="category.totalItems <= 0" />
+                            <span style="margin-left: 3px;">{{category.name}}</span>
+                            <div ng-if="category.subcategories.length > 0">
+                                <ul class="list-unstyled" style="margin-left: 15px;">
+                                    <li ng-repeat="sub in category.subcategories" ng-if="sub && sub.length > 0">
+                                        <input type="checkbox" ng-model="searchResults.subcategories[category.name + sub]" name="categories" ng-click="searchResults.subcategoryCheck(category, sub)" />
+                                        <span style="margin-left: 3px;">{{sub}}</span>
+                                    </li>
+                                    <!--<li ng-repeat="sub in category.subcategories" ng-if="sub && sub.showsubcategory">
+                                        <input type="checkbox" ng-model="sub.showsubcategory" name="categories" />
+                                        <span style="margin-left: 3px;">{{sub.displayname}}</span>
+                                    </li>-->
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="col-xs-10">
+                <div class="searchResults" ng-show="searchResults.showResults">
+                    <div style="margin-left: 30px;">
+
+                        <div ng-repeat="category in searchResults.searchResults.categories" ng-show="category.showcategory && !searchResults.searching && searchResults.searchResults.totalResults > 0">
+
+                            <div id="searchResultsResources" ng-if="category.name === 'Resources'">
+                                <h3>
+                                    <i class="{{category.icon}}"></i>
+                                    {{category.name}} ({{category.totalItems}}) <!--({{category.unlimitedItems}})-->
+                                </h3>
+
+                                <div class="table-responsive">
+                                    <table id="tableResources"
+                                           class="table table-striped table-hover table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    {{'GENERIC_Status' | translate}}
+                                                </th>
+                                                <th>
+                                                    {{'GENERIC_Name' | translate}}
+                                                </th>
+                                                <!--<th>
+                                                    {{'GENERIC_Description' | translate}}
+                                                </th>-->
+                                                <th>
+                                                    {{'SEARCHRESULTS_ResourceSubcategory' | translate}}
+                                                    <!--{{'GENERIC_ResourceType' | translate}}-->
+                                                </th>
+                                                <th>
+                                                    {{'SEARCHRESULTS_OSHostname' | translate}}
+                                                </th>
+                                                <th>
+                                                    {{'SEARCHRESULTS_ManagementIP' | translate}}
+                                                </th>
+                                                <th>
+                                                    {{'SEARCHRESULTS_Model' | translate}}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-if="category.items.length != 0">
+                                            <tr ng-repeat="item in category.items"
+                                                ng-if="searchResults.subcategories[category.name + item.subcategory]">
+                                                <!--ng-class="{'st-selected': devices.selectedDevice.id == device.id}"-->
+                                                <!--ng-click="devices.selectRow(device)"-->
+                                                <!--Status-->
+                                                <td class="text-center">
+                                                    <statusicon ng-if="item.status" value="item.status"></statusicon>
+                                                </td>
+                                                <!--searchPageLink-->
+                                                <td>
+                                                    <a id="#searchpageLink" class="searchpageLink" href="{{item.target}}">{{item.name}}</a>
+                                                </td>
+                                                <!--searchPageDesc-->
+                                                <!--<td>
+                                                    <span id="#searchpageDesc" class="searchpageDesc" ng-if="item.description">{{item.description}}</span>
+                                                </td>-->
+                                                <!--Resource Type / Device Type-->
+                                                <td>
+                                                    {{item.deviceType}}
+                                                </td>
+                                                <!--OS Hostname-->
+                                                <td>
+                                                    {{item.osHostname}}
+                                                </td>
+                                                <!--Management IP-->
+                                                <td>
+                                                    {{item.managementIp}}
+                                                </td>
+                                                <!--Model-->
+                                                <td>
+                                                    {{item.model}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody ng-if="category.items.length == 0">
+                                            <tr>
+                                                <td colspan="7">
+                                                    {{'SEARCHRESULTS_ResourcesEmptyTable'|translate}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <!--<tfoot>
+                                            <tr>
+                                                <td colspan="7" class="text-center">
+                                                    <div st-pagination="category.items"
+                                                         st-items-by-page="50"
+                                                         st-displayed-pages=""></div>
+                                                </td>
+                                            </tr>
+                                        </tfoot>-->
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div id="searchResultsServices" ng-if="category.name === 'Services'">
+                                <h3>
+                                    <i class="{{category.icon}}"></i>
+                                    {{category.name}} ({{category.totalItems}}) <!--({{category.unlimitedItems}})-->
+                                </h3>
+
+                                <div class="table-responsive">
+                                    <table id="tableServices"
+                                           class="table table-striped table-hover table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    {{'GENERIC_Status' | translate}}
+                                                </th>
+                                                <th>
+                                                    {{'SERVICES_THName' | translate}}
+                                                </th>
+                                                <!--<th>
+                                                    {{'GENERIC_Description' | translate}}
+                                                </th>-->
+                                                <th>
+                                                    {{'SERVICES_THDeployed_By' | translate}}
+                                                </th>
+                                                <th>
+                                                    {{'SERVICES_THDeployed_On' | translate}}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-if="category.items.length != 0">
+                                            <tr ng-repeat="item in category.items"
+                                                ng-if="searchResults.subcategories[category.name + item.subcategory]">
+                                                <!--ng-class="{'st-selected': devices.selectedDevice.id == device.id}"-->
+                                                <!--ng-click="devices.selectRow(device)"-->
+                                                <!--Status-->
+                                                <td class="text-center">
+                                                    <statusicon ng-if="item.status" value="item.status"></statusicon>
+                                                </td>
+                                                <!--searchPageLink-->
+                                                <td>
+                                                    <a id="#searchpageLink" class="searchpageLink" href="{{item.target}}">{{item.name}}</a>
+                                                </td>
+                                                <!--searchPageDesc-->
+                                                <!--<td>
+                                                    <span id="#searchpageDesc" class="searchpageDesc" ng-if="item.description">{{item.description}}</span>
+                                                </td>-->
+                                                <!--DeployedBy-->
+                                                <td>
+                                                    {{item.deployedBy}}
+                                                </td>
+                                                <!--DeployedOn-->
+                                                <td>
+                                                    <datetime-display time="item.deployedOn" time-format="'LLL'" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody ng-if="category.items.length == 0">
+                                            <tr>
+                                                <td colspan="7">
+                                                    {{'SEARCHRESULTS_ServicesEmptyTable'|translate}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <!--<tfoot>
+                                            <tr>
+                                                <td colspan="7" class="text-center">
+                                                    <div st-pagination="category.items"
+                                                         st-items-by-page="50"
+                                                         st-displayed-pages=""></div>
+                                                </td>
+                                            </tr>
+                                        </tfoot>-->
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div id="searchResultsTemplates" ng-if="category.name === 'Templates'">
+                                <h3>
+                                    <i class="{{category.icon}}"></i>
+                                    {{category.name}} ({{category.totalItems}}) <!--({{category.unlimitedItems}})-->
+                                </h3>
+
+                                <div class="table-responsive">
+                                    <table id="tableTemplates"
+                                           class="table table-striped table-hover table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    {{'GENERIC_Status' | translate}}
+                                                </th>
+                                                <th>
+                                                    {{'GENERIC_Name' | translate}}
+                                                </th>
+                                                <!--<th>
+                                                    {{'GENERIC_Description' | translate}}
+                                                </th>-->
+                                                <th>
+                                                    {{'TEMEPLATES_State' | translate}}
+                                                </th>
+                                                <th>
+                                                    {{'GENERIC_Category' | translate}}
+                                                </th>
+                                                <th>
+                                                    {{'TEMPLATES_LastDeployedOn' | translate}}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-if="category.items.length != 0">
+                                            <tr ng-repeat="item in category.items"
+                                                ng-if="searchResults.subcategories[category.name + item.subcategory]">
+                                                <!--ng-class="{'st-selected': devices.selectedDevice.id == device.id}"-->
+                                                <!--ng-click="devices.selectRow(device)"-->
+                                                <!--Status-->
+                                                <td class="text-center">
+                                                    <!--<i ng-if="category.name == 'Templates' && !item.status" class="text-warning ci-health-warning-tri-bang"></i>-->
+                                                    <statusicon ng-if="!item.status" value="'yellow'"></statusicon>
+                                                </td>
+                                                <!--searchPageLink-->
+                                                <td>
+                                                    <a id="#searchpageLink" class="searchpageLink" href="{{item.target}}">{{item.name}}</a>
+                                                </td>
+                                                <!--searchPageDesc-->
+                                                <!--<td>
+                                                    <span id="#searchpageDesc" class="searchpageDesc" ng-if="item.description">{{item.description}}</span>
+                                                </td>-->
+                                                <!--State-->
+                                                <td>
+                                                    <span ng-if="item.state">
+                                                        {{'TEMPLATES_Draft' | translate}}
+                                                    </span>
+                                                    <span ng-if="!item.state">
+                                                        {{'TEMPLATES_Published' | translate}}
+                                                    </span>
+                                                </td>
+                                                <!--Category-->
+                                                <td>
+                                                    {{item.category}}
+                                                </td>
+                                                <!--LastDeployedOn-->
+                                                <td>
+                                                    <datetime-display time="item.lastDeployed" time-format="'LLL'"></datetime-display>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody ng-if="category.items.length == 0">
+                                            <tr>
+                                                <td colspan="7">
+                                                    {{'SEARCHRESULTS_TemplatesEmptyTable'|translate}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <!--<tfoot>
+                                            <tr>
+                                                <td colspan="7" class="text-center">
+                                                    <div st-pagination="category.items"
+                                                         st-items-by-page="50"
+                                                         st-displayed-pages=""></div>
+                                                </td>
+                                            </tr>
+                                        </tfoot>-->
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!--<ul style="margin-left: 20px;" class="list-unstyled search-result-items">
+                                    <li ng-repeat="item in category.items" ng-if="searchResults.subcategories[category.name + item.subcategory]">
+                                        <statusicon ng-if="category.name != 'Templates' && item.status" value="item.status"></statusicon>-->
+                                        <!--<i ng-if="category.name == 'Templates' && !item.status" class="text-warning ci-health-warning-tri-bang"></i>-->
+                                        <!--<statusicon ng-if="category.name == 'Templates' && !item.status" value="'yellow'"></statusicon>
+                                    <a id="#searchpageLink" class="searchpageLink" href="{{item.target}}">{{item.name}}</a>
+                                    <span id="#searchpageDesc" class="searchpageDesc" ng-if="item.description">{{item.description}}</span>
+                                </li>-->
+                                <!--<li ng-repeat="item in category.items" ng-if="category.subcategories['id'] == category.name + item.subcategory && ??.showsubcategory">
+                                    <statusicon ng-if="category.name != 'Templates' && item.status" value="item.status"></statusicon>-->
+                                        <!--<i ng-if="category.name == 'Templates' && !item.status" class="text-warning ci-health-warning-tri-bang"></i>-->
+                                        <!--<statusicon ng-if="category.name == 'Templates' && !item.status" value="'yellow'"></statusicon>
+                                    <a href="{{item.target}}">{{item.name}}</a>
+                                    <span ng-if="item.description">{{item.description}}</span>
+                                </li>-->
+                            <!--</ul>-->
+
+                        </div>
+
+                        <div class="" ng-show="!searchResults.searching && searchResults.searchResults.totalResults == 0">
+                            <br />
+                            <div style="display: block; text-align: center; vertical-align: central;">
+                                <h1><i class="ci-action-circle-remove-slash-o "></i></h1>
+                                <p>{{'SEARCHRESULTS_NoResultsFoundFor'|translate}} &quot;{{searchResults.searchResults.searchedTerm}}&quot;.</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default" ng-show="category.showcategory" ng-repeat="category in searchResults.searchResults.categories">
+                <div class="panel-heading" role="tab" id="heading-{{category.name | toclassname}}">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" data-target="#collapse-{{category.name | toclassname}}" aria-expanded="true" aria-controls="collapse-{{category.name | toclassname}}">{{category.name}} ({{category.totalItems}})
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse-{{category.name | toclassname}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{category.name | toclassname}}">
+                    <div class="list-group">
+
+                        <div class="row results-header">
+                            <div class="col-sm-5"><strong>{{'GENERIC_Name'|translate}}</strong>
+                            </div>
+                            <div class="col-sm-5"><strong>{{'GENERIC_Details'|translate}}</strong>
+                            </div>
+                            <div class="col-sm-2"><strong>{{'GENERIC_Relevancy'|translate}}</strong>
+                            </div>
+                        </div>
+
+                        <div class="row results-items" ng-repeat="item in category.items" ng-if="searchResults.subcategories[category.name + item.subcategory]">
+                            <div class="col-sm-5">
+                                <a href="{{item.target}}">{{item.name}}</a>
+                            </div>
+                            <div class="col-sm-5">{{item.details}}</div>
+                            <div class="col-sm-2">
+                                {{item.relevance * 100 | number:1}}%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>-->
+
+                </div>
+            </section>
+        </div>
+    </div>
+
+</section>

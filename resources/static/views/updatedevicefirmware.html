@@ -1,0 +1,154 @@
+﻿<section id="page_updatedevicefirmware">
+    <error-display errors="updatedeviceFirmware.errors"
+                   on-click="$root.ASM.RemoveError(error, updatedeviceFirmware.errors)"
+                   on-expand-collapse=""></error-display>
+    <form id="form_updatedevicefirmware"
+          class="form-horizontal">
+        <div class="form-group">
+            <div class="radio">
+                <label>
+                    <input type="radio"
+                           name="scheduletype"
+                           ng-model="updatedeviceFirmware.scheduletype"
+                           value="updatenow" />
+                    <strong>
+                        <span ng-if="updatedeviceFirmware.deviceType == ''" ng-bind-html="'UPDATE_RESOURCE_FIRMWARE_updateNowNoSpecificType_label' | translate | htmlSafe"></span>
+                        <span ng-if="updatedeviceFirmware.deviceType == 'Server'" ng-bind-html="'UPDATE_RESOURCE_FIRMWARE_updateNowServer_label' | translate | htmlSafe"></span>
+                        <span ng-if="updatedeviceFirmware.deviceType == 'Chassis'" ng-bind-html="'UPDATE_RESOURCE_FIRMWARE_updateNowChassis_label' | translate | htmlSafe"></span>
+                        <span ng-if="updatedeviceFirmware.deviceType == 'Switch'" ng-bind-html="'UPDATE_RESOURCE_FIRMWARE_updateNowSwitch_label' | translate | htmlSafe"></span>
+                    </strong>
+                    &nbsp;
+                    <!--<a class="ci ci-info-circle-info"
+                       data-toggle="tooltip"
+                       data-placement="right"
+                       title="{{'UPDATE_RESOURCE_FIRMWARE_updateNowTooltip' | translate}}">
+                    </a>-->
+                    <br />
+                    <span ng-if="updatedeviceFirmware.deviceType == ''" ng-bind-html="'UPDATE_RESOURCE_FIRMWARE_updateNowNoSpecificType_help' | translate | htmlSafe"></span>
+                    <span ng-if="updatedeviceFirmware.deviceType == 'Server'" ng-bind-html="'UPDATE_RESOURCE_FIRMWARE_updateNowServer_help' | translate | htmlSafe"></span>
+                    <span ng-if="updatedeviceFirmware.deviceType == 'Chassis'" ng-bind-html="'UPDATE_RESOURCE_FIRMWARE_updateNowChassis_help' | translate | htmlSafe"></span>
+                    <span ng-if="updatedeviceFirmware.deviceType == 'Switch'" ng-bind-html="'UPDATE_RESOURCE_FIRMWARE_updateNowSwitch_help' | translate | htmlSafe"></span>
+                </label>
+            </div>
+            <!--<hr ng-if="updatedeviceFirmware.deviceType == 'Server'" />-->
+            <br />
+        </div>
+        <!--<div class="form-group" ng-if="updatedeviceFirmware.deviceType == 'Server'">
+            <div class="radio">
+                <label>
+                    <input ng-model="updatedeviceFirmware.scheduletype"
+                           type="radio"
+                           name="scheduletype"
+                           value="nextreboot"
+                           id="scheduleTypeNextReboot" />
+                    <span ng-bind-html="'UPDATE_RESOURCE_FIRMWARE_applyOnRebootDescription' | translate | htmlSafe"></span>
+                </label>
+            </div>
+        </div>-->
+        <!--<div class="form-group">
+            <div class="col-xs-12">
+                <hr />
+            </div>
+        </div>-->
+        <div class="form-group">
+            <div class="radio">
+                <label>
+                    <input type="radio"
+                           ng-model="updatedeviceFirmware.scheduletype"
+                           name="scheduletype"
+                           value="schedule"
+                           id="scheduleTypeSchedule" />
+                    <strong>
+                        <span ng-if="updatedeviceFirmware.deviceType == ''">{{'UPDATE_RESOURCE_FIRMWARE_Schedulefirmwareandsoftwareupdates_label'|translate}}</span>
+                        <span ng-if="updatedeviceFirmware.deviceType == 'Server'" ng-bind-html="'UPDATE_RESOURCE_FIRMWARE_scheduleServer_label' | translate | htmlSafe"></span>
+                        <span ng-if="updatedeviceFirmware.deviceType == 'Chassis'" ng-bind-html="'UPDATE_RESOURCE_FIRMWARE_scheduleChassis_label' | translate | htmlSafe"></span>
+                        <span ng-if="updatedeviceFirmware.deviceType == 'Switch'" ng-bind-html="'UPDATE_RESOURCE_FIRMWARE_scheduleSwitch_label' | translate | htmlSafe"></span>
+                    </strong>
+                    &nbsp;
+                    <!--<a class="ci ci-info-circle-info"
+                       data-toggle="tooltip"
+                       data-placement="right"
+                       title="{{'UPDATE_RESOURCE_FIRMWARE_scheduleTooltip' | translate}}">
+                    </a>-->
+                    <br />
+                    <span ng-if="updatedeviceFirmware.deviceType == ''">{{'UPDATE_RESOURCE_FIRMWARE_Schedulefirmwareandsoftwareupdates_help'|translate}}</span>
+                    <span ng-if="updatedeviceFirmware.deviceType == 'Server'" ng-bind-html="'UPDATE_RESOURCE_FIRMWARE_scheduleServer_help' | translate | htmlSafe"></span>
+                    <span ng-if="updatedeviceFirmware.deviceType == 'Chassis'" ng-bind-html="'UPDATE_RESOURCE_FIRMWARE_scheduleChassis_help' | translate | htmlSafe"></span>
+                    <span ng-if="updatedeviceFirmware.deviceType == 'Switch'" ng-bind-html="'UPDATE_RESOURCE_FIRMWARE_scheduleSwitch_help' | translate | htmlSafe"></span>
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-11 col-sm-offset-1">
+                <ul class="list-inline">
+                    <li>
+                        <div class="form-inline form-group">
+                            <label class="">
+                                {{'UPDATE_RESOURCE_FIRMWARE_ScheduleDate' | translate }}
+                            </label>
+                            &nbsp;
+                            <div class="input-group date" id="dpScheduleDate_device"
+                                 datetimepicker-options="{{updatedeviceFirmware.datePicker.options}}"
+                                 datetimepicker
+                                 ng-model="updatedeviceFirmware.datePicker.selectedDate">
+                                <input type="text"
+                                       class="form-control"
+                                       ng-disabled="updatedeviceFirmware.scheduletype !== 'schedule'"
+                                       placeholder="Select"
+                                       ng-model="updatedeviceFirmware.invalidDevice.scheduleDate" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                            <span ng-if="updatedeviceFirmware.scheduletype === 'schedule' && updatedeviceFirmware.validDate === false && updatedeviceFirmware.submitted === true"
+                                  class="help-block">
+                                {{'UPDATE_RESOURCE_FIRMWARE_DateError' | translate }}
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <br />
+    </form>
+    <div ng-switch="updatedeviceFirmware.deviceType" id="updateDeviceFirmwareWarning">
+        <div ng-switch-when="Server" class="outline-warning">
+            <span>
+                <i class="ci-health-warning-tri-bang text-warning"></i>
+                &nbsp;{{'UPDATE_RESOURCE_FIRMWARE_serverTimeEstimate'|translate}}
+            </span>
+        </div>
+        <div ng-switch-when="Chassis" class="outline-warning">
+            <span>
+                <i class="ci-health-warning-tri-bang text-warning"></i>
+                &nbsp;{{'UPDATE_RESOURCE_FIRMWARE_chassisTimeEstimate'|translate}}
+            </span>
+        </div>
+        <div ng-switch-when="Switch" class="outline-warning">
+            <span>
+                <i class="ci-health-warning-tri-bang text-warning"></i>
+                &nbsp;{{'UPDATE_RESOURCE_FIRMWARE_switchTimeEstimate'|translate}}
+            </span>
+        </div>
+    </div>
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+                <button id="submit_form_updatedevicefirmware"
+                        class="btn btn-primary"
+                        type="submit"
+                        ng-click="updatedeviceFirmware.submit()">
+                    {{'UPDATE_RESOURCE_FIRMWARE_ApplyUpdates'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="cancel_form_updatedevicefirmware"
+                        class="btn btn-default"
+                        type="button"
+                        ng-click="updatedeviceFirmware.close()">
+                    {{'GENERIC_Cancel' | translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

@@ -1,0 +1,689 @@
+﻿
+<section id="page_deviceportview">
+    <div ng-if="deviceportview.servicePage">
+        <strong>{{'PORTVIEW_ServerSelect' | translate}}</strong> <select ng-options="item as item.name for item in deviceportview.serversDropDown" ng-model="deviceportview.selectedServer" ng-change="deviceportview.changeServer()"></select>
+    </div>
+    <br />
+    <div>
+        <p>{{'PORTVIEW_Instructions' | translate}}</p>
+        <ul class="list-inline">
+            <li>
+                <strong>
+                    {{'PORTVIEW_PortViewSVG_DisplayConnections'|translate}}
+                </strong>
+            </li>
+            <li>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle"
+                            id="dLabel"
+                            type="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                        {{deviceportview.selectedPorts.displayName}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dLabel">
+                        <li ng-repeat="port in deviceportview.portList">
+                            <a ng-click="deviceportview.selectedPorts = port; deviceportview.refresh()" href="javascript:void(0)">
+                                {{port.displayName}}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <br /><br />
+
+    <!--<div ng-repeat="iomvlan in deviceportview.portView.ioModules" ng-if="deviceportview.portView.ioModules.uplinkPorts.length == 0" id={{iomvlan.id}} style="position:absolute; left: {{180 * $index + 260}}">
+        <div ng-repeat="nic in iomvlan.nics" id="{{nic.id}}">
+            <div ng-repeat="port in nic.ports" id="{{port.id}}">
+                <div ng-repeat="partition in port.partitions" id="{{partition.id}}">
+                    <div ng-repeat="vlan in partition.vlans">
+                        <span>{{vlan.vlan}} - {{vlan.name}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
+
+    <ul class="list-unstyled list-inline col-xs-12" ng-if="deviceportview.portView.ioModules.uplinkPorts.length == 0" style="position: absolute; left: 240px; white-space: nowrap">
+        <li ng-repeat="iomvlan in deviceportview.portView.ioModules" id=vlan-{{iomvlan.id}}>
+            <ul class="list-unstyled" style="margin-left: 30px; height: 100px; width: 260px; overflow-y:scroll; outline: 1px dashed gray;">
+                <li style="" ng-repeat="nic in iomvlan.nics track by $index" id="{{nic.id}}">
+                    <div ng-repeat="port in nic.ports" id="{{port.id}}">
+                        <div ng-repeat="partition in port.partitions" id="{{partition.id}}">
+                            <div ng-repeat="vlan in partition.vlans">
+                                <span translate="PORTVIEW_PortViewSVG_vlanName" translate-values="{'vlan' : vlan.vlan, 'vlanName' : vlan.name}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+
+    <!--<ul class="list-unstyled list-inline col-xs-12" style="position: absolute; left: 240px; white-space: nowrap">
+        <li ng-repeat="torSwitch in deviceportview.portView.torSwitches" id=vlan-{{torSwitch.id}}>
+            <ul class="list-unstyled" style="margin-left: 30px; height: 100px; width: 260px; overflow-y:scroll; outline: 1px dashed gray;">
+                <li style="" ng-repeat="nic in torSwitch.nics track by $index" id="{{nic.id}}">
+                    <div ng-repeat="port in nic.ports" id="{{port.id}}">
+                        <div ng-repeat="partition in port.partitions" id="{{partition.id}}">
+                            <div ng-repeat="vlan in partition.vlans">
+                                <span>{{vlan.vlan}} - {{vlan.name}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </ul>-->
+    <ul class="list-unstyled list-inline col-xs-12 vlanList" style="position: absolute; left: 240px; white-space: nowrap">
+        <li ng-repeat="torSwitch in deviceportview.portView.torSwitches" id=vlan-{{torSwitch.id}}>
+            <ul class="list-unstyled" style="margin-left: 30px; height: 100px; width: 260px; overflow-y:scroll; outline: 1px dashed gray;">
+                <li ng-click="deviceportview.selectConnection(torSwitch, vlan.name, vlan, 'VLAN')" ng-repeat="vlan in torSwitch.vlans" class="{{vlan.vlan}} vlan">
+                    <span>{{vlan.vlan}}{{vlan.zone}} - {{vlan.name}}{{vlan.zoneConfig}}</span>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <div>
+        <svg id="PortView" version="1.1" class="Layer_1" x="0px" y="0px" width="1800px" height="600px" style="overflow: visible;">
+            <!--Left col text-->
+            <g class="LeftColText">
+                <text transform="matrix(1 0 0 1 44.7 30.6)" fill="#444445">{{'PORTVIEW_PortViewSVG_VLAN'|translate}}</text>
+                <text transform="matrix(1 0 0 1 44.95 152.6)" fill="#444445">{{'PORTVIEW_PortViewSVG_ToR'|translate}}</text>
+                <text transform="matrix(1 0 0 1 44.95 290.6834)" fill="#444445" ng-if="deviceportview.portView.ioModules.length > 0">{{'PORTVIEW_PortViewSVG_IOM'|translate}}</text>
+                <text transform="matrix(1 0 0 1 44.95 478.6833)" fill="#444445">{{'PORTVIEW_PortViewSVG_Interface_Cards'|translate}}</text>
+                <!--<text transform="matrix(1 0 0 1 44.95 623.6)" fill="#444445">{{'PORTVIEW_PortViewSVG_NPAR'|translate}}</text>-->
+            </g>
+
+
+            <svg class="popOverElement SwitchElement" ng-repeat="torSwitch in deviceportview.portView.torSwitches" ng-attr-x="{{deviceportview.TorSwitchIntervals * $index}}" id="{{torSwitch.id}}">
+                <path class="BackgroundSelection" display="none" fill="#A4D0EF" d="M425.7,185.3h-165c-2.2,0-4-1.8-4-4v-43c0-2.2,1.8-4,4-4h165 c2.2,0,4,1.8,4,4v43C429.7,183.5,427.9,185.3,425.7,185.3z" />
+                <g class="torSwitch">
+                    <path class="BG_Box" fill="#DDDDDC" stroke="#878787" stroke-linecap="round" stroke-miterlimit="10" d="M421,179.4H265 c-1.1,0-2-0.9-2-2v-35c0-1.1,0.9-2,2-2h156c1.1,0,2,0.9,2,2v35C423,178.5,422.1,179.4,421,179.4z" />
+                    <rect class="BG_Box" x="292.4" y="148" fill="#979797" stroke="#CCCBCB" stroke-linecap="round" stroke-miterlimit="10" width="17" height="9" />
+                    <rect class="BG_Box" x="312.6" y="148" fill="#979797" stroke="#CCCBCB" stroke-linecap="round" stroke-miterlimit="10" width="17" height="9" />
+                    <rect class="BG_Box" x="332.8" y="148" fill="#979797" stroke="#CCCBCB" stroke-linecap="round" stroke-miterlimit="10" width="17" height="9" />
+                    <rect class="BG_Box" x="353" y="148" fill="#979797" stroke="#CCCBCB" stroke-linecap="round" stroke-miterlimit="10" width="17" height="9" />
+                    <rect class="BG_Box" x="373.2" y="148" fill="#979797" stroke="#CCCBCB" stroke-linecap="round" stroke-miterlimit="10" width="17" height="9" />
+                    <rect class="BG_Box" x="393.4" y="148" fill="#979797" stroke="#CCCBCB" stroke-linecap="round" stroke-miterlimit="10" width="17" height="9" />
+                    <rect class="BG_Box" x="292.4" y="163" fill="#979797" stroke="#CCCBCB" stroke-linecap="round" stroke-miterlimit="10" width="17" height="9" />
+                    <rect class="BG_Box" x="312.6" y="163" fill="#979797" stroke="#CCCBCB" stroke-linecap="round" stroke-miterlimit="10" width="17" height="9" />
+                    <rect class="BG_Box" x="332.8" y="163" fill="#979797" stroke="#CCCBCB" stroke-linecap="round" stroke-miterlimit="10" width="17" height="9" />
+                    <rect class="BG_Box" x="353" y="163" fill="#979797" stroke="#CCCBCB" stroke-linecap="round" stroke-miterlimit="10" width="17" height="9" />
+                    <rect class="BG_Box" x="373.2" y="163" fill="#979797" stroke="#CCCBCB" stroke-linecap="round" stroke-miterlimit="10" width="17" height="9" />
+                    <rect class="BG_Box" x="393.4" y="163" fill="#979797" stroke="#CCCBCB" stroke-linecap="round" stroke-miterlimit="10" width="17" height="9" />
+                    <path style="fill:#979797;" d="M278.2,160h-1v4.4h1V160z M275.7,163.2L275.7,163.2L275.7,163.2L275.7,163.2z M279.7,163.2     L279.7,163.2L279.7,163.2L279.7,163.2z M279.7,162.1L279.7,162.1v1.1c1.2,0.7,2,2,2,3.5c0,2.2-1.8,4-4,4s-4-1.8-4-4     c0-1.5,0.8-2.8,2-3.5v-1.1l0,0c-1.8,0.8-3,2.5-3,4.6c0,2.8,2.2,5,5,5s5-2.2,5-5C282.7,164.7,281.4,162.9,279.7,162.1z" />
+                    <circle style="fill:#6DA242;" cx="277.5" cy="152" r="4.442" />
+                </g>
+                <!--<g class="SwitchNameElements">
+                    <rect class="TextBG" x="262.8" y="197.8" opacity="0.75" fill="#FFFFFF" enable-background="new    " width="160" height="14" />
+                    <text class="SwitchHostName" transform="matrix(1 0 0 1 268.95 208.6833)">
+                        <a ng-href="'#/device/' + {{torSwitch.id}} + '/' + {{torSwitch.deviceType}}" xlink:href='' data-bind="attr: {'xlink:href':'#/devices/deviceDetails?deviceId=' + id + '&amp;deviceType=' + deviceType()}">
+                            <tspan data-bind="text: hostname" fill="#027DB8">{{torSwitch.hostname}}</tspan>
+                        </a>
+                        <tspan data-bind="text: model">{{torSwitch.model}}</tspan>
+                    </text>
+                </g>-->
+                <g class="SwitchLabels">
+                    <svg class="SwitchLabel" ng-repeat="downlink in torSwitch.downlinkPorts" id="{{downlink.id}}" ng-attr-x="{{deviceportview.TorPortIntervals * $index}}">
+                        <path ng-class="{'healthy': downlink.health == 'green', 'warning': downlink.health == 'yellow', 'error': downlink.health == 'red' }" fill="#000" class="SwitchLabelBG" d="M312.5,179.9h-20.1v13c0,1.1,0.9,2,2,2h20.1c1.1,0,2-0.9,2-2V179.9z" />
+                        <text transform="matrix(1 0 0 1 305.2998 190.8167)" fill="#FFFFFF" text-anchor="middle" font-size="9px">
+                            <tspan>{{downlink.port | limitTo:4}} {{downlink.port.length > 4 ? '...' : ''}}<title>{{downlink.port.length > 4 ? downlink.port : ''}}</title></tspan>
+                        </text>
+                    </svg>
+                </g>
+                <!--<line class="VLANline topo-line" fill="none" stroke="#6DA242" stroke-miterlimit="10" stroke-dasharray="4,3" x1="343" y1="100" x2="343" y2="143"/>-->
+                <g class="TORSwitchStatus">
+                    <path ng-if="torSwitch.health == 'red'" class="Outline" style="fill:none;stroke:#CE2028;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d=" M421,179.4H265c-1.1,0-2-0.9-2-2v-35c0-1.1,0.9-2,2-2h156c1.1,0,2,0.9,2,2v35C423,178.5,422.1,179.4,421,179.4z" />
+                    <path ng-if="torSwitch.health == 'yellow'" class="Outline" style="fill:none;stroke:#F1AF1D;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d=" M421,179.4H265c-1.1,0-2-0.9-2-2v-35c0-1.1,0.9-2,2-2h156c1.1,0,2,0.9,2,2v35C423,178.5,422.1,179.4,421,179.4z" />
+                    <g ng-if="torSwitch.health == 'red'" class="CriticalIcon">
+                        <path style="fill:#CE2028;stroke:#FFFFFF;stroke-width:1.5;stroke-miterlimit:10;" d="M255.31,143.1     c0,4.639,3.795,8.434,8.434,8.434s8.434-3.795,8.434-8.434s-3.795-8.434-8.434-8.434S255.31,138.377,255.31,143.1" />
+                        <rect x="258.092" y="141.823" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -23.9056 228.4638)" style="fill:#FFFFFF;" width="11.47" height="2.53" />
+                        <rect x="258.043" y="141.738" transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 349.1788 430.6407)" style="fill:#FFFFFF;" width="11.47" height="2.53" />
+                    </g>
+
+                    <g ng-if="torSwitch.health == 'yellow'" class="WarningIcon">
+                        <path style="fill:#F1AF1D;" d="M257.094,151.65c-0.6,0-1.2-0.3-1.6-0.9c-0.3-0.5-0.4-1.2-0.1-1.8l6.7-13.3      c0.2-0.5,0.6-0.8,1.1-0.9v-0.1h1v0.1c0.5,0.1,0.9,0.5,1.1,0.9l6.7,13.3c0.3,0.6,0.3,1.2-0.1,1.8c-0.3,0.5-0.9,0.9-1.6,0.9      H257.094z" />
+                        <path style="fill:#FFFFFF;" d="M263.794,135.15L263.794,135.15c0.5,0,0.9,0.3,1.2,0.7l6.7,13.3c0.2,0.4,0.2,0.9-0.1,1.3      c-0.2,0.4-0.7,0.6-1.1,0.6h-13.3c-0.5,0-0.9-0.2-1.1-0.6c-0.2-0.4-0.3-0.9-0.1-1.3l6.7-13.3      C262.794,135.45,263.294,135.15,263.794,135.15L263.794,135.15L263.794,135.15L263.794,135.15 M263.794,134.15L263.794,134.15      h-1v0.2c-0.5,0.2-0.8,0.6-1.1,1l-6.7,13.3c-0.4,0.7-0.3,1.6,0.1,2.3s1.2,1.1,2,1.1h13.3c0.8,0,1.6-0.4,2-1.1      c0.4-0.7,0.5-1.5,0.1-2.3l-6.7-13.3c-0.2-0.5-0.6-0.8-1.1-1v-0.2H263.794L263.794,134.15z" />
+                        <path style="fill:#282828;" d="M262.494,148.35c0-0.7,0.5-1.2,1.2-1.2s1.2,0.6,1.2,1.2c0,0.7-0.5,1.2-1.2,1.2      C263.094,149.65,262.494,149.05,262.494,148.35z" />
+                        <path style="fill:#282828;" d="M262.794,139.75h2v6.4h-2V139.75z" />
+                    </g>
+                </g>
+                <path class="TorClick" ng-click="deviceportview.selectConnection(torSwitch, null, null, 'TOR')" style="cursor: pointer;" opacity="0" fill="#DDDDDC" stroke="#878787" stroke-linecap="round" stroke-miterlimit="10" d="M421,179.4H265 c-1.1,0-2-0.9-2-2v-35c0-1.1,0.9-2,2-2h156c1.1,0,2,0.9,2,2v35C423,178.5,422.1,179.4,421,179.4z"
+                      popover
+                      popover-class="small"
+                      title="{{torSwitch.hostname}}"
+                      data-content-template="popover-content-torswitch.html" />
+            </svg>
+
+            <!--IOM elements-->
+            <g class="IOMElements">
+                <rect class="IOMModule" x="260.7" y="281.6" rx="4" ry="4" fill="#EEEDED" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" width="1173.9" height="95" ng-if="deviceportview.portView.ioModules.length > 0"/>
+                <g class="Power" style="display: none;">
+                    <path fill="#979797" d="M278.7,291.8h-1v4.4h1V291.8z M276.2,295L276.2,295L276.2,295L276.2,295z M280.2,293.9L280.2,293.9v1.1 c1.2,0.7,2,2,2,3.5c0,2.2-1.8,4-4,4s-4-1.8-4-4c0-1.5,0.8-2.8,2-3.5v-1.1l0,0c-1.8,0.8-3,2.5-3,4.6c0,2.8,2.2,5,5,5s5-2.2,5-5 C283.2,296.4,281.9,294.6,280.2,293.9z M280.2,295L280.2,295L280.2,295L280.2,295z" />
+                </g>
+                <g class="IOMlabel">
+                    <rect x="260.5" y="379.3" opacity="0.75" fill="#FFFFFF" enable-background="new    " width="206" height="14" />
+                </g>
+                <g class="IOMSlotElements">
+                    <svg ng-repeat="iom in deviceportview.portView.ioModules" ng-attr-x="{{deviceportview.IOMintervals * $index}}" id="{{iom.id}}" class="popOverElement IOMSlotElement">
+                        <rect ng-if="$even" class="Border" x="298.3" y="292.5" fill="none" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" width="359" height="43.6" />
+                        <path class="BackgroundSelection" display="none" fill="#93C7EB" d="M469.8,330h-144c-1.1,0-2-0.9-2-2v-28c0-1.1,0.9-2,2-2h144c1.1,0,2,0.9,2,2 v28C471.8,329.1,470.9,330,469.8,330z" />
+                        <text class="SlotNumber" transform="matrix(1 0 0 1 304.7833 319.9333)" fill="#444445">{{iom.fabric}}</text>
+                        <!--<g class="PortDetailText">
+                            <rect class="TextBG" x="323.8" y="345" opacity="0.75" fill="#EEEDED" enable-background="new    " width="144.3" height="26" />
+                            <text class="HostName" transform="matrix(1 0 0 1 330.3667 355.2667)">
+                                <a xlink:href='' data-bind="attr: {'xlink:href':'#/devices/deviceDetails?deviceId=' + id + '&amp;deviceType=' + deviceType()}">
+                                    <tspan fill="#027DB8" data-bind="text: hostname">{{iom.hostname}}</tspan>
+                                </a>
+                            </text>
+                            <text class="PortType" transform="matrix(1 0 0 1 330.3667 368.2667)" fill="#444445" data-bind="text: model">{{iom.model}}</text>
+                        </g>-->
+                        <g class="PortShapes">
+                            <g class="Ethernet">
+                                <rect x="328.5" y="302.5" fill="#DDDDDC" stroke="#878787" stroke-linecap="square" stroke-miterlimit="10" width="139" height="22.9" />
+                                <rect x="344.3" y="305" fill="#E3E3E3" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" width="106.2" height="17.6" />
+                                <polygon opacity="0.5" fill="#878787" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" enable-background="new    " points=" 358.5,310.5 358.5,308.5 351.5,308.5 351.5,310.5 348.5,310.5 348.5,319.5 361.5,319.5 361.5,310.5 " />
+                                <polygon opacity="0.5" fill="#878787" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" enable-background="new    " points=" 375.5,310.5 375.5,308.5 368.5,308.5 368.5,310.5 365.5,310.5 365.5,319.5 378.5,319.5 378.5,310.5 " />
+                                <polygon opacity="0.5" fill="#878787" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" enable-background="new    " points=" 392.5,310.5 392.5,308.5 385.5,308.5 385.5,310.5 382.5,310.5 382.5,319.5 395.5,319.5 395.5,310.5 " />
+                                <polygon opacity="0.5" fill="#878787" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" enable-background="new    " points=" 409.5,310.5 409.5,308.5 402.5,308.5 402.5,310.5 399.5,310.5 399.5,319.5 412.5,319.5 412.5,310.5 " />
+                                <polygon opacity="0.5" fill="#878787" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" enable-background="new    " points=" 426.5,310.5 426.5,308.5 419.5,308.5 419.5,310.5 416.5,310.5 416.5,319.5 429.5,319.5 429.5,310.5 " />
+                                <polygon opacity="0.5" fill="#878787" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" enable-background="new    " points=" 443.5,310.5 443.5,308.5 436.5,308.5 436.5,310.5 433.5,310.5 433.5,319.5 446.5,319.5 446.5,310.5 " />
+                                <circle fill="#DDDDDC" stroke="#A9AAAA" stroke-linecap="square" stroke-miterlimit="10" cx="336.5" cy="313.3" r="4.5" />
+                                <line fill="none" stroke="#A9AAAA" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="333.5" y1="316.6" x2="339.9" y2="310.2" />
+                                <line fill="none" stroke="#A9AAAA" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="333.5" y1="310.2" x2="339.2" y2="315.9" />
+                                <circle fill="#DDDDDC" stroke="#A9AAAA" stroke-linecap="square" stroke-miterlimit="10" cx="458.5" cy="313.3" r="4.5" />
+                                <line fill="none" stroke="#A9AAAA" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="455.5" y1="316.6" x2="461.9" y2="310.2" />
+                                <line fill="none" stroke="#A9AAAA" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="455.5" y1="310.2" x2="461.2" y2="315.9" />
+                            </g>
+                            <g class="SquarePorts" style="display: none">
+                                <rect x="328.5" y="302.5" fill="#DDDDDC" stroke="#878787" stroke-linecap="square" stroke-miterlimit="10" width="139" height="22.9" />
+                                <rect x="344.3" y="305.1" fill="#E3E3E3" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" width="106.2" height="17.6" />
+                                <circle fill="#DDDDDC" stroke="#A9AAAA" stroke-linecap="square" stroke-miterlimit="10" cx="336.5" cy="313.3" r="4.5" />
+                                <line fill="none" stroke="#A9AAAA" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="333.5" y1="316.6" x2="339.9" y2="310.2" />
+                                <line fill="none" stroke="#A9AAAA" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="333.5" y1="310.2" x2="339.2" y2="315.9" />
+                                <circle fill="#DDDDDC" stroke="#A9AAAA" stroke-linecap="square" stroke-miterlimit="10" cx="458.5" cy="313.3" r="4.5" />
+                                <line fill="none" stroke="#A9AAAA" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="455.5" y1="316.6" x2="461.9" y2="310.2" />
+                                <line fill="none" stroke="#A9AAAA" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="455.5" y1="310.2" x2="461.2" y2="315.9" />
+                                <rect x="348.5" y="308.9" opacity="0.5" fill="#878787" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" enable-background="new    " width="13" height="10" />
+                                <rect x="433.4" y="308.9" opacity="0.5" fill="#878787" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" enable-background="new    " width="13" height="10" />
+                                <rect x="416.5" y="308.9" opacity="0.5" fill="#878787" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" enable-background="new    " width="13" height="10" />
+                                <rect x="399.5" y="308.9" opacity="0.5" fill="#878787" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" enable-background="new    " width="13" height="10" />
+                                <rect x="382.5" y="308.9" opacity="0.5" fill="#878787" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" enable-background="new    " width="13" height="10" />
+                                <rect x="365.5" y="308.9" opacity="0.5" fill="#878787" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" enable-background="new    " width="13" height="10" />
+                            </g>
+                        </g>
+
+                        <svg ng-repeat="uplink in iom.uplinkPorts" ng-attr-x="{{deviceportview.IomPortIntervals * $index}}" id="{{uplink.id}}" class="IOMLabelTop">
+                            <path ng-class="{'healthy': uplink.health == 'green', 'warning': uplink.health == 'yellow', 'error': uplink.health == 'red' }" class="LabelBG" fill="#000" d="M392,287h-46c-1.1,0-2,0.9-2,2v13h50v-13C394,287.9,393.2,287,392,287z" />
+                            <text transform="matrix(1 0 0 1 369.5498 298.5667)" fill="#FFFFFF" text-anchor="middle" font-size="9px">
+                                <tspan>{{uplink.port | limitTo:11}}</tspan>
+                                <title><tspan></tspan></title>
+                            </text>
+                            <!--<g class="HealthIcons" display="none" data-bind="attr: {id: 'iomUpLink' + ASM.ConvertToClassName($parent.id + port())}">
+                                <path class="Critical" display="none" fill="#FFFFFF" d="M357.4,292.3c-0.4-0.6-0.9-1.2-1.6-1.6c-0.7-0.4-1.5-0.6-2.3-0.6 c-0.8,0-1.6,0.2-2.3,0.6c-0.7,0.4-1.2,0.9-1.6,1.6c-0.4,0.7-0.6,1.5-0.6,2.3c0,0.9,0.2,1.6,0.6,2.3c0.4,0.7,0.9,1.2,1.6,1.6 c0.7,0.4,1.5,0.6,2.3,0.6c0.9,0,1.6-0.2,2.3-0.6c0.7-0.4,1.2-1,1.6-1.6c0.4-0.7,0.6-1.5,0.6-2.3 C358,293.7,357.8,293,357.4,292.3z M356.2,296.2l-1,1l-1.7-1.7l-1.6,1.7l-1-1l1.6-1.7l-1.6-1.7l1-0.9l1.6,1.6l1.7-1.6l1,0.9 l-1.7,1.7L356.2,296.2z" />
+                                <path class="Warning" display="none" fill="#FFFFFF" d="M357.9,297.5l-3.7-7.5c-0.1-0.3-0.4-0.4-0.7-0.4c-0.3,0-0.5,0.2-0.7,0.4l-3.8,7.5 c-0.1,0.2-0.1,0.5,0,0.7s0.4,0.4,0.6,0.4h7.5c0.4,0,0.7-0.3,0.7-0.7C358,297.7,358,297.6,357.9,297.5z M354.1,292.1v3.6H353 v-3.6H354.1z M353.5,297.6c-0.4,0-0.7-0.3-0.7-0.7c0-0.4,0.3-0.7,0.7-0.7c0.4,0,0.7,0.3,0.7,0.7 C354.2,297.3,353.9,297.6,353.5,297.6z" />
+                                <path class="Healthy" fill="#FFFFFF" d="M356.8,289.9H350c-0.6,0-1.1,0.5-1.1,1.1v6.8c0,0.6,0.5,1.1,1.1,1.1h6.8 c0.6,0,1.1-0.5,1.1-1.1V291C357.9,290.4,357.4,289.9,356.8,289.9z M352.6,297l-2.5-2.2l1-1l1.5,1.4l3.1-2.9l1,1L352.6,297z" />
+                            </g>-->
+                        </svg>
+                        <svg class="IOMLabelBottom" ng-repeat="downlink in iom.downlinkPorts" id="{{downlink.id}}" ng-attr-x="{{deviceportview.IomPortIntervals * $index}}">
+                            <path ng-class="{'healthy': downlink.health == 'green', 'warning': downlink.health == 'yellow', 'error': downlink.health == 'red' }" fill="#000" d="M393.8,325.7h-50v13c0,1.1,0.9,2,2,2h46c1.1,0,2-0.9,2-2V325.7z" />
+                            <text transform="matrix(1 0 0 1 369.5306 337.0821)" fill="#FFFFFF" text-anchor="middle" font-size="9px">
+                                <tspan>{{downlink.port | limitTo:11}}</tspan>
+                                <title><tspan></tspan></title>
+                            </text>
+
+                        </svg>
+                        <g class="IOMInnerStatus">
+                            <rect ng-if="iom.health == 'red'" class="outline" x="328.5" y="302.5" style="fill:none;stroke:#CE2028;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" width="139" height="22.9" />
+                            <rect ng-if="iom.health == 'yellow'" class="outline" x="328.5" y="302.5" style="fill:none;stroke:#F1AF1D;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" width="139" height="22.9" />
+                            <g ng-if="iom.health == 'red'" class="CriticalIcon">
+                                <path style="fill:#CE2028;stroke:#FFFFFF;stroke-width:1.5;stroke-miterlimit:10;" d="M321.704,304.451     c0,4.417,3.614,8.031,8.031,8.031c4.417,0,8.031-3.614,8.031-8.031s-3.614-8.031-8.031-8.031     C325.318,296.42,321.704,299.954,321.704,304.451" />
+                                <rect x="324.353" y="303.236" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -118.6718 322.382)" style="fill:#FFFFFF;" width="10.922" height="2.409" />
+                                <rect x="324.306" y="303.155" transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 347.7307 752.754)" style="fill:#FFFFFF;" width="10.922" height="2.409" />
+                            </g>
+                            <g ng-if="iom.health == 'yellow'" class="WarningIcon">
+                                <path style="fill:#F1AF1D;" d="M323.221,309.501c-0.599,0-1.198-0.3-1.597-0.899c-0.3-0.499-0.399-1.198-0.1-1.797l6.689-13.279      c0.2-0.499,0.599-0.799,1.098-0.899l0-0.1h0.998v0.1c0.499,0.1,0.899,0.499,1.098,0.899l6.689,13.279      c0.299,0.599,0.299,1.198-0.1,1.797c-0.299,0.499-0.899,0.899-1.597,0.899L323.221,309.501z" />
+                                <path style="fill:#FFFFFF;" d="M329.91,293.027L329.91,293.027c0.499,0,0.899,0.3,1.198,0.699l6.689,13.279      c0.2,0.399,0.2,0.899-0.1,1.298c-0.2,0.399-0.699,0.599-1.098,0.599l-13.279,0c-0.499,0-0.899-0.2-1.098-0.599      c-0.2-0.399-0.3-0.899-0.1-1.298l6.689-13.279C328.912,293.327,329.411,293.027,329.91,293.027L329.91,293.027L329.91,293.027      L329.91,293.027 M329.91,292.029L329.91,292.029h-0.998v0.2c-0.499,0.2-0.799,0.599-1.098,0.998l-6.689,13.279      c-0.399,0.699-0.299,1.597,0.1,2.296c0.399,0.699,1.198,1.098,1.997,1.098l13.279,0c0.799,0,1.597-0.399,1.997-1.098      c0.399-0.699,0.499-1.498,0.1-2.296l-6.689-13.279c-0.2-0.499-0.599-0.799-1.098-0.998v-0.2H329.91L329.91,292.029z" />
+                                <path style="fill:#282828;" d="M328.613,306.206c0-0.699,0.499-1.198,1.198-1.198c0.699,0,1.198,0.599,1.198,1.198      c0,0.699-0.499,1.198-1.198,1.198C329.212,307.504,328.613,306.905,328.613,306.206z" />
+                                <path style="fill:#282828;" d="M328.912,297.62l1.997,0l0,6.39l-1.997,0L328.912,297.62z" />
+                            </g>
+                        </g>
+                        <rect id="IOMclick" ng-click="deviceportview.selectConnection(iom, null, null, 'IOM')" style="cursor:pointer;" opacity="0" x="328.5" y="302.5" fill="#DDDDDC" stroke="#878787" stroke-linecap="square" stroke-miterlimit="10" width="139" height="22.9"
+                              popover
+                              popover-class="small"
+                              title="{{'PORTVIEW_PortViewSVG_FabricPopoverTitle' | translate:deviceportview.convertToObj({fabric:iom.fabric, hostName: iom.hostname})}}"
+                              data-content-template="popover-content-iom.html" />
+                    </svg>
+
+                    <!--IOM OUter health status-->
+                    <!--<g class="IOMOuterStatus">
+                        <path class="Outline" style="fill:none;stroke:#BBBBBB;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d=" M264.7,281.6h1165.9c2.209,0,4,1.791,4,4v87c0,2.209-1.791,4-4,4H264.7c-2.209,0-4-1.791-4-4v-87 C260.7,283.391,262.491,281.6,264.7,281.6z" />
+                        <g class="CriticalIcon">
+                            <path style="fill:#CE2028;stroke:#FFFFFF;stroke-width:1.5;stroke-miterlimit:10;" d="M253.5,283.1c0,5.5,4.5,10,10,10     s10-4.5,10-10s-4.5-10-10-10S253.5,277.5,253.5,283.1" />
+                            <rect x="256.799" y="281.586" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -122.9661 269.3065)" style="fill:#FFFFFF;" width="13.6" height="3" />
+                            <rect x="256.74" y="281.485" transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 249.7902 669.4366)" style="fill:#FFFFFF;" width="13.6" height="3" />
+                        </g>
+                        <g class="WarningIcon">
+                            <path style="fill:#F1AF1D;" d="M255.93,293.113c-0.705,0-1.41-0.353-1.88-1.058c-0.353-0.588-0.47-1.41-0.118-2.115      l7.873-15.629c0.235-0.588,0.705-0.94,1.293-1.058v-0.118h1.175v0.118c0.588,0.117,1.058,0.588,1.293,1.058l7.873,15.629      c0.353,0.705,0.353,1.41-0.118,2.115c-0.353,0.588-1.058,1.058-1.88,1.058H255.93z" />
+                            <path style="fill:#FFFFFF;" d="M263.803,273.724L263.803,273.724c0.588,0,1.058,0.353,1.41,0.823l7.873,15.629      c0.235,0.47,0.235,1.058-0.118,1.528c-0.235,0.47-0.823,0.705-1.293,0.705h-15.629c-0.588,0-1.058-0.235-1.293-0.705      c-0.235-0.47-0.353-1.058-0.118-1.528l7.873-15.629C262.628,274.077,263.216,273.724,263.803,273.724L263.803,273.724      L263.803,273.724L263.803,273.724 M263.803,272.549L263.803,272.549h-1.175v0.235c-0.588,0.235-0.94,0.705-1.293,1.175      l-7.873,15.629c-0.47,0.823-0.353,1.88,0.118,2.703c0.47,0.823,1.41,1.293,2.35,1.293h15.629c0.94,0,1.88-0.47,2.35-1.293      c0.47-0.823,0.588-1.763,0.117-2.703l-7.873-15.629c-0.235-0.588-0.705-0.94-1.293-1.175v-0.235H263.803L263.803,272.549z" />
+                            <path style="fill:#282828;" d="M262.275,289.235c0-0.823,0.588-1.41,1.41-1.41s1.41,0.705,1.41,1.41      c0,0.823-0.588,1.41-1.41,1.41C262.98,290.763,262.275,290.058,262.275,289.235z" />
+                            <path style="fill:#282828;" d="M262.628,279.13h2.35v7.52h-2.35V279.13z" />
+                        </g>
+                    </g>-->
+                </g>
+
+
+
+                <!--Nic Elements-->
+                <g class="NICelements">
+                    <rect ng-if="deviceportview.portView.health == 'green'" xmlns="http://www.w3.org/2000/svg" class="Greybox" style="fill: #eeeded; stroke: #bbbbbb; stroke-linecap: square; stroke-miterlimit: 10;" x="260" y="470" width="1600" height="80" />
+                    <rect ng-if="deviceportview.portView.health == 'red'" xmlns="http://www.w3.org/2000/svg" class="Greybox" style="fill: #eeeded; stroke: red; stroke-linecap: square; stroke-miterlimit: 10;" x="260" y="470" width="1600" height="80" />
+                    <rect ng-if="deviceportview.portView.health == 'yellow'" xmlns="http://www.w3.org/2000/svg" class="Greybox" style="fill: #eeeded; stroke: #F1AF1D; stroke-linecap: square; stroke-miterlimit: 10;" x="260" y="470" width="1600" height="80" />
+                    <!--<path class="Greybox" style="fill:#EEEDED;stroke:#BBBBBB;stroke-linecap:square;stroke-miterlimit:10;" d="M564.7,467.3h1165.9   c2.209,0,4,1.791,4,4v210c0,2.209-1.791,4-4,4H264.7c-2.209,0-4-1.791-4-4v-210C260.7,469.091,262.491,467.3,264.7,467.3z" />-->
+                    <g class="PowerButton">
+                        <path style="fill:#979797;" ng-if="deviceportview.portView.powerState === 'on'" d="M282.5,494.3h-1v4.4h1V494.3z M280,497.5L280,497.5L280,497.5L280,497.5z M284,496.4L284,496.4     v1.1c1.2,0.7,2,2,2,3.5c0,2.2-1.8,4-4,4s-4-1.8-4-4c0-1.5,0.8-2.8,2-3.5v-1.1l0,0c-1.8,0.8-3,2.5-3,4.6c0,2.8,2.2,5,5,5     s5-2.2,5-5C287,498.9,285.7,497.1,284,496.4z M284,497.5L284,497.5L284,497.5L284,497.5z" />
+                        <path style="fill:red;" ng-if="deviceportview.portView.powerState === 'off'" d="M282.5,494.3h-1v4.4h1V494.3z M280,497.5L280,497.5L280,497.5L280,497.5z M284,496.4L284,496.4     v1.1c1.2,0.7,2,2,2,3.5c0,2.2-1.8,4-4,4s-4-1.8-4-4c0-1.5,0.8-2.8,2-3.5v-1.1l0,0c-1.8,0.8-3,2.5-3,4.6c0,2.8,2.2,5,5,5     s5-2.2,5-5C287,498.9,285.7,497.1,284,496.4z M284,497.5L284,497.5L284,497.5L284,497.5z" />
+                    </g>
+                    <circle ng-if="deviceportview.portView.powerState === 'on'" style="fill:#6DA242;" cx="282.1" cy="483.5" r="4.9" />
+                    <circle ng-if="deviceportview.portView.powerState === 'off'" style="fill:#bbb;" cx="282.1" cy="483.5" r="4.9" />
+
+                    <svg class="NICports" ng-repeat="nic in deviceportview.portView.nics" id="{{nic.id}}" ng-attr-x="{{nic.xcoord + (20 * $index)}}">
+                        <text transform="matrix(1 0 0 1 313.6167 542.85)" fill="#444445">{{nic.name}}</text>
+                        <rect class="NICrectangle" x="311.5" y="479.4" style="fill:none;stroke:#BBBBBB;stroke-linecap:square;stroke-miterlimit:10;" ng-attr-width="{{(nic.ports.length * 140) - (30 * nic.ports.length) + 15}}" height="51.9" />
+                        <svg ng-repeat="port in nic.ports" ng-attr-x="{{deviceportview.NicPortIntervals * $index}}" id="{{port.id}}">
+                            <path class="BackgroundSelection" display="none" fill="#93C7EB" d="M423.2,526.6h-98c-2.8,0-5-2.2-5-5v-32.2c0-2.8,2.2-5,5-5h98c2.8,0,5,2.2,5,5v32.2   C428.2,524.3,426,526.6,423.2,526.6z" />
+                            <path class="TextBG" ng-class="{'healthy': port.health == 'green', 'warning': port.health == 'yellow', 'error': port.health == 'red' }" fill="#000" d="M419.1,489.1h-89.7c-2.2,0-4,1.8-4,4v24.7c0,2.2,1.8,4,4,4h89.7c2.2,0,4-1.8,4-4v-24.7   C423.1,490.9,421.3,489.1,419.1,489.1z" />
+
+                            <text style="font-size: 12px" text-anchor="middle" x="373" y="502" fill="#fff">{{port.name}}</text>
+                            <text style="font-size: 12px" text-anchor="middle" x="373" y="515" fill="#fff">{{nic.modelDisplayName}}</text>
+                            
+                            <!--
+                            <line ng-if="port.partitions.length >= 1" opacity="0.5" fill="none" stroke="#6DA242" stroke-miterlimit="10" stroke-dasharray="4,3" enable-background="new    " x1="375" y1="519" x2="375" y2="572" />
+
+                            <svg ng-repeat="partition in port.partitions" ng-attr-y="{{25 * $index}}" class="PartitionElements {{partition.id}}">
+                                <g>
+                                    <g>
+                                        <rect class="WhiteBox" stroke="#BABABA" stroke-linecap="square" stroke-miterlimit="10" stroke-dasharray="1.1904,2.9759" x="324.9" y="572" fill="#FFFFFF" width="100" height="19" />
+                                    </g>
+                                    <text transform="matrix(1 0 0 1 332.8122 585.35)" fill="#444445">{{partition.displayName}}</text>
+                                </g>
+                                <rect style="cursor: pointer;" ng-click="deviceportview.selectConnection(nic, port.id, partition, 'PAR')" stroke="#BABABA" opacity="0" stroke-linecap="square" stroke-miterlimit="10" stroke-dasharray="1.1904,2.9759" x="324.9" y="572" fill="#FFFFFF" width="100" height="19"
+                                      popover
+                                      title="{{partition.displayName}}"
+                                      popover-class="small"
+                                      data-content-template="popover-content-partition.html" />
+                            </svg>
+                            -->
+                            <path id="NicPortClick" ng-click="deviceportview.selectConnection(nic, port, null, 'NIC')" style="cursor: pointer" opacity="0" fill="#000" d="M419.1,489.1h-89.7c-2.2,0-4,1.8-4,4v24.7c0,2.2,1.8,4,4,4h89.7c2.2,0,4-1.8,4-4v-24.7   C423.1,490.9,421.3,489.1,419.1,489.1z"
+                                  popover
+                                  title="{{port.name}}"
+                                  popover-class="small"
+                                  data-content-template="popover-content-nic.html" />
+
+                        </svg>
+                    </svg>
+
+                    <g class="InterfaceCardsStatus">
+                        <g ng-if="deviceportview.portView.health == 'red'" class="CriticalIcon">
+                            <path style="fill:#CE2028;stroke:#FFFFFF;stroke-width:1.5;stroke-miterlimit:10;" d="M253.5,469.285c0,5.5,4.5,10,10,10     s10-4.5,10-10s-4.5-10-10-10S253.5,463.685,253.5,469.285" />
+                            <rect x="256.799" y="467.772" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -254.6188 323.8388)" style="fill:#FFFFFF;" width="13.6" height="3" />
+                            <rect x="256.74" y="467.67" transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 118.1374 987.2744)" style="fill:#FFFFFF;" width="13.6" height="3" />
+                        </g>
+                        <g ng-if="deviceportview.portView.health == 'yellow'" class="WarningIcon">
+                            <path style="fill:#F1AF1D;" d="M255.93,479.447c-0.705,0-1.41-0.353-1.88-1.058c-0.353-0.588-0.47-1.41-0.118-2.115      l7.873-15.629c0.235-0.588,0.705-0.94,1.293-1.058v-0.118h1.175v0.118c0.588,0.118,1.058,0.588,1.293,1.058l7.873,15.629      c0.353,0.705,0.353,1.41-0.118,2.115c-0.353,0.588-1.058,1.058-1.88,1.058H255.93z" />
+                            <path style="fill:#FFFFFF;" d="M263.803,460.058L263.803,460.058c0.588,0,1.058,0.353,1.41,0.823l7.873,15.629      c0.235,0.47,0.235,1.058-0.118,1.528c-0.235,0.47-0.823,0.705-1.293,0.705h-15.629c-0.588,0-1.058-0.235-1.293-0.705      c-0.235-0.47-0.353-1.058-0.118-1.528l7.873-15.629C262.628,460.411,263.216,460.058,263.803,460.058L263.803,460.058      L263.803,460.058L263.803,460.058 M263.803,458.883L263.803,458.883h-1.175v0.235c-0.588,0.235-0.94,0.705-1.293,1.175      l-7.873,15.629c-0.47,0.823-0.353,1.88,0.118,2.703c0.47,0.823,1.41,1.293,2.35,1.293h15.629c0.94,0,1.88-0.47,2.35-1.293      c0.47-0.823,0.588-1.763,0.117-2.703l-7.873-15.629c-0.235-0.588-0.705-0.94-1.293-1.175v-0.235H263.803L263.803,458.883z" />
+                            <path style="fill:#282828;" d="M262.275,475.569c0-0.823,0.588-1.41,1.41-1.41s1.41,0.705,1.41,1.41      c0,0.823-0.588,1.41-1.41,1.41C262.98,477.097,262.275,476.392,262.275,475.569z" />
+                            <path style="fill:#282828;" d="M262.628,465.464h2.35v7.52h-2.35V465.464z" />
+                        </g>
+                    </g>
+                    <text transform="matrix(1 0 0 1 267.6167 575.9333)">
+                        <tspan>{{deviceportview.portView.hostname}} {{deviceportview.portView.model}} {{deviceportview.portView.type}}</tspan>
+                    </text>
+                </g>
+
+                <!--Sample Lines for reference only (don't use polylines)-->
+                <!--<line class="VLANline" fill="none" stroke="#6DA242" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="4,3" x1="343" y1="100" x2="343" y2="143"/>-->
+                <!--<polyline class="SwitchLine" opacity="0.5" fill="none" stroke="#6DA242" stroke-width="2" stroke-miterlimit="10" enable-background="new    " points="
+                373,288.9 373,255.1 316.3,255.1 316.3,194.2 		"/>-->
+                <!--<polyline class="IOMLine" opacity="0.5" fill="none" stroke="#6DA242" stroke-width="2" stroke-miterlimit="10" enable-background="new    " points="
+                375,472.9 375,429.1 367.1,428.9 367.1,335.4 		"/>-->
+                <!--<line class="NICLine_1_" opacity="0.5" fill="none" stroke="#6DA242" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="4,3" enable-background="new    " x1="483" y1="519" x2="483" y2="576"/>-->
+            </g>
+            <svg id="PortViewSVGLines"></svg>
+            <svg id="PortViewSelectedSVGLines"></svg>
+
+            <svg ng-repeat="torSwitch in deviceportview.portView.torSwitches" ng-attr-x="{{deviceportview.TorSwitchIntervals * $index}}" id="{{torSwitch.id}}">
+                <g class="SwitchNameElements">
+                    <rect class="TextBG" x="262.8" y="197.8" opacity="0.5" fill="#FFFFFF" enable-background="new    " width="160" height="14" />
+                    <text class="SwitchHostName" transform="matrix(1 0 0 1 268.95 208.6833)">
+                        <a ng-href="#/device/{{torSwitch.originalId}}/{{torSwitch.deviceType}}" xlink:href=''>
+                            <tspan fill="#027DB8">{{torSwitch.hostname}}</tspan>
+                        </a>
+                        <tspan>{{torSwitch.model}}</tspan>
+                    </text>
+                </g>
+            </svg>
+
+            <svg ng-repeat="iom in deviceportview.portView.ioModules" ng-attr-x="{{deviceportview.IOMintervals * $index}}" id="{{iom.id}}">
+                <g class="PortDetailText">
+                    <rect class="TextBG" x="323.8" y="345" opacity="0.75" fill="#EEEDED" enable-background="new    " width="144.3" height="26" />
+                    <text class="HostName" transform="matrix(1 0 0 1 330.3667 355.2667)">
+                        <a ng-href="#/device/{{iom.originalId}}/{{iom.deviceType}}" xlink:href=''>
+                            <tspan fill="#027DB8">{{iom.hostname}}</tspan>
+                        </a>
+                    </text>
+                    <text class="PortType" transform="matrix(1 0 0 1 330.3667 368.2667)" fill="#444445">{{iom.model}}</text>
+                </g>
+            </svg>
+
+        </svg>
+    </div>
+    <!--Tor Switch Popover-->
+    <script type="text/ng-template" id="popover-content-torswitch.html">
+        <div id="popover-content-servers">
+            <div class="popover-body">
+                <ul class="list-unstyled">
+                    <li>{{'PORTVIEW_Popover_Model'|translate}}{{torSwitch.model}}</li>
+                    <li>{{'PORTVIEW_Popover_IP_Address'|translate}}{{torSwitch.ipaddress}}</li>
+                </ul>
+                <footer class="text-right" style="padding-bottom: 15px;"></footer>
+            </div>
+        </div>
+    </script>
+
+    <!--IOM Popover-->
+    <script type="text/ng-template" id="popover-content-iom.html">
+        <div id="popover-content-servers">
+            <div class="popover-body">
+                <ul class="list-unstyled">
+                    <li><statusicon value="iom.health"></statusicon>{{iom.statusMessage}}</li>
+                    <li>{{'PORTVIEW_Popover_Model'|translate}}{{iom.model}}</li>
+                    <li>{{'PORTVIEW_Popover_IP_Address'|translate}}{{iom.ipaddress}}</li>
+                </ul>
+                <footer class="text-right" style="padding-bottom: 15px;"></footer>
+            </div>
+        </div>
+    </script>
+
+    <!--Nic Popover-->
+    <script type="text/ng-template" id="popover-content-nic.html">
+        <div id="popover-content-servers">
+            <div class="popover-body">
+                <ul class="list-unstyled">
+                    <li>{{'PORTVIEW_Popover_Model'|translate}}{{nic.model}}</li>
+                    <!--<li>{{'PORTVIEW_Popover_IP_Address'|translate}}{{nic.ipaddress}}</li>-->
+                </ul>
+                <footer class="text-right" style="padding-bottom: 15px;"></footer>
+            </div>
+        </div>
+    </script>
+
+    <!--Partition Popover-->
+    <script type="text/ng-template" id="popover-content-partition.html">
+        <div id="popover-content-servers">
+            <div class="popover-body">
+                {{'PORTVIEW_Popover_VLANS'|translate}}
+                <ul style="padding-left:10px" class="list-unstyled">
+                    <li ng-repeat="vlan in partition.vlans">
+                        <span translate="PORTVIEW_PortViewSVG_vlanName" translate-values="{'vlan' : vlan.vlan, 'vlanName' : vlan.name}"></span>
+                </ul>
+                <footer class="text-right" style="padding-bottom: 15px;"></footer>
+            </div>
+        </div>
+    </script>
+
+    <!-- Details Section-->
+    <h2 class="detailsHeader">
+        <i class="clarity-icon ci-port"></i>
+        {{'PORTVIEW_Details_Connection_Details'|translate}}
+    </h2>
+    <div ng-if="deviceportview.portView.health == 'red'" class="clarity-error alert alert-danger">
+        <i class="ci-action-circle-remove pull-left"></i>
+        <h4>{{deviceportview.portView.statusMessage}}</h4>
+    </div>
+    <div ng-if="deviceportview.portView.health == 'yellow'" class="clarity-error alert alert-warning">
+        <i class="ci-health-warning-tri-bang pull-left"></i>
+        <h4>{{deviceportview.portView.statusMessage}}</h4>
+    </div>
+
+
+
+
+    <div class="panel-group" id="" role="tablist" aria-multiselectable="true">
+
+        <!-- <div ng-repeat="nic in deviceportview.accordiondata.nics">-->
+        <div ng-repeat="port in deviceportview.accordionData" class="panel panel-default">
+            <div class="panel-heading" role="tab" id="heading{{$index}}{{port.nicInfo.id}}{{port.id}}">
+                <h4 class="panel-title">
+                    <a role="button" id="accordionheader{{$index}}{{port.nicInfo.id}}{{port.id}}" class="" ng-class="{'collapsed': port != deviceportview.accordionData[0]}" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{$index}}{{port.nicInfo.id}}{{port.id}}" aria-expanded="false" aria-controls="collapse{{$index}}{{port.nicInfo.id}}{{port.id}}">
+                        <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                        <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                        <statusicon value="port.health"></statusicon> <i class="ci-health-warning-tri-bang" ng-if="port.health == 'yellow'" style="color: #F1AF1D"></i>
+                        <span translate="PORTVIEW_PortViewSVG_NicDetails" translate-values="{nicName: port.nicInfo.name, portName: port.name}"></span>
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse{{$index}}{{port.nicInfo.id}}{{port.id}}" class="panel-collapse collapse" ng-class="{'in' : port == deviceportview.accordionData[0]}" role="tabpanel" aria-labelledby="heading{{$index}}{{port.nicInfo.id}}{{port.id}}">
+                <div class="panel-body well">
+                    <h2>{{'PORTVIEW_Details_NPAR'|translate}}</h2>
+                    <table id="nicPartitionDetailsTable{{port.nicInfo.id}}{{port.id}}" class="table col-md-12">
+                        <thead>
+                            <tr>
+                                <th>{{'PORTVIEW_Details_NPAR_TH'|translate}}</th>
+                                <th>{{'PORTVIEW_Details_iSCSI_TH'|translate}}</th>
+                                <th>{{'PORTVIEW_Details_PXE_TH'|translate}}</th>
+                                <th>{{'PORTVIEW_Details_IP_Address_TH'|translate}}</th>
+                                <th>{{'PORTVIEW_Details_MAC_Address_TH'|translate}}</th>
+                                <th>{{'PORTVIEW_Details_WWPN_TH'|translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="partition in port.partitions">
+                                <td>{{partition.name}}</td>
+                                <td>{{partition.iscsiEnabled | able}}</td>
+                                <td>{{partition.pxeEnabled | able}}</td>
+                                <td>
+                                    <a ng-if="partition.ipaddressurl !== '' && partition.ipaddressurl" target="_blank" href="{{partition.ipaddressurl}}">
+                                        <span>{{partition.ipaddress}}</span>
+                                    </a>
+                                    <span ng-if="partition.ipaddressurl == '' || !partition.ipaddressurl">{{partition.ipaddress}}</span>
+                                </td>
+                                <td>{{partition.macaddress}}</td>
+                                <td>{{partition.wwpn}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h2>{{'PORTVIEW_Details_Interface_Card'|translate}}</h2>
+                    <table id="nicDetailsTable" class="table col-md-12">
+                        <thead>
+                            <tr>
+                                <th>{{'PORTVIEW_Details_Location_TH'|translate}}</th>
+                                <th>{{'PORTVIEW_Details_Model_TH'|translate}}</th>
+                                <th>{{'PORTVIEW_Details_Port_TH'|translate}}</th>
+                                <th>{{'PORTVIEW_Details_Fabric_TH'|translate}}</th>
+                                <th>{{'PORTVIEW_Details_NPAREnabled_TH'|translate}}</th>
+                                <th>{{'PORTVIEW_Details_IP_Address_TH'|translate}}</th>
+                                <th>{{'PORTVIEW_Details_MAC_Address_TH'|translate}}</th>
+                                <th>{{'PORTVIEW_Details_WWPN_TH'|translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{port.nicInfo.location}}</td>
+                                <td>{{port.nicInfo.model}}</td>
+                                <td>{{port.name}}</td>
+                                <td>{{port.location}}</td>
+                                <td>{{port.nicInfo.nparEnabled | able}}</td>
+                                <td>
+                                    <ul class="list-unstyled">
+                                        <li ng-repeat="ip in port.nicInfo.ipaddresses">
+                                            <a ng-if="ip.ipaddressurl !== '' && ip.ipaddressurl" target="_blank" href="{{ip.ipaddressurl}}">
+                                                <span>{{ip.ipaddress}}</span>
+                                            </a>
+                                            <span ng-if="ip.ipaddressurl == '' || !ip.ipaddressurl">{{ip.ipaddress}}</span>
+                                        </li>
+                                    </ul>
+
+                                    <!--<a ng-if="port.nicInfo.ipaddressurl !== '' && port.nicInfo.ipaddressurl" target="_blank" href="{{port.nicInfo.ipaddressurl}}">
+                                        <span>{{port.nicInfo.ipaddress}}</span>
+                                    </a>-->
+                                    <!--<span ng-if="port.nicInfo.ipaddressurl == '' || !port.nicInfo.ipaddressurl">{{port.nicInfo.ipaddress}}</span>-->
+                                </td>
+                                <td>{{port.nicInfo.macaddress}}</td>
+                                <td>{{port.wwpn}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div ng-if="deviceportview.iomData(port.nicInfo.id, port.id)" class="well">
+                        <h2>{{'PORTVIEW_Details_IOM'|translate}}</h2>
+                        <table id="iomDetailsTable" class="table col-md-12">
+                            <thead>
+                                <tr>
+                                    <th>{{'PORTVIEW_Details_Model_TH'|translate}}</th>
+                                    <th>{{'PORTVIEW_Details_Fabric_TH'|translate}}</th>
+                                    <th>{{'PORTVIEW_Details_Host_Name_TH'|translate}}</th>
+                                    <th>{{'PORTVIEW_Details_Asset_Tag_TH'|translate}}</th>
+                                    <th>{{'PORTVIEW_Details_IP_Address_TH'|translate}}</th>
+                                    <th>{{'PORTVIEW_Details_Server_Port_TH'|translate}}</th>
+                                    <th>{{'PORTVIEW_Details_WWPN_TH'|translate}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-if="deviceportview.iomData(port.nicInfo.id, port.id).health == 'red'" class="clarity-error alert alert-danger">
+                                    <td colspan="7">
+                                        <i class="ci-action-circle-remove pull-left"></i>
+                                        <h4>{{deviceportview.iomData(port.nicInfo.id, port.id).statusMessage}}</h4>
+                                    </td>
+                                </tr>
+                                <tr ng-if="deviceportview.iomData(port.nicInfo.id, port.id).health == 'yellow'" class="clarity-error alert alert-warning">
+                                    <td colspan="7">
+                                        <i class="ci-health-warning-tri-bang pull-left"></i>
+                                        <h4>{{deviceportview.iomData(port.nicInfo.id, port.id).statusMessage}}</h4>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{deviceportview.iomData(port.nicInfo.id, port.id).model}}</td>
+                                    <td>{{deviceportview.iomData(port.nicInfo.id, port.id).fabric}}</td>
+                                    <td>{{deviceportview.iomData(port.nicInfo.id, port.id).hostname}}</td>
+                                    <td>{{deviceportview.iomData(port.nicInfo.id, port.id).assettag}}</td>
+                                    <td>
+                                        <a ng-if="deviceportview.iomData(port.nicInfo.id, port.id).ipaddressurl !== '' && deviceportview.iomData(port.nicInfo.id, port.id).ipaddressurl" target="_blank" href="{{deviceportview.iomData(port.nicInfo.id, port.id).ipaddressurl}}">
+                                            <span>{{deviceportview.iomData(port.nicInfo.id, port.id).ipaddress}}</span>
+                                        </a>
+                                        <span ng-if="deviceportview.iomData(port.nicInfo.id, port.id).ipaddressurl == '' || !deviceportview.iomData(port.nicInfo.id, port.id).ipaddressurl">{{deviceportview.iomData(port.nicInfo.id, port.id).ipaddress}}</span>
+                                    </td>
+                                    <td>
+                                        <span ng-repeat="downport in deviceportview.iomData(port.nicInfo.id, port.id).downlinkPorts">{{downport.port}}{{($last || ', ')}}</span>
+                                    </td>
+                                    <td>{{deviceportview.iomData(port.nicInfo.id, port.id).wwpn}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div ng-if="port.torSwitches.length" class="well">
+                        <h2>{{'PORTVIEW_Details_ToR'|translate}}</h2>
+                        <table id="torDetailsTable" class="table col-md-12">
+                            <thead>
+                                <tr>
+                                    <th>{{'PORTVIEW_Details_Model_TH'|translate}}</th>
+                                    <th>{{'PORTVIEW_Details_Host_Name_TH'|translate}}</th>
+                                    <th>{{'PORTVIEW_Details_Asset_Tag_TH'|translate}}</th>
+                                    <th>{{'PORTVIEW_Details_IP_Address_TH'|translate}}</th>
+                                    <th>{{'PORTVIEW_Details_Downlink_Port_TH'|translate}}</th>
+                                    <th>{{'PORTVIEW_Details_Port_Channel_TH'|translate}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-if="torData.health != 'green'" ng-repeat-start="torData in port.torSwitches">
+                                    <td colspan="6" ng-if="torData.health == 'red' && torData.statusMessage != ''" class="clarity-error alert alert-danger">
+                                        <i class="ci-action-circle-remove pull-left"></i>
+                                        <h4>{{torData.statusMessage}}</h4>
+                                    </td>
+                                    <td colspan="6" ng-if="torData.health == 'yellow' && torData.statusMessage != ''" class="clarity-error alert alert-warning">
+                                        <i class="ci-health-warning-tri-bang pull-left"></i>
+                                        <h4>{{torData.statusMessage}}</h4>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat-end>
+                                    <td>{{torData.model}}</td>
+                                    <td>{{torData.hostname}}</td>
+                                    <td>{{torData.assettag}}</td>
+                                    <td>
+                                        <a ng-if="torData.ipaddressurl !== '' && torData.ipaddressurl" target="_blank" href="{{torData.ipaddressurl}}">
+                                            <span>{{torData.ipaddress}}</span>
+                                        </a>
+                                        <span ng-if="torData.ipaddressurl == '' || !torData.ipaddressurl">{{torData.ipaddress}}</span>
+                                    </td>
+                                    <td>
+                                        <span ng-repeat="downport in torData.downlinkPorts">{{downport.port}} </span>
+                                    </td>
+                                    <td>{{torData.portChannel}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div ng-if="port.partitions.length >= 1" class="well">
+                        <h2>{{'PORTVIEW_Details_VLAN'|translate}}</h2>
+                        <table id="valnDetailsTable" class="table col-md-12">
+                            <thead>
+                                <tr>
+                                    <th>{{'PORTVIEW_Details_VLAN_TH'|translate}}</th>
+                                    <th>{{'PORTVIEW_Details_Name_TH'|translate}}</th>
+                                    <th>{{'PORTVIEW_Details_Description_TH'|translate}}</th>
+                                    <th>{{'PORTVIEW_Details_Type_TH'|translate}}</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="partition in port.partitions">
+                                <tr ng-repeat="vlan in partition.vlans">
+                                    <td>{{vlan.vlan}}</td>
+                                    <td>{{vlan.name}}</td>
+                                    <td>{{vlan.description}}</td>
+                                    <td>{{vlan.type}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div ng-if="port.zoneInfo" class="well">
+                        <h2>{{'PORTVIEW_Details_Zone'|translate}}</h2>
+                        <table id="zoneDetailsTable" class="table col-md-12">
+                            <thead>
+                                <tr>
+                                    <th>{{'PORTVIEW_Details_Zone_Configuration_TH'|translate}}</th>
+                                    <th>{{'PORTVIEW_Details_Zone_TH'|translate}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{port.zoneInfo.zoneConfig}}</td>
+                                    <td>{{port.zoneInfo.zone}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--</div>-->
+
+    </div>
+
+
+
+
+
+
+
+</section>

@@ -1,0 +1,505 @@
+﻿<wizard on-finish="DirectoryWizard.finishWizard()" on-cancel="DirectoryWizard.cancelWizard()">
+
+    <error-display errors="DirectoryWizard.errors" on-click="$root.ASM.RemoveError(error, DirectoryWizard.errors)" on-expand-collapse=""></error-display>
+
+    <wizard-step step-title="{{'SETTINGS_DirectoryServicesWizard_ConnectionSettings'|translate}}"
+                 on-next="DirectoryWizard.validateConnectionSettings()"
+                 on-enter="DirectoryWizard.enterConnectionSettings()">
+
+        <form class="form-horizontal"
+              name="DirectoryWizard.forms.connectionSettingsForm"
+              id="DirectoryWizard.forms.connectionSettingsForm"
+              form-validation="DirectoryWizard.forms.connectionSettingsForm._submitted">
+
+            <div class="form-group">
+                <label for="directoryType" class="col-md-4 control-label">
+                    {{'SETTINGS_DirectoryServiceWizardTypeOfDir' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <select ng-if="!DirectoryWizard.editmode"
+                            ng-options="item.directoryName as item.directoryName for item in DirectoryWizard.directorytypelist"
+                            ng-model="DirectoryWizard.directorymodalcopy.directoryName"
+                            name="directoryType"
+                            id="directoryType"
+                            class="form-control"
+                            required>
+                        <option value="">{{'SETTINGS_DirectoryServicesWizardSelectDirectoryCaption'|translate}}</option>
+                    </select>
+                    <p ng-if="DirectoryWizard.editmode"
+                       class="form-control-static">
+                        {{DirectoryWizard.directorymodalcopy.directoryName}}
+                    </p>
+                    <span ng-if="DirectoryWizard.forms.connectionSettingsForm._submitted
+                          && DirectoryWizard.forms.connectionSettingsForm.directoryType.$error.required"
+                          class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="directory_server_name" class="col-md-4 control-label">
+                    {{'GENERIC_Name' | translate}}*
+                    <i class="ci ci-info-circle-info text-primary"
+                       data-toggle="tooltip"
+                       data-placement="right"
+                       title="{{'SETTINGS_DirectoryServicesWizardNameTooltip' |translate}}"></i>
+                </label>
+                <div class="col-md-4">
+                    <input ng-if="!DirectoryWizard.editmode"
+                           name="directoryName"
+                           id="directory_server_name"
+                           type="text"
+                           class="form-control"
+                           ng-model="DirectoryWizard.directorymodalcopy.serverName"
+                           required />
+                    <p ng-if="DirectoryWizard.editmode"
+                       class="form-control-static">
+                        {{DirectoryWizard.directorymodalcopy.serverName}}
+                    </p>
+                    <span ng-if="DirectoryWizard.forms.connectionSettingsForm._submitted
+                          && DirectoryWizard.forms.connectionSettingsForm.directoryName.$error.required"
+                          class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="directoryUserName" class="col-md-4 control-label">
+                    {{'GENERIC_UserName' | translate}}* {{'SETTINGS_DirectoryServicesWizardExample' | translate}}
+                </label>
+                <div class="col-md-4">
+                    <input name="directoryUserName"
+                           id="directoryUserName"
+                           type="text"
+                           class="form-control"
+                           ng-model="DirectoryWizard.directorymodalcopy.bindDN"
+                           required />
+                    <span ng-if="DirectoryWizard.forms.connectionSettingsForm._submitted
+                          && DirectoryWizard.forms.connectionSettingsForm.directoryUserName.$error.required"
+                          class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="directoryPassword" class="col-md-4 control-label">
+                    {{'GENERIC_Password' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input id="directoryPassword"
+                               name="directoryPassword"
+                               ng-model="DirectoryWizard.directorymodalcopy.password"
+                               required
+                               class="form-control"
+                               type="password" password-viewer 
+                               placeholder="" />
+                       
+                    </div>
+                    <span ng-if="DirectoryWizard.forms.connectionSettingsForm._submitted
+                          && DirectoryWizard.forms.connectionSettingsForm.directoryPassword.$error.required"
+                          class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmDirectoryPassword" class="col-md-4 control-label">
+                    {{'SETTINGS_DirectoryServicesWizardConfirmPassword' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input id="confirmDirectoryPassword"
+                               name="confirmDirectoryPassword"
+                               ng-match="DirectoryWizard.directorymodalcopy.password"
+                               ng-model="DirectoryWizard.directorymodalcopy.confirmpassword"
+                               required
+                               class="form-control"
+                               type="password" password-viewer  />                       
+                    </div>
+                    <span class="text-danger" ng-if="DirectoryWizard.forms.connectionSettingsForm._submitted">
+                        <span ng-if="DirectoryWizard.forms.connectionSettingsForm.confirmDirectoryPassword.$error.required">
+                            {{'GENERIC_RequiredField' | translate}}
+                        </span>
+                        <span ng-if="DirectoryWizard.forms.connectionSettingsForm.confirmDirectoryPassword.$error.ngmatch
+                              && !DirectoryWizard.forms.connectionSettingsForm.confirmDirectoryPassword.$error.required">
+                            {{'SETTINGS_DirectoryServicesWizardPassword_Match' | translate}}
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="user_host" class="col-md-4 control-label">
+                    {{'GENERIC_Host' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <input name="DirectoryHost"
+                           id="user_host"
+                           ip-validator
+                           type="text"
+                           required
+                           class="form-control"
+                           ng-model="DirectoryWizard.directorymodalcopy.hostName" />
+                    <span class="text-danger" ng-if="DirectoryWizard.forms.connectionSettingsForm._submitted">
+                        <span ng-if="DirectoryWizard.forms.connectionSettingsForm._submitted
+                                    && DirectoryWizard.forms.connectionSettingsForm.DirectoryHost.$error.ipValidator
+                                    && !DirectoryWizard.forms.connectionSettingsForm.DirectoryHost.$error.required"
+                              class="text-danger">
+                            {{'SETTINGS_DirectoryServicesWizardIP_Format' | translate}}
+                        </span>
+                        <span ng-if="DirectoryWizard.forms.connectionSettingsForm._submitted
+                                    && DirectoryWizard.forms.connectionSettingsForm.DirectoryHost.$error.required"
+                              class="text-danger">
+                            {{'GENERIC_RequiredField' | translate}}
+                        </span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="user_port" class="col-md-4 control-label">
+                    {{'GENERIC_Port' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <input name="DirectoryPort"
+                           id="user_port"
+                           type="number"
+                           string-to-number
+                           class="form-control"
+                           min="0"
+                           max="65535"
+                           ng-model="DirectoryWizard.directorymodalcopy.port"
+                           required />
+                    <span class="text-danger" ng-if="DirectoryWizard.forms.connectionSettingsForm._submitted">
+                        <span ng-if="DirectoryWizard.forms.connectionSettingsForm.DirectoryPort.$error.required">
+                            {{'VALIDATIONMESSAGES_required' | translate}}
+                        </span>
+                        <span ng-if="DirectoryWizard.forms.connectionSettingsForm.DirectoryPort.$error.max">
+                            {{'VALIDATIONMESSAGES_maxNumber' | translate:'{ max:  65535 }' }}
+                        </span>
+                        <span ng-if="DirectoryWizard.forms.connectionSettingsForm.DirectoryPort.$error.min">
+                            {{'VALIDATIONMESSAGES_minNumber' | translate:'{ min:  0 }' }}
+                        </span>
+                    </span>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="protocol" class="col-md-4 control-label">
+                    {{'GENERIC_Protocol' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <select ng-if="!DirectoryWizard.editmode"
+                            name="DirectoryProtocol"
+                            id="protocol"
+                            class="form-control"
+                            ng-model="DirectoryWizard.directorymodalcopy.protocolName"
+                            ng-options="protocol.id as protocol.protocolName for protocol in DirectoryWizard.protocollist"
+                            required>
+                        <option value="">{{ 'GENERIC_select' | translate }}</option>
+                    </select>
+                    <select ng-if="DirectoryWizard.editmode"
+                            name="DirectoryProtocol"
+                            id="protocol"
+                            class="form-control"
+                            ng-model="DirectoryWizard.directorymodalcopy.protocolName"
+                            ng-options="protocol.id as protocol.protocolName for protocol in DirectoryWizard.protocollist"
+                            required>
+                        <option value="">{{ 'GENERIC_select' | translate }}</option>
+                    </select>
+                    <span ng-if="DirectoryWizard.forms.connectionSettingsForm._submitted
+                          && DirectoryWizard.forms.connectionSettingsForm.DirectoryProtocol.$error.required"
+                          class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+        </form>
+
+    </wizard-step>
+
+    <wizard-step step-title="{{'SETTINGS_DirectoryServicesWizard_AttributeSettings'|translate}}"
+                 on-next="DirectoryWizard.validateAttributeSettings()"
+                 on-enter="DirectoryWizard.enterAttributeSettings()">
+
+        <form id="DirectoryWizard.forms.directoryAttributeSettings"
+              name="DirectoryWizard.forms.directoryAttributeSettings"
+              class="form-horizontal"
+              form-validation="DirectoryWizard.forms.directoryAttributeSettings._submitted">
+            <div class="form-group">
+                <label for="directory_basedn" class="col-md-4 control-label">
+                    {{'SETTINGS_DirectoryServicesWizardBaseDN' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <input name="directoryBaseDN"
+                           id="directoryBaseDN"
+                           type="text"
+                           class="form-control"
+                           ng-model="DirectoryWizard.directorymodalcopy.baseDN"
+                           required />
+                    <span ng-if="DirectoryWizard.forms.directoryAttributeSettings._submitted
+                          && DirectoryWizard.forms.directoryAttributeSettings.directoryBaseDN.$error.required"
+                          class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="directory_filter" class="col-md-4 control-label">
+                    {{'GENERIC_Filter' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <input name="DirectoryFilter"
+                           id="directory_filter"
+                           type="text"
+                           class="form-control"
+                           ng-model="DirectoryWizard.directorymodalcopy.filterSettingType"
+                           required />
+                    <span ng-if="DirectoryWizard.forms.directoryAttributeSettings._submitted
+                          && DirectoryWizard.forms.directoryAttributeSettings.DirectoryFilter.$error.required"
+                          class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="directory_uname" class="col-md-4 control-label">
+                    {{'SETTINGS_DirectoryServicesWizardUserAttribute' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <input name="DirectoryUserName"
+                           id="user_uname"
+                           type="text"
+                           class="form-control"
+                           ng-model="DirectoryWizard.directorymodalcopy.userName"
+                           required />
+                    <span ng-if="DirectoryWizard.forms.directoryAttributeSettings._submitted
+                          && DirectoryWizard.forms.directoryAttributeSettings.DirectoryUserName.$error.required"
+                          class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="directory_fname" class="col-md-4 control-label">
+                    {{'SETTINGS_DirectoryServicesWizardFirstNameAttr' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <input name="DirectoryFirstName"
+                           id="fname"
+                           type="text"
+                           class="form-control"
+                           ng-model="DirectoryWizard.directorymodalcopy.firstName"
+                           required />
+                    <span ng-if="DirectoryWizard.forms.directoryAttributeSettings._submitted
+                          && DirectoryWizard.forms.directoryAttributeSettings.DirectoryFirstName.$error.required"
+                          class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="directory_lname" class="col-md-4 control-label">
+                    {{'SETTINGS_DirectoryServicesWizardLastNameAttr' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <input name="DirectoryLastName"
+                           id="lname"
+                           type="text"
+                           class="form-control"
+                           ng-model="DirectoryWizard.directorymodalcopy.lastName"
+                           required />
+                    <span ng-if="DirectoryWizard.forms.directoryAttributeSettings._submitted
+                          && DirectoryWizard.forms.directoryAttributeSettings.DirectoryLastName.$error.required"
+                          class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="directory_email" class="col-md-4 control-label">
+                    {{'SETTINGS_DirectoryServicesWizardEmailAttr' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <input name="DirectoryEmail"
+                           id="email"
+                           type="text"
+                           class="form-control"
+                           ng-model="DirectoryWizard.directorymodalcopy.email"
+                           required />
+                    <span ng-if="DirectoryWizard.forms.directoryAttributeSettings._submitted
+                          && DirectoryWizard.forms.directoryAttributeSettings.DirectoryEmail.$error.required"
+                          class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+        </form>
+    </wizard-step>
+
+    <wizard-step step-title="Summary" on-enter="DirectoryWizard.enterSummary()">
+
+        <form id="DirectorySummary" class="form-horizontal" name="DirectorySummary">
+
+            <h2>
+                {{'GENERIC_Summary' | translate}}
+            </h2>
+            <p>
+                <span ng-if="DirectoryWizard.editmode">
+                    {{'SETTINGS_DirectoryServicesWizardEditDescription' | translate}}
+                </span>
+                <span ng-if="!DirectoryWizard.editmode">
+                    {{'SETTINGS_DirectoryServicesWizardCreateDescription' | translate}}
+                </span>
+            </p>
+            <fieldset>
+                <legend>
+                    {{'SETTINGS_DirectoryServicesWizardConnectionSettings' | translate}}
+                </legend>
+                <ul class="list-unstyled">
+                    <li class="form-group">
+                        <label class="col-md-4 control-label">
+                            {{'SETTINGS_DirectoryServiceWizardTypeOfDir' | translate}}*
+                        </label>
+                        <p class="form-control-static col-md-8">
+                            <span id="directory_servicetypemad">
+                                {{DirectoryWizard.directorymodalcopy.directoryName}}
+                            </span>
+                        </p>
+                    </li>
+                    <li class="form-group">
+                        <label class="col-md-4 control-label">
+                            {{'GENERIC_Name' | translate}}*
+                        </label>
+                        <p class="form-control-static col-md-8">
+                            <span id="directory_servername" class="force-wrap">
+                                {{DirectoryWizard.directorymodalcopy.serverName}}
+                            </span>
+                        </p>
+                    </li>
+                    <li class="form-group">
+                        <label class="col-md-4 control-label">
+                            {{'GENERIC_UserName' | translate}}*
+                        </label>
+                        <p class="form-control-static col-md-8">
+                            <span id="directory_username" class="force-wrap">
+                                {{DirectoryWizard.directorymodalcopy.bindDN}}
+                            </span>
+                        </p>
+                    </li>
+                    <li class="form-group">
+                        <label class="col-md-4 control-label">
+                            {{'GENERIC_Host' | translate}}*
+                        </label>
+                        <p class="form-control-static col-md-8">
+                            <span id="directory_host">
+                                {{DirectoryWizard.directorymodalcopy.hostName}}
+                            </span>
+                        </p>
+                    </li>
+                    <li class="form-group">
+                        <label class="col-md-4 control-label">
+                            {{'GENERIC_Port' | translate}}*
+                        </label>
+                        <p class="form-control-static col-md-8">
+                            <span id="directort_port">
+                                {{DirectoryWizard.directorymodalcopy.port}}
+                            </span>
+                        </p>
+                    </li>
+                    <li class="form-group">
+                        <label class="col-md-4 control-label">
+                            {{'GENERIC_Protocol' | translate}}*
+                        </label>
+                        <p class="form-control-static col-md-8">
+                            <span id="directory_directoryprotocol">
+                                {{DirectoryWizard.directorymodalcopy.protocolName}}
+                            </span>
+                        </p>
+                    </li>
+                </ul>
+
+            </fieldset>
+            <fieldset>
+                <legend>
+                    {{'SETTINGS_DirectoryServicesWizardAttrSettings' | translate}}
+                </legend>
+                <ul class="list-unstyled">
+                    <li class="form-group">
+                        <label class="col-md-4 control-label">
+                            {{'SETTINGS_DirectoryServicesWizardBaseDN' | translate}}*
+                        </label>
+                        <p class="form-control-static col-md-8">
+                            <span id="directory_basedn">
+                                {{DirectoryWizard.directorymodalcopy.baseDN}}
+                            </span>
+                        </p>
+                    </li>
+                    <li class="form-group">
+                        <label class="col-md-4 control-label">
+                            {{'GENERIC_Filter' | translate}}*
+                        </label>
+                        <p class="form-control-static col-md-8">
+                            <span id="directory_filtersettingtype">
+                                {{DirectoryWizard.directorymodalcopy.filterSettingType}}
+                            </span>
+                        </p>
+                    </li>
+
+                    <li class="form-group">
+                        <label class="col-md-4 control-label">
+                            {{'SETTINGS_DirectoryServicesWizardUserAttribute' | translate}}*
+                        </label>
+                        <p class="form-control-static col-md-8">
+                            <span id="directory_uname">
+                                {{DirectoryWizard.directorymodalcopy.userName}}
+                            </span>
+                        </p>
+                    </li>
+                    <li class="form-group">
+                        <label class="col-md-4 control-label">
+                            {{'SETTINGS_DirectoryServicesWizardFirstNameAttr' | translate}}*
+                        </label>
+                        <p class="form-control-static col-md-8">
+                            <span id="directory_fname">
+                                {{DirectoryWizard.directorymodalcopy.firstName}}
+                            </span>
+                        </p>
+                    </li>
+                    <li class="form-group">
+                        <label class="col-md-4 control-label">
+                            {{'SETTINGS_DirectoryServicesWizardLastNameAttr' | translate}}*
+                        </label>
+                        <p class="form-control-static col-md-8">
+                            <span id="directory_lname">
+                                {{DirectoryWizard.directorymodalcopy.lastName}}
+                            </span>
+                        </p>
+                    </li>
+                    <li class="form-group">
+                        <label class="col-md-4 control-label">
+                            {{'SETTINGS_DirectoryServicesWizardEmailAttr' | translate}}*
+                        </label>
+                        <p class="form-control-static col-md-8">
+                            <span id="directory_email">
+                                {{DirectoryWizard.directorymodalcopy.email}}
+                            </span>
+                        </p>
+                    </li>
+                </ul>
+            </fieldset>
+        </form>
+
+    </wizard-step>
+
+</wizard>

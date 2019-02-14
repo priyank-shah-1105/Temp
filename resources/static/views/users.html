@@ -1,0 +1,37 @@
+﻿<section id="page_users">
+    <div>
+        <h2>
+            {{'GENERIC_Users' | translate}}
+        </h2>
+        <div role="tabpanel">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist" id="users_tabs">
+                <li role="presentation" ng-click="users.clickTab('users')" ng-class="{active: users.activeTab == 'users'}">
+                    <a data-target="#users" aria-controls="users" role="tab" data-toggle="tab" id="usersTab" ng-click="users.setTab('users_tabs', 'users')">
+                        {{'GENERIC_Users' | translate}}
+                    </a>
+                </li>
+                <li role="presentation" ng-click="users.clickTab('directoryservices')" ng-class="{active: users.activeTab == 'directoryservices'}">
+                    <a data-target="#directoryservices" aria-controls="directoryservices" role="tab" data-toggle="tab" id="directoryservicesTab" ng-click="users.setTab('users_tabs', 'directoryservices')">
+                        {{'SETTINGS_DirectoryServices' | translate}}
+                    </a>
+                </li>
+
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane" id="users" ng-class="{active: users.activeTab == 'users'}">
+                    <div ng-if="users.activeTab === 'users'">
+                        <users-list errors="$rootScope.errors"></users-list>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="directoryservices" ng-class="{active: users.activeTab == 'directoryservices'}">
+                    <div ng-if="users.activeTab === 'directoryservices'">
+                        <directory-list errors="$rootScope.errors"></directory-list>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,8 @@
+﻿<a role="button" style="color:#888888"
+   ng-click="chevronController.item = !chevronController.item"
+   ng-init="chevronController.item = chevronController.initValue">
+    <i ng-if="!chevronController.hideChevron"
+       ng-class="chevronController.item ? 'ci ci-arrow-chev-down-2-med' : 'ci ci-arrow-chev-right-2-med'"></i>
+    <span ng-transclude></span>
+</a>
+

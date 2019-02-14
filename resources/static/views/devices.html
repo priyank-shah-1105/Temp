@@ -1,0 +1,1898 @@
+﻿<section id="page_devices">
+    <error-display errors="$rootScope.errors"
+                   on-click="$root.ASM.RemoveError(error)"
+                   on-expand-collapse=""></error-display>
+    <header>
+        <h1>
+            {{'DEVICES_Title' | translate}}
+        </h1>
+    </header>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" ng-class="{'active': devices.activeTab == 'AllResources'}"><a id="tabSummary" ng-click="devices.clickTab('AllResources')">{{'DEVICES_AllResources'|translate}}</a></li>
+                <li role="presentation" ng-class="{'active': devices.activeTab == 'ServerPools'}"><a id="tabserverpools" ng-click="devices.clickTab('ServerPools')">{{'DEVICES_ServerPools'|translate}}</a></li>
+            </ul>
+        </div>
+
+        <!-- All Resources tab -->
+        <div class="" style="position: relative" role="tabpanel" ng-if="devices.activeTab == 'AllResources'" id="devices">
+            <div class="col-xs-6 col-sm-7 col-md-8 col-lg-9" st-table="devices.displayeddevices" st-safe-src="devices.devices" id="devicePanel">
+
+                <ul class="list-unstyled list-inline collapsible-button-bar clearfix">
+                    <li id="button-1" ng-show="devices.buttonoverflow.indexOf('button-1') == -1">
+                        <button id="lnkDiscoverDevices" class="btn btn-default" ng-click="devices.launchDiscoverWizard()" ng-disabled="ASM.IsInRole('readonly') || ASM.IsInRole('standard')">
+                            <i class="ci-search-discover-mag-glass"></i>
+                            {{'DEVICES_Discover'|translate}}
+                        </button>
+                    </li>
+                    <li id="button-2" ng-show="devices.buttonoverflow.indexOf('button-2') == -1">
+                        <button type="button" id="runInventoryLink" class="btn btn-default"
+                                ng-disabled="ASM.IsInRole('readonly')
+                                || !ASM.anyChecked(devices.devices)
+                                || ASM.IsInRole('standard')"
+                                ng-click="devices.runInventory()">
+                            <i class="ci-action-circle-arrow-play-solid"></i>
+                            {{'DEVICES_RunInventory'| translate}}
+                        </button>
+                    </li>
+                    <li id="button-3" ng-show="devices.buttonoverflow.indexOf('button-3') == -1">
+                        <button tabindex="0" id="removeDeviceLink"
+                                class="btn btn-default"
+                                ng-click="devices.remove()"
+                                ng-disabled="!ASM.anyChecked(devices.devices) || ASM.IsInRole('readonly') || ASM.IsInRole('standard') || devices.removeDisabled() == true">
+                            <i class="ci-action-square-solid-minus"></i>
+                            {{'GENERIC_Remove'|translate}}
+                        </button>
+                    </li>
+                    <li id="button-4" ng-show="devices.buttonoverflow.indexOf('button-4') == -1">
+                        <button tabindex="0"
+                                id="updateFirmwareDeviceLink"
+                                ng-click="devices.updateFirmware()"
+                                class="btn btn-default"
+                                ng-disabled="devices.disableUpdateResourcesButton() || ASM.IsInRole('readonly') || ASM.IsInRole('standard')">
+                            <i class="ci-arrow-box-updates"></i>
+                            {{'DEVICES_UpdateResources'|translate}}
+                        </button>
+                    </li>
+                    <!--<li id="button-5" ng-show="devices.buttonoverflow.indexOf('button-5') == -1">
+                        <button tabindex="0" id="configureDeviceLink" class="btn btn-default" ng-click="devices.configureChassis('global')"
+                                ng-disabled="devices.configureChassisButtonDisabled() || ASM.IsInRole('readonly') || ASM.IsInRole('standard')">
+                            <i class="ci-device-storage-chassis-config-gear"></i>
+                            {{'DEVICES_ConfigureChassis'|translate}}
+                        </button>
+                    </li>-->
+                    <li id="button-6" ng-show="devices.buttonoverflow.indexOf('button-6') == -1">
+                        <button id="exportAllLink" class="btn btn-default" ng-disabled="ASM.IsInRole('readonly') || ASM.IsInRole('standard')" ng-click="devices.exportAll()">
+                            <i class="ci-arrow-bold-line-export-up"></i>
+                            {{'GENERIC_ExportAll'|translate}}
+                        </button>
+                    </li>
+
+                    <li id="button-7" ng-show="devices.buttonoverflow.indexOf('button-7') == -1">
+                        <form>
+                            <select class="form-control" id="changeResourceState"
+                                    ng-change="devices.updateManagedState()"
+                                    ng-disabled="!ASM.anyChecked(devices.devices) || ASM.IsInRole('readonly') || ASM.IsInRole('standard')"
+                                    ng-model="devices.resourceState"
+                                    ng-options="item.id as item.name for item in devices.getManageStateOptions()">
+                                <!--<option value="">{{'DEVICES_ChangeResourceTypeTo'|translate}}</option>
+                                -->
+                            </select>
+                        </form>
+                    </li>
+
+                    <li ng-if="devices.buttonoverflow.length > 0">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span>&hellip;</span>
+                            </button>
+                            <ul class="dropdown-menu">
+
+                                <li ng-if="devices.buttonoverflow.indexOf('button-1') != -1">
+                                    <button class="btn btn-link" id="lnkDiscoverDevices" ng-click="devices.launchDiscoverWizard()" ng-disabled="ASM.IsInRole('readonly') || ASM.IsInRole('standard')">
+                                        <i class="ci-search-discover-mag-glass"></i>
+                                        {{'DEVICES_Discover'|translate}}
+                                    </button>
+                                </li>
+                                <li ng-if="devices.buttonoverflow.indexOf('button-2') != -1">
+                                    <button id="runInventoryLink"
+                                            class="btn btn-link"
+                                            ng-disabled="ASM.IsInRole('readonly') || ASM.isInRole('standard') || !ASM.anyChecked(devices.devices)"
+                                            ng-click="devices.runInventory()">
+                                        <i class="ci-action-circle-arrow-play-solid"></i>
+                                        {{'DEVICES_RunInventory'| translate}}
+                                    </button>
+                                </li>
+                                <li ng-if="devices.buttonoverflow.indexOf('button-3') != -1">
+                                    <button class="btn btn-link" id="removeDeviceLink" ng-click="devices.remove()" ng-disabled="!ASM.anyChecked(devices.devices) || ASM.IsInRole('readonly') || ASM.IsInRole('standard') || devices.removeDisabled() == true">
+                                        <i class="ci-action-square-solid-minus"></i>
+                                        {{'GENERIC_Remove'|translate}}
+                                    </button>
+                                </li>
+                                <li ng-if="devices.buttonoverflow.indexOf('button-4') != -1">
+                                    <button class="btn btn-link"
+                                            id="updateFirmwareDeviceLink"
+                                            ng-click="devices.updateFirmware()"
+                                            ng-disabled="devices.disableUpdateResourcesButton() || ASM.IsInRole('readonly') || ASM.IsInRole('standard')">
+                                        <i class="ci-arrow-box-updates"></i>
+                                        {{'DEVICES_UpdateResources'|translate}}
+                                    </button>
+                                </li>
+                                <!--<li ng-if="devices.buttonoverflow.indexOf('button-5') != -1">
+                                    <button class="btn btn-link" id="configureDeviceLink" ng-click="devices.configureChassis('global')"
+                                            ng-disabled="devices.configureChassisButtonDisabled() || ASM.IsInRole('readonly') || ASM.IsInRole('standard')">
+                                        <i class="ci-device-storage-chassis-config-gear"></i>
+                                        {{'DEVICES_ConfigureChassis'|translate}}
+                                    </button>
+                                </li>-->
+                                <li ng-if="devices.buttonoverflow.indexOf('button-6') != -1">
+                                    <button class="btn btn-link" id="exportAllLink" ng-disabled="ASM.IsInRole('readonly') || ASM.IsInRole('standard')" ng-click="devices.exportAll()">
+                                        <i class="ci-arrow-bold-line-export-up"></i>
+                                        {{'GENERIC_ExportAll'|translate}}
+                                    </button>
+                                </li>
+                                <li ng-repeat="item in devices.getManageStateOptions_buttonoverflow()" ng-if="devices.buttonoverflow.indexOf('button-7') != -1">
+                                    <button class="btn btn-link"
+                                            id="updateManagedState-{{item.id}}"
+                                            ng-click="devices.resourceState = item.id; devices.updateManagedState();"
+                                            ng-disabled="!ASM.anyChecked(devices.devices) || ASM.IsInRole('readonly') || ASM.IsInRole('standard')">
+                                        {{'DEVICES_ChangeResourceType'|translate}} {{item.name}}
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="pull-right">
+                        <ul class="list-inline">
+                            <li>
+                                <ul class="list-inline">
+                                    <li ng-if="devices.showSearch">
+                                        <div class="has-feedback">
+                                            <input class="form-control-static input-small"
+                                                   ng-model="devices.searchText"
+                                                   ng-model-options="{ debounce : 500 }"
+                                                   autofocus
+                                                   placeholder="Look up a device"
+                                                   type="search"
+                                                   id="deviceSearch" />
+                                        </div>
+                                    </li>
+                                    <li ng-style="{'padding':devices.showFilters ? '0':'5px'};" class="hover-gray">
+                                        <button tabindex="0"
+                                                id="showSearchLink"
+                                                class="btn btn-link"
+                                                data-toggle="tooltip"
+                                                title="Toggle Search"
+                                                style=""
+                                                ng-click="devices.clearTooltips();devices.showSearch = !devices.showSearch;"
+                                                ng-style="{'padding':devices.showFilters ? '6px 12px':'0'};">
+                                            <i class="ci-search-discover-mag-glass" style="margin-right:0;"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li ng-if="!devices.showFilters" style="padding:5px;" class="hover-gray">
+                                <button tabindex="0"
+                                        id="showFilterLink"
+                                        class="btn btn-link"
+                                        data-toggle="tooltip"
+                                        title="Toggle Filters"
+                                        ng-click="devices.clearTooltips();devices.showFilters = true;"
+                                        style="padding: 0;">
+                                    <i class="ci-filter" style="margin-right:0;"></i>
+                                </button>
+                            </li>
+                            <li ng-if="devices.showFilters" style="background-color: #eee; margin-bottom: -10px;">
+                                <button tabindex="0"
+                                        id="hideFilterLink"
+                                        class="btn btn-link"
+                                        data-toggle="tooltip"
+                                        title="Toggle Filters"
+                                        ng-click="devices.clearTooltips();devices.showFilters = false;">
+                                    <i class="ci-filter"></i>
+                                    {{'GENERIC_Close'|translate}}
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+
+
+                </ul>
+                <ul class="list-unstyled list-inline filter-box clearfix well" id="devices_filters" ng-show="devices.showFilters" style="margin-top: -1px;">
+                    <li>
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <label for="ddlView">
+                                    {{'DEVICES_ResourceType'|translate}}
+                                </label>
+                                <select style="max-width: none; width: 203px;" class="form-control" id="ddlView" ng-change="devices.selectFirstDevice()" ng-model="devices.currentView" ng-options="item.id as item.name for item in devices.constants.availableDeviceViews"></select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ddlView2" style="margin-left: 10px;">
+                                    {{'GENERIC_Health'|translate}}
+                                </label>
+                                <select class="form-control" id="ddlView2" ng-change="devices.selectFirstDevice()" ng-model="devices.currentHealthView" ng-options="item.id as item.name for item in devices.constants.availableDeviceHealthViews"></select>
+                            </div>
+                            <br class="hidden-xs" />
+                            <div class="form-group" style="width: 250px;">
+                                <label for="ddlView3">
+                                    {{'GENERIC_Service'|translate}}
+                                </label>
+                                <select style="max-width: none; width: 203px;" class="form-control" id="ddlView3" ng-change="devices.selectFirstDevice()" ng-model="devices.currentServiceView" ng-options="item.id as item.name for item in devices.services">
+                                    <option value="">{{'GENERIC_All'|translate}}</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ddlView4" style="margin-left: 10px;">
+                                    {{'DEVICES_ResourceState'|translate}}
+                                </label>
+                                <span id="resourceStateTooltip" class="fa fa-stack tooltip-wide" data-toggle="tooltip" data-placement="bottom" title="{{'DEVICES_ResourceStateTooltip' | translate}}" data-html="true">
+                                    <i class="ci-info-circle-info text-primary"></i>
+                                </span>
+                                <select class="form-control" id="ddlView4" ng-change="devices.selectFirstDevice()" ng-model="devices.currentStateView" ng-options="item.id as item.name for item in devices.constants.resourceStateFilter"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="ddlView5" style="margin-left: 10px;">
+                                    {{'GENERIC_ServerPool'|translate}}
+                                </label>
+                                <select class="form-control" id="ddlView5" ng-change="devices.selectFirstDevice()" ng-model="devices.currentServerPoolView" ng-options="item.name as item.name for item in devices.serverpoolslist">
+                                    <option value="">{{'GENERIC_All'|translate}}</option>
+                                </select>
+                            </div>
+                        </form>
+                    </li>
+                    <li class="pull-right clearfix">
+                        <button tabindex="0" id="clearFilterLink" class="btn btn-default" ng-click="devices.clearFilter()">
+                            {{'GENERIC_ClearFilter'|translate}}
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="table-responsive">
+                    <table id="devicesGrid"
+                           class="table table-striped table-hover table-condensed">
+                        <thead>
+                            <tr>
+                                <th class="checkColumn">
+                                    <input id="selectAllDevices"
+                                           type="checkbox"
+                                           ng-click="devices.toggleAll(devices.devices)"
+                                           ng-checked="devices.getNumChecked(devices.devices) === devices.devices.length" />
+                                </th>
+                                <th st-sort="health" tabindex="0">
+                                    {{'GENERIC_Health' | translate}}
+                                </th>
+                                <th st-sort="compliant" tabindex="0">
+                                    {{'DEVICES_Compliance'|translate}}
+                                    <!--<i class="ci-info-circle-info text-primary"></i>-->
+                                    <i class="ci ci-info-circle-info text-primary"
+                                       data-toggle="tooltip"
+                                       data-placement="right"
+                                       title="{{'DEVICES_ComplianceToolTipText' | translate}}"></i>
+                                    <!--<a class="ci ci-info-circle-info text-primary"
+                                       popover
+                                       data-trigger="hover"
+                                       data-content-template="DevicesComplianceTooltip.html">
+                                    </a>-->
+                                </th>
+                                <th st-sort="hostname" tabindex="0" ng-show="devices.currentView == '' || devices.currentView == 'server' || devices.currentView == 'switch'">
+                                    {{'DEVICES_OSHostName'|translate}}
+                                </th>
+                                <th st-sort="$root.ASM.getters.resourcename()" tabindex="0">
+                                    {{'DEVICES_ResourceName'|translate}}
+                                </th>
+                                <th st-sort="$root.ASM.getters.ipaddress('ipAddress')" tabindex="0">
+                                    {{'DEVICES_ManagementIp' | translate}}
+                                </th>
+                                <th st-sort="deviceid" tabindex="0">
+                                    {{'DEVICES_AssetServiceTag'|translate}}
+                                </th>
+                                <th tabindex="0">
+                                    {{'DEVICES_DeploymentStatus' | translate}}
+                                </th>
+                                <th st-sort="state" tabindex="0">
+                                    {{'DEVICES_ManagedState' | translate}}
+                                </th>
+                                <th st-sort="$root.ASM.getters.model()">
+                                    {{'GENERIC_Model' | translate}}
+                                    <i class="ci ci-info-circle-info text-primary"
+                                       data-toggle="tooltip"
+                                       data-placement="right"
+                                       title="{{'DEVICES_ModelToolTipText' | translate}}"></i>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody ng-if="devices.devices.length != 0">
+                            <tr ng-repeat="device in devices.displayeddevices"
+                                ng-class="{'st-selected': devices.selectedDevice.id == device.id}"
+                                ng-click="devices.selectRow(device)">
+                                <td class="checkColumn">
+                                    <input type="checkbox" ng-model="device.isChecked" ng-click="devices.checkselected();$event.stopPropagation();" />
+                                </td>
+                                <!--Health-->
+                                <td class="text-center">
+                                    <a data-toggle="tooltip"
+                                       title="{{device.healthmessage}}"
+                                       data-trigger="hover"
+                                       id="serverStatusIcon">
+                                        <statusicon value="device.health" ng-if="device.health !== 'servicemode'"></statusicon>
+                                        <i class="ci-action-circle-wrench" 
+                                           style="color:#efad18" 
+                                           ng-if="device.health === 'servicemode'"></i>
+                                    </a>
+                                </td>
+                                <!--Compliance-->
+                                <td>
+                                    <span ng-switch="device.compliant">
+                                        <span ng-switch-when="noncompliant">
+                                            <statusicon value="'yellow'"></statusicon>
+                                            <a ng-click="devices.openFirmwareReport(device.id)">
+                                                {{device.compliant | compliant}}
+                                            </a>
+                                        </span>
+                                        <span ng-switch-when="updaterequired">
+                                            <statusicon value="'red'"></statusicon>
+                                            <a ng-click="devices.openFirmwareReport(device.id)">
+                                                {{device.compliant | compliant}}
+                                            </a>
+                                        </span>
+                                        <span ng-switch-when="unknown">
+                                            <statusicon value="'unknown'"></statusicon>
+                                            {{device.compliant | compliant}}
+                                        </span>
+                                        <span ng-switch-when="updating">
+                                            <statusicon value="'standby'"></statusicon>
+                                            {{device.compliant | compliant}}
+                                        </span>
+                                        <span ng-switch-when="updatefailed">
+                                            <statusicon value="'red'"></statusicon>
+                                            {{device.compliant | compliant}}
+                                        </span>
+                                        <span ng-switch-default>
+                                            {{device.compliant | compliant}}
+                                        </span>
+
+                                    </span>
+
+                                </td>
+                                <!--Host Name-->
+                                <td ng-show="devices.currentView == '' || devices.currentView == 'server' || devices.currentView == 'switch'">
+                                    {{device.hostname}}
+                                </td>
+                                <!--Resource Name-->
+                                <td>
+                                    <span ng-if="devices.isServer(device)">{{device.dnsdracname}}</span>
+                                    <span ng-if="devices.isIOM(device) || devices.isDellSwitch(device) || devices.isCiscoSwitch(device)">{{device.hostname}}</span>
+                                    <span ng-if="devices.isChassis(device)">{{device.chassisname}}</span>
+                                    <span ng-if="devices.isEqualLogic(device)">{{device.groupname}}</span>
+                                    <span ng-if="devices.isCompellent(device) || devices.isNetApp(device) || devices.isEmcUnity(device) || devices.isEmcvnx(device)">{{device.storagecentername}}</span>
+                                    <span ng-if="device.deviceType == 'scvmm' || device.deviceType == 'vcenter' || device.deviceType == 'em' || device.deviceType == 'scaleio'">{{device.model}}</span>
+                                    <span ng-if="device.deviceType == 'storage' || device.deviceType == 'Server' || device.deviceType == 'vm'">-</span>
+                                </td>
+                                <!--Ip Address-->
+                                <td>
+                                    <!--<a class="ipLink" ng-href="{{device.ipaddressurl}}" ng-attr-target="_blank" ng-if="device.ipaddressurl != ''">-->
+                                    <a class="ipLink" ng-click="devices.launchManagementIP(device.ipaddressurl)" ng-if="!(device.ipaddressurl == '' || device.ipaddressurl == null)">
+                                        {{device.ipAddress}}
+                                    </a>
+                                    <span ng-if="device.ipaddressurl == '' || device.ipaddressurl == null">
+                                        {{device.ipAddress}}
+                                    </span>
+                                </td>
+                                <!--Asset / service tag-->
+                                <td>
+                                    {{device.deviceid}}
+                                </td>
+                                <!--Deployment status-->
+                                <td>
+                                    <div ng-if="device.availability == 'inuse'">
+
+                                    </div>
+                                    <div ng-if="device.availability == 'inuse'"
+                                         ng-switch="device.status">
+                                        <span ng-switch-when="ready">
+                                            <a ng-href="{{device.servicelist.length > 0 ? '#/service/' + device.servicelist[0].id + '/details' : ''}}"
+                                               ng-if="devices.isServer(device)">{{'DEVICES_InUse' | translate}}</a>
+
+                                            <span ng-if="!devices.isServer(device)">{{'GENERIC_Available'|translate}}</span>
+                                        </span>
+                                        <span ng-switch-when="deploying">
+                                            <span class="spinner" style="position: relative; top: 4px;"></span>
+                                            <spinner color="{{devices.selectedDevice.id == device.id ? 'white' : ''}}"></spinner> {{'DEVICES_Deploying' | translate}}
+                                        </span>
+                                        <span ng-switch-when="updating">
+                                            <a ng-href="{{device.servicelist.length > 0 ? '#/service/' + device.servicelist[0].id + '/details' : ''}}"
+                                               class="spinner"
+                                               style="position: relative; top: 4px;"></a>
+                                            <spinner color="{{devices.selectedDevice.id == device.id ? 'white' : ''}}"></spinner> {{'DEVICES_UpdatingService' | translate}}
+                                        </span>
+                                        <span ng-switch-when="pendingupdates">
+                                            <!--<i class="ci-schedule-clock-o {{devices.selectedDevice.id == device.id ? '' : 'text-primary'}}"></i>-->
+                                            <statusicon value="'pending'"></statusicon>
+                                            {{'DEVICES_PendingUpdates' | translate}}
+                                        </span>
+                                        <span ng-switch-when="pendingdelete">
+                                            <!--<i class="ci-schedule-clock-o {{devices.selectedDevice.id == device.id ? '' : 'text-primary'}}"></i>-->
+                                            <statusicon value="'pending'"></statusicon>
+                                            {{'GENERIC_PendingDelete' | translate}}
+                                        </span>
+                                        <a ng-switch-when="error" ng-href="{{device.servicelist.length > 0 ? '#/service/' + device.servicelist[0].id + '/details' : ''}}">
+                                            <statusicon value="'red'"></statusicon>
+                                            {{'DEVICES_DeploymentFailed' | translate}}
+                                        </a>
+                                        <a ng-switch-when="cancelled" ng-href="{{device.servicelist.length > 0 ? '#/service/' + device.servicelist[0].id + '/details' : ''}}">
+                                            <statusicon value="'cancelled'"></statusicon>
+                                            {{'DEVICES_DeploymentCancelled' | translate}}
+                                        </a>
+                                        <span ng-switch-default>
+                                            {{device.status}}
+                                        </span>
+                                    </div>
+                                    <span ng-if="device.availability != 'inuse'" ng-switch="device.status">
+                                        <span ng-switch-when="ready">
+                                            <span ng-if="devices.isServer(device)">{{'DEVICES_NotInUse' | translate}}</span>
+                                            <span ng-if="!devices.isServer(device)">{{'GENERIC_Available'|translate}}</span>
+                                        </span>
+                                        <span ng-switch-when="updating">
+                                            <spinner color="{{devices.selectedDevice.id == device.id ? 'white' : ''}}"></spinner> {{'DEVICES_UpdatingResource' | translate}}
+                                        </span>
+                                        <span ng-switch-when="pendingupdates">
+                                            <!--<i class="ci-schedule-clock-o {{devices.selectedDevice.id == device.id ? '' : 'text-primary'}}"></i>-->
+                                            <statusicon value="'pending'"></statusicon>
+                                            {{'DEVICES_PendingUpdates' | translate}}
+                                        </span>
+                                        <span ng-switch-when="pendingdelete">
+                                            <!--<i class="ci-schedule-clock-o {{devices.selectedDevice.id == device.id ? '' : 'text-primary'}}"></i>-->
+                                            <statusicon value="'pending'"></statusicon>
+                                            {{'GENERIC_PendingDelete' | translate}}
+                                        </span>
+                                        <span ng-switch-when="error">
+                                            <statusicon value="'red'"></statusicon>
+                                            {{'DEVICES_ConfigError' | translate}}
+                                        </span>
+                                        <span ng-switch-default>
+                                            {{device.status}}
+                                        </span>
+                                    </span>
+                                </td>
+                                <!--Managed state-->
+                                <td>
+                                    {{device.state | deviceManagementState}}
+                                </td>
+                                <!--model-->
+                                <td>
+                                    <span ng-if="device.deviceType == 'scvmm' || device.deviceType == 'vcenter' || device.deviceType == 'em'">-</span>
+                                    <span ng-if="(device.deviceType != 'scvmm' && device.deviceType != 'vcenter' && device.deviceType != 'em')">
+                                        <span ng-if="device.manufacturer">{{device.manufacturer}}</span>&nbsp;
+                                        <span ng-if="device.model">{{device.model}}</span>
+                                    </span>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                        <tbody ng-if="devices.devices.length == 0">
+                            <tr>
+                                <td colspan="11">
+                                    {{'DEVICES_EmptyTable'|translate}}
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="11" class="text-center">
+                                    <div st-pagination="devices.displayeddevices"
+                                         st-items-by-page="50"
+                                         st-displayed-pages=""></div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+            </div>
+
+            <aside class="col-xs-6 col-sm-5 col-md-4 col-lg-3">
+                <!-- details well -->
+                <div id="deviceInfo" ng-if="devices.selectedDevice && devices.selectedDevice.deviceType">
+                    <div class="well">
+                        <!-- Device Image and name -->
+                        <ul class="text-center list-unstyled">
+                            <li ng-if="devices.selectedDevice.deviceType !== 'scaleio'">
+                                <i class="deviceImage small {{devices.selectedDevice.deviceType}} {{devices.selectedDeviceImageClass}}"></i>
+                            </li>
+                            <li ng-if="devices.selectedDevice.deviceType == 'scaleio'">
+                                <h2 class="text-center">
+                                    {{'DEVICES_EMC_SCALEIO_ScaleImageText'|translate}}
+                                </h2>
+                            </li>
+                            <li>
+                                <h5>
+                                    <strong>
+                                        {{devices.selectedDevice.hostname}}
+                                        {{devices.selectedDevice.name}}
+                                    </strong>
+                                </h5>
+                            </li>
+                            <li>
+                                <h5>
+                                    {{devices.selectedDevice.model}}
+                                </h5>
+                            </li>
+                        </ul>
+                        <!-- View Details/Launch button -->
+                        <div class="text-center">
+                            <ul class="list-unstyled">
+                                <li class="">
+                                    <a id="lnkViewDeviceDetails"
+                                       class="btn btn-primary btn-sm"
+                                       ng-if="devices.viewDetailsAvailable"
+                                       ng-href="#/device/{{devices.selectedDevice.id}}/{{devices.selectedDevice.deviceType}}">
+                                        <i class="ci-action-sort-list"></i>
+                                        {{'GENERIC_ViewDetails'|translate}}
+                                    </a>
+                                </li>
+                                <li class="" ng-if="devices.debugMode == true">
+                                    <a id="lnkLogSelectedDeviceDetails"
+                                       class="btn btn-primary btn-sm"
+                                       ng-click="devices.logSelectedDeviceDetails()">
+                                        <i class="ci-action-sort-list"></i>
+                                        Log Selected Device Details
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a id="lnkLaunchOME"
+                                       class="btn btn-primary btn-sm"
+                                       ng-click="devices.launchGUI()"
+                                       ng-if="devices.selectedDevice.deviceType == 'em'">
+                                        <i class="ci-popout-expand-window-arrow-up-2-o"></i>
+                                        {{'DEVICES_EM_Launch'|translate}}
+                                    </a>
+                                </li>
+                                <li>
+                                    <alert ng-if="devices.selectedDevice.health && devices.selectedDevice.health.toUpperCase() == 'RED'" type="danger" dismissable="false">{{devices.selectedDevice.healthmessage}}</alert>
+                                    <alert ng-if="devices.selectedDevice.health && devices.selectedDevice.health.toUpperCase() == 'YELLOW'" type="warning" dismissable="false">{{devices.selectedDevice.healthmessage}}</alert>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Server pools -->
+                        <div>
+                            <ul id="displayServerPools"
+                                class="list-unstyled"
+                                ng-if="devices.selectedDevice.displayserverpools">
+                                <li>
+                                    <label class="col-sm-5" for="serverPools">
+                                        {{'GENERIC_ServerPools'|translate}}
+                                    </label>
+                                    <span class="col-xs-7" id="serverPools">
+                                        {{devices.selectedDevice.displayserverpools}}
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div ng-if="!devices.loadingDetails">
+
+
+                            <ul class="list-unstyled infoCol">
+                                <!-- In Use -->
+                                <li ng-if="devices.selectedDevice.showcompliancereport">
+                                   <div ng-if="!(devices.isCiscoSwitch(devices.selectedDevice) || devices.isDellSwitch(devices.selectedDevice))">
+                                        <label class="col-sm-5">
+                                            {{'DEVICES_Service' | translate}}
+                                        </label>
+                                        <span class="col-sm-7" ng-if="devices.selectedDevice.servicelist.length == 0">
+                                            {{'DEVICES_NotInUse'|translate}}
+                                        </span>
+                                    </div>
+
+                                    <div class="col-sm-7" ng-if="devices.selectedDevice.servicelist.length >= 1">
+                                        <div ng-repeat="service in devices.selectedDevice.servicelist">
+                                            <a ng-href="#/service/{{devices.selectedDevice.servicelist[0].id}}/details">
+                                                {{service.name}}
+                                                <span ng-hide="$last || ($last && $first)">, </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <!-- RCM Compliance -->
+                                <li ng-if="devices.selectedDevice.showcompliancereport">
+                                    <label class="col-sm-5">
+                                        {{'DEVICES_RCMCompliance' | translate}}
+                                    </label>
+                                    <div class="col-sm-7" id="firmwarestatus">
+                                        <span ng-switch="devices.selectedDevice.compliant">
+                                            <span ng-switch-when="updaterequired">
+                                                <statusicon value="'yellow'"></statusicon>
+                                                <a ng-click="devices.openFirmwareReport(devices.selectedDevice.id)">
+                                                    {{devices.selectedDevice.firmwareName}}
+                                                </a>
+                                            </span>
+                                            <span ng-switch-when="compliant">
+                                                <statusicon value="'green'"></statusicon>
+                                                <a ng-click="devices.openFirmwareReport(devices.selectedDevice.id)">
+                                                    {{devices.selectedDevice.firmwareName}}
+                                                </a>
+                                            </span>
+                                            <span ng-switch-when="noncompliant">
+                                                <statusicon value="'yellow'"></statusicon>
+                                                <a ng-click="devices.openFirmwareReport(devices.selectedDevice.id)">
+                                                    {{devices.selectedDevice.firmwareName}}
+                                                </a>
+                                            </span>
+                                            <span ng-switch-when="unknown">
+                                                <statusicon value="'unknown'"></statusicon>
+                                                <span ng-if="!(devices.isServer(devices.selectedDevice)
+                                              && devices.selectedDevice.availability === 'inuse'
+                                              && devices.selectedDevice.manageFirmware)">
+                                                    {{'DEVICES_CompliantStatus_Unknown'|translate}}
+                                                </span>
+                                                <span ng-if="devices.isServer(devices.selectedDevice)
+                                              && devices.selectedDevice.availability === 'inuse'
+                                              && devices.selectedDevice.manageFirmware">
+                                                    <a ng-href="#/service/{{devices.selectedDevice.servicelist[0].id}}/edit">
+                                                        {{'DEVICES_InUseNoCatMessage'|translate}}
+                                                    </a>
+                                                </span>
+                                            </span>
+                                            <span ng-switch-when="updating">
+                                                <spinner></spinner> {{'DEVICES_Updating' | translate}}
+                                            </span>
+                                            <span ng-switch-when="updatefailed">
+                                                <statusicon value="'yellow'"></statusicon>
+                                                <a ng-click="devices.openFirmwareReport(devices.selectedDevice.id)">
+                                                    {{devices.selectedDevice.firmwareName}}
+                                                </a>
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </li>
+                            </ul>
+
+                            <ul id="activityHistory-RackServer" class="list-unstyled infoCol">
+                                <!-- ******************** EM Element Manager ******************** -->
+                                <li ng-if="devices.selectedDevice.deviceType == 'em'">
+                                    <label class="col-xs-5" for="EMserviceTag">
+                                        {{'DEVICES_EM_ServiceTag'|translate}}
+                                    </label>
+                                    <span id="EMserviceTag" class="col-xs-7">
+                                        {{devices.selectedDevice.deviceDetails.serviceTag}}
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'em'">
+                                    <label class="col-xs-5" for="EMdiscoveredDevices">
+                                        {{'DEVICES_EM_DescoveredDevices'|translate}}
+                                    </label>
+                                    <span id="EMdiscoveredDevices" class="col-xs-7">
+                                        {{devices.selectedDevice.deviceDetails.discoveredDevices}}
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** RackServer ******************** -->
+                                <li ng-if="devices.selectedDevice.deviceType == 'RackServer'
+                            && !devices.isChassis(devices.selectedDevice)
+                            && devices.selectedDevice.deviceType != 'vcenter'
+                            && devices.selectedDevice.deviceType != 'scvmm'">
+                                    <label for="rackServerProcessorPowerState" class="col-sm-5">
+                                        {{'DEVICES_PowerState'|translate}}
+                                    </label>
+                                    <span id="rackServerProcessorPowerState" class="col-xs-7">
+                                        {{devices.selectedDevice.powerstate}}
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'RackServer'">
+                                    <label class="col-sm-5" for="rackos">
+                                        {{'DEVICES_OS'|translate}}
+                                    </label>
+                                    <span id="rackos" class="col-sm-7">{{devices.selectedDevice.os}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'RackServer'">
+                                    <label class="col-sm-5" for="rackServerProcessorList">
+                                        {{'DEVICES_Processors'|translate}}
+                                    </label>
+                                    <span id="rackServerProcessorList" class="col-sm-7">
+                                        <strong>{{devices.selectedDevice.processorcount + ' Processors'}}</strong>
+                                        <br />
+                                        {{devices.selectedDevice.processor}}
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'RackServer'">
+                                    <label class="col-sm-5" for="rackmemory">
+                                        {{'GENERIC_Memory'|translate}}
+                                    </label>
+                                    <span id="rackmemory" class="col-sm-7">{{devices.selectedDevice.memory}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** TowerServer ******************** -->
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'TowerServer'
+                                && !devices.isChassis(devices.selectedDevice)
+                            && devices.selectedDevice.deviceType != 'vcenter'
+                            && devices.selectedDevice.deviceType != 'scvmm'">
+                                    <label class="col-sm-5" for="towerstate">
+                                        {{'DEVICES_PowerState'|translate}}
+                                    </label>
+                                    <span id="towerstate" class="col-sm-7">{{devices.selectedDevice.powerstate}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'TowerServer'">
+                                    <label class="col-sm-5" for="toweros">
+                                        {{'DEVICES_OS'|translate}}
+                                    </label>
+                                    <span id="toweros" class="col-sm-7">{{devices.selectedDevice.os}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'TowerServer'">
+                                    <label class="col-sm-5" for="towerprocessorList">
+                                        {{'DEVICES_Processors'|translate}}
+                                    </label>
+                                    <span id="towerprocessorList" class="col-sm-7">
+                                        <strong>{{devices.selectedDevice.processorcount + ' Processors'}}</strong>
+                                        <br />
+                                        {{devices.selectedDevice.processor}}
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'TowerServer'">
+                                    <label class="col-sm-5" for="towermemory">
+                                        {{'GENERIC_Memory'|translate}}
+                                    </label>
+                                    <span id="towermemory" class="col-sm-7">{{devices.selectedDevice.memory}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** BladeServer ******************** -->
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'BladeServer'">
+                                    <label class="col-sm-5" for="bladestate">
+                                        {{'DEVICES_PowerState'|translate}}
+                                    </label>
+                                    <span id="bladestate" class="col-sm-7">{{devices.selectedDevice.powerstate}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'BladeServer'">
+                                    <label class="col-sm-5" for="bladelocation">
+                                        {{'GENERIC_Location'|translate}}
+                                    </label>
+                                    <span id="bladelocation" class="col-sm-7">{{devices.selectedDevice.location}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'BladeServer'">
+                                    <label class="col-sm-5" for="bladeos">
+                                        {{'DEVICES_OS'|translate}}
+                                    </label>
+                                    <span id="bladeos" class="col-sm-7">{{devices.selectedDevice.os}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'BladeServer'">
+                                    <label class="col-sm-5" for="bladeprocessorList">
+                                        {{'DEVICES_Processors'|translate}}
+                                    </label>
+                                    <span id="bladeprocessorList" class="col-sm-7">
+                                        <strong>{{devices.selectedDevice.processorcount + ' Processors'}}</strong>
+                                        <br />
+                                        {{devices.selectedDevice.processor}}
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'BladeServer'">
+                                    <label class="col-sm-5" for="bladememory">
+                                        {{'GENERIC_Memory'|translate}}
+                                    </label>
+                                    <span id="bladememory" class="col-sm-7">{{devices.selectedDevice.memory}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** FXServer ******************** -->
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'FXServer'">
+                                    <label class="col-sm-5" for="fxserverstate">
+                                        {{'DEVICES_PowerState'|translate}}
+                                    </label>
+                                    <span id="fxserverstate" class="col-sm-7">{{devices.selectedDevice.powerstate}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'FXServer'">
+                                    <label class="col-sm-5" for="fxserverlocation">
+                                        {{'GENERIC_Location'|translate}}
+                                    </label>
+                                    <span id="fxserverlocation" class="col-sm-7">{{devices.selectedDevice.location}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'FXServer'">
+                                    <label class="col-sm-5" for="fxserveros">
+                                        {{'DEVICES_OS'|translate}}
+                                    </label>
+                                    <span id="fxserveros" class="col-sm-7">{{devices.selectedDevice.os}}</span>
+
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'FXServer'">
+                                    <label class="col-sm-5" for="fxserverprocessorList">
+                                        {{'DEVICES_Processors'|translate}}
+                                    </label>
+                                    <span id="fxserverprocessorList" class="col-sm-7">
+                                        <strong>{{devices.selectedDevice.processorcount + ' Processors'}}</strong>
+                                        {{devices.selectedDevice.processor}}
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'FXServer'">
+                                    <label class="col-sm-5" for="fxservermemory">
+                                        {{'GENERIC_Memory'|translate}}
+                                    </label>
+                                    <span id="fxservermemory" class="col-sm-7">{{devices.selectedDevice.memory}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** ChassisM1000e ******************** -->
+                                <!-- ******************** ChassisFX ******************** -->
+                                <!-- ******************** ChassisVRTX ******************** -->
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'ChassisVRTX'">
+                                    <label class="col-sm-5" for="vrtxlocation">
+                                        {{'GENERIC_Location'|translate}}
+                                    </label>
+                                    <span id="vrtxlocation" class="col-sm-7">{{devices.selectedDevice.location}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** compellent ******************** -->
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'compellent'">
+                                    <label class="col-sm-5" for="systemstatus">
+                                        {{'DEVICES_SystemStatus'|translate}}
+                                    </label>
+                                    <span id="systemstatus" class="col-sm-7">{{devices.selectedDevice.systemstatus}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'compellent'">
+                                    <label class="col-sm-5" for="compellentvolumes">
+                                        {{'DEVICES_Volumes'|translate}}
+                                    </label>
+                                    <span id="compellentvolumes" class="col-sm-7">{{devices.selectedDevice.volumes}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'compellent'">
+                                    <label class="col-sm-5" for="compellentreplayprofile">
+                                        {{'DEVICES_ReplayProfile'|translate}}
+                                    </label>
+                                    <span id="compellentreplayprofile" class="col-sm-7">{{devices.selectedDevice.replayprofile}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'compellent'">
+                                    <label class="col-sm-5" for="compellentfreediskspace">
+                                        {{'DEVICES_FreeDiskSpace'|translate}}
+                                    </label>
+                                    <span id="compellentfreediskspace" class="col-sm-7">{{devices.selectedDevice.freediskspace}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** equallogic ******************** -->
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'equallogic'">
+                                    <label class="col-sm-5" for="equaltonline">
+                                        {{'DEVICES_Online'|translate}}
+                                    </label>
+                                    <span id="equaltonline" class="col-sm-7">{{devices.selectedDevice.online}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'equallogic'">
+                                    <label class="col-sm-5" for="equalgroupmembers">
+                                        {{'DEVICES_GroupMembers'|translate}}
+                                    </label>
+                                    <span id="equalgroupmembers" class="col-sm-7">{{devices.selectedDevice.groupmembers}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'equallogic'">
+                                    <label class="col-sm-5" for="equalvolumes">
+                                        {{'DEVICES_Volumes'|translate}}
+                                    </label>
+                                    <span id="equalvolumes" class="col-sm-7">{{devices.selectedDevice.volumes}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'equallogic'">
+                                    <label class="col-sm-5" for="equalsnapshots">
+                                        {{'DEVICES_SnapshotsTitle'|translate}}
+                                    </label>
+                                    <span id="equalsnapshots" class="col-sm-7">{{devices.selectedDevice.snapshots}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'equallogic'">
+                                    <label class="col-sm-5" for="equalfreegroupspace">
+                                        {{'DEVICES_FreeGroupSpace'|translate}}
+                                    </label>
+                                    <span id="equalfreegroupspace" class="col-sm-7">{{devices.selectedDevice.freegroupspace}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** netapp ******************** -->
+
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'netapp'">
+                                    <label class="col-sm-5" for="netappsystemstatus">
+                                        {{'DEVICES_SystemStatus'|translate}}
+                                    </label>
+                                    <span id="netappsystemstatus" class="col-sm-7">{{devices.selectedDevice.systemstatus}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'netapp'">
+                                    <label class="col-sm-5" for="netappavailablestorage">
+                                        {{'DEVICES_AvailableStorage'|translate}}
+                                    </label>
+                                    <span id="netappavailablestorage" class="col-sm-7">{{devices.selectedDevice.availablestorage}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'netapp'">
+                                    <label class="col-sm-5" for="netappaggregates">
+                                        {{'DEVICES_Aggregates'|translate}}
+                                    </label>
+                                    <span id="netappaggregates" class="col-sm-7">{{devies.selectedDevice.aggregates}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'netapp'">
+                                    <label class="col-sm-5" for="netappvolumes">
+                                        {{'DEVICES_Volumes'|translate}}
+                                    </label>
+                                    <span id="netappvolumes" class="col-sm-7">{{devices.selectedDevice.volumes}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'netapp'">
+                                    <label class="col-sm-5" for="netappdisks">
+                                        {{'DEVICES_Disks'|translate}}
+                                    </label>
+                                    <span id="netappdisks" class="col-sm-7">{{devices.selectedDevice.disks}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+
+
+                                <!-- ******************** AggregatorIOM ******************** -->
+
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'AggregatorIOM'">
+                                    <label class="col-sm-5" for="iomstate">
+                                        {{'DEVICES_PowerState'|translate}}
+                                    </label>
+                                    <span id="iomstate" class="col-sm-7">{{devices.selectedDevice.powerstate}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'AggregatorIOM'">
+                                    <label class="col-sm-5" for="iomlocation">
+                                        {{'GENERIC_Location'|translate}}
+                                    </label>
+                                    <span id="iomlocation" class="col-sm-7">{{devices.selectedDevice.location}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** storage ******************** -->
+
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'storage'">
+                                    <label class="col-sm-5" for="storagestatus">
+                                        {{'DEVICES_SystemStatus'|translate}}
+                                    </label>
+                                    <span id="storagestatus" class="col-sm-7">{{devices.selectedDevice.systemstatus}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'storage'">
+                                    <label class="col-sm-5" for="storageluns">
+                                        {{'DEVICES_Luns'|translate}}
+                                    </label>
+                                    <span id="storageluns" class="col-sm-7">{{devices.selectedDevice.luns}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** emcvnx ******************** -->
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'emcvnx'">
+                                    <label class="col-sm-5" for="storagehostip-emc">
+                                        {{'DEVICES_SPAIPAddress'|translate}}
+                                    </label>
+                                    <a id="ipLinkStorage-emc" ng-href="{{devices.selectedDevice.spaipaddressurl}}" ng-attr-target="_blank" ng-if="devices.selectedDevice.spaipaddressurl != ''">
+                                        {{devices.selectedDevice.spaipaddress}}
+                                    </a>
+                                    <span id="storagehostip-emc" ng-if="devices.selectedDevice.spaipaddressurl == ''">
+                                        {{devices.selectedDevice.spaipaddressurl}}
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'emcvnx'">
+                                    <label class="col-sm-5" for="storagehostip-emcvnx">
+                                        {{'DEVICES_SPBIPAddress'|translate}}
+                                    </label>
+                                    <a id="ipLinkStorage-emcvnx" ng-href="{{devices.selectedDevice.spbipaddressurl}}" ng-attr-target="_blank" ng-if="devices.selectedDevice.spbipaddressurl != ''">
+                                        {{devices.selectedDevice.spbipaddress}}
+                                    </a>
+                                    <span id="storagehostip-emcvnx" ng-if="devices.selectedDevice.spbipaddressurl == ''">
+                                        {{devices.selectedDevice.spbipaddressurl}}
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'emcvnx'">
+                                    <label class="col-sm-5" for="storageluns-emcvnx">
+                                        {{'DEVICES_Luns'|translate}}
+                                    </label>
+                                    <span id="storageluns-emcvnx" class="col-sm-7">{{devices.selectedDevice.luns}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'emcvnx'">
+                                    <label class="col-sm-5" for="diskSpace">
+                                        {{'DEVICES_FreeDiskSpace'|translate}}
+                                    </label>
+                                    <span id="diskSpace" class="col-sm-7">{{devices.selectedDevice.freediskspace}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** emcunity ******************** -->
+                                <li ng-if="devices.selectedDevice.deviceType == 'emcunity'">
+                                    <label class="col-sm-5" for="storagehostip-emcunity">
+                                        {{'DEVICEDETAILS_ManagementIP'|translate}}
+                                    </label>
+                                    <a id="ipLinkStorage-emcunity" ng-href="{{devices.selectedDevice.ipaddressurl}}" ng-attr-target="_blank" ng-if="devices.selectedDevice.ipaddressurl">
+                                        {{devices.selectedDevice.ipAddress}}
+                                    </a>
+                                    <span id="storagehostip-emcunity" ng-if="!devices.selectedDevice.ipaddressurl">
+                                        {{devices.selectedDevice.ipAddress}}
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'emcunity'">
+                                    <label class="col-sm-5" for="storageluns-emcunity">
+                                        {{'DEVICES_Luns'|translate}}
+                                    </label>
+                                    <span id="storageluns-emcunity" class="col-sm-7">{{devices.selectedDevice.luns}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'emcunity'">
+                                    <label class="col-sm-5" for="diskSpace">
+                                        {{'DEVICES_FreeDiskSpace'|translate}}
+                                    </label>
+                                    <span id="diskSpace" class="col-sm-7">{{devices.selectedDevice.freediskspace}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** MXLIOM ******************** -->
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'MXLIOM'">
+                                    <label class="col-sm-5" for="mxliomstate">
+                                        {{'DEVICES_PowerState'|translate}}
+                                    </label>
+                                    <span id="mxliomstate" class="col-sm-7">{{devices.selectedDevice.powerstate}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'MXLIOM'">
+                                    <label class="col-sm-5" for="mxliomlocation">
+                                        {{'GENERIC_Location'|translate}}
+                                    </label>
+                                    <span id="mxliomlocation" class="col-sm-7">{{devices.selectedDevice.location}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** FXIOM ******************** -->
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'FXIOM'">
+                                    <label class="col-sm-5" for="fxiomstate">
+                                        {{'DEVICES_PowerState'|translate}}
+                                    </label>
+                                    <span id="fxiomstate" class="col-sm-7">{{devices.selectedDevice.powerstate}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'FXIOM'">
+                                    <label class="col-sm-5" for="fxiomlocation">
+                                        {{'GENERIC_Location'|translate}}
+                                    </label>
+                                    <span id="fxiomlocation" class="col-sm-7">{{devices.selectedDevice.location}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** genericswitch ******************** -->
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'genericswitch'">
+                                    <label class="col-sm-5" for="switchstate">
+                                        {{'DEVICES_PowerState'|translate}}
+                                    </label>
+                                    <span id="switchstate" class="col-sm-7">{{devices.selectedDevice.powerstate}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'genericswitch'">
+                                    <label class="col-sm-5" for="switchserialnumber">
+                                        {{'DEVICES_SerialNumber'|translate}}
+                                    </label>
+                                    <span id="switchserialnumber" class="col-sm-7">{{devices.selectedDevice.serialnumber}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** dellswitch ******************** -->
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'dellswitch'">
+                                    <label class="col-sm-5" for="dellswitchstate">
+                                        {{'DEVICES_PowerState'|translate}}
+                                    </label>
+                                    <span id="dellswitchstate" class="col-sm-7">{{devices.selectedDevice.powerstate}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** ciscoswitch ******************** -->
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'ciscoswitch'">
+                                    <label class="col-sm-5" for="ciscoswitchstate">
+                                        {{'DEVICES_PowerState'|translate}}
+                                    </label>
+                                    <span id="ciscoswitchstate" class="col-sm-7">{{devices.selectedDevice.powerstate}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'ciscoswitch'">
+                                    <label class="col-sm-5" for="switchserialnumber">
+                                        {{'DEVICES_SerialNumber'|translate}}
+                                    </label>
+                                    <span id="switchserialnumber" class="col-sm-7">{{devices.selectedDevice.serialnumber}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** Server ******************** -->
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'Server'">
+                                    <label class="col-sm-5" for="serverstate">
+                                        {{'DEVICES_PowerState'|translate}}
+                                    </label>
+                                    <span id="serverstate" class="col-sm-7">{{devices.selectedDevice.powerstate}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'Server'">
+                                    <label class="col-sm-5" for="serveros">
+                                        {{'DEVICES_OS'|translate}}
+                                    </label>
+                                    <span id="serveros" class="col-sm-7">{{devices.selectedDevice.os}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'Server'">
+                                    <label class="col-sm-5" for="serverprocessorList">
+                                        {{'DEVICES_Processors'|translate}}
+                                    </label>
+                                    <span id="serverprocessorList" class="col-sm-7">
+                                        <strong>{{devices.selectedDevice.processorcount + ' Processors'}}</strong>
+                                        <br />
+                                        {{devices.selectedDevice.processor}}
+                                    </span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'Server'">
+                                    <label class="col-sm-5" for="servermemory">
+                                        {{'GENERIC_Memory'|translate}}
+                                    </label>
+                                    <span id="servermemory" class="col-sm-7">{{devices.selectedDevice.memory}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** vcenter ******************** -->
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'vcenter'">
+                                    <label class="col-sm-5" for="vcenterclusters">
+                                        {{'DEVICES_Clusters'|translate}}
+                                    </label>
+                                    <span id="vcenterclusters" class="col-sm-7">{{devices.selectedDevice.clusters}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'vcenter'">
+                                    <label class="col-sm-5" for="vcenterhosts">
+                                        {{'DEVICES_Hosts'|translate}}
+                                    </label>
+                                    <span id="vcenterhosts" class="col-sm-7">{{devices.selectedDevice.hosts}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'vcenter'">
+                                    <label class="col-sm-5" for="vcentervm">
+                                        {{'DEVICES_VMs'|translate}}
+                                    </label>
+                                    <span id="vcentervm" class="col-sm-7">{{devices.selectedDevice.virtualmachines}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** scvmm ******************** -->
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'scvmm'">
+                                    <label class="col-sm-5" for="scvmmclusters">
+                                        {{'DEVICES_Clusters'|translate}}
+                                    </label>
+                                    <span id="scvmmclusters" class="col-sm-7">{{devices.selectedDevice.clusters}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'scvmm'">
+                                    <label class="col-sm-5" for="scvmmhosts">
+                                        {{'DEVICES_Hosts'|translate}}
+                                    </label>
+                                    <span id="scvmmhosts" class="col-sm-7">{{devices.selectedDevice.hosts}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'scvmm'">
+                                    <label class="col-sm-5" for="scvmmvm">
+                                        {{'DEVICES_VMs'|translate}}
+                                    </label>
+                                    <span id="scvmmvm" class="col-sm-7">{{devices.selectedDevice.virtualmachines}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** em ******************** -->
+                                <!-- ******************** vm ******************** -->
+
+                                <li ng-if="devices.selectedDevice.deviceType == 'vm'">
+                                    <label class="col-sm-5" for="vmstate">
+                                        {{'DEVICES_PowerState'|translate}}
+                                    </label>
+                                    <span id="vmstate" class="col-sm-7">{{devices.selectedDevice.powerstate}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'vm'">
+                                    <label class="col-sm-5" for="vmdnsname">
+                                        {{'DEVICES_DNSName'|translate}}
+                                    </label>
+                                    <span id="vmdnsname" class="col-sm-7">{{devices.selectedDevice.dnsname}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'vm'">
+                                    <label class="col-sm-5" for="vmserialnumber">
+                                        {{'DEVICES_SerialNumber'|translate}}
+                                    </label>
+                                    <span id="vmserialnumber" class="col-sm-7">{{devices.selectedDevice.serialnumber}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'vm'">
+                                    <label class="col-sm-5" for="vmos">
+                                        {{'DEVICES_OS'|translate}}
+                                    </label>
+                                    <span id="vmos" class="col-sm-7">{{devices.selectedDevice.os}}</span>
+
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'vm'">
+                                    <label class="col-sm-5" for="vmcpu">
+                                        {{'DEVICES_CPU'|translate}}
+                                    </label>
+                                    <span id="vmcpu" class="col-sm-7">{{devices.selectedDevice.cpu}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'vm'">
+                                    <label class="col-sm-5" for="vmmemory">
+                                        {{'GENERIC_Memory'|translate}}
+                                    </label>
+                                    <span id="vmmemory" class="col-sm-7">{{devices.selectedDevice.memory}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+                                <!-- ******************** scaleio ******************** -->
+                                <li ng-if="devices.selectedDevice.deviceType == 'scaleio' && devices.selectedDevice.deviceDetails.scaleIOInformation.protectedInKb > 0">
+                                    <label class="col-sm-5" for="scaleioProtected">
+                                        {{'DEVICES_EMC_SCALEIO_Protected'|translate}}
+                                    </label>
+                                    <span id="scaleioProtected" class="col-sm-7">{{devices.selectedDevice.deviceDetails.scaleIOInformation.protectedInKb | byteConvert}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'scaleio' && devices.selectedDevice.deviceDetails.scaleIOInformation.inMaintenanceInKb > 0">
+                                    <label class="col-sm-5" for="scaleioinMaintenanceInKb">
+                                        {{'DEVICES_EMC_SCALEIO_InMaintenance'|translate}}
+                                    </label>
+                                    <span id="scaleioinMaintenanceInKb" class="col-sm-7">{{devices.selectedDevice.deviceDetails.scaleIOInformation.inMaintenanceInKb | byteConvert}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'scaleio' && devices.selectedDevice.deviceDetails.scaleIOInformation.degradedInKb > 0">
+                                    <label class="col-sm-5" for="scaleiodegradedInKb">
+                                        {{'DEVICES_EMC_SCALEIO_Degraded'|translate}}
+                                    </label>
+                                    <span id="scaleiodegradedInKb" class="col-sm-7">{{devices.selectedDevice.deviceDetails.scaleIOInformation.degradedInKb | byteConvert}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'scaleio' && devices.selectedDevice.deviceDetails.scaleIOInformation.failedInKb > 0">
+                                    <label class="col-sm-5" for="scaleiofailedInKb">
+                                        {{'DEVICES_EMC_SCALEIO_Failed'|translate}}
+                                    </label>
+                                    <span id="scaleiofailedInKb" class="col-sm-7">{{devices.selectedDevice.deviceDetails.scaleIOInformation.failedInKb | byteConvert}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'scaleio' && devices.selectedDevice.deviceDetails.scaleIOInformation.unusedInKb > 0">
+                                    <label class="col-sm-5" for="scaleiounusedInKb">
+                                        {{'DEVICES_EMC_SCALEIO_Unused'|translate}}
+                                    </label>
+                                    <span id="scaleiounusedInKb" class="col-sm-7">{{devices.selectedDevice.deviceDetails.scaleIOInformation.unusedInKb | byteConvert}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'scaleio' && devices.selectedDevice.deviceDetails.scaleIOInformation.spareInKb > 0">
+                                    <label class="col-sm-5" for="scaleiospareInKb">
+                                        {{'DEVICES_EMC_SCALEIO_Spare'|translate}}
+                                    </label>
+                                    <span id="scaleiospareInKb" class="col-sm-7">{{devices.selectedDevice.deviceDetails.scaleIOInformation.spareInKb | byteConvert}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'scaleio' && devices.selectedDevice.deviceDetails.scaleIOInformation.decreasedInKb > 0">
+                                    <label class="col-sm-5" for="scaleiodecreasedInKb">
+                                        {{'DEVICES_EMC_SCALEIO_Decreased'|translate}}
+                                    </label>
+                                    <span id="scaleiodecreasedInKb" class="col-sm-7">{{devices.selectedDevice.deviceDetails.scaleIOInformation.decreasedInKb | byteConvert}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'scaleio' && devices.selectedDevice.deviceDetails.scaleIOInformation.unavailableUnusedInKb > 0">
+                                    <label class="col-sm-5" for="scaleiounavailableUnusedInKb">
+                                        {{'DEVICES_EMC_SCALEIO_Unavailable'|translate}}
+                                    </label>
+                                    <span id="scaleiounavailableUnusedInKb" class="col-sm-7">{{devices.selectedDevice.deviceDetails.scaleIOInformation.unavailableUnusedInKb | byteConvert}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'scaleio' && devices.selectedDevice.deviceDetails.scaleIOInformation.maxCapacityInKb > 0">
+                                    <label class="col-sm-5" for="scaleioTotalCapacity">
+                                        {{'DEVICES_EMC_SCALEIO_Max'|translate}}
+                                    </label>
+                                    <span id="scaleioTotalCapacity" class="col-sm-7">{{devices.selectedDevice.deviceDetails.scaleIOInformation.maxCapacityInKb | byteConvert}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'scaleio'">
+                                    <label class="col-sm-5" for="scaleioProtectionDomains">
+                                        {{'DEVICES_EMC_SCALEIO_DevicesProtectionDomains'|translate}}
+                                    </label>
+                                    <span id="scaleioProtectionDomains" class="col-sm-7">{{devices.selectedDevice.deviceDetails.protectionDomainCount}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'scaleio'">
+                                    <label class="col-sm-5" for="scaleioVolumes">
+                                        {{'DEVICES_EMC_SCALEIO_DevicesVolumes'|translate}}
+                                    </label>
+                                    <span id="scaleioVolumes" class="col-sm-7">{{devices.selectedDevice.deviceDetails.volumeCount}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'scaleio'">
+                                    <label class="col-sm-5" for="scaleioscaleioDataClients">
+                                        {{'DEVICES_EMC_SCALEIO_ScaleIODataClients'|translate}}
+                                    </label>
+                                    <span id="scaleioscaleioDataClients" class="col-sm-7">{{devices.selectedDevice.deviceDetails.sDCCount}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'scaleio'">
+                                    <label class="col-sm-5" for="scaleioscaleioDataServers">
+                                        {{'DEVICES_EMC_SCALEIO_ScaleIODataServers'|translate}}
+                                    </label>
+                                    <span id="scaleioscaleioDataServers" class="col-sm-7">{{devices.selectedDevice.deviceDetails.sDSCount}}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+                                <li ng-if="devices.selectedDevice.deviceType == 'scaleio'">
+                                    <label class="col-sm-5" for="scaleiomanagement">
+                                        {{'DEVICES_EMC_SCALEIO_Management2'|translate}}
+                                    </label>
+                                    <span id="scaleiomanagement" class="col-sm-7">{{devices.selectedDevice.deviceDetails.management }}</span>
+                                    <div class="clearfix"></div>
+                                </li>
+
+
+
+                                <!-- ******************** Related Services ******************** -->
+                                <!--<li ng-if="devices.selectedDevice.deviceType == 'BladeServer'
+                                                                                                                                                || devices.selectedDevice.deviceType == 'FXServer'
+                                                                                                                                                || devices.selectedDevice.deviceType == 'Server'
+                                                                                                                                                || devices.selectedDevice.deviceType == ''
+                                                                                                                                                || devices.selectedDevice.deviceType == 'RackServer'
+                                                                                                                                                || devices.selectedDevice.deviceType == 'TowerServer'
+                                                                                                                                                || devices.selectedDevice.deviceType == 'compellent'
+                                                                                                                                                || devices.selectedDevice.deviceType == 'equallogic'
+                                                                                                                                                || devices.selectedDevice.deviceType == 'netapp'
+                                                                                                                                                || devices.selectedDevice.deviceType == 'storage'">
+                                    <label class="col-sm-5 servicelistlabel" for="serviceList">
+                                        {{'DEVICES_DisplayServices'|translate}}
+                                    </label>
+                                    <ul id="serviceList" ng-if="devices.servicelist.length > 0" class="list-unstyled">
+                                        <li ng-repeat="service in devices.servicelist">
+                                            <a class="" ng-href="'#services/details?id=' + encodeURIComponent(service.id)">{{service.name}}</a>
+                                            <div class="clearfix"></div>
+                                        </li>
+                                    </ul>
+                                    <span ng-if="devices.selectedDevice.servicelist.length == 0">{{'available'|deviceState}}</span>
+                                    <div class="clearfix"></div>
+                                </li>-->
+                            </ul>
+                        </div>
+
+                        <!-- *******
+                        ************* vcenter collapse ******************** -->
+                        <div ng-if="devices.selectedDevice.deviceType == 'vcenter'" class="vcenterdevice">
+                            <h4>
+                                {{'DEVICES_VCenterDeviceTitle'|translate}}
+                            </h4>
+                            <div>
+                                <span ng-if="devices.vcenter.children.length > 0" tabindex="0" class="collapsed" data-toggle="collapse" data-target="#{{devices.vcenter.deviceid|toclassname}}">
+                                    <i class="collapsed-show ci-arrow-chev-right-3-thick"></i>
+                                    <i class="collapsed-hide ci-arrow-chev-down-3-thick"></i>
+                                </span>
+                                <i class="vcenterdevice vcenter" ng-class="{'empty' : !devices.vcenter.children.length}"></i>
+                                {{devices.vcenter.name}}
+                            </div>
+                            <ul class="list-unstyled list-unstyled collapse" id="{{devices.vcenter.deviceid|toclassname}}">
+                                <li ng-repeat="child in devices.vcenter.children">
+                                    <span tabindex="0" ng-if="child.children.length > 0" class="collapsed" data-toggle="collapse" data-target="#{{child.deviceid|toclassname}}">
+                                        <i class="collapsed-show ci-arrow-chev-right-3-thick"></i>
+                                        <i class="collapsed-hide ci-arrow-chev-down-3-thick"></i>
+                                    </span>
+                                    <i class="vcenterdevice {{child.type}}" ng-class="{'empty' : !child.children.length}"></i>
+                                    {{child.name}}
+                                    <ul class="list-unstyled collapse" id="{{child.deviceid|toclassname}}">
+                                        <li ng-repeat="child1 in child.children">
+                                            <span ng-if="child1.children.length > 0" tabindex="0" class="collapsed" data-toggle="collapse" data-target="#{{child1.deviceid|toclassname}} ">
+                                                <i class="collapsed-show ci-arrow-chev-right-3-thick"></i>
+                                                <i class="collapsed-hide ci-arrow-chev-down-3-thick"></i>
+                                            </span>
+                                            <i class="vcenterdevice {{child1.type}}" ng-class="{'empty' : !child1.children.length}"></i>{{child1.name}}
+                                            <ul class="list-unstyled collapse" id="{{child1.deviceid|toclassname}}">
+                                                <li ng-repeat="child2 in child1.children">
+                                                    <span ng-if="child2.children.length > 0" tabindex="0" class="collapsed" data-toggle="collapse" data-target="#{{child2.deviceid|toclassname}} ">
+                                                        <i class="collapsed-show ci-arrow-chev-right-3-thick"></i>
+                                                        <i class="collapsed-hide ci-arrow-chev-down-3-thick"></i>
+                                                    </span>
+                                                    <i class="vcenterdevice {{child2.type}}" ng-class="{'empty' : !child2.children.length}"></i>{{child2.name}}
+                                                    <ul class="list-unstyled collapse" id="{{child2.deviceid|toclassname}}">
+                                                        <li ng-repeat="child3 in child2.children">
+                                                            <span ng-if="child3.children.length > 0" tabindex="0" class="collapsed" data-toggle="collapse" data-target="#{{child3.deviceid|toclassname}} ">
+                                                                <i class="collapsed-show ci-arrow-chev-right-3-thick"></i>
+                                                                <i class="collapsed-hide ci-arrow-chev-down-3-thick"></i>
+                                                            </span>
+                                                            <i class="vcenterdevice {{child3.type}}" ng-class="{'empty' : !child3.children.length}"></i>{{child3.name}}
+                                                            <ul class="list-unstyled collapse" id="{{child3.deviceid|toclassname}}">
+                                                                <li ng-repeat="child4 in child3.children">
+                                                                    <span ng-if="child4.children.length > 0" tabindex="0" class="collapsed" data-toggle="collapse" data-target="#{{child4.deviceid|toclassname}} ">
+                                                                        <i class="collapsed-show ci-arrow-chev-right-3-thick"></i>
+                                                                        <i class="collapsed-hide ci-arrow-chev-down-3-thick"></i>
+                                                                    </span>
+                                                                    <i class="vcenterdevice {{child4.type}}" ng-class="{'empty' : !child4.children.length}"></i>{{child4.name}}
+                                                                    <ul class="list-unstyled collapse" id="{{child4.deviceid|toclassname}}">
+                                                                        <li ng-repeat="child5 in child4.children">
+                                                                            <span ng-if="child5.children.length > 0" tabindex="0" class="collapsed" data-toggle="collapse" data-target="#{{child5.deviceid|toclassname}} ">
+                                                                                <i class="collapsed-show ci-arrow-chev-right-3-thick"></i>
+                                                                                <i class="collapsed-hide ci-arrow-chev-down-3-thick"></i>
+                                                                            </span>
+                                                                            <i class="vcenterdevice {{child5.type}}" ng-class="{'empty' : !child5.children.length}"></i>{{child5.name}}
+                                                                            <ul class="list-unstyled collapse" id="{{child5.deviceid|toclassname}}">
+                                                                                <li ng-repeat="child6 in child5.children">
+                                                                                    <i class="vcenterdevice {{child6.type}} empty"></i>{{child6.name}}
+                                                                                </li>
+                                                                            </ul>
+                                                                        </li>
+                                                                    </ul>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- ******************** scvmm collapse ******************** -->
+                        <div class="vcenterdevice" ng-if="devices.selectedDevice.deviceType == 'scvmm'">
+                            <h4>
+                                {{'DEVICES_SCVMMDeviceTitle'|translate}}
+                            </h4>
+                            <div>
+                                <span ng-if="devices.scvmm.children.length > 0" tabindex="0" data-toggle="collapse" data-target="#{{devices.scvmm.deviceid|toclassname}}">
+                                    <i class="collapsed-show ci-arrow-chev-right-3-thick"></i>
+                                    <i class="collapsed-hide ci-arrow-chev-down-3-thick"></i>
+                                </span>
+                                <i class="vcenterdevice scvmm" ng-class="{'empty' : !devices.scvmm.children.length}"></i>
+                                {{devices.scvmm.name}}
+                            </div>
+                            <ul class="list-unstyled collapse" id="{{devices.scvmm.deviceid|toclassname}}">
+                                <li ng-repeat="child in devices.scvmm.children">
+                                    <span ng-if="child.children.length > 0" tabindex="0" class="collapsed" data-toggle="collapse" data-target="#{{child.deviceid|toclassname}}">
+                                        <i class="collapsed-show ci-arrow-chev-right-3-thick"></i>
+                                        <i class="collapsed-hide ci-arrow-chev-down-3-thick"></i>
+                                    </span>
+                                    <i class="vcenterdevice {{child.type}}" ng-class="{'empty' : !child.children.length}"></i>{{child.name}}
+                                    <ul class="list-unstyled collapse" id="{{child.deviceid|toclassname}}">
+                                        <li ng-repeat="child1 in child.children">
+                                            <span ng-if="child1.children.length > 0" tabindex="0" class="collapsed" data-toggle="collapse" data-target="#{{child1.deviceid|toclassname}} ">
+                                                <i class="collapsed-show ci-arrow-chev-right-3-thick"></i>
+                                                <i class="collapsed-hide ci-arrow-chev-down-3-thick"></i>
+                                            </span>
+                                            <i class="vcenterdevice {{child1.type}}" ng-class="{'empty' : !child1.children.length}"></i>{{child1.name}}
+                                            <ul class="list-unstyled collapse" id="{{child1.deviceid|toclassname}}">
+                                                <li ng-repeat="child2 in child1.children">
+                                                    <span ng-if="child2.children.length > 0" tabindex="0" class="collapsed" data-toggle="collapse" data-target="#{{child2.deviceid|toclassname}} ">
+                                                        <i class="collapsed-show ci-arrow-chev-right-3-thick"></i>
+                                                        <i class="collapsed-hide ci-arrow-chev-down-3-thick"></i>
+                                                    </span>
+                                                    <i class="vcenterdevice {{child2.type}}" ng-class="{'empty' : !child2.children.length}"></i>{{child2.name}}
+                                                    <ul class="list-unstyled collapse" id="{{child2.deviceid|toclassname}}">
+                                                        <li ng-repeat="child3 in child2.children">
+                                                            <span ng-if="child3.children.length > 0" tabindex="0" class="collapsed" data-toggle="collapse" data-target="#{{child3.deviceid|toclassname}}">
+                                                                <i class="collapsed-show ci-arrow-chev-right-3-thick"></i>
+                                                                <i class="collapsed-hide ci-arrow-chev-down-3-thick"></i>
+                                                            </span>
+                                                            <i class="vcenterdevice {{child3.type}}" ng-class="{'empty' : !child3.children.length}"></i>{{child3.name}}
+                                                            <ul class="list-unstyled collapse" id="{{child4.deviceid|toclassname}}">
+                                                                <li ng-repeat="child4 in child3.children">
+                                                                    <span ng-if="child4.children.length > 0" tabindex="0" class="collapsed" data-toggle="collapse" data-target="#{{child4.deviceid|toclassname}} ">
+                                                                        <i class="collapsed-show ci-arrow-chev-right-3-thick"></i>
+                                                                        <i class="collapsed-hide ci-arrow-chev-down-3-thick"></i>
+                                                                    </span>
+                                                                    <i class="vcenterdevice {{child4.type}}" ng-class="{'empty' : !child4.children.length}"></i>{{child4.name}}
+                                                                    <ul class="list-unstyled collapse" id="{{child5.deviceid|toclassname}}">
+                                                                        <li ng-repeat="child5 in child4.children">
+                                                                            <span ng-if="child5.children.length > 0" tabindex="0" class="collapsed" data-toggle="collapse" data-target="#{{child5.deviceid|toclassname}} ">
+                                                                                <i class="collapsed-show ci-arrow-chev-right-3-thick"></i>
+                                                                                <i class="collapsed-hide ci-arrow-chev-down-3-thick"></i>
+                                                                            </span>
+                                                                            <i class="vcenterdevice {{child5.type}}" ng-class="{'empty' : !child5.children.length}"></i>{{child5.name}}
+                                                                            <ul class="list-unstyled collapse" id="{{child5.deviceid|toclassname}}">
+                                                                                <li ng-repeat="child6 in child5.children">
+                                                                                    <i class="vcenterdevice {{child6.type}}"></i>{{child6.name}}
+                                                                                </li>
+                                                                            </ul>
+                                                                        </li>
+                                                                    </ul>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+
+        </div>
+
+        <!-- Server Pools tab -->
+        <div role="tabpanel" class="tab-pane" ng-if="devices.activeTab == 'ServerPools'" id="serverpools">
+            <div class="col-xs-12">
+                <ul class="list-unstyled list-inline">
+                    <li>
+                        <button id="new_serverpool_link" class="btn btn-default" ng-click="devices.createNewServerPool()" ng-disabled="ASM.IsInRole('readonly') || ASM.IsInRole('standard')">
+                            <i class="ci-action-add-plus-float"></i>
+                            {{'GENERIC_CreateNew'|translate}}
+                        </button>
+                    </li>
+                    <li>
+                        <button id="edit_serverpool_link"
+                                class="btn btn-default"
+                                ng-click="devices.editServerPool()"
+                                ng-disabled="ASM.IsInRole('readonly') || ASM.IsInRole('standard') || devices.getNumChecked(devices.serverpools) !== 1  || devices.getChecked(devices.serverpools)[0].canEdit === false">
+                            <i class="ci-doc-blank-pencil-edit-o"></i>
+                            {{'GENERIC_Edit'|translate}}
+                        </button>
+                    </li>
+                    <li>
+                        <button id="delete_serverpool_link"
+                                class="btn btn-default"
+                                ng-click="devices.removeServerPool()"
+                                ng-disabled="!devices.getChecked(devices.serverpools).length
+                                            || ASM.IsInRole('readonly')
+                                            || ASM.IsInRole('standard')
+                                            || devices.getNumChecked(devices.serverpools) === 0
+                                            || !devices.canDeleteAll(devices.serverpools) ">
+                            <i class="ci-trash"></i>
+                            {{'GENERIC_Delete'|translate}}
+                        </button>
+                    </li>
+                </ul>
+                <table id="serverPoolsGrid"
+                       class="table table-striped table-hover"
+                       st-table="devices.serverpools"
+                       st-safe-src="devices.safeSources.serverPoolsTab.serverPools">
+                    <thead>
+                        <tr>
+                            <th class="checkColumn">
+                                <input id="selectAllServerPools" type="checkbox" ng-click="devices.toggleAll(devices.serverpools)" />
+                            </th>
+                            <th st-sort="name" tabindex="0">
+                                {{'SERVERPOOLS_Name' | translate}}
+                            </th>
+                            <th st-sort="createdby" tabindex="0">
+                                {{'GENERIC_CreatedBy'|translate}}
+                            </th>
+                            <th st-sort="createddate" tabindex="0">
+                                {{'GENERIC_CreatedDate'|translate}}
+                            </th>
+                            <th st-sort="servercount" tabindex="0">
+                                {{'SERVERPOOLS_NumServers'|translate}}
+                            </th>
+                            <th st-sort="usercount" tabindex="0">
+                                {{'SERVERPOOLS_NumUsers'|translate}}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody ng-if="devices.serverpools.length != 0">
+                        <tr ng-repeat="sp in devices.serverpools"
+                            ng-click="devices.selectServerPoolRow(sp);"
+                            ng-class="{'st-selected': devices.selectedServerPool.id == sp.id}">
+                            <td class="checkColumn">
+                                <input type="checkbox" ng-model="sp.isChecked" />
+                            </td>
+                            <td>
+                                {{sp.name}}
+                            </td>
+                            <td>
+                                {{sp.createdby}}
+                            </td>
+                            <td>
+                                <datetime-display time="sp.createddate" time-format="'LLL'" />
+                            </td>
+                            <td>
+                                {{sp.servercount}}
+                            </td>
+                            <td>
+                                {{sp.usercount}}
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-if="devices.serverpools.length === 0">
+                        <tr>
+                            <td colspan="6">
+                                <div>
+                                    {{'GENERIC_EmptyTable'|translate}}
+                                </div>
+
+                                <div ng-if="devices.serverpools.length === 0"
+                                     st-pagination=""
+                                     st-items-by-page="10"
+                                     st-displayed-pages=""></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6" class="text-center"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="col-xs-12">
+                <div class="well bottomDetails">
+                    <!-- with selectedServerPool -->
+                    <header>
+                        <h2>{{devices.selectedServerPool.name}}</h2>
+                    </header>
+                    <div>
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" ng-class="{'active': devices.serverPoolActiveTab == 'Servers'}"><a ng-click="devices.serverPoolActiveTab = 'Servers'">{{'GENERIC_Servers'|translate}}</a></li>
+                            <li role="presentation" ng-class="{'active': devices.serverPoolActiveTab == 'Users'}"><a ng-click="devices.serverPoolActiveTab = 'Users'">{{'GENERIC_Users'|translate}}</a></li>
+                        </ul>
+                        <div class="tab-pane" role="tabpanel" ng-if="devices.serverPoolActiveTab == 'Servers'">
+                            <table id="serverTable"
+                                   class="table"
+                                   st-safe-src="devices.safeSources.serverPoolsTab.servers"
+                                   st-table="devices.selectedServerPool.servers">
+                                <thead>
+                                    <tr>
+                                        <th st-sort="health" tabindex="0">
+                                            {{'GENERIC_Health' | translate}}
+                                        </th>
+                                        <th st-sort="$root.ASM.getters.ipaddress('ipAddress')" tabindex="0">
+                                            {{'GENERIC_IpAddress'|translate}}
+                                        </th>
+                                        <th st-sort="serviceTag">
+                                            {{'GENERIC_AssetServiceTag'|translate}}
+                                        </th>
+                                        <th tabindex="0">
+                                            {{'DEVICES_DeploymentStatus'|translate}}
+                                        </th>
+                                        <th st-sort="state" tabindex="0">
+                                            {{'DEVICES_ManagedState'|translate}}
+                                        </th>
+                                        <th st-sort="$root.ASM.getters.model()" tabindex="0">
+                                            {{'GENERIC_Model'|translate}}
+                                        </th>
+                                        <th st-sort="processercount" tabindex="0">
+                                            {{'GENERIC_cpus'|translate}}
+                                        </th>
+                                        <th st-sort="$root.ASM.getters.memory()" tabindex="0">
+                                            {{'GENERIC_Memory'|translate}}
+                                        </th>
+                                        <th st-sort="nics" tabindex="0">
+                                            {{'SERVERPOOLS_Ports'|translate}}
+                                        </th>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="server in devices.selectedServerPool.servers">
+                                        <td>
+                                            <a data-toggle="tooltip"
+                                               title="{{server.healthmessage}}"
+                                               data-trigger="hover"
+                                               id="serverStatusIcon">
+                                                <statusicon value="server.health"></statusicon>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <!--<a id="ipLink" ng-href="{{server.ipaddressurl}}" ng-attr-target="_blank" ng-if="serveripaddressurl != ''">-->
+                                            <a class="ipLink" ng-click="devices.launchManagementIP(server.ipaddressurl)" ng-if="!(ASM.IsInRole('readonly')) && !(server.ipaddressurl == '' || server.ipaddressurl == null)">
+                                                {{server.ipAddress}}
+                                            </a>
+                                            <span ng-if="ASM.IsInRole('readonly') || server.ipaddressurl == '' || server.ipaddressurl == null">
+                                                {{server.ipAddress}}
+                                            </span>
+                                        </td>
+                                        <td>{{server.serviceTag}}</td>
+                                        <td>
+                                            <a ng-if="server.availability == 'inuse'"
+                                               ng-href="#/device/{{server.id}}/{{server.deviceType}}"
+                                               ng-switch="server.status">
+                                                <span ng-switch-when="ready">
+                                                    {{'DEVICES_InUse' | translate}}
+                                                </span>
+                                                <span ng-switch-when="deploying">
+                                                    <span class="spinner"></span>
+                                                    <spinner></spinner> {{'DEVICES_Deploying' | translate}}
+                                                </span>
+                                                <span ng-switch-when="updating">
+                                                    <span class="spinner"></span>
+                                                    <spinner></spinner>
+                                                    {{'DEVICES_UpdatingService' | translate}}
+                                                </span>
+                                                <span ng-switch-when="pendingupdates">
+                                                    <i class="ci-schedule-clock-o text-primary"></i>
+                                                    {{'DEVICES_PendingUpdates' | translate}}
+                                                </span>
+                                                <span ng-switch-when="pendingdelete">
+                                                    <i class="ci-schedule-clock-o text-primary"></i>
+                                                    {{'GENERIC_PendingDelete' | translate}}
+                                                </span>
+                                                <span ng-switch-when="error">
+                                                    <statusicon value="'red'"></statusicon>
+                                                    {{'DEVICES_DeploymentFailed' | translate}}
+                                                </span>
+                                                <span ng-switch-when="cancelled">
+                                                    <statusicon value="'cancelled'"></statusicon>
+                                                    {{'DEVICES_DeploymentCancelled' | translate}}
+                                                </span>
+                                                <span ng-switch-default>
+                                                    {{server.status}}
+                                                </span>
+                                            </a>
+                                            <span ng-if="server.availability != 'inuse'" ng-switch="server.status">
+                                                <span ng-switch-when="ready">
+                                                    {{'DEVICES_NotInUse' | translate}}
+                                                </span>
+                                                <span ng-switch-when="updating">
+                                                    <spinner></spinner>
+                                                    {{'DEVICES_UpdatingResource' | translate}}
+                                                </span>
+                                                <span ng-switch-when="pendingupdates">
+                                                    <i class="ci-schedule-clock-o text-primary"></i>
+                                                    {{'DEVICES_PendingUpdates' | translate}}
+                                                </span>
+                                                <span ng-switch-when="pendingdelete">
+                                                    <i class="ci-schedule-clock-o text-primary"></i>
+                                                    {{'GENERIC_PendingDelete' | translate}}
+                                                </span>
+                                                <span ng-switch-when="error">
+                                                    <statusicon value="'red'"></statusicon>
+                                                    {{'DEVICES_ConfigError' | translate}}
+                                                </span>
+                                                <span ng-switch-default>
+                                                    {{device.status}}
+                                                </span>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {{server.state | availableManagedStates }}
+                                        </td>
+                                        <td>
+                                            <span ng-if="server.manufacturer">{{server.manufacturer}}</span>
+                                            <span ng-if="server.model">{{server.model}}</span>
+                                        </td>
+                                        <td>{{server.processorcount}}</td>
+                                        <td>{{server.memory}}</td>
+                                        <td>{{server.nics}}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="11">
+                                            <div ng-if="devices.selectedServerPool.servers.length"
+                                                 st-pagination=""
+                                                 st-items-by-page="20"
+                                                 st-displayed-pages=""></div>
+                                            <div ng-if="devices.selectedServerPool.servers.length === 0">
+                                                {{'GENERIC_EmptyTable'|translate}}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div id="users"
+                             role="tabpanel"
+                             class="tab-pane"
+                             ng-if="devices.serverPoolActiveTab == 'Users'">
+                            <table id="users_table"
+                                   class="table"
+                                   st-table="devices.selectedServerPool.users"
+                                   st-safe-src="devices.safeSources.serverPoolsTab.users">
+                                <thead>
+                                    <tr>
+                                        <th st-sort="username" tabindex="0">
+                                            {{'GENERIC_UserName' | translate}}
+                                        </th>
+                                        <th st-sort="domain" tabindex="0">
+                                            {{'GENERIC_Domain' | translate}}
+                                        </th>
+                                        <th st-sort="roleDisplay" tabindex="0">
+                                            {{'GENERIC_Role' | translate}}
+                                        </th>
+                                        <th st-sort="lastname" tabindex="0">
+                                            {{'GENERIC_LastName' | translate}}
+                                        </th>
+                                        <th st-sort="firstname" tabindex="0">
+                                            {{'GENERIC_FirstName' | translate}}
+                                        </th>
+                                        <th st-sort="state" tabindex="0">
+                                            {{'GENERIC_State' | translate}}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="user in devices.selectedServerPool.users">
+                                        <td>
+                                            {{user.username}}
+                                        </td>
+                                        <td>
+                                            <span ng-if="!user.serverName">
+                                                {{'GENERIC_LocalUser'|translate}}
+                                            </span>
+                                            <span ng-if="user.serverName">
+                                                {{user.serverName}}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {{user.roleDisplay}}
+                                        </td>
+                                        <td>
+                                            {{user.lastname}}
+                                        </td>
+                                        <td>
+                                            {{user.firstname}}
+                                        </td>
+                                        <td>
+                                            {{user.state}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="6">
+                                            <div ng-if="devices.selectedServerPool.users.length === 0">
+                                                {{'GENERIC_EmptyTable'|translate}}
+                                            </div>
+                                            <div ng-if="devices.selectedServerPool.users.length"
+                                                 st-pagination=""
+                                                 st-items-by-page="20"
+                                                 st-displayed-pages=""></div>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/ng-template" id="DevicesComplianceTooltip.html">
+        <div class="popover-body" ng-bind-html="'DEVICES_ComplianceToolTip' | translate | htmlSafe"></div>
+    </script>
+</section>

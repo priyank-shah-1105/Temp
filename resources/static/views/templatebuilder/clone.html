@@ -1,0 +1,71 @@
+﻿<section id="page_clone">
+    <error-display errors="cloneController.errors"
+                   on-click="$root.ASM.RemoveError(error, cloneController.errors)"
+                   on-expand-collapse=""></error-display>
+    <p ng-bind-html="'TEMPLATEBUILDER_Clone_Help'|translate|htmlSafe"></p>
+
+    <table id="deviceTable" class="table table-striped table-hover col-md-12"
+            st-skip-natural="true" st-table="cloneController.displayedData" st-safe-src="cloneController.devices">
+
+            <thead>
+                <tr>
+                    <th class="checkColumn"></th>
+                    <th tabindex="0" st-sort="'state'">{{'TEMPLATEBUILDER_Clone_THState' | translate }}</th>
+                    <th tabindex="0" st-sort="'ip'">{{'TEMPLATEBUILDER_Clone_THIP_Address' | translate }}</th>
+                    <th tabindex="0" st-sort="'deviceid'">{{'TEMPLATEBUILDER_Clone_THDevice_ID' | translate }}</th>
+                    <th tabindex="0" st-sort="'manufacturer'">{{'TEMPLATEBUILDER_Clone_THManufacturer' | translate }}</th>
+                    <th tabindex="0" st-sort="'model'">{{'TEMPLATEBUILDER_Clone_THModel' | translate }}</th>
+                    <th tabindex="0" st-sort="'serverpool'">{{'TEMPLATEBUILDER_Clone_THSServer_Pool' | translate }}</th>
+                </tr>
+            </thead>
+            <tbody >
+
+            <tr ng-repeat="device in cloneController.displayedData" 
+                ng-class="{'st-selected': cloneController.selectedDevice.id == device.id}" 
+                ng-click="cloneController.selectedDevice = device;">
+                    <td class="checkColumn">
+                        <input type="radio" 
+                               name="chkDevice" 
+                               ng-checked="cloneController.selectedDevice.id === device.id"/>
+                    </td>
+                    <td>{{device.state | availableManagedStates}}</td>
+                    <td>
+                        <a class="btn btn-link"
+                           ng-href="{{device.ipAddressurl}}"
+                           target="_blank"
+                           ng-show="device.ipAddressurl != null">
+                            <span>{{device.ipAddress}}</span>
+                        </a>
+                        <span ng-show="device.ipAddressurl == null">{{device.ipAddress}}</span>
+                    </td>
+                    <td>{{device.deviceid}}</td>
+                    <td>{{device.manufacturer}}</td>
+                    <td>{{device.model}}</td>
+                    <td>{{device.displayserverpools}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7" class="text-center">
+                        <div id="pager-devices" st-pagination="cloneController.displayedData" st-items-by-page="20" st-displayed-pages="7"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+                <button id="submit_form_clone" class="btn btn-primary" ng-click="cloneController.save()" ng-disabled="!cloneController.selectedDevice">
+                    {{'GENERIC_select' | translate }}
+                </button>
+            </li>
+            <li>
+                <button id="cancel_form_clone" class="btn btn-default" ng-click="cloneController.cancel()">
+                    {{'GENERIC_Cancel' | translate }}
+                </button>
+            </li>
+        </ul>
+    </footer>
+
+</section>

@@ -1,0 +1,74 @@
+﻿<div id="device_scale_storages">
+    <table id="scaleStoragesTable" class="table"
+           st-table="scaleStoragesController.scaleIOProtectionDomains"
+           st-safe-src="scaleStoragesController.safeSrc.scaleIOProtectionDomains">
+        <thead>
+            <tr>
+                <th>
+                    {{'DEVICES_EMC_SCALEIO_Storage_ProtectionDomain'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_EMC_SCALEIO_Storage_StoragePools'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_EMC_SCALEIO_Storage_Volumes'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_EMC_SCALEIO_Storage_Size'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_EMC_SCALEIO_Storage_Type'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_EMC_SCALEIO_Storage_MappedSDCs'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat-start="storage in scaleStoragesController.scaleIOProtectionDomains | scaleioStorageFilter">
+                <td>
+                    <chevron item="storage._show"
+                             id="storageChevron_{{$index}}">
+                        {{storage.protectionDomainName}}
+                    </chevron>
+                </td>
+                <td>{{storage.scaleIOStoragePools.length}}</td>
+                <td>{{storage.storageVolumes}}</td>
+                <td>{{storage.storageSize}}</td>
+                <td>-</td>
+                <td>{{storage.mappedSDCs}}</td>
+            </tr>
+            <tr ng-repeat-start="pool in storage.scaleIOStoragePools" ng-if="storage._show">
+                <td></td>
+                <td>
+                    <chevron item="pool._show"
+                             id="poolChevron_{{$index}}"
+                             hide-chevron="!storage.scaleIOStoragePools.length">
+                        {{pool.name}}
+                    </chevron>
+                </td>
+                <td colspan="4"></td>
+            </tr>
+            <tr ng-repeat-end
+                ng-repeat="volume in pool.scaleIOStorageVolumes"
+                ng-if="pool._show">
+                <td colspan="2"></td>
+                <td>{{volume.name}}</td>
+                <td>{{volume.size}}</td>
+                <td>{{volume.type}}</td>
+                <td>{{volume.mappedSDCs}}</td>
+            </tr>
+            <tr ng-if="" ng-repeat-end></tr>
+        </tbody>
+        <!--<tfoot>
+            <tr>
+                <td colspan="9" class="text-center">
+                    <div id="pager"
+                         st-pagination="(scaleStoragesController.scaleIOProtectionDomains | scaleioStorageFilter)"
+                         st-items-by-page="20"
+                         st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>-->
+    </table>
+</div>

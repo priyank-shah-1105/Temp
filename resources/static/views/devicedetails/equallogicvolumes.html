@@ -1,0 +1,58 @@
+﻿<div id="device_equallogicvolumes">
+    <table class="table" 
+           st-table="deviceEquallogicController.device.volumes"
+           st-safe-src="deviceEquallogicController.safeSource">
+        <thead>
+            <tr>
+                <th st-sort="'volume'">
+                    {{'DEVICES_DETAILS_EQUAL_LOGIC_Volumes_Volume'|translate}}
+                </th>
+                <th st-sort="'storagepool'">
+                    {{'DEVICES_DETAILS_EQUAL_LOGIC_Volumes_StoragePool'|translate}}
+                </th>
+                <th st-sort="'reportedsize'">
+                    {{'DEVICES_DETAILS_EQUAL_LOGIC_Volumes_ReportedSize'|translate}}
+                </th>
+                <th st-sort="'volumereserve'">
+                    {{'DEVICES_DETAILS_EQUAL_LOGIC_Volumes_VolumeReserve'|translate}}
+                </th>
+                <th st-sort="'snapshotreserve'">
+                    {{'DEVICES_DETAILS_EQUAL_LOGIC_Volumes_SnapshotReserve'|translate}}
+                </th>
+                <th st-sort="'borrowedspace'">
+                    {{'DEVICES_DETAILS_EQUAL_LOGIC_Volumes_BorrowedSpace'|translate}}
+                </th>
+                <th st-sort="'volumestatus'">
+                    {{'DEVICES_DETAILS_EQUAL_LOGIC_Volumes_VolumeStatus'|translate}}
+                </th>
+                <th st-sort="'replicationpartner'">
+                    {{'DEVICES_DETAILS_EQUAL_LOGIC_Volumes_ReplicationPartner'|translate}}
+                </th>
+                <th st-sort="'syncrepstatus'">
+                    {{'DEVICES_DETAILS_EQUAL_LOGIC_Volumes_SyncRepStatus'|translate}}
+                </th>
+                <th st-sort="'numberofsnapshot'">
+                    {{'DEVICES_DETAILS_EQUAL_LOGIC_Volumes_NumberofSnapshot'|translate}}
+                </th>
+                <th st-sort="'iscsiconnections'">
+                    {{'DEVICES_DETAILS_EQUAL_LOGIC_Volumes_ISCSIConnections'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="volume in deviceEquallogicController.device.volumes">
+                <td>{{volume.volume}}</td>
+                <td>{{volume.storagepool}}</td>
+                <td>{{volume.reportedsize}}</td>
+                <td>{{volume.volumereserve}}</td>
+                <td>{{volume.snapshotreserve}}</td>
+                <td>{{volume.borrowedspace}}</td>
+                <td><statusicon value="volume.volumestatus"></statusicon> {{volume.volumestatus | deviceState}}</td>
+                <td>{{volume.replicationpartner}}</td>
+                <td>{{volume.syncrepstatus}}</td>
+                <td>{{volume.numberofsnapshot}}</td>
+                <td>{{volume.iscsiconnections}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

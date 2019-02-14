@@ -1,0 +1,193 @@
+﻿<section id="page_userslist">
+    <error-display errors="usersList.errors"
+                   on-click="$root.ASM.RemoveError(error, usersList.errors)"
+                   on-expand-collapse=""></error-display>
+    <div id="usersmasterdetails" class="master-details">
+        <div class="AbsoluteFullHeight">
+            <div class="TopPortion">
+                <div>
+                    <ul class="list-unstyled list-inline">
+                        <!--<li class="pull-right">
+                            <button id="refresh_users_link" class="btn btn-link" ng-click="usersList.refresh()">
+                                <i class="ci-arrow-curve-forward-right-refresh"></i>
+                            </button>
+                        </li>-->
+                        <li class="pull-right">
+                            <form class="form-inline">
+                                <div class="form-group">
+                                    <label>
+                                        {{'SETTINGS_FilterByGroup' | translate}}
+                                    </label>&nbsp;
+                                    <select id="ddlADGroup" class="form-control" name="usergroups" ng-options="group as group.name for group in usersList.directoryGroups" ng-model="usersList.selectedGroup" ng-change="usersList.filterbyGroup()"></select>
+                                </div>
+                            </form>
+
+                        </li>
+                    </ul>
+                    <ul class="list-unstyled list-inline">
+                        <li>
+                            <button id="new_user_link" class="btn btn-default" ng-click="usersList.createuser()" ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                                {{'GENERIC_Create' | translate}}
+                            </button>
+                        </li>
+                        <li>
+                            <button id="edit_user_link" class="btn btn-default" ng-disabled="usersList.selectedUsers().length != 1 || $root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')" ng-click="usersList.edituser()">
+                                <i class=""></i>{{'GENERIC_Edit' | translate}}
+                            </button>
+                        </li>
+                        <li>
+                            <button id="disable_user" class="btn btn-default" ng-disabled="usersList.selectedUsers().length == 0 || usersList.disableButtonActive() !== true || $root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')" ng-click="usersList.disableUser()">
+                                <i class=""></i> {{'GENERIC_Disable' | translate}}
+                            </button>
+                        </li>
+                        <li>
+                            <button id="enable_user" class="btn btn-default" ng-disabled="usersList.selectedUsers().length == 0 || usersList.enableButtonActive() !== true || $root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')" ng-click="usersList.enableUser()">
+                                <i class=""></i> {{'GENERIC_Enable' | translate}}
+                            </button>
+                        </li>
+                        <li>
+                            <button id="delete_user_link" class="btn btn-default" ng-disabled="usersList.selectedUsers().length == 0 || usersList.deleteButtonActive() !== true || $root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')" ng-click="usersList.deleteUser()">
+                                <i class=""></i>{{'GENERIC_Delete' | translate}}
+                            </button>
+                        </li>
+                        <li>
+                            <button id="importUsers" class="btn btn-default" ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')" ng-click="usersList.importactivedirectoryusers()">
+                                <i class=""></i> {{'SETTINGS_ImportActiveDirectoryUsers' | translate}}
+                            </button>
+                        </li>
+                    </ul>
+
+                    <table id="users_table" class="table table-striped table-hover table-condensed" st-table="usersList.displayedresults" st-safe-src="usersList.results">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input id="selectAllUsers" type="checkbox" ng-click="usersList.checkAll()" ng-model="usersList.checkAllBox" />
+                                </th>
+                                <th st-sort="username" tabindex="0">
+                                    {{'GENERIC_Name' | translate}}
+                                </th>
+                                <th st-sort="groupname" tabindex="0">
+                                    {{'SETTINGS_ActiveDirectoryGroup' | translate}}
+                                </th>
+                                <th st-sort="domain" tabindex="0">
+                                    {{'GENERIC_Domain' | translate}}
+                                </th>
+                                <th st-sort="role" tabindex="0">
+                                    {{'GENERIC_Role' | translate}}
+                                </th>
+                                <th st-sort="lastname" tabindex="0">
+                                    {{'GENERIC_LastName' | translate}}
+                                </th>
+                                <th st-sort="firstname" tabindex="0">
+                                    {{'GENERIC_FirstName' | translate}}
+                                </th>
+                                <th st-sort="state" tabindex="0">
+                                    {{'GENERIC_State' | translate}}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody ng-if="usersList.displayedresults.length >= 1">
+                            <tr ng-repeat="user in usersList.displayedresults" ng-click="usersList.getUserDetails(user)" ng-class="{'st-selected': usersList.selectedDetail.id == user.id}">
+                                <td>
+                                    <input type="checkbox" ng-model="user.isSelected" />
+                                </td>
+
+                                <td>
+                                    {{user.username}}
+                                </td>
+                                <td>
+                                    {{user.groupName}}
+                                </td>
+                                <td>
+                                    <span ng-if="!user.serverName">{{user.localuser}}</span>
+                                    <span ng-if="user.serverName">{{user.serverName}}</span>
+                                </td>
+                                <td>
+                                    {{user.roleDisplay}}
+                                </td>
+                                <td>
+                                    {{user.lastname}}
+                                </td>
+                                <td>
+                                    {{user.firstname}}
+                                </td>
+                                <td>
+                                    {{user.state}}
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-if="usersList.displayedresults.length == 0">
+                            <tr>
+                                <td colspan="8">
+                                    {{'SETTINGS_NoUsersAdded' | translate}}
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot ng-if="usersList.displayedresults.length >= 1">
+                            <tr>
+                                <td colspan="8" class="text-center">
+                                    <div st-pagination="usersList.displayedresults" st-items-by-page="20" st-displayed-pages=""></div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div class="well BottomPortion" ng-if="usersList.displayedresults.length >= 1">
+                {{'SETTINGS_SelectedUser' | translate}} <b>{{usersList.selectedDetail.username}}</b>
+
+                <div>
+                    <div role="tabpanel">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist" id="users_detailswell">
+                            <li role="presentation" ng-click="usersList.activeTab = 'usersdetails'" ng-init="usersList.activeTab = 'usersdetails'" ng-class="{active: usersList.activeTab == 'usersdetails'}">
+                                <a data-target="#usersdetails" aria-controls="usersdetails" role="tab" data-toggle="tab" id="usersdetailsTab" ng-click="users.setTab('users_tabs', 'users')">
+                                    {{'GENERIC_Users' | translate}}
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane" id="usersdetails" ng-class="{active: usersList.activeTab == 'usersdetails'}">
+                                <div ng-if="usersList.activeTab === 'usersdetails'">
+                                    <div id="nework_summary">
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                {{'GENERIC_Email' | translate}}
+                                            </dt>
+                                            <dd ng-if="usersList.selectedDetail.email">
+                                                {{usersList.selectedDetail.email}}
+                                            </dd>
+                                            <dd ng-if="!usersList.selectedDetail.email">
+                                                {{'SETTINGS_NoEmail' | translate}}
+                                            </dd>
+                                            <dt>
+                                                {{'GENERIC_Phone' | translate}}
+                                            </dt>
+                                            <dd ng-if="usersList.selectedDetail.phone">
+                                                {{usersList.selectedDetail.phone}}
+                                            </dd>
+                                            <dd ng-if="!usersList.selectedDetail.phone">
+                                                {{'SETTINGS_NoPhoneNumber' | translate}}
+                                            </dd>
+                                            <dt>
+                                                {{'SETTINGS_DirectoryServices' | translate}}
+                                            </dt>
+                                            <dd ng-if="usersList.selectedDetail.serverName">
+                                                {{usersList.selectedDetail.serverName}}
+                                            </dd>
+                                            <dd ng-if="!usersList.selectedDetail.serverName">
+                                                {{'GENERIC_NA' | translate}}
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

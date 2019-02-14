@@ -1,0 +1,99 @@
+﻿<div id="device_networkinterface">
+    <table id="tableNICs"
+           class="table"
+           st-table="deviceNetworkInterfacesController.device.nics"
+           st-safe-src="deviceNetworkInterfacesController.safeSource.nics">
+        <thead>
+            <tr>
+                <th>
+                    <!-- Dropdown column -->
+                </th>
+                <th>
+                    {{'DEVICES_NETWORK_INTERFACES_InstanceID'|translate}}
+                </th>
+                <th ng-if="deviceNetworkInterfacesController.deviceType !== 'Server'">
+                    {{'DEVICES_NETWORK_INTERFACES_Vendor'|translate}}
+                </th>
+                <th ng-if="deviceNetworkInterfacesController.deviceType !== 'Server'">
+                    {{'DEVICES_NETWORK_INTERFACES_Product'|translate}}
+                </th>
+                <th ng-if="deviceNetworkInterfacesController.deviceType !== 'Server'">
+                    {{'DEVICES_NETWORK_INTERFACES_NetworkMode'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat-start="nic in deviceNetworkInterfacesController.device.nics">
+                <td>
+                    <chevron item="nic.open"></chevron>
+                </td>
+                <td>{{nic.instanceId}}</td>
+                <td ng-if="deviceNetworkInterfacesController.deviceType !== 'Server'">{{nic.vendor}}</td>
+                <td ng-if="deviceNetworkInterfacesController.deviceType !== 'Server'">{{nic.product}}</td>
+                <td ng-if="deviceNetworkInterfacesController.deviceType !== 'Server'">{{nic.networktype}}</td>
+            </tr>
+            <!-- ng-repeat="info in nic.networkInformation" -->
+            <tr ng-if="nic.open" ng-repeat-end>
+                <td></td>
+                <td colspan="4">
+                    <ul class="list-unstyled">
+                        <li ng-if="nic.networkInformation.permanentmacaddress">
+                            <label>{{'DEVICES_NETWORK_INTERFACES_PermanentMACAddress'|translate}}</label>
+                            <span>{{nic.networkInformation.permanentmacaddress}}</span>
+                        </li>
+                        <li ng-if="deviceNetworkInterfacesController.deviceType !== 'Server' && nic.networkInformation.virtualmacaddress">
+                            <label>{{'DEVICES_NETWORK_INTERFACES_VirtualMACAddress'|translate}}</label>
+                            <span>{{nic.networkInformation.virtualmacaddress}}</span>
+                        </li>
+                        <li ng-if="deviceNetworkInterfacesController.deviceType !== 'Server' && nic.networkInformation.permanentiscsimacaddress">
+                            <label>{{'DEVICES_NETWORK_INTERFACES_PermanentISCSIMACAddress'|translate}}</label>
+                            <span>{{nic.networkInformation.permanentiscsimacaddress}}</span>
+                        </li>
+                        <li ng-if="deviceNetworkInterfacesController.deviceType !== 'Server' && nic.networkInformation.virtualiscsimacaddress">
+                            <label>{{'DEVICES_NETWORK_INTERFACES_VirtualISCSIMACAddress'|translate}}</label>
+                            <span>{{nic.networkInformation.virtualiscsimacaddress}}</span>
+                        </li>
+                        <li ng-if="deviceNetworkInterfacesController.deviceType !== 'Server' && nic.networkInformation.permanentfcoemacaddress">
+                            <label>{{'DEVICES_NETWORK_INTERFACES_PermanentFCOEAddress'|translate}}</label>
+                            <span>{{nic.networkInformation.permanentfcoemacaddress}}</span>
+                        </li>
+                        <li ng-if="deviceNetworkInterfacesController.deviceType !== 'Server' && nic.networkInformation.virtualfipsmacaddress">
+                            <label>{{'DEVICES_NETWORK_INTERFACES_VirtualFIPSMACAddress'|translate}}</label>
+                            <span>{{nic.networkInformation.virtualfipsmacaddress}}</span>
+                        </li>
+                        <li ng-if="deviceNetworkInterfacesController.deviceType !== 'Server' && nic.networkInformation.initiatoriqn">
+                            <label>{{'DEVICES_NETWORK_INTERFACES_InitiatorIQN'|translate}}</label>
+                            <span>{{nic.networkInformation.initiatoriqn}}</span>
+                        </li>
+                        <li ng-if="deviceNetworkInterfacesController.deviceType !== 'Server' && nic.networkInformation.initiatorip">
+                            <label>{{'DEVICES_NETWORK_INTERFACES_InitiatorIP'|translate}}</label>
+                            <span>{{nic.networkInformation.initiatorip}}</span>
+                        </li>
+                        <li ng-if="deviceNetworkInterfacesController.deviceType !== 'Server' && nic.networkInformation.wwpn">
+                            <label>{{'DEVICES_NETWORK_INTERFACES_World-wideportname(WWPN)'|translate}}</label>
+                            <span>{{nic.networkInformation.wwpn}}</span>
+                        </li>
+                        <li ng-if="deviceNetworkInterfacesController.deviceType !== 'Server' && nic.networkInformation.virtualwwpn">
+                            <label>{{'DEVICES_NETWORK_INTERFACES_VirtualWWPN'|translate}}</label>
+                            <span>{{nic.networkInformation.virtualwwpn}}</span>
+                        </li>
+                        <li ng-if="deviceNetworkInterfacesController.deviceType !== 'Server' && nic.networkInformation.wwnn">
+                            <label>{{'DEVICES_NETWORK_INTERFACES_WWnodeWeb'|translate}}</label>
+                            <span>{{nic.networkInformation.wwnn}}</span>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="{{deviceNetworkInterfacesController.deviceType !== 'Server' ? 5 : 2}}" class="text-center">
+                    <div id="pager"
+                         st-pagination="deviceMemoryController.device.memorydata"
+                         st-items-by-page="20"
+                         st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

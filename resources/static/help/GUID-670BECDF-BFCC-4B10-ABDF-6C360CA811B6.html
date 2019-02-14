@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Configuring
+uplink ports</title><link rel="prev" href="GUID-3E7F5240-5A9A-498F-BD6E-D3241D166BAB.html" /><link rel="next" href="GUID-07343F6B-1358-4951-A712-B0120C96DB0A.html" /><link href="static/screen.css?mSUyqg2y" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-670BECDF-BFCC-4B10-ABDF-6C360CA811B6" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">Active System Manager Release 8.4</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Configuring
+uplink ports</h1>
+<ol class="steps" id="GUID-9163F2C4-06D5-447E-AAAF-B619421537DE">
+<li id="STEP_E034B023F35E4727BF9FD5AFF83618B7"><p>On the <span class="uicontrol">I/O Module Configuration</span> page, select the <span class="uicontrol">Configure Uplinks </span>check
+box.</p></li><li id="STEP_B0CD718A44014617A91791EC5F654C55"><p>Select one of the following options: </p><p><ul id="UL_CDE2D6D11A4C4B6A8338BBB6DDA56608"><li id="LI_6E4AF206E20044D6A3D9669C33211ED8"><span class="uicontrol">Configure Uplink Ports on All Chassis the same</span>—Allows you to configure same ports on all chassis.</li><li id="LI_66F5C9651C74407D8E9312F7D3346E56"><span class="uicontrol">Configure Uplink Ports on
+All Chassis independently</span>—Allows you to configure different ports on different chassis.</li><li id="LI_398CA8EBDA59473D883C4FFDA5C61268"><span class="uicontrol">Upload Switch Configuration File</span>—Allows you to configure switches using a pre-configured switch configuration file. For more information about uploading switch configuration file, see<a data-scope="local" href="GUID-07343F6B-1358-4951-A712-B0120C96DB0A.html" title="">Upload Switch
+Configuration File</a>.</li></ul></p></li>
+
+<li id="STEP_4B955181699E4B2DB286F909A129272A"><p>In the <span class="uicontrol">Configure Uplinks</span> area, expand the
+chassis section, and perform one of the following actions:</p>
+<p><ul id="GUID-8F7B3802-C3AC-41A4-8B77-BDF5B959AA3E">
+<li id="LI_F4A8567B4516471FBD0E6EB671599637"><p>Select the<span class="uicontrol"> Configure uplinks on each I/O Module Independently</span> check box to configure
+different ports as uplink ports in each I/O module.</p><p>The table lists ports that are available in each I/O module in separate
+columns.</p></li>
+<li id="LI_C7A107C2E8784E95B9C61FA7382C4DBC"><p>Clear the <span class="uicontrol">Configure the
+uplinks on each I/O Module Independently </span>check box to
+configure the same ports as uplink ports across all I/O modules.</p><p>The table displays the following information:<ul id="GUID-DB2B6D2F-07CA-46A3-A46B-C30B21880E7F">
+<li id="LI_115F3876D9A94A37AFA8B7CA81FBE201"><p>I/O modules (Model Name) that is present
+in each fabric.</p></li>
+<li id="LI_CF15E44776B54AC0B69D1729D5974982"><p>Ports that are available in each
+I/O module.</p></li>
+</ul></p></li>
+</ul></p>
+</li>
+<li id="STEP_F31AE65363E443209ACB4CFCE073FBCF"><p>In the table, select the <span class="uicontrol">Quadport
+mode</span> check box if you want to run the port in Quad mode. </p>
+<p>When a 40 GbE port is run in quad mode, it provides
+four 10 GB Ethernet interfaces that number sequentially starting with
+the port number of the 40GbE interface. For example, when <span class="uicontrol">Quadport mode</span> is enabled on the GbE port number 33, it
+makes four 10GbE links with the port numbers 33, 34, 35, and 36.</p>
+</li>
+<li id="STEP_70FFD29A46FD4FE595A626C7D22C5F6A"><p>From the drop-down list next to the corresponding
+port numbers, select the uplink that you want to configure on each
+port.</p>
+<p><div class="note" id="GUID-BC15C081-CB4F-4EA6-91DB-2270F1BF60E5"><span class="notelabel">NOTE: </span>Uplink is an interconnect (also referred to port-channel, or grouping of ports) which is created on a switch by creating a connection to other switches in a networking environment. ASM can configure uplinks on MXLs, I/O Aggregators, FN410S, and FN2210S switches—I/O modules.</div></p>
+</li>
+<li id="STEP_DEAF98C236F34214B99E06762A5B503E"><p>Click <span class="uicontrol">Next</span> to configure
+uplink port on all chassis independently.</p>
+<p><div class="note" id="GUID-7A4A571C-11F9-41A0-A848-1DB18EEA327E"><span class="notelabel">NOTE: </span> Uplink is an external connection from chassis switch to customer network environment.  Customer is still required to configure corresponding ports and uplinks on the top of rack switches, ASM only configures the chassis.</div></p>
+</li>
+</ol>
+</article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?MavHWBUW"></script></body></html>

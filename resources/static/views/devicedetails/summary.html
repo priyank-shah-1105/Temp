@@ -1,0 +1,537 @@
+﻿<!--
+    jek 7.6.2016 - This page is not used in new ASM
+-->
+
+
+<div id="device_summary" ng-controller="DeviceSummaryController as DeviceSummary">
+    <div class="col-sm-9">
+        <span class="deviceImage" ng-class="d.deviceType"></span>
+        <!-- Chassis Information 
+        <h4 ng-if="$parent.device.isChassis()">
+            {{'DEVICEDETAILS_ChassisInformation'|translate}}
+        </h4>
+        <ul class="list-unstyled" data-bind="visible: isChassis()">
+            <li>
+                <label for="deviceType">
+                    <fmt:message key="deviceDetails.type" />
+                </label>
+                <span id="deviceType" data-bind="lookup: deviceType(), lookuplist: ASM.DeviceTypes"></span>
+            </li>
+            <li>
+                <label for="deviceIP">
+                    <fmt:message key="deviceDetails.ip" />
+                </label>
+
+                <a id="ipChassisLink" data-bind="attr: { href: ipaddressurl, target: '_blank' }, visible: ipaddressurl() != ''">
+                    <span data-bind="text: deviceIpAddress()"></span>
+                </a>
+                <span id="deviceIP" data-bind="text: deviceIpAddress(), visible: ipaddressurl() == ''"></span>
+            </li>
+            <li>
+                <label for="assocCred">
+                    <fmt:message key="deviceDetails.associatedCred" />
+                </label>
+                <span id="assocCred" data-bind="text: chassis.associatedcredential"></span>
+            </li>
+            <li>
+                <label for="chassisServiceTag">
+                    <fmt:message key="deviceDetails.serviceTag" />
+                </label>
+                <span id="chassisServiceTag" data-bind="text: chassis.servicetag"></span>
+            </li>
+            <li>
+                <label for="assetTag">
+                    <fmt:message key="deviceDetails.assetTag" />
+                </label>
+                <span id="assetTag" data-bind="text: chassis.assettag"></span>
+            </li>
+            <li>
+                <label for="chassisName">
+                    <fmt:message key="deviceDetails.dnsdracname" />
+                </label>
+                <span id="chassisName" data-bind="text: chassis.chassisname"></span>
+            </li>
+            <li>
+                <label for="chassisModel">
+                    <fmt:message key="deviceDetails.chassisModel" />
+                </label>
+                <span id="chassisModel" data-bind="text: chassis.chassismodel"></span>
+            </li>
+            <li>
+                <label for="dnsName">
+                    <fmt:message key="deviceDetails.chassisDnsName" />
+                </label>
+                <span id="dnsName" data-bind="text: chassis.chassisdnsname"></span>
+            </li>
+            <li>
+                <label for="midPlaneVersion">
+                    <fmt:message key="deviceDetails.chassisMidVersion" />
+                </label>
+                <span id="midPlaneVersion" data-bind="text: chassis.chassismidplaneversion"></span>
+            </li>
+            <li>
+                <label for="powerCap">
+                    <fmt:message key="deviceDetails.powerCap" />
+                </label>
+                <span id="powerCap" data-bind="text: chassis.powercap"></span>
+            </li>
+        </ul>
+        <!-- /Chassis Information -->
+        <!-- ko if: deviceType() == 'equallogic'
+        <h4>
+            <fmt:message key="deviceDetails.storageGroupInformation" />
+        </h4>
+
+        <ul class="list-unstyled" data-bind="with: equalLogicStorage">
+            <li>
+                <label for="groupname">
+                    <fmt:message key="deviceDetails.resourcename" />
+                </label>
+                <span id="groupname" data-bind="text: groupname()"></span>
+            </li>
+            <li>
+                <label for="deviceIPEq">
+                    <fmt:message key="deviceDetails.deviceIPEq" />
+                </label>
+                <a id="lnkdeviceIPEq" data-bind="attr: { href: ipaddressurl, target: '_blank' }, visible: ipaddressurl() != ''">
+                    <span data-bind="text: ipAddress()"></span>
+                </a>
+                <span id="deviceIPEq" data-bind="text: ipAddress(), visible: ipaddressurl() == ''"></span>
+            </li>
+            <li>
+                <label for="location">
+                    <fmt:message key="deviceDetails.location" />
+                </label>
+                <span id="location" data-bind="text: location()"></span>
+            </li>
+        </ul>
+
+        <h4>
+            <fmt:message key="deviceDetails.volumes" />
+        </h4>
+
+        <ul class="list-unstyled" data-bind="with: equalLogicStorage">
+            <li>
+                <label for="totalvolumes">
+                    <fmt:message key="deviceDetails.totalvolumes" />
+                </label>
+                <span id="totalvolumes" data-bind="text: totalvolumes()"></span>
+            </li>
+            <li>
+                <label for="volumesonline">
+                    <fmt:message key="deviceDetails.volumesonline" />
+                </label>
+                <span id="volumesonline" data-bind="text: volumesonline()"></span>
+            </li>
+            <li>
+                <label for="volumesinuse">
+                    <fmt:message key="deviceDetails.volumesinuse" />
+                </label>
+                <span id="volumesinuse" data-bind="text: volumesinuse()"></span>
+            </li>
+            <li>
+                <label for="iscsi">
+                    <fmt:message key="deviceDetails.iscsiConnections" />
+                </label>
+                <span id="iscsi" data-bind="text: iscsiconnections()"></span>
+            </li>
+        </ul>
+        <!-- /ko -->
+        <!-- ko if: deviceType() == 'compellent'
+        <h4>
+            <fmt:message key="deviceDetails.storageGroupInformation" />
+        </h4>
+
+        <ul class="list-unstyled" data-bind="with: compellentStorage">
+            <li>
+                <label for="compellentstoragename">
+                    <fmt:message key="deviceDetails.compellentstoragename" />
+                </label>
+                <span id="compellentstoragename" data-bind="text: storagecentername()"></span>
+            </li>
+            <li>
+                <label for="compellenthostip">
+                    <fmt:message key="deviceDetails.deviceIPEq" />
+                </label>
+                <a id="lnkcompellenthostip" data-bind="attr: { href: ipaddressurl, target: '_blank' }, visible: ipaddressurl() != ''">
+                    <span data-bind="text: ipAddress()"></span>
+                </a>
+                <span id="compellenthostip" data-bind="text: ipAddress(), visible: ipaddressurl() == ''"></span>
+            </li>
+            <!--  <li>
+          <label for="compellentlocation">
+            <fmt:message key="deviceDetails.location" />
+          </label>
+          <span id="compellentlocation" data-bind="text: location()"></span>
+        </li>
+        </ul>
+
+        <h4>
+            <fmt:message key="deviceDetails.volumes" />
+        </h4>
+
+        <ul class="list-unstyled" data-bind="with: compellentStorage">
+            <li>
+                <label for="compellenttotalvolumes">
+                    <fmt:message key="deviceDetails.totalvolumes" />
+                </label>
+                <span id="compellenttotalvolumes" data-bind="text: totalvolumes()"></span>
+            </li>
+            <li>
+                <label for="volumesup">
+                    <fmt:message key="deviceDetails.volumesup" />
+                </label>
+                <span id="volumesup" data-bind="text: volumesup()"></span>
+            </li>
+            <li>
+                <label for="volumesdown">
+                    <fmt:message key="deviceDetails.volumesdown" />
+                </label>
+                <span id="volumesdown" data-bind="text: volumesdown()"></span>
+            </li>
+            
+        </ul>
+        <!-- /ko -->
+        <!-- ko if: deviceType() == 'netapp' 
+        <h4>
+            <fmt:message key="deviceDetails.storageGroupInformation" />
+        </h4>
+
+        <ul class="list-unstyled" data-bind="with: netappStorage">
+            <li>
+                <label for="netappstoragename">
+                    <fmt:message key="deviceDetails.netappstoragename" />
+                </label>
+                <span id="netappstoragename" data-bind="text: storagecentername()"></span>
+            </li>
+            <li>
+                <label for="netapphostip">
+                    <fmt:message key="deviceDetails.deviceIPEq" />
+                </label>
+                <a id="lnknetapphostip" data-bind="attr: { href: ipaddressurl, target: '_blank' }, visible: ipaddressurl() != ''">
+                    <span data-bind="text: ipAddress()"></span>
+                </a>
+                <span id="netapphostip" data-bind="text: ipAddress(), visible: ipaddressurl() == ''"></span>
+            </li>
+        </ul>
+
+        <h4>
+            <fmt:message key="deviceDetails.volumes" />
+        </h4>
+
+        <ul class="list-unstyled" data-bind="with: netappStorage">
+            <li>
+                <label for="netapptotalvolumes">
+                    <fmt:message key="deviceDetails.totalvolumes" />
+                </label>
+                <span id="netapptotalvolumes" data-bind="text: totalvolumes()"></span>
+            </li>
+            <li>
+                <label for="netappvolumesup">
+                    <fmt:message key="deviceDetails.volumesup" />
+                </label>
+                <span id="netappvolumesup" data-bind="text: volumesup()"></span>
+            </li>
+            <li>
+                <label for="netappvolumesdown">
+                    <fmt:message key="deviceDetails.volumesdown" />
+                </label>
+                <span id="netappvolumesdown" data-bind="text: volumesdown()"></span>
+            </li>
+        </ul>
+        <!-- /ko -->
+        <!-- ko if: deviceType() == 'dellswitch'  --
+        <h4 data-bind="visible: deviceType() == 'dellswitch'">
+            <fmt:message key="deviceDetails.dellSwitchInfo" />
+        </h4>
+
+        <ul class="list-unstyled" data-bind="with: dellSwitch">
+            <li>
+                <label for="dellswitchstatus">
+                    <fmt:message key="deviceDetails.state" />
+                </label>
+                <span id="dellswitchstatus" data-bind="text: state()"></span>
+            </li>
+            <li>
+                <label for="dellswitchstate">
+                    <fmt:message key="deviceDetails.powerState" />
+                </label>
+                <span id="dellswitchstate" data-bind="text: powerstate()"></span>
+            </li>
+            <li>
+                <label for="dellswitchhostip">
+                    <fmt:message key="deviceDetails.ipAddress" />
+                </label>
+                <a id="lnkdellswitch" data-bind="attr: { href: ipaddressurl, target: '_blank' }, visible: ipaddressurl() != ''">
+                    <span data-bind="text: ipaddress()"></span>
+                </a>
+                <span id="dellswitchhostip" data-bind="text: ipaddress(), visible: ipaddressurl() == ''"></span>
+            </li>
+            <li>
+                <label for="dellswitchhostname">
+                    <fmt:message key="deviceDetails.dnsdracname" />
+                </label>
+                <span id="dellswitchhostname" data-bind="text: hostname()"></span>
+            </li>
+            <li>
+                <label for="dellswitchservicetag">
+                    <fmt:message key="deviceDetails.serviceTag" />
+                </label>
+                <span id="dellswitchservicetag" data-bind="text: servicetag()"></span>
+            </li>
+
+            <li>
+                <label for="dellswitchmacaddress">
+                    <fmt:message key="deviceDetails.dellswitchmacaddress" />
+                </label>
+                <span id="dellswitchmacaddress" data-bind="text: macaddress()"></span>
+            </li>
+            <li>
+                <label for="dellswitchassettag">
+                    <fmt:message key="deviceDetails.assetTag" />
+                </label>
+                <span id="dellswitchassettag" data-bind="text: assettag()"></span>
+            </li>
+            <li>
+                <label for="dellswitchfirewarever">
+                    <fmt:message key="deviceDetails.dellswitchfirewarever" />
+                </label>
+                <span id="dellswitchfirewarever" data-bind="text: firmwareversion()"></span>
+            </li>
+            <li>
+                <label for="dellswitchsoftwarever">
+                    <fmt:message key="deviceDetails.dellswitchsoftwarever" />
+                </label>
+                <span id="dellswitchsoftwarever" data-bind="text: softwareversion()"></span>
+            </li>
+            <li>
+                <label for="dellswitchsysdesc">
+                    <fmt:message key="deviceDetails.dellswitchsysdesc" />
+                </label>
+                <span id="dellswitchsysdesc" data-bind="text: systemdescription()"></span>
+            </li>
+        </ul>
+        <!-- /ko -->
+
+        <h4 ng-if="d.deviceType === 'RackServer'">
+            <fmt:message key="deviceDetails.rackServerInfo" />
+        </h4>
+        <h4 ng-if="d.deviceType === 'TowerServer'">
+            <fmt:message key="deviceDetails.towerServerInfo" />
+        </h4>
+        <h4 ng-if="d.deviceType === 'BladeServer'">
+            <fmt:message key="deviceDetails.bladeServerInfo" />
+        </h4>
+        <h4 ng-if="device.d === 'FXServer'">
+            <fmt:message key="deviceDetails.bladeServerInfo" />
+        </h4>
+        <h4 ng-if="device.d === 'Server'">
+            <fmt:message key="deviceDetails.serverInfo" />
+        </h4>
+        <ul class="list-unstyled" ng-if="$parent.device.isServer()">
+            
+            <li ng-if="device.deviceType != 'Server'">
+                <label for="serverPowerState">
+                    {{'DEVICEDETAILS_PowerState'|translate}}
+                </label>
+                <span id="serverPowerState">{{$parent.$parent.$parent.device.devicePowerState}}</span>
+            </li>
+            <li>
+                <label for="serverModel">
+                    {{'GENERIC_Model'|translate}}
+                </label>
+                <span id="serverModel">{{d.systemmodel}}</span>
+            </li>
+            <li>
+                <label for="serverAssetTag">
+                    <span ng-if="device.deviceType != 'Server'">
+                        {{'GENERIC_AssetTag'|translate}}
+                    </span>
+                    <span ng-if="device.deviceType == 'Server'">
+                        {{'DEVICEDETAILS)SerialNumber'|translate}}
+                    </span>
+                </label>
+                <span id="serverAssetTag">{{d.servicetag}}</span>
+            </li>
+
+            <li ng-if="device.deviceType != 'Server'">
+                <label for="serverdnsDracName">
+                    {{'GENERIC_ResourceName'|translate}}
+                </label>
+                <span id="serverdnsDracName">{{d.dnsIdracName}}</span>
+            </li>
+
+            <li ng-if="device.deviceType != 'Server'">
+                <label for="serverhostname">
+                    {{'DEVICES_OSHostName'|translate}}
+                </label>
+                <span id="serverhostname">{{d.hostname}}</span>
+            </li>
+        </ul>
+        
+        <!-- /Server Info Column 1 -->
+        <!-- Chassis Location -->
+        <h4 data-bind="visible: isChassis()">
+            <fmt:message key="deviceDetails.chassisLocation" />
+        </h4>
+        <ul class="list-unstyled" data-bind="visible: isChassis()">
+            <li>
+                <label for="dataCenter">
+                    <fmt:message key="deviceDetails.dataCenter" />
+                </label>
+                <span id="dataCenter" data-bind="text: chassis.datacenter"></span>
+            </li>
+            <li>
+                <label for="aisle">
+                    <fmt:message key="deviceDetails.aisle" />
+                </label>
+                <span id="aisle" data-bind="text: chassis.aisle"></span>
+            </li>
+            <li>
+                <label for="rack">
+                    <fmt:message key="deviceDetails.rack" />
+                </label>
+                <span id="rack" data-bind="text: chassis.rack"></span>
+            </li>
+            <li>
+                <label for="rackSlot">
+                    <fmt:message key="deviceDetails.rackSlot" />
+                </label>
+                <span id="rackSlot" data-bind="text: chassis.rackslot"></span>
+            </li>
+        </ul>
+        <!-- /Chassis Location -->
+        <!-- IO Module -->
+        <h4 data-bind="visible: isIOM()">
+            <fmt:message key="deviceDetails.ioModInfo" />
+        </h4>
+        <ul class="list-unstyled" data-bind="visible: isIOM()">
+            <li>
+                <label>
+                    <fmt:message key="deviceDetails.powerState" />
+                </label>
+                <span data-bind="text: ioModule.iompowerstate"></span>
+            </li>
+            <li>
+                <label>
+                    <fmt:message key="deviceDetails.assetTag" />
+                </label>
+                <span data-bind="text: ioModule.assettag"></span>
+            </li>
+            <li>
+                <label>
+                    <fmt:message key="deviceDetails.firmwareVersion" />
+                </label>
+                <span data-bind="text: ioModule.firmwareversion"></span>
+            </li>
+            <li>
+                <label>
+                    <fmt:message key="deviceDetails.switchHostName" />
+                </label>
+                <span data-bind="text: ioModule.switchhostname"></span>
+            </li>
+            <li>
+                <label>
+                    <fmt:message key="deviceDetails.fabricSlot" />
+                </label>
+                <span data-bind="text: ioModule.slot"></span>
+            </li>
+            <li>
+                <label>
+                    <fmt:message key="deviceDetails.fabricPurpose" />
+                </label>
+                <span data-bind="text: ioModule.fabricpurpose"></span>
+            </li>
+        </ul>
+
+        <h4 data-bind="visible: isIOM()">
+            <fmt:message key="deviceDetails.chassisInfo" />
+        </h4>
+        <ul class="list-unstyled" data-bind="visible: isIOM()">
+            <li>
+                <label>
+                    <fmt:message key="deviceDetails.ipAddress" />
+                </label>
+                <a id="lnkIOM" data-bind="attr: { href: ipaddressurl, target: '_blank' }, visible: ipaddressurl() != ''">
+                    <span data-bind="text: ioModule.ipaddress()"></span>
+                </a>
+                <span id="iomipaddress" data-bind="text: ioModule.ipaddress(), visible: ipaddressurl() == ''"></span>
+            </li>
+            <li>
+                <label>
+                    <fmt:message key="deviceDetails.serviceTag" />
+                </label>
+                <span data-bind="text: ioModule.servicetag"></span>
+            </li>
+            <li>
+                <label>
+                    <fmt:message key="deviceDetails.slotName" />
+                </label>
+                <span data-bind="text: ioModule.slot"></span>
+            </li>
+        </ul>
+        <!-- /IO Module -->
+        <!-- ko if: deviceType() === 'BladeServer' -->
+        <h4 id="chassisInfoTitle">
+            <fmt:message key="deviceDetails.chassisInfo" />
+        </h4>
+        <ul id="chassisInformation" class="list-unstyled">
+            <li>
+                <label for="chassisIPAddress">
+                    <fmt:message key="deviceDetails.ipAddress" />
+                </label>
+                <span id="chassisIPAddress" data-bind="text: server.chassisipaddress"></span>
+            </li>
+            <li>
+                <label for="chassisInfoServiceTag">
+                    <fmt:message key="deviceDetails.serviceTag" />
+                </label>
+                <span id="chassisInfoServiceTag" data-bind="text: server.chassisservicetag"></span>
+            </li>
+            <li>
+                <label for="chassisSlot">
+                    <fmt:message key="deviceDetails.slotName" />
+                </label>
+                <span id="chassisSlot" data-bind="text: server.slotname"></span>
+            </li>
+            <li>
+                <label for="chassisSlotNum">
+                    <fmt:message key="deviceDetails.slotNumber" />
+                </label>
+                <span id="chassisSlotNum" data-bind="text: server.slotnumber"></span>
+            </li>
+        </ul>
+        <!--/ko -->
+        <!-- ko if: deviceType() === 'FXServer' -->
+        <h4 id="chassisInfoTitle">
+            <fmt:message key="deviceDetails.chassisInfo" />
+        </h4>
+        <ul id="chassisInformation" class="list-unstyled">
+            <li>
+                <label for="chassisIPAddress">
+                    <fmt:message key="deviceDetails.ipAddress" />
+                </label>
+                <span id="chassisIPAddress" data-bind="text: server.chassisipaddress"></span>
+            </li>
+            <li>
+                <label for="chassisInfoServiceTag">
+                    <fmt:message key="deviceDetails.serviceTag" />
+                </label>
+                <span id="chassisInfoServiceTag" data-bind="text: server.chassisservicetag"></span>
+            </li>
+            <li>
+                <label for="chassisSlot">
+                    <fmt:message key="deviceDetails.slotName" />
+                </label>
+                <span id="chassisSlot" data-bind="text: server.slotname"></span>
+            </li>
+            <li>
+                <label for="chassisSlotNum">
+                    <fmt:message key="deviceDetails.slotNumber" />
+                </label>
+                <span id="chassisSlotNum" data-bind="text: server.slotnumber"></span>
+            </li>
+        </ul>
+        <!--/ko -->
+    </div>
+</div>

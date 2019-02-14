@@ -1,0 +1,996 @@
+﻿<section id="page_dashboard">
+
+    <error-display errors="$rootScope.errors"
+                   on-click="$root.ASM.RemoveError(error)"
+                   on-expand-collapse=""></error-display>
+
+    <header>
+        <h1 style="margin-bottom: 20px;">
+            {{'DASHBOARD_Title' | translate}}
+        </h1>
+    </header>
+
+    <div class="row">
+        <!-- Service History -->
+        <div id="health" class="col-sm-6 col-md-6 col-lg-4">
+            <div class="grayTitle">
+                <h2>
+                    {{'DASHBOARD_ServiceOverview'|translate}}
+                </h2>
+            </div>
+            <div class="well">
+                <h3 class="noMarginTop">
+                    {{'DASHBOARD_ServiceHistory'|translate}}
+                </h3>
+                <span ng-if="home.loadingServiceOverview">
+                    <spinner></spinner>
+                    {{'DASHBOARD_Updating'| translate}}
+                </span>
+                <div style="width: 160px;">
+                    <select id="viewBy"
+                            ng-model="home.viewBy"
+                            class="form-control"
+                            ng-options="item.id as item.name for item in home.viewByOptions"
+                            ng-change="home.viewByChanged()">
+                        <option value="">{{"DASHBOARD_AllDeployments" | translate}}</option>
+                    </select>
+                </div>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col-md-12 col-lg-8">
+
+                        <highchart ng-if="home.config.series[0]"
+                                   class=""
+                                   id="serviceOverviewPie"
+                                   config="home.config"></highchart>
+
+                        <ul class="list-inline list-unstyled text-center">
+                            <li>
+                                <a href="#/services"
+                                   data-toggle="tooltip"
+                                   title="{{ 'DASHBOARD_ViewAllServices' |translate}}"
+                                   data-trigger="hover">
+                                    <label for="totalServicesCount">
+                                        {{'DASHBOARD_TotalServices' | translate}}
+                                    </label>
+                                </a>
+                                <strong id="totalServicesCount">
+                                    {{home.servicesData.servicecount}}
+                                </strong>
+                            </li>
+                        </ul>
+
+                        <div id="serviceOverviewPieCenterText" class="text-center">
+
+                            <div class="text-center graphCenterTextNumber" ng-switch="home.wedge">
+                                <div ng-switch-when="none">
+                                    0
+                                    <div class="graphCenterText">
+                                        {{'GENERIC_Services' | translate}}
+                                    </div>
+                                </div>
+                                <div ng-switch-when="green">
+                                    {{home.servicesData.servicesuccesscount}}
+                                    <div class="graphCenterText">
+                                        {{'GENERIC_Healthy' | translate}}
+                                    </div>
+                                </div>
+                                <div ng-switch-when="yellow">
+                                    {{home.servicesData.servicewarningcount}}
+                                    <div class="graphCenterText">
+                                        {{'GENERIC_Warning' | translate}}
+                                    </div>
+                                </div>
+                                <div ng-switch-when="red">
+                                    {{home.servicesData.servicecriticalcount}}
+                                    <div class="graphCenterText">
+                                        {{'GENERIC_Critical' | translate}}
+                                    </div>
+                                </div>
+                                <div ng-switch-when="pending">
+                                    {{home.servicesData.servicependingcount}}
+                                    <div class="graphCenterText">
+                                        {{'GENERIC_Pending' | translate}}
+                                    </div>
+                                </div>
+                                <div ng-switch-when="unknown">
+                                    {{home.servicesData.serviceunknowncount}}
+                                    <div class="graphCenterText">
+                                        {{'GENERIC_InProgress' | translate}}
+                                    </div>
+                                </div>
+                                <div ng-switch-when="cancelled">
+                                    {{home.servicesData.servicecancelledcount}}
+                                    <div class="graphCenterText">
+                                        {{'GENERIC_Cancelled' | translate}}
+                                    </div>
+                                </div>
+                                <div ng-switch-when="incomplete">
+                                    {{home.servicesData.serviceincompletecount}}
+                                    <div class="graphCenterText">
+                                        {{'GENERIC_Incomplete' | translate}}
+                                    </div>
+                                </div>
+                                <div ng-switch-when="servicemode">
+                                    {{home.servicesData.serviceservicemodecount}}
+                                    <div class="graphCenterText">
+                                        {{'GENERIC_ServiceMode' | translate}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <br class="visible-lg" />
+                    <br class="visible-lg" />
+                    <br class="visible-lg" />
+                    <div class="col-md-12 col-lg-4" style="display: block">
+                        <ul class="list-unstyled" ng-if="home.config.series[0].data.length">
+                            <li>
+                                <a ng-if="home.servicesData.servicesuccesscount > 0"
+                                   ng-href="#/services/green"
+                                   data-toggle="tooltip"
+                                   title="{{home.getServicesTooltip('green', home.servicesData.servicesuccesscount)}}"
+                                   data-trigger="hover">
+                                    <statusicon value="'green'"></statusicon>
+                                    {{home.servicesData.servicesuccesscount + ' '}}{{'GENERIC_Healthy' | translate}}
+                                </a>
+                                <span ng-if="home.servicesData.servicesuccesscount == 0">
+                                    <statusicon value="'green'"></statusicon>
+                                    {{home.servicesData.servicesuccesscount + ' '}}{{'GENERIC_Healthy' | translate}}
+                                </span>
+                            </li>
+                            <li>
+                                <a ng-if="home.servicesData.servicewarningcount > 0"
+                                   ng-href="#/services/yellow"
+                                   data-toggle="tooltip"
+                                   title="{{home.getServicesTooltip('yellow', home.servicesData.servicewarningcount)}}"
+                                   data-trigger="hover">
+                                    <statusicon value="'yellow'"></statusicon>
+                                    {{home.servicesData.servicewarningcount + ' '}}{{'GENERIC_Warning' | translate}}
+                                </a>
+                                <span ng-if="home.servicesData.servicewarningcount == 0">
+                                    <statusicon value="'yellow'"></statusicon>
+                                    {{home.servicesData.servicewarningcount + ' '}}{{'GENERIC_Warning' | translate}}
+                                </span>
+                            </li>
+                            <li>
+                                <a ng-if="home.servicesData.servicecriticalcount > 0"
+                                   ng-href="#/services/red"
+                                   data-toggle="tooltip"
+                                   title="{{home.getServicesTooltip('red', home.servicesData.servicecriticalcount)}}"
+                                   data-trigger="hover">
+                                    <statusicon value="'red'"></statusicon>
+                                    {{home.servicesData.servicecriticalcount + ' '}}{{'GENERIC_Critical' | translate}}
+                                </a>
+                                <span ng-if="home.servicesData.servicecriticalcount == 0">
+                                    <statusicon value="'red'"></statusicon>
+                                    {{home.servicesData.servicecriticalcount + ' '}}{{'GENERIC_Critical' | translate}}
+                                </span>
+                            </li>
+                            <li>
+                                <a ng-if="home.servicesData.servicependingcount > 0"
+                                   ng-href="#/services/pending"
+                                   data-toggle="tooltip"
+                                   title="{{home.getServicesTooltip('pending', home.servicesData.servicependingcount)}}"
+                                   data-trigger="hover">
+                                    <span class="ci-stack">
+                                        <statusicon value="'STANDBY'"></statusicon>
+                                    </span>
+                                    {{home.servicesData.servicependingcount + ' '}}{{'GENERIC_Pending' | translate}}
+                                </a>
+                                <span ng-if="home.servicesData.servicependingcount == 0">
+                                    <span class="ci-stack">
+                                        <statusicon value="'STANDBY'"></statusicon>
+                                    </span>
+                                    {{home.servicesData.servicependingcount + ' '}}{{'GENERIC_Pending' | translate}}
+                                </span>
+                            </li>
+                            <li>
+                                <a ng-if="home.servicesData.serviceunknowncount > 0"
+                                   ng-href="#/services/unknown"
+                                   data-toggle="tooltip"
+                                   title="{{home.getServicesTooltip('unknown', home.servicesData.serviceunknowncount)}}"
+                                   data-trigger="hover">
+                                    <span class="ci-stack">
+                                        <!--<i class="text-primary ci-schedule-clock-o"></i>-->
+                                        <i class="ci-state-standby-clock text-primary"></i>
+                                    </span>
+                                    {{home.servicesData.serviceunknowncount + ' '}}{{'GENERIC_InProgress' | translate}}
+                                </a>
+                                <span ng-if="home.servicesData.serviceunknowncount == 0">
+                                    <span class="ci-stack">
+                                        <!--<i class="text-primary ci-schedule-clock-o"></i>-->
+                                        <i class="ci-state-standby-clock text-primary"></i>
+                                    </span>
+                                    {{home.servicesData.serviceunknowncount + ' '}}{{'GENERIC_InProgress' | translate}}
+                                </span>
+                            </li>
+                            <li>
+                                <a ng-if="home.servicesData.servicecancelledcount > 0"
+                                   ng-href="#/services/cancelled"
+                                   data-toggle="tooltip"
+                                   title="{{home.getServicesTooltip('cancelled', home.servicesData.servicecancelledcount)}}"
+                                   data-trigger="hover">
+                                    <span class="ci-stack">
+                                        <i class="ci-action-circle-remove-slash" style="color: #333333"></i>
+                                    </span>
+                                    {{home.servicesData.servicecancelledcount + ' '}}{{'GENERIC_Cancelled' | translate}}
+                                </a>
+                                <span ng-if="home.servicesData.servicecancelledcount == 0">
+                                    <span class="ci-stack">
+                                        <i class="ci-action-circle-remove-slash" style="color: #333333"></i>
+                                    </span>
+                                    {{home.servicesData.servicecancelledcount + ' '}}{{'GENERIC_Cancelled' | translate}}
+                                </span>
+                            </li>
+                            <li>
+                                <a ng-if="home.servicesData.serviceincompletecount > 0"
+                                   ng-href="#/services/incomplete"
+                                   data-toggle="tooltip"
+                                   title="{{home.getServicesTooltip('incomplete', home.servicesData.serviceincompletecount)}}"
+                                   data-trigger="hover">
+                                    <span class="ci-stack">
+                                        <i class="ci-action-circle-minus" style="color: #EE6411"></i>
+                                    </span>
+                                    {{home.servicesData.serviceincompletecount + ' '}}{{'GENERIC_Incomplete' | translate}}
+                                </a>
+                                <span ng-if="home.servicesData.serviceincompletecount == 0">
+                                    <span class="ci-stack">
+                                        <i class="ci-action-circle-minus" style="color: #EE6411"></i>
+                                    </span>
+                                    {{home.servicesData.serviceincompletecount + ' '}}{{'GENERIC_Incomplete' | translate}}
+                                </span>
+                            </li>
+                            <li>
+                                <a ng-if="home.servicesData.serviceservicemodecount > 0"
+                                   ng-href="#/services/servicemode"
+                                   data-toggle="tooltip"
+                                   title="{{home.getServicesTooltip('servicemode', home.servicesData.serviceservicemodecount)}}"
+                                   data-trigger="hover">
+                                    <span class="ci-stack">
+                                        <i class="ci-action-circle-wrench" style="color:#efad18"></i>
+                                    </span>
+                                    {{home.servicesData.serviceservicemodecount + ' '}}{{'GENERIC_ServiceMode' | translate}}
+                                </a>
+                                <span ng-if="home.servicesData.serviceservicemodecount == 0">
+                                    <span class="ci-stack">
+                                        <i class="ci-action-circle-wrench" style="color:#efad18"></i>
+                                    </span>
+                                    {{home.servicesData.serviceservicemodecount + ' '}}{{'GENERIC_ServiceMode' | translate}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="text-center">
+                    <spinner ng-if="home.loadingServiceOverview" class="text-center"></spinner>
+                </div>
+
+                <div id="services" ng-if="!home.loadingServiceOverview">
+                    <div class="row">
+                        <br class="hidden-lg">
+                        <br class="hidden-lg">
+                        <br class="hidden-lg">
+                        <div class="col-xs-12 negativeMarginTop">
+                            <div ng-switch="home.wedge"
+                                 ng-if="home.wedge == 'green'">
+                                <span ng-switch-when="green">{{'SERVICES_HealthyServices' | translate }}</span>
+                                <span ng-switch-when="yellow">{{'SERVICES_WarningServices' | translate }}</span>
+                                <span ng-switch-when="red">{{'SERVICES_CriticalServices' | translate }}</span>
+                                <span ng-switch-when="unknown">{{'SERVICES_InProgressServices' | translate }}</span>
+                                <span ng-switch-when="cancelled">{{'SERVICES_CancelledServices' | translate }}</span>
+                                <span ng-switch-when="servicemode">{{'SERVICES_ServiceModeServices' | translate }}</span>
+                            </div>
+                            <div ng-repeat="service in home.services">
+                                <div class="clearfix" ng-if="service.health == home.wedge">
+                                    <h4>
+                                        <span ng-if="home.wedge != 'unknown'">
+                                            <statusicon value="home.wedge"></statusicon>
+                                        </span>
+                                        <span class="ci-stack" ng-if="home.wedge == 'unknown'">
+                                            <i class="ci-stack-1x text-primary ci-state-standby-clock"></i>
+                                        </span>
+
+                                        <a ng-href="#/service/{{service.id}}/details"
+                                           data-toggle="tooltip"
+                                           title="{{ 'DASHBOARD_ViewService' |translate}} : {{service.name}}"
+                                           data-trigger="hover">{{service.name}}</a>
+                                    </h4>
+                                    <ul class="list-unstyled">
+                                        <li>
+                                            <strong class="col-sm-4">
+                                                {{'DASHBOARD_DeployedBy' | translate}}
+                                            </strong>
+                                            <span class="col-sm-8">
+                                                {{service.deployedBy}}
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <strong class="col-sm-4">
+                                                {{'DASHBOARD_DeployedDate' | translate}}
+                                            </strong>
+                                            <span class="col-sm-8">
+                                                <datetime-display time="service.deployedOn" time-format="'LLL'" />
+                                            </span>
+                                        </li>
+                                    </ul>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-sm-9">
+                                            <div class="col-sm-3" ng-if="service.count_storage">
+                                                <h4>
+                                                    <i class="ci-storage-volume-half-full-2"></i> {{service.count_storage}}
+                                                </h4>
+                                            </div>
+                                            <div class="col-sm-3" ng-if="service.count_server">
+                                                <h4>
+                                                    <i class="ci-device-tower-chassis"></i> {{service.count_server}}
+                                                </h4>
+                                            </div>
+                                            <div class="col-sm-3" ng-if="service.count_cluster">
+                                                <h4>
+                                                    <i class="ci-device-tower-three-cluster"></i> {{service.count_cluster}}
+                                                </h4>
+                                            </div>
+                                            <div class="col-sm-3" ng-if="service.count_vm">
+                                                <h4>
+                                                    <i class="ci-app-virtual-machine"></i> {{service.count_vm}}
+                                                </h4>
+                                            </div>
+                                            <div class="col-sm-3" ng-if="service.count_application">
+                                                <h4>
+                                                    <i class="ci-app-window"></i> {{service.count_application}}
+                                                </h4>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                    <ul class="list-unstyled noBorder list-inline" ng-if="service.errors && service.errors.length">
+                                        <li>
+                                            <label>
+                                                {{'DASHBOARD_ERRORS'|translate}}
+                                            </label>
+                                            {{service.errors}}
+                                        </li>
+                                    </ul>
+
+                                </div>
+                                <div class="clearfix" ng-if="service.health == home.wedge && !$last">
+                                    <hr />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- Resource Overview -->
+        <div class="col-sm-6  col-md-6 col-lg-4">
+            <div class="grayTitle">
+                <h2>
+                    {{'DASHBOARD_ResourceOverview' | translate}}
+                </h2>
+            </div>
+
+            <div class="well">
+                <!-- Resources Discovered -->
+                <div class="row" ng-if="!home.loadingServerHealth">
+                    <div class="col-xs-12">
+                        <h3 class="DashboardSectionHeader noMarginTop">
+                            {{'DASHBOARD_ResourcesDiscovered'|translate}}
+                        </h3>
+                    </div>
+                </div>
+                <div class="row" ng-if="!home.loadingServerHealth">
+                    <div class="col-sm-3 text-center col-md-offset-3">
+                        <h1>
+                            <i class="ci-device-tower-chassis"></i>
+                            <span>
+                                {{home.dashboard.serversdiscovered}}
+                            </span>
+                        </h1>
+                        <div>
+                            <a href="#/devices/server">
+                                {{'GENERIC_Servers'|translate}}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 text-center">
+                        <h1>
+                            <i class="ci-device-storage-rack-switch-stack-horiz"></i>
+                            <span>
+                                {{home.dashboard.switchesdiscovered}}
+                            </span>
+                        </h1>
+                        <div>
+                            <a href="#/devices/switch">
+                                {{'GENERIC_Switches'|translate}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Server Health -->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h3 class="DashboardSectionHeader">
+                            {{'DASHBOARD_ServerHealth'|translate}}
+                        </h3>
+                        <span ng-if="home.loadingServerHealth">
+                            <spinner></spinner>
+                            {{'DASHBOARD_Updating'|translate}}
+                        </span>
+                    </div>
+                </div>
+                <div class="row" ng-if="!home.loadingServerHealth">
+                    <div class="col-md-12 col-lg-8">
+                        <highchart ng-if="home.serverHealthConfig"
+                                   id="serverHealthPie"
+                                   config="home.serverHealthConfig"></highchart>
+
+                        <ul class="list-inline list-unstyled text-center">
+                            <li class="">
+                                <label for="serverCount">
+                                    <a ng-href="#/devices/server"
+                                       data-toggle="tooltip"
+                                       title="{{ 'DASHBOARD_ViewAllServers' |translate}}"
+                                       data-trigger="hover">
+                                        {{'DASHBOARD_TotalServers'| translate}}
+                                    </a>
+                                </label>
+                                <strong id="serverCount">
+                                    {{home.serverHealth.total}}
+                                </strong>
+                            </li>
+                        </ul>
+
+                        <div class="smallPieTextOverlay2">
+                            <div id="ServerHealthGraphCenterValue" class="text-center graphCenterTextNumber">{{home.serverHealth.total}}</div>
+                            <div id="ServerHealthGraphCenterText" ng-if="home.serverHealth.total" class="text-center graphCenterText">
+                                {{'GENERIC_Servers'|translate}}
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-12 col-lg-4">
+                        <br class="visible-lg" />
+                        <br class="visible-lg" />
+                        <ul class="list-unstyled" ng-if="home.serverHealthConfig">
+                            <li class="">
+                                <a href="#/devices/server/red"
+                                   data-toggle="tooltip"
+                                   title="{{home.getServersTooltip('red', home.serverHealth.red)}}"
+                                   data-trigger="hover">
+                                    <i class="ci-action-circle-remove text-danger"></i>
+                                    {{home.serverHealth.red}}
+                                    {{'GENERIC_Critical'|translate}}
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="#/devices/server/yellow"
+                                   data-toggle="tooltip"
+                                   title="{{home.getServersTooltip('yellow', home.serverHealth.yellow)}}"
+                                   data-trigger="hover">
+                                    <i class="ci-health-warning-tri-bang text-warning"></i>
+                                    {{home.serverHealth.yellow}}
+                                    {{'SERVICES_DEPLOY_STATE_Warning'|translate}}
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="#/devices/server/green"
+                                   data-toggle="tooltip"
+                                   title="{{home.getServersTooltip('green', home.serverHealth.green)}}"
+                                   data-trigger="hover">
+                                    <i class="text-success ci-health-square-check"></i>
+                                    {{home.serverHealth.green}}
+                                    {{'SERVICES_DEPLOY_STATE_Healthy'|translate}}
+                                </a>
+
+                            </li>
+                            <li class="">
+                                <a href="#/devices/server/servicemode"
+                                   data-toggle="tooltip"
+                                   title="{{home.getServersTooltip('servicemode', home.serverHealth.servicemode)}}"
+                                   data-trigger="hover">
+                                    <i class="ci-action-circle-wrench" style="color:#efad18"></i>
+                                    {{home.serverHealth.servicemode}}
+                                    {{'GENERIC_ServiceMode' | translate}}
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="#/devices/server/unknown"
+                                   data-toggle="tooltip"
+                                   title="{{home.getServersTooltip('unknown', home.serverHealth.unknown)}}"
+                                   data-trigger="hover">
+                                    <i style="color: #999" class="ci-info-diamond-help"></i>
+                                    {{home.serverHealth.unknown}}
+                                    {{'GENERIC_Unknown' | translate}}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+
+                <!-- Server Utilization -->
+                <div class="row">
+                    <br class="hidden-lg">
+                    <br class="hidden-lg">
+                    <br class="hidden-lg">
+                    <div class="col-xs-12">
+                        <h3 ng-class="{'negativeMarginTop': !home.loadingServerHealth }">
+                            {{'DASHBOARD_ServerUtilizationInServices' | translate}}
+                        </h3>
+                        <span ng-if="home.loadingServerUtilization">
+                            <spinner></spinner>
+                            {{'DASHBOARD_Updating' | translate}}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row" ng-if="!home.loadingServerUtilization">
+                    <div class="col-md-12 col-lg-8">
+                        <highchart ng-if="home.serverUtilizationConfig" id="serverUtilizationPie" config="home.serverUtilizationConfig"></highchart>
+
+                        <div ng-if="home.serverPoolUtilization.pctinuse && home.serverPoolUtilization.pctinuse > -1" class="smallPieTextOverlay">
+                            <div id="ServerGraphCenterValue" class="text-center graphCenterTextNumber">{{home.serverPoolUtilization.pctinuse}}%</div>
+                            <div id="ServerGraphCenterText" class="text-center graphCenterText">
+                                {{'DASHBOARD_Used' | translate}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <br class="visible-lg" />
+                        <br class="visible-lg" />
+                        <br class="visible-lg" />
+                        <ul class="list-inline">
+                            <li>
+                                <i class="ci-control-square-stop" style="color: #0685C2"></i>
+                            </li>
+                            <li>
+                                {{'DASHBOARD_Used'|translate}}
+                            </li>
+                        </ul>
+                        <ul class="list-inline">
+                            <li>
+                                <i class="ci-control-square-stop" style="color: #CCCCCC"></i>
+                            </li>
+                            <li>
+                                {{'DASHBOARD_NotUsed'|translate}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Utilization by Server Pool -->
+                <div id="poolbreakdown">
+                    <br /><br /><br />
+                    <div class="row">
+                        <br class="hidden-lg" />
+                        <br class="hidden-lg" />
+                        <br class="hidden-lg" />
+                        <div class="col-xs-12">
+                            <h3 ng-class="{'negativeMarginTop': !home.loadingServerHealth }">
+                                {{'DASHBOARD_UtilizationByServerPool' | translate }}
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="clearfix" ng-repeat="serverpool in home.serverPoolUtilization.serverpools">
+                            <h4>
+                                <a ng-href="{{'#/devices/serverpools/' + serverpool.id}}" title="{{home.getServerPoolTitleTranslation(serverpool.name)}}">
+                                    <span>{{serverpool.name}}</span>
+                                    <span class="pull-right"
+                                          translate="DASHBOARD_Of"
+                                          translate-values="{numerator:serverpool.totalinuse, denominator: serverpool.totalservers}">{{serverpool.totalinuse}}</span>
+                                </a>
+                            </h4>
+                            <highchart ng-if="home.serverPoolUsageConfigs[$index]" id="serverPoolUsageConfig_{{$index}}" config="home.serverPoolUsageConfigs[$index]"></highchart>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ScaleIO Storage -->
+                <div>
+                    <br ng-if="!home.scaleIOConfig" />
+                    <br ng-if="!home.scaleIOConfig" />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h3>
+                                {{'DASHBOARD_TotalStorageCapacity' | translate}}
+                            </h3>
+                            <spinner ng-if="!home.scaleIOConfig"></spinner>
+                            <span ng-if="!home.scaleIOConfig">
+                                {{'GENERIC_Loading' | translate}}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="row" ng-if="home.scaleIOData">
+                        <div class="col-md-12 col-lg-5">
+                            <select class="form-control"
+                                    ng-options="option as option.name for option in home.scaleIOData.storageComponents"
+                                    ng-change="home.setScaleIOConfig(home.selectedStorage)"
+                                    ng-model="home.selectedStorage">
+                                <option value="">
+                                    {{"DASHBOARD_AllStorage" | translate}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- ScaleIO Donut -->
+                    <div class="row" ng-if="home.scaleIOData">
+                        <div class="col-md-12 col-lg-8">
+                            <highchart ng-if="home.scaleIOConfig"
+                                       id="dashboardStorageCapacityPie"
+                                       config="home.scaleIOConfig"></highchart>
+
+                            <div class="smallPieTextOverlay">
+                                <div id="StorageGraphCenterValue" class="text-center graphCenterTextNumber">
+                                    {{home.scaleIODonutPercent}}%
+                                </div>
+                                <div id="StorageGraphCenterText" class="text-center graphCenter">
+                                    {{'DASHBOARD_Used' | translate}}
+                                </div>
+                            </div>
+                            <div class="text-center"
+                                 ng-if="home.selectedStorage"
+                                 style="bottom: 55px; position:relative;">
+                                <a ng-href="{{'#/device/' + home.selectedStorage.id + '/scaleio'}}">
+                                    {{"DASHBOARD_ViewDetails" | translate}}
+                                </a>
+                            </div>
+
+                        </div>
+                        <div class="col-md-12 col-lg-4">
+                            <br class="visible-lg">
+                            <br class="visible-lg">
+                            <!-- Loading spinner -->
+                            <div ng-if="home.scaleIODetailsLoading" class="text-center">
+                                <spinner></spinner>
+                                {{'GENERIC_Loading' | translate }}
+                            </div>
+                            <!-- Used and Not used legend -->
+                            <div class="row">
+                                <ul class="list-inline col-xs-12">
+                                    <li>
+                                        <i class="ci-control-square-stop" style="color: #0685C2"></i>
+                                    </li>
+                                    <li>
+                                        {{'DASHBOARD_Used'|translate}}
+                                    </li>
+                                </ul>
+                                <ul class="list-inline">
+                                    <li>
+                                        <i class="ci-control-square-stop" style="color: #CCCCCC"></i>
+                                    </li>
+                                    <li>
+                                        {{'DASHBOARD_NotUsed'|translate}}
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ScaleIO Details -->
+                    <div class="" ng-if="home.scaleIOData" style="border-top: 1px solid #ddd">
+                        <!-- ScaleIO Individual View -->
+                        <div class="col-xs-12" ng-if="!home.scaleIODetailsLoading && home.selectedStorageDisplay">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    {{"DASHBOARD_ProtectionDomains" | translate}}
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    {{home.selectedStorageDisplay.protectionDomainCount}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    {{"DASHBOARD_Volumes" | translate}}
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    {{home.selectedStorageDisplay.volumeCount}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    {{"DASHBOARD_ScaleIODataClients" | translate}}
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    {{home.selectedStorageDisplay.sDCCount}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    {{"DASHBOARD_ScaleIODataServers" | translate}}
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    {{home.selectedStorageDisplay.sDSCount}}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ScaleIO Overview View -->
+                        <div class="col-xs-12" ng-if="!home.scaleIODetailsLoading && !home.selectedStorageDisplay">
+                            <div class="form-group">
+                                <div class="col-sm-8">
+                                    {{"DASHBOARD_Storage" | translate}}
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    {{home.scaleIOData.storageComponents.length}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8">
+                                    {{"DASHBOARD_ProtectionDomains" | translate}}
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    {{home.scaleIOData.protectionDomains}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8">
+                                    {{"DASHBOARD_Volumes" | translate}}
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    {{home.scaleIOData.volumes}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8">
+                                    {{"DASHBOARD_ScaleIODataClients" | translate}}
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    {{home.scaleIOData.dataClients}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8">
+                                    {{"DASHBOARD_ScaleIODataServers" | translate}}
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    {{home.scaleIOData.dataServers}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="storagegroups">
+                        <div class="row">
+                            <br class="hidden-lg" />
+                            <br class="hidden-lg" />
+                            <br class="hidden-lg" />
+                            <div class="col-xs-12">
+                                <h3 ng-class="{'negativeMarginTop': !home.scaleIOData }">
+                                    {{'DASHBOARD_StorageGroupBreakdown' | translate }}
+                                </h3>
+                            </div>
+                        </div>
+                        <!-- Progress bars -->
+                        <div class="clearfix" ng-repeat="scaleIO in home.scaleIOData.storageComponents" ng-style="{'opacity' : home.getOpacity(scaleIO.id)}">
+                            <h4>
+                                <a ng-href="{{'#/device/' + scaleIO.id + '/scaleio'}}">
+                                    <span>{{scaleIO.name}}</span>
+                                </a>
+                                <span class="pull-right">
+                                    {{scaleIO.usedInKb | byteConvert}}/{{scaleIO.totalInKb | byteConvert}}
+                                </span>
+                            </h4>
+                            <div class="progress"
+                                 style="height:12px; background-color:#cccccc">
+                                <div class="progress-bar"
+                                     role="progressbar"
+                                     aria-valuenow="{{scaleIO.usedInKb}}"
+                                     aria-valuemin="0"
+                                     aria-valuemax="{{scaleIO.totalInKb}}"
+                                     style="background-color : #007db8"
+                                     ng-style="{'width' : ((scaleIO.usedInKb / scaleIO.totalInKb)*100) + '%' }">
+                                </div>
+                            </div>
+
+                            <!--<highchart ng-if="home.serverPoolUsageConfigs[$index]" id="serverPoolUsageConfig_{{$index}}" config="home.serverPoolUsageConfigs[$index]"></highchart>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appliance Overview -->
+        <div id="sidebar" class="col-sm-6 col-md-6 col-lg-4">
+            <div class="grayTitle">
+                <h2>
+                    {{'DASHBOARD_ApplianceOverview'|translate}}
+                </h2>
+            </div>
+            <div class="well" ng-if="home.licenseDataLoaded && (home.dashboard.licenseData.availablenodes <= 0 || home.dashboard.licenseData.expiressoon || home.dashboard.licenseData.expired)">
+                <h2>
+                    <i class="text-black ci-disk-arrow-down-o"></i>
+                    {{'DASHBOARD_Licenses' | translate}}
+                </h2>
+                <div id="licenseAlerts">
+                    <alert dismissable="false" type="warning" ng-if="home.dashboard.licenseData.expiressoon">{{home.dashboard.licenseData.expiressoonmessage}}</alert>
+                    <alert dismissable="false" type="danger" ng-if="home.dashboard.licenseData.expired">{{'DASHBOARD_ExpiresStatus' | translate }}</alert>
+                    <alert dismissable="false" type="danger" ng-if="home.dashboard.licenseData.availablenodes <= 0">{{'DASHBOARD_ZeroAvailableStatus' | translate }}</alert>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="well">
+                <div class="row">
+                    <ul class="list-unstyled button-list col-sm-6">
+                        <li>
+                            <button class="btn btn-primary btn-block text-left"
+                                    id="deployLink"
+                                    ng-click="home.deployNewService()"
+                                    ng-disabled="ASM.IsInRole('readonly') || !home.isDeployServiceEnabled"
+                                    data-toggle="tooltip"
+                                    data-placement="right"
+                                    title="{{(home.templates.length ? '' : isDeployServiceEnabled ? 'SERVICES_NoPublishedTemplates' : '') | translate}}">
+                                <i class="ci-deploy"></i>
+                                {{'INDEX_DeployNewService' | translate }}
+                            </button>
+                        </li>
+                        <li>
+                            <button class="btn btn-primary btn-block text-left"
+                                    id="createTemplateLink"
+                                    ng-click="home.createTemplate()"
+                                    ng-disabled="ASM.IsInRole('standard') || ASM.IsInRole('readonly')">
+                                <i class="ci-action-add-plus-float"></i>
+                                {{'GETTINGSTARTED_step5btn' | translate }}
+                            </button>
+                        </li>
+                        <li>
+                            <button class="btn btn-primary btn-block text-left"
+                                    ng-click="home.addExistingService()"
+                                    ng-disabled="ASM.IsInRole('standard') || ASM.IsInRole('readonly')">
+                                <i class="ci-action-add-plus-float"></i>
+                                {{'SERVICES_Add_Existing_Service' | translate }}
+                            </button>
+                        </li>
+                        <li>
+                            <button class="btn btn-primary btn-block text-left"
+                                    ng-disabled="ASM.IsInRole('standard') || ASM.IsInRole('readonly')"
+                                    ng-click="home.goTo('/gettingstarted')">
+                                <i class="ci-action-circle-arrow-thin"></i>
+                                {{'DASHBOARD_GettingStarted' | translate }}
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="col-sm-6">
+                        <div style="margin: auto;"
+                             ng-if="ASM.gettingStarted.storageUtilization && home.gauge"
+                             data-toggle="tooltip"
+                             title="{{ 'DASHBOARD_TOOLTIP_Storageutilization' | translate : home.toObj({'percentageUsed' : ASM.gettingStarted.storageUtilization.percentageUsed*100, 'partitionName' : ASM.gettingStarted.storageUtilization.partitionName })}}"
+                             data-trigger="hover">
+                            <highchart style="height: 128px;"
+                                       id="gauge"
+                                       config="home.gauge"></highchart>
+                            <ul class="list-unstyled text-center" style="font-size: 11px;">
+                                <li>
+                                    <statusicon value="'warning'"></statusicon>
+                                    {{'DASHBOARD_STORAGE_CAPACITY_YellowDescription' | translate}}
+                                </li>
+                                <li style="margin:0">
+                                    <statusicon value="'critical'"></statusicon>
+                                    {{'DASHBOARD_STORAGE_CAPACITY_RedDescription' | translate}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+            </div>
+            <div class="grayTitle">
+                <h2>
+                    {{'DASHBOARD_ActivityLog'|translate}}
+                    <span id="NotificationLoadingArea" ng-if="home.loadingNotifications">
+                        <spinner></spinner>
+                        {{'GENERIC_Loading' | translate }}
+
+                    </span>
+                    <button class="btn btn-link pull-right"
+                            id="recentActivityViewAll"
+                            ng-click="home.goTo('/settings/Logs/true')"
+                            ng-disabled="ASM.IsInRole('standard')">
+                        {{'GENERIC_ViewAll' | translate }}
+                    </button>
+                </h2>
+            </div>
+            <div class="well">
+                <div ng-if="!home.gettingStarted.initialConfigurationCompleted">
+                    <spinner></spinner>
+                    <strong>{{'GETTINGSTARTED_initialhardwareconfiginprogress' | translate}}</strong>
+                </div>
+
+                <div ng-if="home.gettingStarted.pendingResources > 0">
+                    <div>
+                        <spinner ng-if="home.gettingStarted.pendingResources > 0"></spinner>
+                        <strong>
+                            {{'GETTINGSTARTED_discoveryjobrunning' | translate}}
+                        </strong>
+                    </div>
+                    <div>
+                        <div>
+                            <i class="text-success ci-health-square-check"></i>
+                            <label>
+                                {{'GETTINGSTARTED_discoveredresources' | translate}}
+                            </label>
+                            <span>{{home.gettingStarted.discoveredResources}}</span>
+                        </div>
+                        <div>
+                            <i class="text-light-gray ci-state-standby-clock"></i>
+                            <label>
+                                {{'GETTINGSTARTED_pendingresources'| translate}}
+                            </label>
+                            <span>{{home.gettingStarted.pendingResources}}</span>
+                        </div>
+                        <div>
+                            <i class="ci-action-circle-remove text-danger"></i>
+                            <label>
+                                {{'GETTINGSTARTED_errorresources'|translate}}
+                            </label>
+                            <span>{{home.gettingStarted.errorsResources}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-if="!home.gettingStarted.firmwareUpdateCompleted">
+                    <spinner></spinner>
+                    <strong>{{'FIRMWARE_UpdateInProgress'| translate}}</strong>
+                </div>
+
+                <div ng-if="!home.gettingStarted.inventoryUpdateCompleted">
+                    <spinner></spinner>
+                    <strong>{{'INVENTORYUPDATE_InProgress'| translate}}</strong>
+                </div>
+
+                <hr ng-if="!home.gettingStarted.initialConfigurationCompleted || home.gettingStarted.pendingResources > 0 || !home.gettingStarted.firmwareUpdateCompleted || !home.gettingStarted.inventoryUpdateCompleted" />
+
+                <ul class="list-unstyled activityList" ng-repeat="notification in home.dashboardNotifications">
+                    <li>
+                        <div class="row">
+                            <div class="col-sm-9">
+                                {{notification.message}}
+                            </div>
+                            <div class="col-sm-3 text-right">
+                                <datetime-display time="notification.createdOn" time-format="'LLL'" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                {{notification.userName}}
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="grayTitle">
+                <h2>
+                    {{'DASHBOARD_Learn'|translate}}
+                </h2>
+            </div>
+            <div class="well">
+                <ul class="list-unstyled">
+                    <li>
+                        <button class="btn btn-link"
+                                id="deployLearn"
+                                ng-click="home.showHelp('deployingserviceoverview')">
+                            &gt; {{'DASHBOARD_LearnDeploy'|translate}}
+                        </button>
+                    </li>
+                    <li>
+                        <button class="btn btn-link"
+                                id="templateLearn"
+                                ng-click="home.showHelp('templatesoverview')">
+                            &gt; {{'DASHBOARD_LearnTemps'|translate}}
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,689 @@
+﻿<wizard invalid="!$root.ASM.IsInRole('administrator')" on-finish="SetupWizard.finishWizard()" on-cancel="SetupWizard.cancel()">
+    <error-display errors="SetupWizard.errors"
+                   on-click="$root.ASM.RemoveError(error, SetupWizard.errors)"
+                   on-expand-collapse=""></error-display>
+    <wizard-step step-title="{{'SETUPWIZARD_WelcomeTitle'|translate}}"
+                 invalid="SetupWizard.forms.step1.$invalid"
+                 on-enter="SetupWizard.enterWelcome()"
+                 on-next="SetupWizard.GlobalServices.ClearErrors(SetupWizard.errors);">
+        <section id="page_initialsetup_welcome">
+            <header>
+                <h2>{{'SETUPWIZARD_WelcomeTitle'|translate}}</h2>
+            </header>
+            <form id="form_setup_welcome" class="form-horizontal" role="form" name="SetupWizard.forms.step1">
+                <fieldset>
+                    <legend class="hidden">{{'SETUPWIZARD_WelcomeTitle'|translate}}</legend>
+                    <p ng-bind-html="'SETUPWIZARD_WelcomeHelp'|translate|htmlSafe"></p>
+                </fieldset>
+            </form>
+        </section>
+    </wizard-step>
+    <wizard-step step-title="{{'SETUPWIZARD_LicensingTitle'|translate}}"
+                 on-enter="SetupWizard.enterLicense()"
+                 on-next="SetupWizard.updateLicense()"
+                 next-button-title="{{'GENERIC_SaveAndContinue'|translate}}">
+        <section id="page_initialsetup_licensing">
+            <header>
+                <h2>{{'SETUPWIZARD_LicensingTitle'|translate}}</h2>
+            </header>
+            <div id="form_initialsetup_licensing" class="form-horizontal" role="form">
+                <fieldset>
+                    <legend class="hidden" ng-bind-html="'SETUPWIZARD_LicensingHelp'|translate|htmlSafe"></legend>
+                    <ul class="list-unstyled">
+                        <li class="form-group">
+                            <label class="col-md-4 control-label">
+                                {{'SETUPWIZARD_LicensingUpload'|translate}} <span ng-if="!SetupWizard.setupData.licenseData.isValid">*</span>
+                            </label>
+                            <div class="col-md-8">
+                                <form name="SetupWizard.forms.uploadLicenseForm">
+                                    <div id="fileWrapper">
+                                        <input uploader="uploader"
+                                               nv-file-select
+                                               ng-model="SetupWizard.fileModel"
+                                               ng-required="!SetupWizard.setupData.licenseData.isValid"
+                                               id="idLocationFileUpload"
+                                               type="file"
+                                               text="Browse"
+                                               name="idLocationFileUpload" />
+                                    </div>
+                                    <div ng-if="SetupWizard.forms.uploadLicenseForm._submitted" class="text-danger">
+                                        <div ng-if="SetupWizard.forms.uploadLicenseForm.$error.required">
+                                            {{'SETTINGS_FileRequired'|translate}}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                    <div>
+                        <ul class="list-unstyled">
+                            <li class="form-group">
+                                <label class="col-md-4 control-label">{{'SETUPWIZARD_LicensingType'|translate}}</label>
+                                <p class="form-control-static col-md-8">{{SetupWizard.setupData.licenseData.type}}</p>
+                            </li>
+                            <li class="form-group">
+                                <label class="col-md-4 control-label">{{'SETUPWIZARD_LicensingTotalNodes'|translate}}</label>
+                                <p class="form-control-static col-md-8">{{SetupWizard.setupData.licenseData.totalnodes}}</p>
+                            </li>
+                            <li class="form-group">
+                                <label class="col-md-4 control-label">{{'SETUPWIZARD_LicensingExpirationDate'|translate}}</label>
+                                <p class="form-control-static col-md-8">
+                                    <datetime-display ng-if="SetupWizard.setupData.licenseData.expirationdate"
+                                                      time="SetupWizard.setupData.licenseData.expirationdate"
+                                                      time-format="'LLL'"></datetime-display>
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <h2>
+                        {{'SETUPWIZARD_ServiceTag' | translate}}
+                    </h2>
+                    <div>
+                        <ul class="list-unstyled">
+                            <li class="form-group">
+                                <label class="col-md-4 control-label">
+                                    {{'SETUPWIZARD_ServiceTag'|translate}}
+                                </label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" ng-model="SetupWizard.aboutData.serviceTag" />
+                                </div>
+
+                            </li>
+                        </ul>
+
+                    </div>
+
+                </fieldset>
+            </div>
+        </section>
+    </wizard-step>
+    <wizard-step step-title="{{'SETUPWIZARD_NTPSettingsTitle'|translate}}"
+                 on-enter="SetupWizard.enterNTP()"
+                 on-next="SetupWizard.updateNTP()"
+                 next-button-title="{{'GENERIC_SaveAndContinue'|translate}}">
+        <section id="page_initialsetup_time">
+            <header>
+                <h2>{{'SETUPWIZARD_NTPSettingsTitle'|translate}}</h2>
+            </header>
+            <form id="form_initialsetup_time"
+                  class="form-horizontal"
+                  role="form"
+                  name="SetupWizard.forms.step3"
+                  form-validation="SetupWizard.forms.step3._submitted">
+                <p ng-bind-html="'SETUPWIZARD_NTPSettingsHelp'|translate|htmlSafe"></p>
+                <fieldset>
+                    <legend class="hidden">{{'SETUPWIZARD_NTPSettingsTitle'|translate}}</legend>
+                    <ul class="list-unstyled">
+                        <li class="form-group">
+                            <label for="timeZone" class="col-md-4 control-label">{{'SETUPWIZARD_NTPSettingsTimeZone'|translate}}</label>
+                            <div class="col-md-8">
+                                <select id="timeZone"
+                                        name="timeZone"
+                                        required
+                                        class="form-control"
+                                        ng-model="SetupWizard.setupData.timeData.timeZone"
+                                        ng-options="tz.id as tz.name for tz in SetupWizard.timeZones">
+                                    <option value="">{{'SETTINGS_SelectTimeZone'|translate}}</option>
+                                </select>
+                                <div ng-if="SetupWizard.forms.step3._submitted" class="text-danger">
+                                    <div ng-if="SetupWizard.forms.step3.timeZone.$error.required">
+                                        {{'SETTINGS_FileRequired'|translate}}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="form-group" ng-if="SetupWizard.setupData.timeData.enableNTPServer">
+                            <label for="preferredNTPServer" class="col-md-4 control-label">{{'SETUPWIZARD_NTPSettingsPreferredServer'|translate}}</label>
+                            <div class="col-md-8">
+                                <input id="preferredNTPServer"
+                                       name="preferredNTPServer"
+                                       class="form-control"
+                                       type="text"
+                                       ng-model="SetupWizard.setupData.timeData.preferredNTPServer"
+                                       required />
+                                <div ng-if="SetupWizard.forms.step3._submitted" class="text-danger">
+                                    <div ng-if="SetupWizard.forms.step3.preferredNTPServer.$error.required">
+                                        {{'VALIDATIONMESSAGES_required'|translate}}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="form-group" ng-if="SetupWizard.setupData.timeData.enableNTPServer">
+                            <label for="secondaryNTPServer" class="col-md-4 control-label">{{'SETUPWIZARD_NTPSettingsSecondaryServer'|translate}}</label>
+                            <div class="col-md-8">
+                                <input id="secondaryNTPServer" class="form-control" type="text" ng-model="SetupWizard.setupData.timeData.secondaryNTPServer" />
+                            </div>
+                        </li>
+                    </ul>
+                </fieldset>
+            </form>
+        </section>
+    </wizard-step>
+    <wizard-step step-title="{{'SETUPWIZARD_ProxySettingsTitle'|translate}}"
+                 on-enter="SetupWizard.enterProxy()"
+                 on-next="SetupWizard.updateProxy()"
+                 next-button-title="{{'GENERIC_SaveAndContinue'|translate}}">
+        <section id="page_initialsetup_proxy">
+            <header>
+                <h2>{{'SETUPWIZARD_ProxySettingsTitle'|translate}}</h2>
+            </header>
+            <form id="form_initialsetup_proxy"
+                  class="form-horizontal"
+                  role="form"
+                  name="SetupWizard.forms.step4"
+                  form-validation="SetupWizard.forms.step4._submitted">
+                <p ng-bind-html="'SETUPWIZARD_ProxySettingsHelp'|translate|htmlSafe"></p>
+                <fieldset>
+                    <legend class="hidden">{{'SETUPWIZARD_ProxySettingsTitle'|translate}}</legend>
+                    <ul class="list-unstyled">
+                        <li class="form-group">
+                            <label for="enableProxy" class="col-md-4 control-label">{{'SETUPWIZARD_ProxySettingsEnableProxy'|translate}}</label>
+                            <div class="col-md-8">
+                                <div class="checkbox">
+                                    <label>
+                                        <input id="enableProxy" type="checkbox" ng-model="SetupWizard.setupData.proxyData.enableProxy" />
+                                    </label>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="list-unstyled">
+                        <li class="form-group">
+                            <label for="proxyServer" class="col-md-4 control-label">{{'SETUPWIZARD_ProxySettingsServerAddress'|translate}}</label>
+                            <div class="col-md-8">
+                                <input id="proxyServer"
+                                       name="proxyServer"
+                                       ng-required="SetupWizard.setupData.proxyData.enableProxy"
+                                       class="form-control"
+                                       type="text"
+                                       ng-model="SetupWizard.setupData.proxyData.proxyServer"
+                                       ng-disabled="!SetupWizard.setupData.proxyData.enableProxy" />
+                                <div ng-if="SetupWizard.forms.step4._submitted" class="text-danger">
+                                    <div ng-if="SetupWizard.forms.step4.proxyServer.$error.required">
+                                        {{'SETTINGS_FileRequired'|translate}}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label for="proxyPort" class="col-md-4 control-label">{{'SETUPWIZARD_ProxySettingsPort'|translate}}</label>
+                            <div class="col-md-8">
+                                <input id="proxyPort"
+                                       name="proxyPort"
+                                       ng-required="SetupWizard.setupData.proxyData.enableProxy"
+                                       class="form-control"
+                                       min="0"
+                                       step="1"
+                                       type="number"
+                                       ng-model="SetupWizard.setupData.proxyData.proxyPort"
+                                       ng-disabled="!SetupWizard.setupData.proxyData.enableProxy" />
+                                <div ng-if="SetupWizard.forms.step4._submitted" class="text-danger">
+                                    <div ng-if="SetupWizard.forms.step4.proxyPort.$error.required">
+                                        {{'SETTINGS_FileRequired'|translate}}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label for="enableProxyCredentials" class="col-md-4 control-label">{{'SETUPWIZARD_ProxySettingsUseCredentials'|translate}}</label>
+                            <div class="col-md-8">
+                                <div class="checkbox">
+                                    <label>
+                                        <input id="enableProxyCredentials" type="checkbox" ng-model="SetupWizard.setupData.proxyData.enableProxyCredentials" ng-disabled="!SetupWizard.setupData.proxyData.enableProxy" />
+                                    </label>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="list-unstyled">
+                        <li class="form-group">
+                            <label for="proxyUsername" class="col-md-4 control-label">{{'SETUPWIZARD_ProxySettingsUserName'|translate}}</label>
+                            <div class="col-md-8">
+                                <input id="proxyUsername"
+                                       name="proxyUsername"
+                                       ng-required="SetupWizard.setupData.proxyData.enableProxyCredentials"
+                                       class="form-control"
+                                       type="text"
+                                       ng-model="SetupWizard.setupData.proxyData.proxyUsername"
+                                       ng-disabled="!SetupWizard.setupData.proxyData.enableProxy || !SetupWizard.setupData.proxyData.enableProxyCredentials" />
+                                <div ng-if="SetupWizard.forms.step4._submitted" class="text-danger">
+                                    <div ng-if="SetupWizard.forms.step4.proxyUsername.$error.required">
+                                        {{'SETTINGS_FileRequired'|translate}}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label for="proxyPassword" class="col-md-4 control-label">{{'SETUPWIZARD_ProxySettingsPassword'|translate}}</label>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input id="proxyPassword"
+                                           name="proxyPassword"
+                                           ng-model="SetupWizard.setupData.proxyData.proxyPassword"
+                                           ng-required="SetupWizard.setupData.proxyData.enableProxyCredentials"
+                                           class="form-control"
+                                           type="password" password-viewer
+                                           placeholder=""
+                                           ng-disabled="!SetupWizard.setupData.proxyData.enableProxy || !SetupWizard.setupData.proxyData.enableProxyCredentials" />
+
+                                </div>
+                                <span class="text-danger" ng-if="SetupWizard.forms.step4._submitted">
+                                    <span ng-if="SetupWizard.forms.step4.proxyPassword.$error.required">
+                                        {{'GENERIC_RequiredField' | translate}}
+                                    </span>
+                                </span>
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label for="proxyVerifyPassword" class="col-md-4 control-label">{{'SETUPWIZARD_ProxySettingsVerifyPassword'|translate}}</label>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input id="proxyVerifyPassword"
+                                           name="proxyVerifyPassword"
+                                           ng-match="SetupWizard.setupData.proxyData.proxyPassword"
+                                           ng-model="SetupWizard.setupData.proxyData.proxyVerifyPassword"
+                                           ng-required="SetupWizard.setupData.proxyData.enableProxyCredentials"
+                                           class="form-control"
+                                           type="password" password-viewer
+                                           ng-disabled="!SetupWizard.setupData.proxyData.enableProxy || !SetupWizard.setupData.proxyData.enableProxyCredentials" />
+
+                                </div>
+                                <span class="text-danger" ng-if="SetupWizard.forms.step4._submitted">
+                                    <span ng-if="SetupWizard.forms.step4.proxyVerifyPassword.$error.required">
+                                        {{'GENERIC_RequiredField' | translate}}
+                                    </span>
+                                    <span ng-if="!SetupWizard.forms.step4.proxyVerifyPassword.$error.required
+                                                  && SetupWizard.forms.step4.proxyVerifyPassword.$error.ngmatch">
+                                        {{'SETTINGS_DirectoryServicesWizardPassword_Match' | translate}}
+                                    </span>
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                    <button id="btnTestProxy"
+                            class="btn btn-default"
+                            ng-disabled="SetupWizard.testProxyRunning || SetupWizard.forms.step4.$invalid || !SetupWizard.setupData.proxyData.enableProxy"
+                            ng-click="SetupWizard.testProxy()">
+                        {{'SETUPWIZARD_ProxySettingsProxyConnection'|translate}}
+                    </button>
+                    <span ng-if="SetupWizard.testProxyRunning">
+                        <span class="spinner"></span> {{'SETUPWIZARD_ProxySettingsTestConnection'|translate}}
+                    </span>
+                </fieldset>
+            </form>
+        </section>
+    </wizard-step>
+    <wizard-step step-title="{{'SETUPWIZARD_DHCPSettingsTitle'|translate}}"
+                 on-enter="SetupWizard.enterDHCP()"
+                 on-next="SetupWizard.updateDHCP()"
+                 next-button-title="{{'GENERIC_SaveAndContinue'|translate}}">
+        <section id="page_initialsetup_dhcp">
+            <header>
+                <h2>{{'SETUPWIZARD_DHCPSettingsTitle'|translate}}</h2>
+            </header>
+            <form id="form_initialsetup_dhcp"
+                  class="form-horizontal"
+                  role="form"
+                  name="SetupWizard.forms.step5"
+                  form-validation="SetupWizard.forms.step5._submitted">
+                <p ng-bind-html="'SETUPWIZARD_DHCPSettingsHelp'|translate|htmlSafe"></p>
+                <fieldset>
+                    <legend class="hidden">{{'SETUPWIZARD_DHCPSettingsTitle'|translate}}</legend>
+                    <ul class="list-unstyled">
+                        <li class="form-group">
+                            <label for="enableDHCPServer" class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsEnable'|translate}}</label>
+                            <div class="col-md-8">
+                                <div class="checkbox">
+                                    <label>
+                                        <input id="enableDHCPServer" type="checkbox" ng-model="SetupWizard.setupData.dhcpData.enableDhcpServer" />
+                                    </label>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label for="subnet" class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsSubnet'|translate}}</label>
+                            <div class="col-md-8">
+                                <input id="subnet"
+                                       name="subnet"
+                                       class="form-control"
+                                       type="text"
+                                       ng-model="SetupWizard.setupData.dhcpData.subnet"
+                                       ng-required="SetupWizard.setupData.dhcpData.enableDhcpServer"
+                                       ng-disabled="!SetupWizard.setupData.dhcpData.enableDhcpServer" />
+                                <span class="text-danger" ng-if="SetupWizard.forms.step5._submitted">
+                                    <span ng-if="SetupWizard.forms.step5.subnet.$error.required">
+                                        {{'GENERIC_RequiredField' | translate}}
+                                    </span>
+                                </span>
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label for="netmask" class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsNetMask'|translate}}</label>
+                            <div class="col-md-8">
+                                <input id="netmask"
+                                       name="netmask"
+                                       class="form-control"
+                                       type="text"
+                                       ng-model="SetupWizard.setupData.dhcpData.netmask"
+                                       ng-required="SetupWizard.setupData.dhcpData.enableDhcpServer"
+                                       ng-disabled="!SetupWizard.setupData.dhcpData.enableDhcpServer" />
+                                <span class="text-danger" ng-if="SetupWizard.forms.step5._submitted">
+                                    <span ng-if="SetupWizard.forms.step5.netmask.$error.required">
+                                        {{'GENERIC_RequiredField' | translate}}
+                                    </span>
+                                </span>
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label for="startingIpAddress" class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsStartingIP'|translate}}</label>
+                            <div class="col-md-8">
+                                <input id="startingIpAddress"
+                                       name="startingIpAddress"
+                                       class="form-control"
+                                       type="text"
+                                       ng-model="SetupWizard.setupData.dhcpData.startingIpAddress"
+                                       ng-required="SetupWizard.setupData.dhcpData.enableDhcpServer"
+                                       ng-disabled="!SetupWizard.setupData.dhcpData.enableDhcpServer" />
+                                <span class="text-danger" ng-if="SetupWizard.forms.step5._submitted">
+                                    <span ng-if="SetupWizard.forms.step5.startingIpAddress.$error.required">
+                                        {{'GENERIC_RequiredField' | translate}}
+                                    </span>
+                                </span>
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label for="endingIpAddress" class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsEndingIP'|translate}}</label>
+                            <div class="col-md-8">
+                                <input id="endingIpAddress"
+                                       name="endingIpAddress"
+                                       class="form-control"
+                                       type="text"
+                                       ng-model="SetupWizard.setupData.dhcpData.endingIpAddress"
+                                       ng-required="SetupWizard.setupData.dhcpData.enableDhcpServer"
+                                       ng-disabled="!SetupWizard.setupData.dhcpData.enableDhcpServer" />
+                                <span class="text-danger" ng-if="SetupWizard.forms.step5._submitted">
+                                    <span ng-if="SetupWizard.forms.step5.endingIpAddress.$error.required">
+                                        {{'GENERIC_RequiredField' | translate}}
+                                    </span>
+                                </span>
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsDefaultLeaseTime'|translate}}</label>
+                            <div class="col-md-8">
+
+                                <select ng-model="SetupWizard.setupData.dhcpData.defaultLeaseTimeDays"
+                                        id="defaultLeaseTimeDays"
+                                        ng-options="n for n in [] | range:0:SetupWizard.ranges.days"
+                                        ng-disabled="!SetupWizard.setupData.dhcpData.enableDhcpServer"></select>
+                                <select ng-model="SetupWizard.setupData.dhcpData.defaultLeaseTimeHours"
+                                        id="defaultLeaseTimeHours"
+                                        ng-options="n for n in [] | range:0:SetupWizard.ranges.hours"
+                                        ng-disabled="!SetupWizard.setupData.dhcpData.enableDhcpServer"></select>
+                                <select ng-model="SetupWizard.setupData.dhcpData.defaultLeaseTimeMinutes"
+                                        id="defaultLeaseTimeMinutes"
+                                        ng-options="n for n in [] | range:0:SetupWizard.ranges.minutes"
+                                        ng-disabled="!SetupWizard.setupData.dhcpData.enableDhcpServer"></select>
+                                <select ng-model="SetupWizard.setupData.dhcpData.defaultLeaseTimeSeconds"
+                                        id="defaultLeaseTimeSeconds"
+                                        ng-options="n for n in [] | range:0:SetupWizard.ranges.seconds"
+                                        ng-disabled="!SetupWizard.setupData.dhcpData.enableDhcpServer"></select>
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsMaxLeaseTime'|translate}}</label>
+                            <div class="col-md-8">
+
+                                <select ng-model="SetupWizard.setupData.dhcpData.maxLeaseTimeDays"
+                                        id="maxLeaseTimeDays"
+                                        ng-options="n for n in [] | range:0:SetupWizard.ranges.days"
+                                        ng-disabled="!SetupWizard.setupData.dhcpData.enableDhcpServer"></select>
+                                <select ng-model="SetupWizard.setupData.dhcpData.maxLeaseTimeHours"
+                                        id="maxLeaseTimeHours"
+                                        ng-options="n for n in [] | range:0:SetupWizard.ranges.hours"
+                                        ng-disabled="!SetupWizard.setupData.dhcpData.enableDhcpServer"></select>
+                                <select ng-model="SetupWizard.setupData.dhcpData.maxLeaseTimeMinutes"
+                                        id="maxLeaseTimeMinutes"
+                                        ng-options="n for n in [] | range:0:SetupWizard.ranges.minutes"
+                                        ng-disabled="!SetupWizard.setupData.dhcpData.enableDhcpServer"></select>
+                                <select ng-model="SetupWizard.setupData.dhcpData.maxLeaseTimeSeconds"
+                                        id="maxLeaseTimeSeconds"
+                                        ng-options="n for n in [] | range:0:SetupWizard.ranges.seconds"
+                                        ng-disabled="!SetupWizard.setupData.dhcpData.enableDhcpServer"></select>
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label for="gateway" class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsGateway'|translate}}</label>
+                            <div class="col-md-8">
+                                <input id="gateway" class="form-control" type="text" ng-model="SetupWizard.setupData.dhcpData.gateway"
+                                       ng-disabled="!SetupWizard.setupData.dhcpData.enableDhcpServer" />
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label for="dns" class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsDNS'|translate}}</label>
+                            <div class="col-md-8">
+                                <input id="dns" class="form-control" type="text" ng-model="SetupWizard.setupData.dhcpData.dns"
+                                       ng-disabled="!SetupWizard.setupData.dhcpData.enableDhcpServer" />
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label for="domain" class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsDomain'|translate}}</label>
+                            <div class="col-md-8">
+                                <input id="domain" class="form-control" type="text" ng-model="SetupWizard.setupData.dhcpData.domain"
+                                       ng-disabled="!SetupWizard.setupData.dhcpData.enableDhcpServer" />
+                            </div>
+                        </li>
+                    </ul>
+                </fieldset>
+            </form>
+        </section>
+    </wizard-step>
+    <wizard-step step-title="{{'SETUPWIZARD_VXFlexAlertConnectorSettings'|translate}}"
+                 on-enter="SetupWizard.enterVxRack()"
+                 on-next="SetupWizard.saveVxRack()"
+                 next-button-title="{{'GENERIC_SaveAndContinue'|translate}}">
+        <section id="page_initialsetup_vxRack">
+            <header>
+                <h2>{{'SETUPWIZARD_VxFlexAlertConnectorTitle'|translate}}</h2>
+            </header>
+            <form class="form">
+                <!--<statusicon value="'yellow'"></statusicon>
+                {{"SETTINGS_VirtualApplianceManagement_PrerequisitesDescList" | translate}}
+                <ul class="">
+                    <li>
+                        {{"SETTINGS_VirtualApplianceManagement_PrerequisitesDescListItem1" | translate}}
+                    </li>
+                    <li>
+                        {{"SETTINGS_VirtualApplianceManagement_PrerequisitesDescListItem1_1" | translate}}
+                    </li>
+                    <li>
+                        {{"SETTINGS_VirtualApplianceManagement_PrerequisitesDescListItem2" | translate}}
+                    </li>
+                    <li>
+                        {{"SETTINGS_VirtualApplianceManagement_PrerequisitesDescListItem3" | translate}}
+                    </li>
+                    <li>
+                        {{"SETTINGS_VirtualApplianceManagement_PrerequisitesDescListItem4" | translate}}
+                    </li>
+                    <li>
+                        {{"SETTINGS_VirtualApplianceManagement_PrerequisitesDescListItem5" | translate}}
+                    </li>
+                </ul>-->
+
+                <div class="form-group row">
+                    <h4 class="col-md-4 control-label" for="enableAlertConnector">
+                        {{ "SETUPWIZARD_EnableVxFlexAlertConnector" | translate}}
+                        <!--<i class="ci ci-info-circle-info text-primary"
+                           data-toggle="tooltip"
+                           data-placement="right"
+                           title="{{'SETTINGS_VirtualApplianceManagement_PrerequisitesDescription' |translate}}"></i>-->
+                    </h4>
+                    <div class="col-md-8 checkbox">
+                        <input type="checkbox"
+                               id="enableAlertConnector"
+                               ng-model="SetupWizard.enableAlertConnector" />
+                    </div>
+                </div>
+            </form>
+            <vx-rack-flex-alert-connector-component settings="SetupWizard.setupData.vxRackSettings"
+                                                    errors="vxRackFlexAlertConnectorModalController.errors"
+                                                    form="SetupWizard.forms.step6"
+                                                    form-submitted="SetupWizard.forms.step5._submitted"
+                                                    disabled="!SetupWizard.enableAlertConnector"
+                                                    ng-if="SetupWizard.setupData.vxRackSettings"></vx-rack-flex-alert-connector-component>
+        </section>
+    </wizard-step>
+    <wizard-step step-title="{{'SETUPWIZARD_SummaryTitle'|translate}}"
+                 on-enter="SetupWizard.enterSummary()">
+        <section id="page_initialsetup_summary">
+            <header>
+                <h2>{{'SETUPWIZARD_SummaryTitle'|translate}}</h2>
+            </header>
+            <p style="margin-bottom: 15px;" ng-bind-html="'SETUPWIZARD_SummaryHelp'|translate|htmlSafe"></p>
+            <form id="form_initialsetup_summary" class="form-horizontal" role="form">
+                <fieldset>
+                    <legend>
+                        {{'SETUPWIZARD_LicensingTitle'|translate}}
+                    </legend>
+                    <div>
+                        <ul class="list-unstyled">
+                            <li class="form-group">
+                                <label class="col-md-4 control-label">{{'SETUPWIZARD_LicensingType'|translate}}</label>
+                                <p class="form-control-static col-md-8">{{SetupWizard.setupData.licenseData.type}}</p>
+                            </li>
+                            <li class="form-group">
+                                <label class="col-md-4 control-label">{{'SETUPWIZARD_LicensingTotalNodes'|translate}}</label>
+                                <p class="form-control-static col-md-8">{{SetupWizard.setupData.licenseData.totalnodes}}</p>
+                            </li>
+                            <li class="form-group">
+                                <label class="col-md-4 control-label">{{'SETUPWIZARD_LicensingExpirationDate'|translate}}</label>
+                                <p class="form-control-static col-md-8">
+                                    <datetime-display ng-if="SetupWizard.setupData.licenseData.expirationdate"
+                                                      time="SetupWizard.setupData.licenseData.expirationdate"
+                                                      time-format="'LLL'"></datetime-display>
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </fieldset>
+                <fieldset ng-if="SetupWizard.aboutData.serviceTag">
+                    <legend>
+                        {{'SETUPWIZARD_ServiceTag'|translate}}
+                    </legend>
+                    <div>
+                        <ul class="list-unstyled">
+                            <li class="form-group">
+                                <label class="col-md-4 control-label">
+                                    {{'SETUPWIZARD_ServiceTag'|translate}}
+                                </label>
+                                <p class="form-control-static col-md-8">{{SetupWizard.aboutData.serviceTag}}</p>
+                            </li>
+                        </ul>
+                    </div>
+                </fieldset>
+
+
+
+                <fieldset>
+                    <legend>
+                        {{'SETUPWIZARD_NTPSettingsTitle'|translate}}
+                    </legend>
+                    <ul class="list-unstyled">
+                        <li class="form-group">
+                            <label class="col-md-4 control-label">{{'SETUPWIZARD_NTPSettingsTitle'|translate}}</label>
+                            <p class="form-control-static col-md-8" ng-if="!SetupWizard.setupData.timeData.timeZone">{{'SETUPWIZARD_SummaryNoTimeZone'|translate}}</p>
+                            <p id="summary_idTimeZone" class="form-control-static col-md-8" ng-if="SetupWizard.setupData.timeData.timeZone">
+                                {{SetupWizard.getSelectedTimeZoneName()}}
+                            </p>
+                        </li>
+                        <li class="form-group" ng-if="SetupWizard.setupData.timeData.enableNTPServer">
+                            <label for="preferredNTPServer" class="col-md-4 control-label">{{'SETUPWIZARD_NTPSettingsPreferredServer'|translate}}</label>
+                            <p class="form-control-static col-md-8">{{SetupWizard.setupData.timeData.preferredNTPServer}}</p>
+                        </li>
+                        <li class="form-group" ng-if="SetupWizard.setupData.timeData.enableNTPServer">
+                            <label for="secondaryNTPServer" class="col-md-4 control-label">{{'SETUPWIZARD_NTPSettingsSecondaryServer'|translate}}</label>
+                            <p class="form-control-static col-md-8">{{SetupWizard.setupData.timeData.secondaryNTPServer}}</p>
+                        </li>
+                    </ul>
+                </fieldset>
+                <fieldset>
+                    <legend>{{'SETUPWIZARD_ProxySettingsTitle'|translate}}</legend>
+                    <ul class="list-unstyled">
+                        <li class="form-group">
+                            <label class="col-md-4 control-label">{{'SETUPWIZARD_SummaryProxySettings'|translate}}</label>
+                            <p class="form-control-static col-md-8" ng-if="!SetupWizard.setupData.proxyData.enableProxy">{{'SETUPWIZARD_SummaryNoProxySettings'|translate}}</p>
+                            <p class="form-control-static col-md-8" ng-if="SetupWizard.setupData.proxyData.enableProxy">{{SetupWizard.setupData.proxyData.proxyServer}}</p>
+                        </li>
+                    </ul>
+                </fieldset>
+                <fieldset>
+                    <legend>{{'SETUPWIZARD_DHCPSettingsTitle'|translate}}</legend>
+                    <ul class="list-unstyled">
+                        <li class="form-group">
+                            <label class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsEnable'|translate}}</label>
+                            <p class="form-control-static col-md-8">{{(SetupWizard.setupData.dhcpData.enableDhcpServer?'GENERIC_Enabled':'GENERIC_Disabled')|translate}}</p>
+                        </li>
+                        <li class="form-group" ng-if="SetupWizard.setupData.dhcpData.enableDhcpServer">
+                            <label class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsSubnet'|translate}}</label>
+                            <p class="col-md-8 form-control-static">{{SetupWizard.setupData.dhcpData.subnet}}</p>
+                        </li>
+                        <li class="form-group" ng-if="SetupWizard.setupData.dhcpData.enableDhcpServer">
+                            <label class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsNetMask'|translate}}</label>
+                            <p class="col-md-8 form-control-static">{{SetupWizard.setupData.dhcpData.netmask}}</p>
+                        </li>
+                        <li class="form-group" ng-if="SetupWizard.setupData.dhcpData.enableDhcpServer">
+                            <label class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsStartingIP'|translate}}</label>
+                            <p class="col-md-8 form-control-static">{{SetupWizard.setupData.dhcpData.startingIpAddress}}</p>
+                        </li>
+                        <li class="form-group" ng-if="SetupWizard.setupData.dhcpData.enableDhcpServer">
+                            <label class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsEndingIP'|translate}}</label>
+                            <p class="col-md-8 form-control-static">{{SetupWizard.setupData.dhcpData.endingIpAddress}}</p>
+                        </li>
+                        <li class="form-group" ng-if="SetupWizard.setupData.dhcpData.enableDhcpServer">
+                            <label class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsDefaultLeaseTime'|translate}}</label>
+                            <p class="col-md-8 form-control-static">
+                                {{SetupWizard.setupData.dhcpData.defaultLeaseTimeDays + ':' + SetupWizard.setupData.dhcpData.defaultLeaseTimeHours + ':' + SetupWizard.setupData.dhcpData.defaultLeaseTimeMinutes + ':' + SetupWizard.setupData.dhcpData.defaultLeaseTimeSeconds}}
+                            </p>
+                        </li>
+                        <li class="form-group" ng-if="SetupWizard.setupData.dhcpData.enableDhcpServer">
+                            <label class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsMaxLeaseTime'|translate}}</label>
+                            <p class="col-md-8 form-control-static">
+                                {{SetupWizard.setupData.dhcpData.maxLeaseTimeDays + ':' + SetupWizard.setupData.dhcpData.maxLeaseTimeHours + ':' + SetupWizard.setupData.dhcpData.maxLeaseTimeMinutes + ':' + SetupWizard.setupData.dhcpData.maxLeaseTimeSeconds}}
+                            </p>
+                        </li>
+                        <li class="form-group" ng-if="SetupWizard.setupData.dhcpData.enableDhcpServer">
+                            <label class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsGateway'|translate}}</label>
+                            <p class="col-md-8 form-control-static">{{SetupWizard.setupData.dhcpData.gateway}}</p>
+                        </li>
+                        <li class="form-group" ng-if="SetupWizard.setupData.dhcpData.enableDhcpServer">
+                            <label class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsDNS'|translate}}</label>
+                            <p class="col-md-8 form-control-static">{{SetupWizard.setupData.dhcpData.dns}}</p>
+                        </li>
+                        <li class="form-group" ng-if="SetupWizard.setupData.dhcpData.enableDhcpServer">
+                            <label class="col-md-4 control-label">{{'SETUPWIZARD_DHCPSettingsDomain'|translate}}</label>
+                            <p class="col-md-8 form-control-static">{{SetupWizard.setupData.dhcpData.domain}}</p>
+                        </li>
+                    </ul>
+                </fieldset>
+                <fieldset>
+                    <legend>{{'SETUPWIZARD_VXFlexAlertConnectorSettings'|translate}}</legend>
+                        <div class="form-group row" ng-if="!SetupWizard.enableAlertConnector">
+                            <label class="col-md-4 control-label" for="enableAlertConnectorSummary">
+                                {{ "SETUPWIZARD_EnableVxFlexAlertConnector" | translate}}
+                            </label>
+                            <div class="col-md-8">
+                                <p class="form-control-static" id="enableAlertConnectorSummary">
+                                    {{ "GENERIC_Disabled" | translate }}
+                                </p>
+                            </div>
+                        </div>
+                    <vx-rack-flex-alert-connector-component settings="SetupWizard.setupData.vxRackSettings"
+                                                            read-only="true"
+                                                            disabled="true"
+                                                            ng-if="SetupWizard.setupData.vxRackSettings && SetupWizard.enableAlertConnector"></vx-rack-flex-alert-connector-component>
+                </fieldset>
+            </form>
+        </section>
+    </wizard-step>
+</wizard>

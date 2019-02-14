@@ -1,0 +1,201 @@
+﻿<section id="Template_builder_side_panel">
+    <aside id="tbAside">
+        <div id="templatesNeedUpdating"
+             ng-if="t.template.isTemplateValid == false && t.template.isLocked == false"
+             style="padding: 10px; margin-bottom: 10px; background-color: #efb106">
+            <i class="text-white ci-health-warning-tri-bang"></i>
+            <span>
+                {{'TEMPLATES_TEMPLATEBUILDER_SIDE_TemplateInvalid'|translate}}
+            </span>
+        </div>
+        <div class="well clearfix">
+            <h3>
+                <i class="ci ci-device-templates-blank-stacked"></i>
+                {{'TEMPLATES_TEMPLATEBUILDER_SIDE_TemplateInformation'|translate}}
+                <button type="button"
+                   class="text-primary ci-edit-pencil pull-right btn-link"
+                   id="btnEditTemplateName"
+                   ng-if="t.mode === 'edit'"
+                   ng-click="t.editTemplateInformation()"
+                   ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                </button>
+            </h3>
+            <span>{{t.template.description}}</span>
+            <div class="row" ng-if="t.template.isLocked == false">
+                <div class="col-xs-6">
+                    <label for="category">
+                        {{'TEMPLATES_TEMPLATEBUILDER_SIDE_Category'|translate}}
+                    </label>
+                </div>
+                <div class="col-xs-6" id="category">
+                    {{t.template.category}}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-6">
+                    <label for="referencefirmwarerepository">
+                        {{'TEMPLATES_TEMPLATEBUILDER_SIDE_ReferenceFirmwareRepository'|translate}}
+                    </label>
+                </div>
+                <div class="col-xs-6">
+                    <span ng-if="t.template.firmwarePackageName !== ''" id="referencefirmwarerepository">
+                        {{t.template.firmwarePackageName}}
+                    </span>
+                    <span ng-if="t.template.firmwarePackageName === ''" id="referencefirmwarerepositoryempty">
+                        {{'TEMPLATES_TEMPLATEBUILDER_SIDE_NotSpecified'|translate}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="row" ng-if="t.template.allStandardUsers === true && t.template.assignedUsers.length > 0">
+                <div class="col-xs-6">
+                    <label for="sideDisabled">
+                        {{'TEMPLATES_TEMPLATEBUILDER_SIDE_UserPermissions'|translate}}
+                    </label>
+                </div>
+                <div class="col-xs-6" id="sideDisabled">
+                    {{'TEMPLATES_TEMPLATEBUILDER_SIDE_Enabled'|translate}}
+                </div>
+            </div>
+
+            <div class="row" ng-if="t.template.allStandardUsers === false && !t.template.assignedUsers.length">
+                <div class="col-xs-6">
+                    <label for="sideEnabled">
+                        {{'TEMPLATES_TEMPLATEBUILDER_SIDE_UserPermissions'|translate}}
+                    </label>
+                </div>
+                <div class="col-xs-6" id="sideEnabled">
+                    {{'TEMPLATES_TEMPLATEBUILDER_SIDE_Disabled'|translate}}
+                </div>
+            </div>
+
+
+            <div class="row">
+                <ul id="menuTemplateBuilder"
+                    class="list-unstyled col-lg-6 col-md-12 col-sm-12">
+                    <li ng-if="t.template.draft === false || t.template.isLocked === 'false'">
+                        <button class="btn btn-primary btn-block text-left"
+                                id="deployLink"
+                                ng-disabled="$root.ASM.IsInRole('readonly')
+                        || $root.ASM.IsInRole('standard')
+                        || t.template.draft === true
+                        || t.mode === 'edit'"
+                                ng-click="t.actions.deployNewService()">
+                            <i class="ci-deploy"></i>
+                            {{'TEMPLATES_TEMPLATEBUILDER_SIDE_Deploy'|translate}}
+                        </button>
+                    </li>
+                    <li ng-if="t.mode === 'edit' && t.template.isLocked === false">
+                        <button type="button"
+                                class="btn btn-primary btn-block text-left"
+                                id="btnPublish"
+                                ng-click="t.publishTemplate()"
+                                ng-disabled="$root.ASM.IsInRole('readonly')
+                        || $root.ASM.IsInRole('standard')
+                        || t.template.components.length === 0
+                        || t.template.isTemplateValid === false">
+                            <i class="ci-arrow-box-updates"></i>
+                            {{'TEMPLATES_TEMPLATEBUILDER_SIDE_PublishTemplate'|translate}}
+                        </button>
+                    </li>
+                    <li ng-if="t.mode !== 'edit' && t.template.isLocked === false">
+                        <button type="button"
+                                ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                                ng-click="t.editMode()"
+                                class="btn btn-primary btn-block text-left"
+                                id="btnEdit">
+                            <i class="ci ci-doc-blank-pencil-edit-o"></i>
+                            {{'TEMPLATES_TEMPLATEBUILDER_SIDE_Edit'|translate}}
+                        </button>
+                    </li>
+                    <li>
+                        <button class="btn btn-primary btn-block text-left"
+                                id="btnViewAllSettings"
+                                ng-disabled="t.template.components.length === 0"
+                                ng-click="t.viewDetails()">
+                            <i class="ci ci-action-sort-list"></i>
+                            {{'TEMPLATES_TEMPLATEBUILDER_SIDE_ViewAllSettings'|translate}}
+                        </button>
+                    </li>
+
+                </ul>
+
+                <ul class="list-unstyled col-lg-6 col-md-12 col-sm-12">
+                    <li>
+                        <button ng-click="t.actions.cloneTemplate()"
+                                ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                                class="btn btn-primary btn-block text-left">
+                            <i class="ci ci-arrows-clone"></i>
+                            {{'TEMPLATES_TEMPLATEBUILDER_SIDE_Clone'|translate}}
+                        </button>
+                    </li>
+                    <li ng-if="t.template.isLocked === false">
+                        <button ng-click="t.deleteTemplate()"
+                                ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                                type="button"
+                                class="btn btn-primary btn-block text-left"
+                                id="btnDiscard">
+                            <i class="ci ci-trash"></i>
+                            {{'TEMPLATES_TEMPLATEBUILDER_SIDE_DeleteTemplate'|translate}}
+                        </button>
+                    </li>
+
+                    <li ng-if="t.mode === 'edit'">
+                        <button class="btn btn-primary btn-block text-left"
+                                id="btnImportTemplate"
+                                ng-disabled="$root.ASM.IsInRole('readonly')
+                        || $root.ASM.IsInRole('standard')
+                        || t.template.draft === false
+                        || t.mode !== 'edit'"
+                                ng-click="t.importTemplate()">
+                            <i class="ci ci-arrow-bold-line-import-down"></i>
+                            {{'TEMPLATES_TEMPLATEBUILDER_SIDE_ImportTemplate'|translate}}
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="clearfix"></div>
+            <div>
+                <h3>
+                    <i class="glyphicon glyphicon-paperclip"></i>
+                    {{'TEMPLATES_TEMPLATEBUILDER_SIDE_Attachments'|translate}}
+                </h3>
+                <ul class="list-unstyled col-sm-6">
+                    <li>
+                        <button ng-click="t.actions.addAttachment()" 
+                                class="btn btn-primary text-left"
+                                id="btnAddAttachments"
+                                ng-disabled="$root.ASM.IsInRole('readonly')
+                                            || $root.ASM.IsInRole('standard')
+                                            || t.mode !== 'edit'">
+                            <i class="ci ci-doc-page-list-attach-arrow-left-o"></i>
+                            {{'TEMPLATES_TEMPLATEBUILDER_SIDE_AddAttachments'|translate}}
+                        </button>
+                    </li>
+                </ul>
+
+                <ul class="list-unstyled list-inline"
+                    style="font-size: 13px;"
+                    ng-if="t.template.attachments.length > 0">
+                    <li ng-repeat="attachments in t.template.attachments">
+                        <button ng-click="t.actions.downloadAttachment(attachments)" 
+                                type="button"
+                                id="btnAttachment"
+                                class="btn btn-link attachment">
+                            {{attachments.name}}
+                        </button>
+                        <button ng-click="t.actions.deleteAttachment(attachments)"
+                                type="button"
+                                id="btnDeleteAttachment"
+                                class="btn btn-link deleteattachment"
+                                ng-if="!t.template.isLocked">
+                            <i class="ci-trash critical"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </aside>
+</section>

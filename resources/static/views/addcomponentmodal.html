@@ -1,0 +1,15 @@
+﻿<div id="modal_addcomponent">
+    <error-display errors="AddComponent.errors" on-click="AddComponent.ASM.RemoveError(error, AddComponent.errors)" on-expand-collapse=""></error-display>
+    <alert-handler error-obj="AddComponent.$scope.modal.params.component.errorObj" ng-if="AddComponent.componentsLoaded" popover-view="false"></alert-handler>
+
+    <component-editor config="AddComponent.$scope.modal.params"
+                      close-modal="AddComponent.close()"
+                      cancel-modal="AddComponent.cancel()" 
+                      save="AddComponent.save(data)"
+                      template-id="{{AddComponent.$scope.modal.params.templateId}}"
+                      errors="AddComponent.errors"
+                      type="template"
+                      invalid-form-elements="AddComponent.invalidFormElements"
+                      instances ="1"
+                      ng-if="AddComponent.componentsLoaded"></component-editor>
+</div>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html ng-app="app" ng-strict-di>
+<head>
+    <title translate="ApplicationTitle"></title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <script type="text/javascript">
+        window.cacheKey = "VTHGGOTZ";
+    </script>
+
+    <script src="js/dell-clarity-components/dell-clarity-vendor.min.js?v=VTHGGOTZ"></script>
+    <script src="js/dell-clarity-components/dell-clarity-components.min.js?v=VTHGGOTZ"></script>
+    <script src="js/dell-clarity-components/dell-clarity-components.tmpl.min.js?v=VTHGGOTZ"></script>
+
+    <script src="js/libs.min.js?v=VTHGGOTZ"></script>
+    <script src="js/scripts.min.js?v=VTHGGOTZ"></script>
+
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="icon" type="image/ico" href="images/favicon.ico" />
+
+    <link rel="stylesheet" href="css/dell-ui-clarity/dell-ui-clarity.min.css?v=VTHGGOTZ" />
+    <link rel="stylesheet" href="js/dell-clarity-components/dell-clarity-components.min.css?v=VTHGGOTZ" />
+    <link rel="stylesheet" href="css/app/app.min.css?v=VTHGGOTZ" />
+
+    <script type="text/javascript">
+
+        var div = document.createElement("div");
+        div.innerHTML = "<!--[if lt IE 9]><i></i><![endif]-->";
+        var isIeLessThan9 = (div.getElementsByTagName("i").length === 1);
+        if (isIeLessThan9) {
+            alert("Please ensure you are using IE9 or greater and that compatibility view is turned off.");
+        }
+
+    </script>
+</head>
+<body id="page-status" ng-controller="StatusController as status">
+
+
+    <section class="">
+        <header style="background-color: #0085c3; color: #fff; padding: 60px 0 60px;" class="text-center">
+            <img width="160px" height="160px"
+                 style="margin: 0 auto 30px; display: block;"
+                 ng-src="images/AppIcon-VxFlexManager-white-32.svg"
+                 alt="Application Logo"
+                 src="images/AppIcon-VxFlexManager-white-32.svg">
+            <h1 style="margin-bottom: 30px; color:#fff;font-size: 38px;">
+                {{"ApplicationTitle" | translate}}
+            </h1>
+            <p>{{status.copywriteStatement}}</p>
+            <i class="login-screen-dell-logo logo-dellemc" alt="Dell Logo"></i>
+        </header>
+        <section style="width: 75px; margin: 60px auto 0px;">
+            <spinner class="text-center" size="75"></spinner>
+        </section>
+        <div class="text-center" style="margin-top:5px;" ng-switch="status.status">
+            <span ng-switch-when="ready">
+                {{'APPLICATION_Status_Ready'|translate}}
+            </span>
+            <span ng-switch-when="notready">
+                {{'APPLICATION_Status_Notready'|translate}}
+            </span>
+            <span ng-switch-default>
+                {{status.status}}
+            </span>
+        </div>
+    </section>
+</body>
+</html>

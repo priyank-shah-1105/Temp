@@ -1,0 +1,50 @@
+﻿<div id="rcm_availability_banner"   class="row">
+    <div class="alert"
+         role="alert"
+         style="margin-bottom: 0px; color: cornflowerblue">
+        <ul class="list-inline">
+            <li>
+                <i ng-class="{'ci-health-info-tri-bang' : storageAlertBannerController.getCriticality(storageAlertBannerController.storageUtilization.percentageUsed) === 'warning', 'ci-action-circle-remove': storageAlertBannerController.getCriticality(storageAlertBannerController.storageUtilization.percentageUsed) === 'critical'}"
+                   aria-hidden="true"></i>
+            </li>
+            <li>
+                <strong>
+                    {{storageAlertBannerController.getCriticality(storageAlertBannerController.storageUtilization.percentageUsed) === 'warning' ? 'GENERIC_Warning' : 'GENERIC_Critical' | translate | uppercase}}:
+                </strong>
+                <span ng-bind-html="storageAlertBannerController.getBannerTitleText() | htmlSafe"></span>
+                <p>
+                    {{'INDEX_STORAGE_BANNER_Description'|translate}}
+                    <a ng-click="storageAlertBannerController.learnMore()"
+                       ng-href="{{storageAlertBannerController.capacityInfo.learnMoreLink}}"
+                       style="color:inherit;text-decoration: underline;">
+                        {{'INDEX_STORAGE_BANNER_LearnMore'|translate}}
+                    </a>
+                </p>
+            </li>
+            <li class="pull-right">
+                <ul class="list-inline">
+                    <li ng-if="storageAlertBannerController.getCriticality(storageAlertBannerController.storageUtilization.percentageUsed) === 'warning'">
+                        <span class="checkbox" style="display: initial;">
+                            <label>
+                                <input type="checkbox" ng-model="storageAlertBannerController.neverShowAgainCheckbox" />
+                                {{'INDEX_STORAGE_BANNER_DontShowAgain'|translate}}
+                            </label>
+                        </span>
+                    </li>
+                    <li>
+                        <button type="button"
+                                class="close"
+                                data-dismiss="alert"
+                                aria-label="Close"
+                                ng-click="storageAlertBannerController.xClicked()">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+
+
+    </div>
+</div>

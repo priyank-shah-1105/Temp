@@ -1,0 +1,45 @@
+﻿<section id="page_retryservice_modal">
+    <error-display errors="RetryServiceController.errors"
+                   on-click="$root.ASM.RemoveError(error, RetryServiceController.errors)"
+                   on-expand-collapse=""></error-display>
+   
+    <div class="row">
+        <div class="col-xs-12">
+            <p>
+                <span ng-bind-html="'SERVICES_SERVICE_Details_Retry_ConfirmModal_RetryService'|translate|htmlSafe"></span>
+                <button id="lnkViewFirmwareReport"
+                        class="btn-link"
+                        data-toggle="tooltip"
+                        title="{{'SERVICE_DETAIL_ViewComplianceReportToolTip'|translate}}"
+                        data-trigger="hover"
+                        ng-click="RetryServiceController.openFirmwareReport('service'); servicesvg.clearTooltips()"
+                        ng-disabled="!RetryServiceController.service.manageFirmware || !RetryServiceController.service.firmwarePackageName">
+                    {{'SERVICE_DETAIL_View_Firmware_Report'|translate}}
+                </button>
+            </p>
+            <p ng-bind-html="'SERVICES_SERVICE_Details_Retry_ConfirmModal_RetryService_Continue'|translate|htmlSafe"></p>
+        </div>
+    </div>
+
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+                <button id="btnRetryService"
+                        type="submit"
+                        class="btn btn-primary"
+                        ng-click="RetryServiceController.retryService()">
+                    {{'GENERIC_Yes'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="btnCancelRetryService"
+                        class="btn btn-default"
+                        type="button"
+                        ng-click="RetryServiceController.cancel()">
+                    {{'GENERIC_No'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>
+

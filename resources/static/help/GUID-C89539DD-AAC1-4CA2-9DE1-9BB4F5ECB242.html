@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Defining or
+editing an existing network</title><link rel="prev" href="GUID-2002C7A9-44BF-473E-92AA-3A8364AF746D.html" /><link rel="next" href="GUID-F96D8EC8-06E2-47D4-A0E4-33E5A6FE56D9.html" /><link href="static/screen.css?fAL4Y+sp" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-C89539DD-AAC1-4CA2-9DE1-9BB4F5ECB242" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">VxFlex Manager</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Defining or
+editing an existing network</h1><p>Adding the
+details of an existing network enables VxFlex Manager to automatically configure
+nodes that are connected to the network. </p>
+
+<ol class="steps" id="GUID-6211856C-21C3-49D0-A8A6-6867B6BEFD36">
+<li id="STEP_135400DF8FD741BC87DDA0BECC215557"><p>On the menu bar, click <span class="uicontrol">Settings</span> and then click <span class="uicontrol">Networks</span>.</p>
+The <span class="uicontrol">Networks</span> page
+opens.
+</li>
+<li id="STEP_7169D92752774A5887343165EA4C4E1C"><p>Complete one of the following:</p>
+<ul id="CHOICES_71A8391E575F41A6AFAA2AECCE80A4E0"><li id="CHOICE_4E293D44BAF44A529AF4E4C786CF0B61">To define a network, click <span class="uicontrol">Define</span>. The <span class="uicontrol">Define Network</span> page opens. </li><li id="CHOICE_5E0674E5C14C43B8B499580859EF9CDE">To edit an existing network, select
+the network that you want to modify, and click <span class="uicontrol">Edit</span>. The <span class="uicontrol">Edit Network</span> page opens.</li></ul>
+</li>
+<li id="STEP_21DDDA16FDFE421A9C7F8A4EA36BE3F5"><p>In the <span class="uicontrol">Name</span> field, enter
+the name of the network.</p><ul id="CHOICES_45F233851068477D9545C8E0D219067B"><li id="CHOICE_8C200BD0E3744D2992CBB62F1988D46E">Optionally, in the <span class="uicontrol">Description</span> field, enter a description for the network.</li></ul></li>
+
+<li id="STEP_100A1E8D323E4624BB8BE68E10B4BBFF"><p>From the <span class="uicontrol">Network Type</span> drop-down list, select one of the following network types. For more
+information about network types, see <a data-scope="local" href="GUID-F96D8EC8-06E2-47D4-A0E4-33E5A6FE56D9.html" title="">Network Types</a></p>
+<p><ul id="GUID-70961F6D-455D-4309-B6C3-647A26AFCD92">
+<li id="LI_90567BD0758045C3B64B61BC47BD85E6"><span class="uicontrol">General Purpose LAN</span></li>
+
+<li id="LI_1071522BC5594892AF359676ADEF9E55"><span class="uicontrol">Hypervisor Management</span></li>
+<li id="LI_0D28F9B8B4BB493480AFD5B7A1705CD2"><span class="uicontrol">Hypervisor Migration</span></li>
+
+<li id="LI_3813938625BF46838A08D96437F5F46A"><span class="uicontrol">OS Installation</span></li><li id="LI_5B43EF16E7CE43F2BF8DFDDD4DE445D3"><span class="uicontrol">Hardware Management</span></li>
+<li id="LI_87EA6045895C4DCB8F1B98B76ED4932A"><span class="uicontrol">VxFlex OS Data</span></li>
+<li id="LI_1985702664EC4F7C9FC63884219A0F8E"><span class="uicontrol">VxFlex OS Data (SDC Traffic Only)</span></li>
+<li id="LI_AAA860420E1E4288AF0D4773804ACF2A"><span class="uicontrol">VxFlex OS Data (SDS Traffic Only)</span></li>
+<li id="LI_D769702E66084C1EAD1FFF4852F59E6C"><span class="uicontrol">VxFlex OS Management</span></li>
+
+</ul><p>For a VxFlex OS configuration that uses a hyper-converged architecture with two data networks, you typically have two VxFlex OS data networks defined with the  VxFlex OS Data network type. The VxFlex OS Data network type supports both SDC and SDS communications. The VxFlex OS Data network type is used with hyper-converged services.</p><p>For a VxFlex OS configuration that uses a two-layer architecture with four dedicated data networks, you typically have two VxFlex OS Data (SDC Traffic Only) VLANs and two VxFlex OS Data (SDS Traffic Only) VLANs. These network types are used with storage only and compute only services. </p><p>You can edit the network type only if the network is not currently referenced by a template.</p></p>
+</li>
+<li id="STEP_3DE8FFC0E0B7431D94DF2925018F99A5"><p>In the <span class="uicontrol">VLAN ID</span> field,
+enter a VLAN ID between <kbd>1</kbd> and <kbd>4094</kbd>. </p>
+<p><div class="note" id="GUID-26B067E1-3A63-45A4-997B-80DB56F2825D"><span class="notelabel">NOTE: </span>VxFlex Manager uses the VLAN ID specifically to configure I/O modules to enable
+network traffic to flow from the node to configured networks during
+deployment. The VLAN ID can be edited only if the network is not currently referenced
+by a template.</div></p>
+</li>
+<li id="STEP_DB06EDB9F855434F8DD0A1E0FDBE826D"><p>Select  the <span class="uicontrol">Configure Static IP Address
+Ranges</span> check box, and then do the following:</p>
+<p><div class="note" id="GUID-6D3EBEEC-75DF-4285-8A64-814FC1D4D889"><span class="notelabel">NOTE: </span>After a network is created, you cannot select or clear this check box to configure
+static IP address pools.</div></p>
+<ol id="GUID-0EDC5306-EA7D-469B-AEF2-BFF62FE119BF">
+<li id="SUBSTEP_BFFA45F4B41249FF9593E6AE6DD220BF"><p>In the <span class="uicontrol">Subnet Mask</span> box, enter the subnet mask.</p></li><li id="SUBSTEP_845034A09AE4407AA2C9E902DF6685F2"><p>In the <span class="uicontrol">Gateway</span> box,
+enter the default gateway IP address for routing network traffic. </p>
+</li>
+
+<li id="SUBSTEP_C2BCB631CF5C40E0AEC096027A624FB4"><p>Optionally, in the <span class="uicontrol">Primary DNS</span> and <span class="uicontrol">Secondary DNS</span> fields, enter the IP addresses
+of primary DNS and secondary DNS.</p></li>
+<li id="SUBSTEP_072DE2D7A3B44FDD873AC6E19A13A623"><p>Optionally, in the <span class="uicontrol">DNS Suffix</span> field, enter the DNS suffix to append for host name resolution.</p>
+</li>
+<li id="SUBSTEP_682EAFEE667B42D1A04B274E5C76AA1C"><p>To add an IP address range, click <span class="uicontrol">Add IP Address Range</span>. In the row that displays, indicate the role in VxFlex OS nodes for the IP address range and then specify a  starting and ending IP address for the range. For the<span class="uicontrol">Role</span>, select either:</p>
+<p><ul id="UL_DAF559BEF3EC4F86A66594A77430F0E0"><li id="LI_C174912EDD5045D5B6F7A07038EC4301"><span class="uicontrol">SDS or SDC</span>: Default; range is assigned to Storage Data Servers (SDS) and Storage Data Client (SDC) roles.</li><li id="LI_9A8348AA18664672BDBDE239F3D06176"><span class="uicontrol">SDC</span>: Range is assigned to SDC role on hyper-converged nodes and compute only nodes.</li><li id="LI_F55AA99146AA498993E46B8DDD9C2234"><span class="uicontrol">SDS</span>: Range is assigned to SDS role on hyper-converged nodes and storage only nodes</li></ul><p>Repeat this step to add multiple IP address ranges
+based on the requirement. For example, you can use one range for SDC and another for SDS.</p><div class="note" id="GUID-6DDA0265-9236-482B-94C2-EBE9B717A1A2"><span class="notelabel">NOTE: </span>IP address ranges cannot overlap. For example, you cannot create
+an IP address range of 10.10.10.1–10.10.10.100 and another range of
+10.10.10.50–10.10.10.150.</div></p>
+</li>
+</ol>
+</li>
+<li id="STEP_5E5FD026BDCC43BDBA7A6B11845710B4"><p>Click <span class="uicontrol">Save</span>.</p></li>
+</ol>
+<dl class="relations"><dt>Related Concepts</dt><dd class="choice_list"><ul data-inset="false" data-role="listview" data-theme="a"><li><a href="GUID-F96D8EC8-06E2-47D4-A0E4-33E5A6FE56D9.html">Network types</a></li></ul></dd></dl></article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?5ZiewaI5"></script></body></html>

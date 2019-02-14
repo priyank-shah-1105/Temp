@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Deploying a service</title><link rel="prev" href="GUID-10CD78FB-ED63-4B82-AF27-642386E3B299.html" /><link rel="next" href="GUID-30B43E75-29F5-4346-8153-7DA9DF532BD3.html" /><link href="static/screen.css?fAL4Y+sp" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-4F98D4A9-4E41-4831-B348-D59B46016463" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">VxFlex Manager</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Deploying a service</h1>
+<div class="prereq" id="PREREQ_21EC07967EC94EC1B1D4EC5A70A7A491"><p>You cannot use a template that is in draft state to deploy a service. Publish the template before using it to deploy a service.</p></div><div class="context" id="GUID-D956CEB8-80B4-412A-ABD4-8748F08A2555_unique_1"><p>To deploy a service: </p></div>
+<ol class="steps" id="GUID-2059B11B-4832-4173-B20C-18A67EA60D79_unique_1">
+<li id="STEP_AA8A9BFD2AB448C5896F728AB1FD751E"><p>On the menu bar, click <span class="uicontrol">Templates</span>.</p>
+
+</li>
+<li id="STEP_73CADBD0BAE44A778D4DB17293F94D67"><p>On the <span class="uicontrol">Templates</span> page,
+click <span class="uicontrol">Deploy New Service</span>.</p>
+<p>The <span class="uicontrol">Deploy Service </span>wizard
+starts.</p>
+</li>
+<li id="STEP_002EAF1EE644424D991CF055C6CD1CBB"><p>On the <span class="uicontrol">Deploy Service</span> page, perform the following steps:</p>
+<p><ol id="GUID-C0AB7683-AFF0-4684-9073-62EC5BD3D392_unique_1">
+<li id="LI_9FF0C6F28B604E3EA41126B4DD18E006"><p>From the <span class="uicontrol">Select Published
+Template</span> list, select the template to deploy
+a service.</p></li>
+<li id="LI_6D239D02052846748FDC4CAFDE23AA80"><p>Enter the <span class="uicontrol">Service Name</span> (required) and<span class="uicontrol"> Service Description</span> (optional)
+that identifies the service.</p></li><li id="LI_325AD27DF17E4198A659E8C2564A8045"><p>To specify the RCM version to use for compliance, select the version from the <span class="uicontrol">Release Certification Matrix (RCM)</span> list or choose <span class="uicontrol">Use VxFlex Manager appliance default catalog</span>.</p>
+<div class="note" id="GUID-0DDC2143-781E-430F-8EDA-8645B38D8B4C_unique_2"><span class="notelabel">NOTE: </span>Changing the firmware
+repository might update the firmware level on nodes for this service.
+Firmware on shared devices will still be maintained by the global
+default firmware repository.</div></li>
+
+<li id="LI_DB0CD545F11742F991961B1E6C8C99F0"><p>Indicate <span class="uicontrol">Who should have access to the service deployed from this template</span> by selecting one of the following options:</p><p><ul id="GUID-C9CE6309-8044-4DF7-A51E-F8105F5B2C93">
+<li id="LI_27250AD7EB254AC7AE917A743BCDC816">Grant access to  <span class="uicontrol">Only VxFlex Manager Administrators</span>.</li><li id="LI_0C838EDB80AA48AA9D084E319F78BABD">Grant access to <span class="uicontrol">VxFlex Manager Administrators and Specific Standard Users</span>. Click <span class="uicontrol">Add User(s)</span> to add one or more standard users to the list. Click <span class="uicontrol"> Remove User(s)</span> to remove users from the list.</li>
+<li id="LI_0D7C71DD749A486CB750E3FA7057ED6A">Grant access to <span class="uicontrol">VxFlex Manager Administrators and All Standard Users</span>.</li>
+</ul></p></li>
+</ol></p>
+</li>
+<li id="STEP_7574E9F95F2E457EAB5A0AC6CD5C5EFC"><p>Click <span class="uicontrol">Next</span>.</p>
+
+</li><li id="STEP_C0971A8EC6E147D98A8A7F9851590B38"><p>On the <span class="uicontrol">Deployment Settings</span> page, configure the required settings.</p></li><li id="STEP_A1970A9468BD49D98F6E75C918DBD0D5"><p>To configure the <span class="uicontrol">VxFlex OS Settings</span>, choose one of the following options for  <span class="uicontrol">VxFlex OS MDM Virtual IP Source</span>:</p><ul id="CHOICES_3680AFD72C6A4EC6A6F53F72594E2F23"><li id="CHOICE_8B45940822FE4EC992F13A49781BCA17"><span class="uicontrol">VxFlex Manager Selected IP</span> instructs VxFlex Manager to select the virtual IP addresses.</li><li id="CHOICE_384FB26F85A44C649FBF812689E96BDD"><span class="uicontrol">User Entered IP</span> allows you to specify the IP address manually for each VxFlex OS data network that is part of the node definition in the service template.</li></ul></li><li id="STEP_08ED4E1B8A9C4B2DAFB7B280F09EE897"><p>To configure <span class="uicontrol">OS Settings</span>, select an <span class="uicontrol">IP Source</span>. </p><p><p>To manually enter the IP address, select <span class="uicontrol">User Entered IP</span>. From the <span class="uicontrol">IP Source</span> list, select <span class="uicontrol">Manual Entry</span>. Then enter the IP address in the <span class="uicontrol">Static IP Address</span> box.</p></p></li>
+<li id="STEP_75B44922B5B945BDA4C1CE60CEDDB6F3"><p>To configure <span class="uicontrol">Hardware Settings</span>, select the node source from the <span class="uicontrol">Node Source</span> list.</p>
+<ul id="CHOICES_AEC77E748ACC4B4C955C21E0C02741D9"><li id="CHOICE_39DD1CE42FE74D2DAC3B033DF9FF6B37">If you select <span class="uicontrol">Node Pool</span>, you can view all user-defined node pools and the
+global pool. Standard users can see only the pools for which they have
+permission. Select the <b>Retry
+On Failure</b> option to ensure that VxFlex Manager selects another node from
+the node pool for deployment if any node fails. Each node can be retried up to five times.</li><li id="CHOICE_65DDDA7DC64C480AB2AB056D34DA0ECC"> If you select <span class="uicontrol">Manual Entry</span>, the <span class="uicontrol">Choose
+Node </span> list appears. Select the node by its Service Tag for deployment from the list.</li></ul>
+
+</li><li id="STEP_0C24C6AC5F2E4BD69998A87C99C703CB"><p> Click <span class="uicontrol">Next</span></p></li>
+<li id="STEP_6ADE3BEAE5894F0598D5B20D1EB6F136"><p>On the <span class="uicontrol">Schedule Deployment</span> page, select  one of the following options:</p>
+<ul id="CHOICES_868CDAA41A4F4A1C93DE8CDB3AD99161"><li id="CHOICE_6508D55924BD4E149FFAFAF965E557FE"><span class="uicontrol">Deploy Now</span>—Select this option to deploy the service immediately.</li><li id="CHOICE_A5C2A2282DD24EB5B9FF5E51887A8CD2"><span class="uicontrol">Deploy Later</span>—Select this option and enter the date and time to deploy the service.</li></ul>
+</li>
+</ol>
+<dl class="relations"><dt>Related Tasks</dt><dd class="choice_list"><ul data-inset="false" data-role="listview" data-theme="a"><li><a href="GUID-DA55E711-6BD6-4AEE-B3B0-DF00087B855C.html">Adding components to a service</a></li><li><a href="GUID-F7A1367E-7BF0-480C-9C38-09F0BC4878DD.html">Redeploying a service</a></li><li><a href="GUID-6B1FEB89-27E7-4720-9D7C-566403BFD433.html">Removing a service</a></li></ul></dd></dl></article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?5ZiewaI5"></script></body></html>

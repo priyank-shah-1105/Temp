@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Virtual machine
+settings</title><link rel="prev" href="GUID-234AE139-8EDE-4742-AC73-68D22B18FF3B.html" /><link rel="next" href="GUID-8B34AFDF-17F4-4140-AC9D-479E09D0481D.html" /><link href="static/screen.css?mSUyqg2y" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-19B402B0-C210-4E07-9670-FDDA8AFD608F" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">Active System Manager Release 8.4</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Virtual machine
+settings</h1>
+<table class="table frame-all" id="GUID-160AF6AF-38D9-41CE-A302-1DD8C81AE6E1"><caption>Table 1. Virtual machine
+settings</caption>
+
+
+<thead><tr><td class=" valign_top" colspan="2">Virtual Machine Component</td></tr><tr><td class=" valign_top"><p>Field Name</p></td><td class=" valign_top"><p>Description</p></td></tr></thead><tbody><tr><td><span class="uicontrol">Select a Component</span></td><td>Select one of the following options from the drop-down menu:<ul id="UL_001CFE6DD9BC4DE09C602414CED2D334"><li id="LI_CA6977658B784EE29F97366502B001ED"><span class="uicontrol">vCenter Virtual Machine</span></li><li id="LI_7108FB7C4FB04729BEA8BBBDA7699B97"><span class="uicontrol">Clone vCenter Virtual Machine</span></li><li id="LI_0D1FA91C307749AAA413D3BD9AC82C63"><span class="uicontrol">Clone Hyper-V Virtual Machine</span></li></ul></td></tr><tr><td><span class="uicontrol">Number of Instances</span> </td><td>In the <span class="uicontrol">Number of Instances</span> box, type or select the number of instances that you want to add.<div class="note" id="GUID-6AB7E76E-5CA5-4C01-92CE-BA7E3537C084_unique_2"><span class="notelabel">NOTE: </span>If you select more than one instance, a single component  representing multiple instances of an identically configured component is created.</div><div class="note" id="GUID-C4F1EFBE-23BF-4136-92D9-E9222DA32D5F_unique_1"><span class="notelabel">NOTE: </span>You can edit the components to add more instances.</div><div class="note" id="GUID-C1D6ABE4-EEF2-4B2F-A746-FCB336FF8E9C"><span class="notelabel">NOTE: </span>You can create multiple components if different configuration settings are required.</div></td></tr><tr><td><span class="uicontrol">Component Name</span></td><td>Indicates the Virtual Machine component name. Type the component name in the <span class="uicontrol">Component Name</span> field.</td></tr><tr><td><span class="uicontrol">Related Components</span></td><td>Select <span class="uicontrol">Associate All</span> or <span class="uicontrol">Associate Selected</span> to associate all or specific components to the new component.</td></tr><tr><td colspan="2"><b>vCenter
+Virtual Machine</b></td></tr><tr><td colspan="2"><p>Virtual Machine OS Settings</p></td></tr><tr><td><span class="uicontrol">Auto-generate Host Name</span></td><td>Select to generate a new name for each virtual
+machine.<div class="note" id="GUID-12B06D9A-60D9-4ABD-8F3A-60C2E86FE9BD"><span class="notelabel">NOTE: </span>The <span class="uicontrol">Host Name Template</span> field is displayed if this option
+is selected.</div></td></tr><tr><td><span class="uicontrol">Host Name Template</span></td><td><p>Displays the naming convention
+followed for the virtual machines deployed in a service.</p><div class="note" id="GUID-1FD4C603-9C5B-4C07-A9FA-CFD4D4DFE1FC"><span class="notelabel">NOTE: </span>The naming convention
+that is followed consists of vm${num), where <i>vm</i> indicates a
+static text that you can provide and <i>${num}</i> is a variable number
+that is enumerated for the number of virtual machines that you create.
+For example, if you deploy a service with 3 virtual machines and if
+you select the auto-generate option and provide the name as vm, the
+virtual machines are named as vm1, vm2, and vm3.</div></td></tr><tr><td><p><span class="uicontrol">Administrator password</span> </p></td><td><p>Specify OS administrator password
+that is set on the installed OS.</p></td></tr><tr><td><p><span class="uicontrol">Confirm administrator
+password </span></p></td><td><p>Enter the password to confirm the
+administrator password.</p></td></tr><tr><td><p><span class="uicontrol">OS Image</span></p></td><td><p>Specifies the target repository
+where the OS image install files are located. The default repositories
+are ESXi. The additional repositories are shown if the user created
+them on the ASM appliance.</p></td></tr><tr><td><p><span class="uicontrol">NTP Server</span></p></td><td><p>Type the IP address of the NTP server for time
+synchronization.</p><p>If you want to add more than one NTP server
+in the OS section of a server component, make sure to separate the
+IP addresses using comma (,).</p></td></tr><tr><td colspan="2"><p>Virtual Machine Settings (<span class="uicontrol">vCenter Virtual Machine</span>)</p></td></tr><tr><td><p><span class="uicontrol">Number of CPUs</span></p></td><td><p>Indicates the number of CPUs specified
+while configuring a Virtual Machine.</p></td></tr><tr><td><p><span class="uicontrol">Virtual Disk(s)</span></p></td><td><p>Specifies the size to allocate
+for virtual machine hard disk.</p><p>The default size is 32 GB.</p><div class="note" id="GUID-E4FC36D9-989E-49B7-8CC7-FCE1BA7723B0"><span class="notelabel">NOTE: </span>The operating system is installed on the first virtual disk.</div></td></tr><tr><td><span class="uicontrol">Add Virtual Disk</span></td><td>Click this option to create extra virtual disks.</td></tr><tr><td><p><span class="uicontrol">Memory in MB</span></p></td><td><p>Indicates the memory specified
+while configuring a virtual machine.</p></td></tr><tr><td><p><span class="uicontrol">Networks</span></p></td><td><p>Allows you to set the virtual machine
+network or set static networks already created in ASM as workload
+networks for the virtual machines.</p><div class="note" id="GUID-589227CF-E3C7-4D20-8B4F-3B6A3A63D0B6"><span class="notelabel">NOTE: </span>Static IPs are applicable
+only for vCenter Virtual Machine on which you are installing Linux
+operating system.</div></td></tr><tr><td><span class="uicontrol">Static Network Default Gateway</span></td><td><p>Set the default gateway for the
+static network selected.</p><div class="note" id="GUID-1D6F4B56-7D8E-4071-8148-4DADC85FFD7F"><span class="notelabel">NOTE: </span>This option is applicable
+only if you have set the <span class="uicontrol">Networks </span>setting to
+a static network.</div></td></tr><tr><td colspan="2"><p>Virtual Machine Settings (<b>Clone vCenter Virtual Machine</b>)</p></td></tr><tr><td><p><span class="uicontrol">Auto-generate Name</span></p></td><td><p>Select to generate a new name
+for each virtual machine.</p></td></tr><tr><td><p><span class="uicontrol">VM Name Template</span></p></td><td><p>Displays the naming convention
+followed for the virtual machines deployed in a service.</p><div class="note" id="GUID-CB1C8E68-FBB1-419A-A7F3-6F6307504141"><span class="notelabel">NOTE: </span>The naming convention
+that is followed consists of vm${num), where <i>vm</i> indicates a
+static text that you can provide and <i>${num}</i> is a variable number
+that is enumerated for the number of virtual machines that you create.
+For example, if you deploy a service with 3 virtual machines and if
+you select the auto-generate option and provide the name as vm, the
+virtual machines are named as vm1, vm2, and vm3.</div></td></tr><tr><td><span class="uicontrol">Clone Type</span></td><td><p>Select the clone type from <b>Clone Type</b> drop-down menu.</p></td></tr><tr><td><p><span class="uicontrol">Source</span></p></td><td><p>Specifies the name of the source
+template.</p></td></tr><tr><td><p><span class="uicontrol">Source Datacenter</span></p></td><td><p>Specifies the VMware data center
+where the source template or virtual machine resides.</p></td></tr><tr><td><span class="uicontrol">VM Guest Customization Spec</span> </td><td><p>Select the specs available in
+vCenter inventory. </p><div class="note" id="GUID-2289BB67-9ACA-4A88-B65E-260CD819BD7B"><span class="notelabel">NOTE: </span>To make these specs available for selection, update the vCenter inventory with customized spec. For more information, see<a data-scope="local" href="GUID-8B34AFDF-17F4-4140-AC9D-479E09D0481D.html" title=""> Creating customization
+specification for vCenter virtual machine clone</a>. </div></td></tr><tr><td><p><span class="uicontrol">Number of CPUs</span></p></td><td><p>Indicates the number of CPUs specified
+while configuring a Virtual Machine.</p></td></tr><tr><td><p><span class="uicontrol">Virtual Disk Size (GB)</span></p></td><td><p>Specifies the size to allocate
+for virtual machine hard disk.</p></td></tr><tr><td><p><span class="uicontrol">Memory in MB</span></p></td><td><p>Indicates the memory specified in
+GB while configuring a Virtual Machine.</p></td></tr><tr><td><p><span class="uicontrol">Networks</span></p></td><td><p>Allows you to set the virtual machine
+network or set static networks already created in ASM as workload
+networks for the virtual machines.</p><div class="note" id="GUID-10157896-1ADF-47DE-9076-539A803CE2F0"><span class="notelabel">NOTE: </span>Static IPs are applicable
+only for vCenter Virtual Machine on which you are installing Linux
+operating system.</div></td></tr><tr><td><span class="uicontrol">Static Network Default Gateway</span></td><td><p>Set the default gateway for the
+static network selected.</p><div class="note" id="GUID-D2DE2913-1A2F-4CB2-8191-28144A93EAFD"><span class="notelabel">NOTE: </span>This option is applicable
+only if you have set the <span class="uicontrol">Networks </span>setting to
+a static network.</div></td></tr><tr><td colspan="2"><p>Virtual Machine Settings (<b>Clone Hyper-V Virtual Machine</b>)</p></td></tr><tr><td><span class="uicontrol">Auto-generate Name</span></td><td><p>Select to generate a new name
+for each virtual machine.</p><div class="note" id="GUID-A7EF17C9-F6E3-4EA8-8FC8-A09A37DDB969"><span class="notelabel">NOTE: </span>If this option is selected,
+the <b>VM Name Template</b> field is displayed.</div></td></tr><tr><td><span class="uicontrol">VM Name Template</span></td><td><p>Displays the naming convention
+followed for the virtual machines deployed in a service.</p><div class="note" id="GUID-5AD5FBCD-1D00-4ED6-8DC4-511B51B6F342"><span class="notelabel">NOTE: </span>The naming convention
+that is followed consists of vm${num), where <i>vm</i> indicates a
+static text that you can provide and <i>${num}</i> is a variable number
+that is enumerated for the number of virtual machines that you create.
+For example, if you deploy a service with 3 virtual machines and if
+you select the auto-generate option and provide the name as vm, the
+virtual machines are named as vm1, vm2, and vm3.</div></td></tr><tr><td><p><span class="uicontrol">Description</span></p></td><td><p>Indicates the number of CPUs specified
+while configuring a Virtual Machine.</p></td></tr><tr><td><p><span class="uicontrol">Name</span></p></td><td><p>Specifies the size to allocate
+for virtual machine hard disk.</p></td></tr><tr><td><p><span class="uicontrol">Template</span></p></td><td><p>Specifies the SCVMM virtual machine
+template name.</p></td></tr><tr><td><p><span class="uicontrol">Path</span></p></td><td><p>Specifies the storage path where
+VM clone is deployed.</p></td></tr><tr><td><p><span class="uicontrol">Networks</span></p></td><td><p>Specifies the ASM networks, which
+are connected to the virtual machine clone.</p></td></tr><tr><td><p><span class="uicontrol">Block Dynamic Optimization</span></p></td><td><p>If it is <code>True</code>,
+the block dynamic optimization is enabled. Possible values: <code>True</code> or <code>False</code>.</p></td></tr><tr><td><p><span class="uicontrol">Highly Available</span></p></td><td><p>Enables whether the VM is a highly
+available VM.</p></td></tr><tr><td><p><span class="uicontrol">Number of CPUs</span></p></td><td><p>Specifies the Number of CPUs to
+allocate to the virtual machine.</p></td></tr><tr><td><p><span class="uicontrol">Memory in MB</span></p></td><td><p>Specifies the memory to allocate
+to the virtual machine.</p></td></tr><tr><td><p><span class="uicontrol">Start Action</span></p></td><td><p>Selects the action to perform
+automatically when the virtualization server starts.</p></td></tr><tr><td><p><span class="uicontrol">Stop Action</span></p></td><td><p>Selects the action to perform when
+the virtualization server stops.</p></td></tr></tbody>
+</table>
+<div class="section" id="GUID-B280BBFC-3734-48D6-9E05-24E852E3C522"><h1 id="GUID-4B958DA5-B863-427C-941D-D78910E822FA"><span class="uicontrol">Deploying
+customization specification for vCenter virtual machine clone</span></h1><p>You can apply customization specification to virtual machines deployed using ASM. A customization spec allows you to create a spec with settings such as host name, domain name, network settings, static IPs that can be applied to VM clones. Before deploying a customization spec, ensure that you have created a spec and added it to the vCenter inventory. For more information on creating a customization spec, see<a data-scope="local" href="GUID-8B34AFDF-17F4-4140-AC9D-479E09D0481D.html" title=""> Creating customization
+specification for vCenter virtual machine clone</a>.</p><div class="note" id="GUID-EC431AEA-7D2D-4A9C-9184-D7CB07333D12"><span class="notelabel">NOTE: </span>Customization specification
+only applies to VMware virtual machine clone.</div><p>To deploy customization specification for vCenter virtual machine
+clone:</p><ol id="GUID-663DB2B7-A718-4E7A-85D7-781037209CF6">
+<li id="LI_0CF7DCD000B542D0912D3635BAF28B4E">Click <span class="uicontrol">Templates</span>. </li>
+<li id="LI_2A1E3842FB9B41C792A209775038DAAE">Create and edit the template. For more information on creating a template, see<a data-scope="local" href="GUID-90061F56-B1A1-4664-A3A8-3F7457BAFAB9.html" title="">Adding a template</a>.</li>
+<li id="LI_927857B263814A5EABF3B74743E2A8BD">On the <span class="uicontrol">Template Builder </span>page, click <span class="uicontrol">Add VM</span>. <p>The <span class="uicontrol">Virtual Machine Component</span> window is displayed.</p></li>
+<li id="LI_EA8547BEFA6145A3AA7D9BC0569EE841">Select <span class="uicontrol">Clone vCenter Virtual Machine </span>from the <span class="uicontrol">Select a Component</span> drop-down menu.</li>
+<li id="LI_8CA738B8F46C41B6BB4157CB20F2BFBD">Under the <span class="uicontrol">Associated Resources</span> section, select <span class="uicontrol">Associate Selected Resources</span> to associate all or specific components to the new component.</li>
+<li id="LI_12256E544BCA4F788F00BBECEBD7722D">Click <span class="uicontrol">Continue</span>.</li>
+<li id="LI_BA4A304C1A8B4E448FB478591C3C6858">Under <span class="uicontrol">Virtual Machine Settings</span>, select or enter all the parameters. For more information on Virtual
+Machine Settings, see <a data-scope="local" href="GUID-19B402B0-C210-4E07-9670-FDDA8AFD608F.html#GUID-19B402B0-C210-4E07-9670-FDDA8AFD608F" title="">Virtual Machine Settings</a>.</li>
+<li id="LI_0F2DA59C3CAA4DA1A67269EAA67C1434">To apply the settings and deploy the customization
+specification, click <span class="uicontrol">Add</span>.</li>
+</ol></div>
+</article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?MavHWBUW"></script></body></html>

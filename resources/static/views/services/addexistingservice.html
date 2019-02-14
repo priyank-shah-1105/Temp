@@ -1,0 +1,498 @@
+﻿<section id="page_add_existing_service">
+    <error-display errors="addExistingServiceController.errors"
+                   on-click="$root.ASM.RemoveError(error, addExistingServiceController.errors)"
+                   on-expand-collapse=""></error-display>
+    <wizard on-finish="addExistingServiceController.finishWizard()"
+            on-cancel="addExistingServiceController.cancel()">
+        <wizard-step step-title="{{'SERVICE_ADD_EXISTING_Service_Welcome'|translate}}" id="welcome">
+            <h1>{{"SERVICE_ADD_EXISTING_Service_Welcome" | translate}}</h1><br />
+            <p ng-bind-html="'SERVICE_ADD_EXISTING_Service_WelcomeMessage'|translate|htmlSafe"></p>
+        </wizard-step>
+        <!-- Service Information -->
+        <wizard-step step-title="{{'SERVICE_ADD_EXISTING_ServiceInformation'|translate}}"
+                     on-next="addExistingServiceController.step1Complete()"
+                     id="step1">
+            <h1>{{'SERVICE_ADD_EXISTING_ServiceInformation'|translate}}</h1>
+            <form name="addExistingServiceController.forms.step1"
+                  class="form-horizontal"
+                  role="form"
+                  novalidate
+                  form-validation="addExistingServiceController.forms.step1._submitted">
+                <div class="form-group">
+                    <div class="col-sm-4">
+                        <label class="control-label">
+                            {{'SERVICE_ADD_EXISTING_NameStar'|translate}}
+                        </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input ng-model="addExistingServiceController.serviceCreator.serviceName"
+                               name="name"
+                               id="name"
+                               type="text"
+                               required
+                               class="form-control" />
+                        <div class="clearfix"></div>
+                        <div ng-if="addExistingServiceController.forms.step1._submitted" class="text-danger">
+                            <div ng-if="addExistingServiceController.forms.step1.name.$error.required">
+                                {{'GENERIC_RequiredField'|translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4">
+                        <label class="control-label">
+                            {{'SERVICE_ADD_EXISTING_Description'|translate}}
+                        </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <textarea class="form-control"
+                                  name="description"
+                                  ng-model="addExistingServiceController.serviceCreator.serviceDescription"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4">
+                        <label class="control-label">
+                            {{'SERVICE_ADD_EXISTING_Type'|translate}}*
+                        </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <select id="type_{{addExistingServiceController.uniqueId}}"
+                                class="form-control"
+                                name="type"
+                                ng-model="addExistingServiceController.serviceCreator.type"
+                                ng-options="type.id as type.name for type in addExistingServiceController.types"
+                                required>
+                            <option value="">{{'GENERIC_select' |translate}}</option>
+                        </select>
+                        <div ng-if="addExistingServiceController.forms.step1._submitted" class="text-danger">
+                            <div ng-if="addExistingServiceController.forms.step1.type.$error.required">
+                                {{'GENERIC_RequiredField' | translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="!$root.ASM.IsInRole('standard') && !addExistingServiceController.readOnly && addExistingServiceController.serviceCreator.manageFirmware">
+                    <div class="col-sm-4">
+                        <label class="control-label">
+
+                            <!--{{ 'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_updateFirmwareonServerswhenDeployed' | translate }}-->
+                            {{ 'SERVICE_ADD_EXISTING_ReleaseCertificationMatrix' | translate }} *
+                        </label>
+                    </div>
+                    <!--<div class="col-sm-8">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="addExistingServiceController.serviceCreator.manageFirmware" />
+                                {{'SERVICE_ADD_EXISTING_PerformFirmwareCompliance'|translate}}
+                            </label>
+                        </div>
+                    </div>-->
+                    <div class="col-sm-8">
+                        <select id="firmwarepackage{{addExistingServiceController.uniqueId}}"
+                                class="form-control"
+                                name="firmwarePackage"
+                                ng-model="addExistingServiceController.serviceCreator.firmwarePackageId"
+                                ng-options="package.id as package.name for package in addExistingServiceController.firmwares"
+                                required>
+                            <option value="">{{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_Select' |translate}}</option>
+                        </select>
+                        <div ng-if="addExistingServiceController.forms.step1._submitted" class="text-danger">
+                            <div ng-if="addExistingServiceController.forms.step1.firmwarePackage.$error.required">
+                                {{'GENERIC_RequiredField' | translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="form-group" ng-if="addExistingServiceController.serviceCreator.manageFirmware">
+                    <div class="col-sm-4">
+                        <label class="control-label">-->
+                <!--{{ 'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_updateFirmwareonServerswhenDeployed' | translate }}-->
+                <!--{{ 'SERVICE_ADD_EXISTING_RCMVersion' | translate }}
+                        </label>
+                    </div>
+                </div>-->
+                <!--<div class="col-sm-4">
+                    {{ 'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_firmwareOnSharedDevices' | translate}}
+                </div>-->
+                <!--
+                allStandardUsers property has a getter of get_allStandardusers(context) and a setter of updateAllStandardUsersProp(context)
+                    -->
+                <div class="form-group">
+                    <div class="col-sm-4">
+                        <label class="control-label">
+                            {{ 'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_WhoShouldHaveAccess' | translate }}
+                        </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <select id="grantedUsers"
+                                class="form-control"
+                                name="grantedUsers"
+                                ng-change="addExistingServiceController.updateAllStandardUsersProp(addExistingServiceController.serviceCreator)"
+                                ng-model="addExistingServiceController.serviceCreator._allStandardUsers"
+                                required>
+                            <option value="">{{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_Select' |translate}}</option>
+                            <option value="admins">{{'TEMPLATES_AdminsOnly' |translate}}</option>
+                            <option value="specific">{{'TEMPLATES_SpecificStandardUsers' |translate}}</option>
+                            <option value="allStandard">{{'TEMPLATES_AllStandardUsers' |translate}}</option>
+                        </select>
+                        <div ng-if="addExistingServiceController.forms.step1._submitted" class="text-danger">
+                            <div ng-if="addExistingServiceController.forms.step1.grantedUsers.$error.required">
+                                {{'GENERIC_RequiredField' | translate}}
+                            </div>
+                        </div>
+                        <!--ng-if specific standard users-->
+                        <div ng-if="addExistingServiceController.serviceCreator._allStandardUsers === 'specific'" class="form-group">
+                            <add-users users-list="addExistingServiceController.serviceCreator.assignedUsers"></add-users>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </wizard-step>
+        <!-- Cluster Information -->
+        <wizard-step step-title="{{'SERVICE_ADD_EXISTING_ClusterInformation'|translate}}" id="step2">
+            <h1>{{'SERVICE_ADD_EXISTING_ClusterInformation'|translate}}</h1>
+            <ng-form name="addExistingServiceController.forms.step2" 
+                     form-validation="addExistingServiceController.forms.step2._submitted" 
+                     class="col-md-8">
+                <div class="form-horizontal">
+                    <!--<div class="form-group">
+                        <div class="col-sm-6">
+                            {{'SERVICE_ADD_EXISTING_ComponentNameStar'|translate}}
+                        </div>
+                        <div class="col-sm-6">
+                            <input class="form-control"
+                                   name="componentName"
+                                   id="componentName"
+                                   required
+                                   ng-model="addExistingServiceController.serviceCreator.template.components[0].name" />
+                            <div ng-if="addExistingServiceController.forms.step2._submitted" class="text-danger">
+                                <div ng-if="addExistingServiceController.forms.step2.componentName.$error.required">
+                                    {{'GENERIC_RequiredField'|translate}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>-->
+                    <div ng-repeat="component in addExistingServiceController.serviceCreator.template.components">
+                        <div ng-repeat="category in component.categories">
+                            <div ng-repeat="setting in category.settings | addExistingSettings:component" class="form-group">
+                                <basic-setting category="category"
+                                               setting="setting"
+                                               component="component"
+                                               form="addExistingServiceController.forms.step2"
+                                               read-only-mode="false"></basic-setting>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </ng-form>
+
+
+
+        </wizard-step>
+        <!-- Inventory Summary (compute and hyper)-->
+        <wizard-step step-title="{{'SERVICE_ADD_EXISTING_Service_InventorySummary'|translate}}" ng-if="!addExistingServiceController.isStorageOnly()"
+                     on-enter="addExistingServiceController.enterInventorySummary();">
+            <h1>{{ 'SERVICE_ADD_EXISTING_SummaryForService' | translate:{ serviceName: addExistingServiceController.serviceCreator.serviceName } }}</h1>
+            <div>{{'SERVICE_ADD_EXISTING_SummaryDescription'|translate}}</div>
+            <br />
+            <ul class="list-inline">
+                <li>
+                    <strong>{{'SERVICE_ADD_EXISTING_ASMClusterInventory'|translate}}: </strong>
+                </li>
+                <li>
+                    {{'SERVICE_ADD_EXISTING_Clusters'|translate}}:
+                    {{addExistingServiceController.existingService.available.clusters + addExistingServiceController.existingService.available.scaleios}}/{{addExistingServiceController.existingService.count_cluster}}
+                    <statusicon value="addExistingServiceController.warning" ng-if="addExistingServiceController.existingService.available.clusters + addExistingServiceController.existingService.available.scaleios != addExistingServiceController.existingService.count_cluster"></statusicon>
+                </li>
+                <li>
+                    {{'SERVICE_ADD_EXISTING_PhysicalServers'|translate}}:
+                    {{addExistingServiceController.existingService.available.servers}}/{{addExistingServiceController.existingService.count_server}}
+                    <statusicon value="addExistingServiceController.warning" ng-if="addExistingServiceController.existingService.available.servers != addExistingServiceController.existingService.count_server"></statusicon>
+                </li>
+                <li>
+                    {{'SERVICE_ADD_EXISTING_Storage'|translate}}:
+                    {{addExistingServiceController.existingService.available.storages}}/{{addExistingServiceController.existingService.count_storage}}
+                    <statusicon value="addExistingServiceController.warning" ng-if="addExistingServiceController.existingService.available.storages != addExistingServiceController.existingService.count_storage"></statusicon>
+                </li>
+                <!--<li>
+                    {{'SERVICE_ADD_EXISTING_ScaleIOGateway'|translate}}:
+                    {{addExistingServiceController.existingService.available.scaleios}}/{{addExistingServiceController.existingService.count_scaleio}}
+                    <statusicon value="addExistingServiceController.warning" ng-if="addExistingServiceController.existingService.available.scaleios != addExistingServiceController.existingService.count_scaleio"></statusicon>
+                </li>-->
+            </ul>
+
+            <resource-tables ng-if="addExistingServiceController.existingServiceCopy"
+                             mode="inventory"
+                             resources="addExistingServiceController.existingServiceCopy"></resource-tables>
+        </wizard-step>
+        <!-- OS Credentials -->
+        <wizard-step step-title="{{'SERVICE_ADD_EXISTING_Service_OSCredentials'|translate}}"
+                     on-enter="addExistingServiceController.enterOsCredentials();"
+                     on-next="addExistingServiceController.validateosCredentials()">
+            <ng-form name="addExistingServiceController.forms.osCredentials" form-validation="addExistingServiceController.forms.osCredentials._submitted">
+
+                <!-- OS credentials and the selectable credentials are fetched by this directive and passed back -->
+                <os-credentials os-credentials="addExistingServiceController.osCredentials"
+                                credentials-request-obj="addExistingServiceController.credentialsRequestObj"
+                                form="addExistingServiceController.forms.osCredentials"
+                                errors="addExistingServiceController.errors"
+                                hide-spinner="true"
+                                credentials="addExistingServiceController.credentials"
+                                credential-types="addExistingServiceController.credentialTypes"
+                                refresh-service="addExistingServiceController.refreshService"
+                                ng-if="addExistingServiceController.credentialsRequestObj"
+                                storage-only="addExistingServiceController.isStorageOnly()"></os-credentials>
+            </ng-form>
+
+        </wizard-step>
+        <!-- Network Mapping (Default) -->
+        <wizard-step step-title="{{'SERVICE_ADD_EXISTING_Service_NetworkMapping'|translate}}"
+                     on-enter="addExistingServiceController.enterNetworkMapping()"
+                     ng-if="!addExistingServiceController.isStorageOnly()">
+            <div class="alert alert-info">
+                <i class="ci-info-circle-info text-default"></i>
+                {{"SERVICE_ADD_EXISTING_Service_NetworkMapping_HelpText"|translate}}
+            </div>
+            <br />
+            <div ng-repeat="switch in addExistingServiceController.vSwitches">
+
+                <h2>{{switch.name}}</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>{{"SERVICE_ADD_EXISTING_Service_NetworkMapping_TH_PortGroupName" | translate}}</th>
+                            <th>{{"SERVICE_ADD_EXISTING_Service_NetworkMapping_TH_VLANID" | translate}}</th>
+                            <th>{{"SERVICE_ADD_EXISTING_Service_NetworkMapping_TH_Network" | translate}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="port in switch.portGroups">
+                            <td>{{port.portGroup}}</td>
+                            <td>{{port.vlan}}</td>
+                            <td>
+                                <select id="network_{{addExistingServiceController.uniqueId}}"
+                                        class="form-control"
+                                        name="network"
+                                        ng-model="port.network"
+                                        ng-options="network.id as network.name for network in port.networks"
+                                        required>
+                                    <option value="">{{'GENERIC_select' |translate}}</option>
+                                </select>
+                                <div ng-if="addExistingServiceController.forms.step1._submitted" class="text-danger">
+                                    <div ng-if="addExistingServiceController.forms.network.$error.required">
+                                        {{'GENERIC_RequiredField' | translate}}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </wizard-step>
+        <!-- Inventory Summary -->
+        <wizard-step step-title="{{'SERVICE_ADD_EXISTING_Service_InventorySummary'|translate}}" ng-if="addExistingServiceController.isStorageOnly()"
+                     on-enter="addExistingServiceController.enterInventorySummary();">
+            <h1>{{ 'SERVICE_ADD_EXISTING_SummaryForService' | translate:{ serviceName: addExistingServiceController.serviceCreator.serviceName } }}</h1>
+            <div>{{'SERVICE_ADD_EXISTING_SummaryDescription'|translate}}</div>
+            <br />
+            <ul class="list-inline">
+                <li>
+                    <strong>{{'SERVICE_ADD_EXISTING_ASMClusterInventory'|translate}}: </strong>
+                </li>
+                <li>
+                    {{'SERVICE_ADD_EXISTING_Clusters'|translate}}:
+                    {{addExistingServiceController.existingService.available.clusters + addExistingServiceController.existingService.available.scaleios}}/{{addExistingServiceController.existingService.count_cluster}}
+                    <statusicon value="addExistingServiceController.warning" ng-if="addExistingServiceController.existingService.available.clusters + addExistingServiceController.existingService.available.scaleios != addExistingServiceController.existingService.count_cluster"></statusicon>
+                </li>
+                <li>
+                    {{'SERVICE_ADD_EXISTING_PhysicalServers'|translate}}:
+                    {{addExistingServiceController.existingService.available.servers}}/{{addExistingServiceController.existingService.count_server}}
+                    <statusicon value="addExistingServiceController.warning" ng-if="addExistingServiceController.existingService.available.servers != addExistingServiceController.existingService.count_server"></statusicon>
+                </li>
+                <li>
+                    {{'SERVICE_ADD_EXISTING_Storage'|translate}}:
+                    {{addExistingServiceController.existingService.available.storages}}/{{addExistingServiceController.existingService.count_storage}}
+                    <statusicon value="addExistingServiceController.warning" ng-if="addExistingServiceController.existingService.available.storages != addExistingServiceController.existingService.count_storage"></statusicon>
+                </li>
+                <!--<li>
+                    {{'SERVICE_ADD_EXISTING_ScaleIOGateway'|translate}}:
+                    {{addExistingServiceController.existingService.available.scaleios}}/{{addExistingServiceController.existingService.count_scaleio}}
+                    <statusicon value="addExistingServiceController.warning" ng-if="addExistingServiceController.existingService.available.scaleios != addExistingServiceController.existingService.count_scaleio"></statusicon>
+                </li>-->
+            </ul>
+
+            <resource-tables ng-if="addExistingServiceController.existingServiceCopy"
+                             mode="inventory"
+                             resources="addExistingServiceController.existingServiceCopy"></resource-tables>
+        </wizard-step>
+        <!-- Network Mapping (Storage Only) -->
+        <wizard-step step-title="{{'SERVICE_ADD_EXISTING_Service_NetworkMapping'|translate}}"
+                     on-enter="addExistingServiceController.enterStorageNetworkMapping()"
+                     ng-if="addExistingServiceController.isStorageOnly()">
+            <div class="row">
+                <div class="col-sm-6">
+                    <strong>
+                        {{"SERVICE_ADD_EXISTING_Service_NetworkMapping_Storage_Nodes" | translate}}
+                    </strong>
+                </div>
+                <div class="col-sm-6">
+                    <button class="btn btn-link text-primary pull-right" ng-click="addExistingServiceController.addNetwork()">
+                        <i class="ci-action-add-plus-float"></i>
+                        {{"SERVICE_ADD_EXISTING_Service_NetworkMapping_Storage_CreateNew" | translate}}
+                    </button>
+                </div>
+            </div>
+            <br />
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{{"SERVICE_ADD_EXISTING_Service_NetworkMapping_Storage_TH_Network" | translate}}</th>
+                        <th>{{"SERVICE_ADD_EXISTING_Service_NetworkMapping_Storage_TH_Role" | translate}}</th>
+                        <th>{{"SERVICE_ADD_EXISTING_Service_NetworkMapping_Storage_TH_Type" | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="serviceNetwork in addExistingServiceController.serviceNetworks">
+                        <td>{{serviceNetwork.network}}</td>
+                        <td>{{serviceNetwork.type}}</td>
+                        <td>
+                            <select id="network_{{addExistingServiceController.uniqueId}}"
+                                    class="form-control"
+                                    name="network"
+                                    ng-model="serviceNetwork.networkId"
+                                    ng-options="network.id as network.name for network in serviceNetwork._networks">
+                                <option value="">{{'GENERIC_select' |translate}}</option>
+                            </select>
+                            <!--<div ng-if="addExistingServiceController.forms.step1._submitted" class="text-danger">
+                                <div ng-if="addExistingServiceController.forms.network.$error.required">
+                                    {{'GENERIC_RequiredField' | translate}}
+                                </div>
+                            </div>-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </wizard-step>
+        <!-- Summary -->
+        <wizard-step step-title="{{'GENERIC_Summary'|translate}}">
+            <form class="form-horizontal col-md-8">
+                <div class="form-group">
+                    <h3 class="col-xs-12">{{"SERVICE_ADD_EXISTING_ServiceInformation" | translate}}</h3>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-6">{{"GENERIC_Name" | translate}}</label>
+                    <div class="col-md-6">{{addExistingServiceController.serviceCreator.serviceName}}</div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-6">{{"SERVICE_ADD_EXISTING_Type" | translate}}</label>
+                    <div class="col-md-6">
+                        <list-lookup list="addExistingServiceController.types"
+                                     id="selectedType_{{server.id}}"
+                                     key="addExistingServiceController.serviceCreator.type"
+                                     property-name="'name'"></list-lookup>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="form-group">
+                    <h3 class="col-xs-12">{{"SERVICE_ADD_EXISTING_ClusterInformation" | translate}}</h3>
+                </div>
+                <div ng-repeat="category in addExistingServiceController.serviceCreator.template.components[0].categories">
+                    <div ng-repeat="setting in category.settings | addExistingSettings:addExistingServiceController.serviceCreator.template.components[0]" class="form-group">
+                        <basic-setting category="category"
+                                       setting="setting"
+                                       component="addExistingServiceController.serviceCreator.template.components[0]"
+                                       form="addExistingServiceController.forms.step2"
+                                       read-only-mode="true"></basic-setting>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="form-group">
+                    <h3 class="col-xs-12">{{"SERVICE_ADD_EXISTING_Service_OSCredentials" | translate}}</h3>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4">{{"SERVICE_ADD_EXISTING_Service_OS_Credentials_TH_Name" | translate}}</label>
+                    <label class="col-xs-4">{{"SERVICE_ADD_EXISTING_Service_OS_Credentials_TH_Credentials" | translate}}</label>
+                </div>
+                <div ng-repeat="credentialType in addExistingServiceController.credentialTypes">
+                    <div class="form-group">
+                        <label class="col-md-12">{{credentialType.name}}</label>
+                    </div>
+
+                    <div class="form-group" ng-repeat="server in addExistingServiceController.osCredentials | filter: {'type': credentialType.type}">
+                        <div class="col-md-4">{{server.name}}</div>
+                        <div class="col-md-4">
+                            <list-lookup list="addExistingServiceController.credentials"
+                                         id="selectedType_summary_server_{{server.id}}"
+                                         key="server.credentialId"
+                                         property-name="'credentialsName'"></list-lookup>
+                        </div>
+                    </div>
+                </div>
+
+
+                <br />
+
+                <div class="form-group">
+                    <h3 class="col-xs-12">{{"SERVICE_ADD_EXISTING_Service_NetworkMapping" | translate}}</h3>
+                </div>
+
+
+                <div ng-if="!addExistingServiceController.isStorageOnly()">
+                    <div class="form-group" >
+                        <label class="col-xs-4">{{"SERVICE_ADD_EXISTING_Service_NetworkMapping_TH_PortGroupName" | translate}}</label>
+                        <label class="col-xs-4">{{"SERVICE_ADD_EXISTING_Service_NetworkMapping_TH_Network" | translate}}</label>
+                    </div>
+                    <div ng-repeat="switch in addExistingServiceController.vSwitches">
+                        <div class="form-group">
+                            <h4>{{switch.name}}</h4>
+                        </div>
+                        <div class="form-group" ng-repeat="port in switch.portGroups">
+                            <div class="col-md-4">{{port.portGroup}}</div>
+                            <div class="col-md-4">
+                                <list-lookup list="port.networks"
+                                             id="selectednetwork_summary_portgroup_{{port.id}}"
+                                             key="port.network"
+                                             property-name="'name'"></list-lookup>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div  ng-if="addExistingServiceController.isStorageOnly()">
+                    <div class="form-group">
+                        <label class="col-md-4">{{"SERVICE_ADD_EXISTING_Service_NetworkMapping_Storage_TH_Network" | translate}}</label>
+                        <label class="col-md-4">{{"SERVICE_ADD_EXISTING_Service_NetworkMapping_Storage_TH_Role" | translate}}</label>
+                        <label class="col-md-4">{{"SERVICE_ADD_EXISTING_Service_NetworkMapping_Storage_TH_Type" | translate}}</label>
+                    </div>
+                    <div ng-repeat="serviceNetwork in addExistingServiceController.serviceNetworks">
+                        <div class="form-group">
+                            <div class="col-md-4">{{serviceNetwork.network}}</div>
+                            <div class="col-md-4">{{serviceNetwork.type}}</div>
+                            <div class="col-md-4">
+                                <list-lookup list="serviceNetwork._networks"
+                                             id="selectednetwork_summary_{{serviceNetwork.id}}"
+                                             key="serviceNetwork.networkId"
+                                             property-name="'name'"></list-lookup>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+
+
+            </form>
+        </wizard-step>
+    </wizard>
+
+</section>
+

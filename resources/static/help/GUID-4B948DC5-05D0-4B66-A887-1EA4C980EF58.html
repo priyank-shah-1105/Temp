@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Discovering
+resources</title><link rel="prev" href="GUID-48A9DF78-C93F-432C-B487-59F530A67604.html" /><link rel="next" href="GUID-EE9A0AB0-31D1-47C7-887B-9A44B05FADE9.html" /><link href="static/screen.css?fAL4Y+sp" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-4B948DC5-05D0-4B66-A887-1EA4C980EF58" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">VxFlex Manager</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Discovering
+resources</h1>
+<div class="prereq" id="GUID-0379EAE3-53BB-4F11-B902-3E43033F4858"><p>Only administrator-level users can discover resources.</p><p>Before you
+start discovering resources, gather the IP addresses and credentials
+associated with the resources. Make sure that both the resources and the VxFlex Manager virtual appliance are connected
+to the network.</p><p>For some resources such as nodes, the default
+credentials are prepopulated in VxFlex Manager. If the credentials have
+been changed from the defaults, add a new credential to VxFlex Manager with the
+new login information.</p><p>By default, the operational state for all discovered nodes is <span class="msgph">Unmanaged</span>. If you want to perform firmware updates or deployments on a discovered node, select the node and change the operational state to <span class="msgph">Managed</span>.</p><p> Before adding an existing service for  a VxFlex OS environment, you are required to have your vCenter, VxFlex OS Gateway, and node hosts already discovered in the resource list. Only <span class="msgph">Managed</span> resources are included in the VxFlex OS service. Any resource  discovered as <span class="msgph">Unmanaged</span> will be missing from the service.</p><p>When you add an existing service for a VxFlex OS cluster, VxFlex Manager matches up the hosts, vCenter, and other items it finds with discovered resources in the resource list. If you missed a component initially, you can change your resource inventory as needed later on, and update the service to reflect these changes. If you are  missing a component, go back to the resources list, select the component, and mark it as <span class="msgph">Managed</span> by selecting <span class="uicontrol">Change resource state to Managed</span>. Then perform an <span class="uicontrol">Update Inventory</span> operation on the service to pull in the missing component.</p></div>
+<div class="context" id="GUID-27B8C390-88F9-4071-A784-77E5F51F1E3C"><p>To discover resources:</p></div>
+<ol class="steps" id="GUID-D2776193-0A9E-43AB-B3B7-52B6E66CF783">
+<li id="STEP_4846F7E12C314CBF825D546C6934553B"><p>On the <b>Welcome</b> page of the <span class="uicontrol">Discovery</span> wizard, read the instructions, and
+click<span class="uicontrol"> Next</span>.</p></li>
+<li id="STEP_5C3D0A40606D4092B5B6ADC638D82E06"><p>On the <span class="uicontrol">Identify Resources</span> page, click <span class="uicontrol">Add Resource Type</span>, and perform
+the following steps:</p>
+<ol id="SUBSTEPS_998CA3DEA77F46FD9CB3DA9C34F138A0"><li id="SUBSTEP_6CC73CE61CAA4C749714573F9560F196"><p>From the <b>Resource Type</b> list, select a
+resource that you want to discover.</p><p><ul id="UL_26E3C74CAAB24B07AB77A3EE83762777"><li id="LI_C6C9358489A341C2ACFDE8DBE68011EC"><span class="uicontrol">Node</span></li><li id="LI_721DA2795F12494896EEF58362F06077"><span class="uicontrol">Switch</span></li><li id="LI_E6A16717851140FC9FEDF4E4E593F647"><span class="uicontrol">vCenter</span></li><li id="LI_DB8836F4FA694F37A7D5FF960155F14E"><span class="uicontrol">Element Manager</span></li><li id="LI_861023F6D6F240768F133E50146F1D9D"><span class="uicontrol">VxFlex OS Gateway</span></li></ul></p></li><li id="SUBSTEP_8753FF8161A7460DAC4D34975083F57D"><p>Enter the management IP address of the resources
+that you want to discover in <span class="uicontrol">IP Address Range</span> field. To discover
+a resource in an IP range, provide a starting and
+ending IP address.</p></li><li id="SUBSTEP_7CCEE97281334F088701A6A0E551615E"><p>Select one of the following options from the <span class="uicontrol">Resource State</span> list:</p><p><ul id="GUID-6BBD5866-5ACD-4F91-AC2D-CECA9605C14E">
+<li id="LI_CEDA3C189498453EB4751CB5DA10FBFF"><span class="uicontrol">Managed</span> — Select this option
+to monitor the firmware version compliance, upgrade firmware, and
+deploy services on the discovered resources. This is the default option for the Switch, vCenter, element manager, and VxFlex OS Gateway resource types.</li>
+<li id="LI_97378980D0DA474AAE5C498312D6BEA5"><span class="uicontrol">Unmanaged</span> — Select this option
+to monitor the health status of a device and the firmware version compliance only. The discovered resources
+are not available for a firmware upgrade or deploying services by
+VxFlex Manager. This is the default option for the node resource type</li>
+<li id="LI_2E0B84B4FEBF40429EF09A2166480A68"><span class="uicontrol">Reserved</span> — Select this option
+to monitor firmware version compliance and upgrade firmware. The discovered
+resources are not available for deploying services by VxFlex Manager.</li>
+</ul></p></li><li id="SUBSTEP_1C505C2C2C914398B95C7CC63F97D1D4"><p>(Optional) Select an existing or create a node pool from the <span class="uicontrol">Discover into Node Pool</span> list. This option
+allows you to discover the resources into a selected node pool
+instead of the global pool (default). To create a new node pool, click the <span class="uicontrol">+</span> sign to the right of the <span class="uicontrol">Discover into Node Pool</span> box.</p></li><li id="SUBSTEP_31F90ABFFB514086930C8FCCB61BB2AC"><p>Select an existing or create a credential from the <span class="uicontrol">Credentials</span> list to discover resource types. To create a new credential, click the <span class="uicontrol">+</span> sign to the right of the <span class="uicontrol">Credentials</span> box.
+VxFlex Manager maps the credential type to the type of resource you are discovering. The credential types are as follows:</p><p><ul id="UL_755EB17AB80E40F5A469B17C8D8A60B2"><li id="LI_8FA320FB59674802B0AC663914C5FFA0">Element Manager</li><li id="LI_386AB9F0EEDC48B5BA302BF50777A5F7">VxFlex OS Gateway</li><li id="LI_65569E3DE8A548B282888030824278AE">Node</li><li id="LI_3AB14C235E644EE7984DBFD0BF69A0D9">Switch</li><li id="LI_7D3E9E0388214EF6B6CB69B39435A6EC">vCenter</li></ul></p></li><li id="SUBSTEP_F61C18AAC2C5489195047F13FE0DB2A3"><p>The default node credential type is <span class="uicontrol">PowerEdge iDRAC Default</span>. </p></li></ol>
+</li>
+<li id="STEP_338065EB78F34849B23CDF3F28D6E668"><p>Click <span class="uicontrol">Next</span>.</p>
+<p><p>You might have to wait while VxFlex Manager locates
+and displays all the resources that are connected to the managed networks.</p><p>To discover
+multiple resources with different IP address ranges, repeat step 2
+and 3.</p></p>
+</li>
+
+<li id="STEP_F0E1916993D34C07A095AA7AA86BFE6A"><p>On the <span class="uicontrol">Discovered Resources</span> page, select the resources from which you want to collect  inventory
+data and click <span class="uicontrol">Finish</span>. </p>
+The discovered resources are listed on the <span class="uicontrol">Resources</span> page.
+</li>
+</ol>
+<dl class="relations"><dt>Related Tasks</dt><dd class="choice_list"><ul data-inset="false" data-role="listview" data-theme="a"><li><a href="GUID-339DE4CE-CCB1-445D-8C54-54A9184C8C2E.html">Collecting the
+resource inventory</a></li></ul></dd></dl></article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?5ZiewaI5"></script></body></html>

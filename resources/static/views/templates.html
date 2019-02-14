@@ -1,0 +1,701 @@
+﻿<section id="page_templates">
+    <error-display errors="$rootScope.errors"
+                   on-click="$root.ASM.RemoveError(error)"
+                   on-expand-collapse=""></error-display>
+    <div class="row">
+        <div class="col-sm-12">
+            <ol class="breadcrumb" ng-click="templates.filterBy = ''" ng-if="templates.filterBy != '' && templates.activeTab == 'MyTemplates'">
+                <li>
+                    <a href="#/templates">
+                        {{'TEMPLATES_Templates' | translate}}
+                    </a>
+                </li>
+                <li class="active">
+                    {{templates.filterBy}}
+                </li>
+            </ol>
+            <h1>
+                {{'TEMPLATES_Title' | translate}}
+            </h1>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" ng-class="{'active': templates.activeTab == 'MyTemplates'}">
+                    <a class="btn btn-link" ng-click="templates.clickTab('MyTemplates')">{{'TEMPLATES_MyTemplates'|translate}}</a>
+                </li>
+                <li role="presentation" ng-class="{'active': templates.activeTab == 'SampleTemplates'}">
+                    <a class="btn btn-link" ng-click="templates.clickTab('SampleTemplates')">{{'TEMPLATES_SampleTemplates'|translate}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8" ng-click="templates.selectedItem = undefined">
+            <div class="row" ng-if="templates.activeTab == 'MyTemplates'">
+                <div class="col-xs-12">
+                    <ul class="list-unstyled list-inline">
+                        <li>
+                            <button class="btn btn-primary"
+                                    ng-click="templates.createTemplateWizard(false, 'create')"
+                                    ng-disabled="$root.ASM.IsInRole('standard') || $root.ASM.IsInRole('readonly')">
+                                <i class="ci-action-add-plus-float"></i>{{'TEMPLATES_CREATE_TEMPLATE_WIZARD_AddaTemplate'|translate}}
+                            </button>
+                        </li>
+                        <!--<li>
+                            <button class="btn btn-primary"
+                                    ng-click="templates.createTemplateWizard(false)"
+                                    ng-disabled="$root.ASM.IsInRole('standard') || $root.ASM.IsInRole('readonly')">
+                                <i class="ci-file-drawer-outbox-arrow-up"></i>{{'TEMPLATES_UploadExternalTemplate'|translate}}
+                            </button>
+                        </li>-->
+                        <li>
+                            <button class="btn btn-default"
+                                    ng-click="templates.downloadAll()"
+                                    ng-disabled="$root.ASM.IsInRole('standard') || $root.ASM.IsInRole('readonly')">
+                                <i class="ci-arrow-bold-line-export-up"></i>{{'GENERIC_ExportAll'|translate}}
+                            </button>
+                        </li>
+                        <li class="pull-right">
+                            <ul class="list-inline view-toggles">
+                                <li ng-click="templates.view = 'ListView'; templates.clearTooltips(); ; templates.storeView()"
+                                    data-toggle="tooltip"
+                                    title="{{'SERVICES_Grid_View' | translate}}">
+                                    <button class="btn btn-lg btn-link"
+                                            ng-disabled="templates.view == 'ListView'">
+                                        <i class="ci-action-sort-list"></i>
+                                    </button>
+                                </li>
+                                <li>
+                                    <i class="view-toggles-separator"></i>
+                                </li>
+                                <li ng-click="templates.view = 'GridView'; templates.clearTooltips(); templates.storeView()"
+                                    data-toggle="tooltip"
+                                    title="{{'SERVICES_Tile_View' | translate}}">
+                                    <button class="btn btn-lg btn-link" ng-disabled="templates.view == 'GridView'">
+                                        <i class="ci-action-sort-grid2"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class=""
+                 role="tabpanel"
+                 ng-if="templates.activeTab == 'MyTemplates'"
+                 id="myTemplates">
+                <!-- My Templates -->
+                <section id="my_templates">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form id="templateMenu" class="form-horizontal">
+                                <ul class="list-inline">
+                                    <li>
+                                        <label class="control-label" for="ddlView">
+                                            {{'TEMPLATES_FilterBy' | translate}}
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <select id="ddlView"
+                                                ng-model="templates.filterBy"
+                                                ng-change="templates.updateArrays();"
+                                                ng-options="item.id as item.name for item in templates.getUniqueCategories()"
+                                                class="form-control"></select>
+                                    </li>
+                                </ul>
+                            </form>
+
+                        </div>
+                    </div>
+                    <br />
+                    <div ng-if="templates.view == 'GridView'">
+                        <div class="row" ng-if="templates.filterBy === ''">
+                            <div class="col-xs-12">
+                                <!-- All Categories -->
+                                <grouped-grid filter-by="templates.filterBy"
+                                              update-Arrays="templates.updateArrays();"
+                                              list="templates.myTemplatesConst"></grouped-grid>
+                            </div>
+                        </div>
+
+                        <div ng-show="templates.filterBy !== ''">
+                            <!-- published templates -->
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <h2>
+                                        {{'TEMPLATES_PublishedTemplates'|translate}}
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="templates.published.length === 0">
+                                <div class="col-xs-12">
+                                    {{'TEMPLATES_NoPublishedTemplates'|translate}}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <section class="myTemplateGrid" id="my_template_grid-published-templates">
+                                        <div id="templateicons">
+                                            <div class="templateicons">
+                                                <ul id="categorytemplates" class="categoryList list-inline">
+                                                    <li ng-repeat="tile in templates.publishedSafe"
+                                                        ng-click="templates.selectedItem = tile; $event.stopPropagation();"
+                                                        ng-class="{'active':templates.selectedItem === tile}"
+                                                        tabindex="0">
+                                                        <template-tile selected-item="templates.selectedItem"
+                                                                       actions="templates.actions"
+                                                                       tile-info="tile"></template-tile>
+
+                                                        <strong class="textBelowTile">
+                                                            <a ng-click="templates.viewDetails(tile)">
+                                                                {{tile.name}}
+                                                            </a>
+                                                        </strong>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+
+                            <!-- draft templates -->
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <h2>
+                                        {{'TEMPLATES_DraftTemplates'|translate}}
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="templates.drafts.length === 0">
+                                <div class="col-xs-12">
+                                    {{'TEMPLATES_NoPublishedDrafts'|translate}}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <section id="my_template_grid-drafts" class="myTemplateGrid">
+                                        <div id="templateicons-drafts">
+                                            <div class="templateicons">
+                                                <ul id="categorytemplates-drafts" class="categoryList list-inline">
+                                                    <li ng-repeat="tile in templates.draftsSafe"
+                                                        ng-click="templates.selectedItem = tile; $event.stopPropagation();"
+                                                        ng-class="{'active':templates.selectedItem === tile}"
+                                                        tabindex="0">
+                                                        <template-tile selected-item="templates.selectedItem"
+                                                                       actions="templates.actions"
+                                                                       tile-info="tile"></template-tile>
+                                                        <strong class="textBelowTile">
+                                                            <a ng-click="templates.viewDetails(tile)">
+                                                                {{tile.name}}
+                                                            </a>
+                                                        </strong>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="templates.view == 'ListView'">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h2 ng-if="templates.filterBy">
+                                    {{templates.filterBy}} ({{templates.myTemplatesSafe.length}})
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <table id="templateTable"
+                                       class="table table-striped table-hover table-condensed"
+                                       st-table="templates.myTemplates"
+                                       st-safe-src="templates.myTemplatesSafe">
+                                    <thead>
+                                        <tr>
+                                            <th st-sort="state">
+                                                {{'TEMEPLATES_State' | translate}}
+                                            </th>
+                                            <th st-sort="category">
+                                                {{'GENERIC_Category' | translate}}
+                                            </th>
+                                            <th st-sort="attachments">
+                                                <i class="glyphicon glyphicon-paperclip"></i>
+                                            </th>
+                                            <th st-sort="name">
+                                                {{'GENERIC_Name' | translate}}
+                                            </th>
+                                            <th st-sort="lastDeployed">
+                                                {{'TEMPLATES_LastDeployedOn' | translate}}
+                                            </th>
+                                            <th>
+                                                {{'GENERIC_Components'|translate}}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in templates.myTemplates"
+                                            ng-class="{ 'st-selected': templates.selectedItem.id == item.id }"
+                                            ng-click="templates.selectedItem = item; $event.stopPropagation();"
+                                            tabindex="0">
+                                            <td>
+                                                <span ng-if="item.draft">
+                                                    {{'TEMPLATES_Draft' | translate}}
+                                                </span>
+                                                <span ng-if="!item.draft">
+                                                    {{'TEMPLATES_Published' | translate}}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {{item.category}}
+                                            </td>
+                                            <td>
+                                                <i class="glyphicon glyphicon-paperclip" ng-if="item.attachments.length >= 1"></i>
+                                            </td>
+                                            <td>
+                                                <i class="text-warning ci-health-warning-tri-bang" ng-if="!item.isTemplateValid"></i>
+                                                <a ng-click="templates.viewDetails(item)">
+                                                    {{item.name}}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <datetime-display time="item.lastDeployed" time-format="'LLL'"></datetime-display>
+                                            </td>
+                                            <td>
+                                                <div class="tabledetailsIcons">
+                                                    <ul class="list-inline">
+                                                        <!--<li>
+                                                            <i class="ci-storage-volume-half-full-2"
+                                                               ng-class="{'component-icon-on' : item.containsStorage, 'component-icon-off' : !item.containsStorage, 'active' : templates.selectedItem.id === item.id }"
+                                                               data-toggle="tooltip"
+                                                               title="{{'GENERIC_Storage' | translate}}"></i>
+                                                        </li>-->
+                                                        <li>
+                                                            <i class="ci-device-tower"
+                                                               ng-class="{'component-icon-on' : item.containsServer, 'component-icon-off' : !item.containsServer, 'active' : templates.selectedItem.id === item.id }"
+                                                               data-toggle="tooltip"
+                                                               title="{{'GENERIC_Server' | translate}}"></i>
+                                                        </li>
+                                                        <li>
+                                                            <i class="ci-device-tower-three-cluster"
+                                                               ng-class="{'component-icon-on' : item.containsCluster, 'component-icon-off' : !item.containsCluster, 'active' : templates.selectedItem.id === item.id }"
+                                                               data-toggle="tooltip"
+                                                               title="{{'GENERIC_Cluster' | translate}}"></i>
+                                                        </li>
+                                                        <!--<li>
+                                                            <i class="ci-app-virtual-machine"
+                                                               ng-class="{'component-icon-on' : item.containsVM, 'component-icon-off' : !item.containsVM, 'active' : templates.selectedItem.id === item.id }"
+                                                               data-toggle="tooltip"
+                                                               title="{{'GENERIC_VirtualMachine' | translate}}"></i>
+                                                        </li>-->
+                                                        <!--<li>
+                                                            <i class="ci-app-window-2"
+                                                               ng-class="{'component-icon-on' : item.containsApplication, 'component-icon-off' : !item.containsApplication, 'active' : templates.selectedItem.id === item.id }"
+                                                               data-toggle="tooltip"
+                                                               title="{{'GENERIC_Application' | translate}}"></i>
+                                                        </li>-->
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="6" class="text-center">
+                                                <div id="pager-firmwarepackage"
+                                                     st-pagination="templates.myTemplates"
+                                                     st-items-by-page="20"
+                                                     st-displayed-pages="7"></div>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+            </div>
+            <!-- Sample Templates -->
+            <div class=""
+                 role="tabpanel"
+                 ng-if="templates.activeTab == 'SampleTemplates'"
+                 id="sampleTemplates">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <ul class="list-inline">
+                            <li class="pull-right">
+                                <ul class="list-inline view-toggles">
+                                    <li>
+                                        <button class="btn btn-lg btn-link"
+                                                ng-disabled="templates.view == 'ListView'"
+                                                ng-click="templates.view = 'ListView'"
+                                                data-toggle="tooltip"
+                                                title="{{'SERVICES_Grid_View' | translate}}">
+                                            <i class="ci-action-sort-list"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <i class="view-toggles-separator"></i>
+                                    </li>
+                                    <li>
+                                        <button class="btn btn-lg btn-link"
+                                                ng-disabled="templates.view == 'GridView'"
+                                                ng-click="templates.view = 'GridView'"
+                                                data-toggle="tooltip"
+                                                title="{{'SERVICES_Tile_View' | translate}}">
+                                            <i class="ci-action-sort-grid2"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <hr />
+                    </div>
+                </div>
+                <div ng-if="templates.view == 'GridView'">
+                    <section id="my_template_grid-gridview" class="myTemplateGrid">
+                        <div id="templateicons-gridview">
+                            <div class="templateicons">
+                                <ul id="categorytemplates-gridview" class="categoryList list-inline">
+                                    <li ng-repeat="tile in templates.sampleTemplates"
+                                        ng-click="templates.selectedItem = tile; $event.stopPropagation();"
+                                        ng-class="{'active':templates.selectedItem === tile}"
+                                        tabindex="0">
+                                        <template-tile selected-item="templates.selectedItem"
+                                                       actions="templates.actions"
+                                                       tile-info="tile"></template-tile>
+                                        <strong class="textBelowTile">
+                                            <a ng-click="templates.viewDetails(tile)">
+                                                {{tile.name}}
+                                            </a>
+                                        </strong>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div ng-if="templates.view == 'ListView'">
+                    <table class="table table-striped table-hover col-md-12"
+                           st-table="templates.sampleTemplates"
+                           st-safe-src="templates.sampleTemplatesSafe">
+                        <thead>
+                            <tr>
+                                <th st-sort="attachments">
+                                    <i class="glyphicon glyphicon-paperclip"></i>
+                                </th>
+                                <th st-sort="name">
+                                    {{'GENERIC_Name' | translate}}
+                                </th>
+                                <th>
+                                    {{'GENERIC_Components'|translate}}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in templates.sampleTemplates"
+                                ng-class="{ 'st-selected': templates.selectedItem == item }"
+                                ng-click="templates.selectedItem = item; $event.stopPropagation();"
+                                tabindex="0">
+                                <td>
+                                    <i class="glyphicon glyphicon-paperclip" ng-if="item.attachments.length >= 1"></i>
+                                </td>
+                                <td>
+                                    <i class="text-warning ci-health-warning-tri-bang" ng-if="!item.isTemplateValid"></i>
+                                    <a ng-click="templates.viewDetails(item)">
+                                        {{item.name}}
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="tabledetailsIcons">
+                                        <ul class="list-inline">
+                                            <!--<li>
+                                                <i class="ci-storage-volume-half-full-2"
+                                                   ng-class="{'component-icon-on' : item.containsStorage, 'component-icon-off' : !item.containsStorage, 'active' : templates.selectedItem.id === item.id }"
+                                                   data-toggle="tooltip"
+                                                   title="{{'GENERIC_Storage' | translate}}"></i>
+                                            </li>-->
+                                            <li>
+                                                <i class="ci-device-tower"
+                                                   ng-class="{'component-icon-on' : item.containsServer, 'component-icon-off' : !item.containsServer, 'active' : templates.selectedItem.id === item.id }"
+                                                   data-toggle="tooltip"
+                                                   title="{{'GENERIC_Server' | translate}}"></i>
+                                            </li>
+                                            <li>
+                                                <i class="ci-device-tower-three-cluster"
+                                                   ng-class="{'component-icon-on' : item.containsCluster, 'component-icon-off' : !item.containsCluster, 'active' : templates.selectedItem.id === item.id }"
+                                                   data-toggle="tooltip"
+                                                   title="{{'GENERIC_Cluster' | translate}}"></i>
+                                            </li>
+                                            <!--<li>
+                                                <i class="ci-app-virtual-machine"
+                                                   ng-class="{'component-icon-on' : item.containsVM, 'component-icon-off' : !item.containsVM, 'active' : templates.selectedItem.id === item.id }"
+                                                   data-toggle="tooltip"
+                                                   title="{{'GENERIC_VirtualMachine' | translate}}"></i>
+                                            </li>-->
+                                            <!--<li>
+                                                <i class="ci-app-window-2"
+                                                   ng-class="{'component-icon-on' : item.containsApplication, 'component-icon-off' : !item.containsApplication, 'active' : templates.selectedItem.id === item.id }"
+                                                   data-toggle="tooltip"
+                                                   title="{{'GENERIC_Application' | translate}}"></i>
+                                            </li>-->
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-center">
+                                    <div id="pager-firmwarepackage"
+                                         st-pagination="templates.sampleTemplates"
+                                         st-items-by-page="20"
+                                         st-displayed-pages="7"></div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Error message above side panel -->
+        <!--<div class="col-sm-4" ng-if="">
+            <div>
+
+            </div>
+        </div>-->
+        <div class="col-sm-4">
+
+            <div style="padding: 10px; margin-bottom: 15px; background-color: #efb106" id="templatesNeedUpdating" ng-if="templates.invalidTemplates == true">
+                <i class="icon text-white ci-health-warning-tri-bang"></i>
+                <span>
+                    {{'TEMPLATES_Invalid'|translate}}
+                </span>
+            </div>
+
+            <div class="well" ng-if="!templates.selectedItem">
+                <h2>{{'TEMPLATES_TemplateOverview'|translate}}</h2>
+                <p>{{'TEMPLATES_TemplateOverviewText'|translate}}</p>
+                <h2>{{'TEMPLATES_TemplateStates'|translate}}</h2>
+                <p ng-bind-html="'TEMPLATES_TemplateStatesText'|translate|htmlSafe"></p>
+            </div>
+
+            <!-- Side Panel -->
+            <div class="well templateWell" ng-if="templates.selectedItem">
+                <div id="templatePicAndDetails">
+                    <ul class="list-unstyled clearfix" style="text-align: center">
+                        <li>
+                            <strong style="font-size: 17px;">{{templates.selectedItem.name}}</strong>
+                        </li>
+                    </ul>
+                    <br />
+                    <div class="detailsIcons">
+                        <ul class="list-inline">
+                            <!--<li>
+                                <i class="ci-storage-volume-half-full-2"
+                                   ng-class="{'component-icon-on' : templates.selectedItem.containsStorage, 'component-icon-off' : !templates.selectedItem.containsStorage}"
+                                   data-toggle="tooltip"
+                                   title="{{'GENERIC_Storage' | translate}}"></i>
+                            </li>-->
+                            <li>
+                                <i class="ci-device-tower"
+                                   ng-class="{'component-icon-on' : templates.selectedItem.containsServer, 'component-icon-off' : !templates.selectedItem.containsServer}"
+                                   data-toggle="tooltip"
+                                   title="{{'GENERIC_Server' | translate}}"></i>
+                            </li>
+                            <li>
+                                <i class="ci-device-tower-three-cluster"
+                                   ng-class="{'component-icon-on' : templates.selectedItem.containsCluster, 'component-icon-off' : !templates.selectedItem.containsCluster}"
+                                   data-toggle="tooltip"
+                                   title="{{'GENERIC_Cluster' | translate}}"></i>
+                            </li>
+                            <!--<li>
+                                <i class="ci-app-virtual-machine"
+                                   ng-class="{'component-icon-on' : templates.selectedItem.containsVM, 'component-icon-off' : !templates.selectedItem.containsVM}"
+                                   data-toggle="tooltip"
+                                   title="{{'GENERIC_VirtualMachine' | translate}}"></i>
+                            </li>-->
+                            <!--<li>
+                                <i class="ci-app-window-2"
+                                   ng-class="{'component-icon-on' : templates.selectedItem.containsApplication, 'component-icon-off' : !templates.selectedItem.containsApplication}"
+                                   data-toggle="tooltip"
+                                   title="{{'GENERIC_Application' | translate}}"></i>
+                            </li>-->
+                        </ul>
+
+                    </div>
+                </div>
+                <br />
+                <div class="row" ng-if="templates.selectedItem.isTemplateValid == false">
+                    <div style="padding: 10px; margin-bottom: 10px; background-color: #efb106" class="col-sm-12">
+                        <i class="icon text-white ci-health-warning-tri-bang"></i>
+                        <span>
+                            {{'TEMPLATES_TEMPLATEBUILDER_SIDE_TemplateInvalid'|translate}}
+                        </span>
+                    </div>
+                    <br />
+                </div>
+                <br ng-if="templates.selectedItem.isTemplateValid == false" />
+                <div class="row" id="btnList">
+                    <div class="col-md-6" ng-if="!templates.selectedItem.isLocked && !templates.selectedItem.draft">
+                        <button class="btn btn-primary btn-block btn-sm text-left" id="deployLink"
+                                ng-disabled="templates.selectedItem.draft || ASM.IsInRole('readonly')"
+                                ng-click="templates.deployNewService()">
+                            <span class="glyphicon icon-ic-nav-deploy-core"></span>
+                            <i class="ci-deploy"></i> {{'TEMPLATES_DeployService' | translate}}
+                        </button>
+                    </div>
+                    <div class="col-md-6" ng-if="!templates.selectedItem.isLocked">
+                        <button class="btn btn-default btn-block btn-sm text-left"
+                                id="editTemplateLink"
+                                ng-click="templates.editTemplate(templates.selectedItem)"
+                                ng-disabled="ASM.IsInRole('standard') || ASM.IsInRole('readonly')">
+                            <span class="glyphicon icon-ic-edit3-core"></span>
+                            <i class="ci-edit-pencil"></i> {{'GENERIC_Edit' | translate}}
+                        </button>
+                    </div>
+                    <div class="col-md-6" ng-if="!templates.selectedItem.isLocked">
+                        <button class="btn btn-default btn-block btn-sm text-left"
+                                id="lnkDeleteTemplate"
+                                ng-click="templates.deleteTemplate(templates.selectedItem)"
+                                ng-disabled="ASM.IsInRole('standard') || ASM.IsInRole('readonly')"
+                                tabindex="0">
+                            <span class="glyphicon icon-ic-action-delete-core"></span>
+                            <i class="ci-trash"></i> {{'GENERIC_Delete' | translate}}
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-default btn-block btn-sm text-left"
+                                ng-disabled="templates.selectedItem.inConfiguration == true"
+                                ng-click="templates.viewDetails(templates.selectedItem);">
+                            <span class="glyphicon icon-ic-action-details-core"></span>
+                            <i class="ci-action-sort-list"></i> {{'GENERIC_ViewDetails' | translate}}
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-default btn-block btn-sm text-left"
+                                ng-click="templates.cloneTemplate()"
+                                ng-disabled="ASM.IsInRole('standard') || ASM.IsInRole('readonly') || templates.selectedItem.inConfiguration == true">
+                            <span class="glyphicon icon-ic-action-clone-core"></span>
+                            <i class="ci-arrows-clone"></i> {{'TEMPLATES_Clone' | translate}}
+                        </button>
+                    </div>
+
+
+
+                    <div class="col-md-6" ng-if="!templates.selectedItem.isLocked">
+                        <button class="btn btn-default btn-block btn-sm text-left"
+                                ng-click="templates.exportTemplate()"
+                                ng-disabled="ASM.IsInRole('standard') || ASM.IsInRole('readonly') || templates.selectedItem.inConfiguration == true">
+                            <i class="ci-arrow-bold-line-export-up"></i> {{'TEMPLATES_ExportTemplate' | translate}}
+                        </button>
+                    </div>
+
+
+
+                </div>
+
+                <ul id="serviceSimpleDetails"
+                    class="list-unstyled infoCol"
+                    style="margin-top: 15px;">
+                    <!--<li class="row" ng-if="!templates.selectedItem.isLocked">
+                        <label for="category" class="col-xs-6">
+                            {{'GENERIC_Category' | translate}}
+                        </label>
+                        <span class="col-xs-6">
+                            <span id="category">{{templates.selectedItem.category}}</span>
+                        </span>
+                    </li>-->
+
+                    <li class="row">
+                        <label for="create" class="col-xs-6">
+                            {{'GENERIC_CreatedOn' | translate}}
+                        </label>
+                        <span id="create" class="col-xs-6">
+                            <datetime-display time="templates.selectedItem.createdDate" time-format="'LLL'" />
+                        </span>
+                    </li>
+
+                    <li class="row">
+                        <label for="createby" class="col-xs-6">
+                            {{'GENERIC_CreatedBy' | translate}}
+                        </label>
+                        <span class="col-xs-6" id="createby">
+                            {{templates.selectedItem.createdBy}}
+                        </span>
+                    </li>
+
+                    <li class="row" ng-if="!templates.selectedItem.isLocked">
+                        <label for="update" class="col-xs-6">
+                            {{'GENERIC_UpdatedOn' | translate}}
+                        </label>
+                        <span class="col-xs-6" id="update">
+                            <datetime-display time="templates.selectedItem.updatedDate" time-format="'LLL'" />
+                        </span>
+                    </li>
+
+                    <li class="row" ng-if="!templates.selectedItem.isLocked">
+                        <label for="updatedby" class="col-xs-6">
+                            {{'GENERIC_UpdatedBy' | translate}}
+                        </label>
+                        <span class="col-xs-6" id="updatedby">
+                            {{templates.selectedItem.updatedBy}}
+                        </span>
+                    </li>
+
+
+                    <!--<li class="row" ng-if="!templates.selectedItem.isLocked">
+                        <label for="lastdeployed" class="col-xs-6">
+                            {{'TEMPLATES_LastDeployedOn' | translate}}
+                        </label>
+                        <span class="col-xs-6" id="lastdeployed">
+                            <datetime-display time="templates.selectedItem.lastDeployed" time-format="'LLL'" />
+                        </span>
+                    </li>-->
+                </ul>
+
+                <div>
+                    <h3>
+                        <i class="glyphicon glyphicon-paperclip"></i>
+                        {{'TEMPLATES_Attachments'|translate}}
+                    </h3>
+                    <button ng-click="templates.addAttachment()"
+                            ng-if="!templates.selectedItem.isLocked"
+                            class="btn btn-link btn-sm"
+                            ng-disabled="ASM.IsInRole('standard') || ASM.IsInRole('readonly')"
+                            id="btnAddAttachments">
+                        <i class="ci-doc-page-list-attach-arrow-left-o"></i>
+                        {{'TEMPLATES_AddAttachment' | translate}}
+                    </button>
+                    <ul class="list-unstyled list-inline" style="font-size: 13px;">
+                        <li ng-repeat="attachment in templates.selectedItem.attachments">
+                            <button ng-click="templates.downloadAttachment(attachment)"
+                                    type="button"
+                                    id="btnAttachment"
+                                    class="btn btn-link attachment">
+                                {{attachment.name}}
+                            </button>
+                            <button type="button"
+                                    id="btnDeleteAttachment"
+                                    class="btn btn-link deleteattachment"
+                                    ng-if="!templates.selectedItem.isLocked"
+                                    ng-click="templates.deleteAttachment(attachment)">
+                                <i class="ci-trash critical"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

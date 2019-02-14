@@ -1,0 +1,11 @@
+﻿<section id="grouped_grid">
+    <ul id="groupedTiles" class="list-inline">
+        <li ng-repeat="tile in group.categories"
+            ng-click="group.changeCategory(tile.name);">
+            <div class="tileArea">
+                <template-tile tile-info="tile" actions="{}"></template-tile>
+                <strong class="textBelowTile">{{tile.name}} ({{tile.count}})</strong>
+            </div>
+        </li>
+    </ul>
+</section>

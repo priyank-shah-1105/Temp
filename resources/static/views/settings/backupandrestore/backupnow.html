@@ -1,0 +1,139 @@
+﻿<section id="page_backupNow">
+    <error-display errors="backupNow.errors"
+                   on-click="$root.ASM.RemoveError(error, backupNow.errors)"
+                   on-expand-collapse=""></error-display>
+    <form id="backupNowForm" 
+          name="backupNow.form" 
+          role="form" 
+          class="form-horizontal" 
+          novalidate
+          form-validation="backupNow.form._submitted">
+        <div class="form-group">
+            <label for="useBackupSettings" class="col-md-7 control-label">
+                {{'BACKUPNOW_usebackupsettings' | translate}}
+            </label>
+            <div class="col-sm-2">
+                <div class="checkbox">
+                    <label>
+                        <input id="useBackupSettings" type="checkbox" ng-model="backupNow.backupSettings.useBackupSettings"/>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <label for="directoryPath" class="col-md-4 control-label">
+                    {{'BACKUPNOW_backupdirpath' | translate}}*
+                    <a class="ci ci-info-circle-info text-primary"
+                       popover
+                       title="{{'BACKUPNOW_backupdirpath' | translate}}"
+                       data-content="{{'BACKUPNOW_backupdirpathinfo' | translate}}">
+                    </a>
+                </label>
+                <div class="col-md-4">
+                    <input id="directoryPath"
+                           name="directoryPath"
+                           type="text"
+                           class="form-control"
+                           placeholder="Not Configured."
+                           ng-required="!backupNow.backupSettings.useBackupSettings"
+                           ng-model="backupNow.backupSettings.backupLocation"
+                           ng-disabled="backupNow.backupSettings.useBackupSettings"/>
+                    <span ng-if="backupNow.form._submitted && backupNow.form.directoryPath.$error.required" class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="directoryUserName" class="col-md-4 control-label">
+                    {{'BACKUPNOW_backupDirUserName' | translate}}
+                </label>
+                <div class="col-md-4">
+                    <input id="directoryUserName"
+                           type="text"
+                           class="form-control"
+                           placeholder="Not Configured."
+                           ng-model="backupNow.backupSettings.userName"
+                           ng-disabled="backupNow.backupSettings.useBackupSettings"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="directoryPassword" class="col-md-4 control-label">
+                    {{'BACKUPNOW_backupDirPassword' | translate}}
+                </label>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input id="directoryPassword"
+                               name="directoryPassword"
+                               ng-model="backupNow.backupSettings.backupLocationPassword"
+                               ng-disabled="backupNow.backupSettings.useBackupSettings"
+                               class="form-control"
+                               type="password" password-viewer 
+                               placeholder="Not Configured."/>
+                    </div>
+                </div>
+            </div>
+            <p id="backupFileText">
+                {{'BACKUPNOW_backupFileDescription' | translate}}
+            </p>
+            <div class="form-group">
+                <label for="encryptionPassword" class="col-md-4 control-label">
+                    {{'BACKUPNOW_encrypPassword' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input id="encryptionPassword"
+                               name="encryptionPassword"
+                               ng-model="backupNow.backupSettings.encryptionPassword"
+                               ng-required="!backupNow.backupSettings.useBackupSettings"
+                               ng-disabled="backupNow.backupSettings.useBackupSettings"
+                               class="form-control"
+                              type="password" password-viewer 
+                               placeholder="Not Configured."/>
+                    </div>
+                    <span ng-if="backupNow.form._submitted && backupNow.form.encryptionPassword.$error.required" class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="verifyEncryptPassword" class="col-md-4 control-label">
+                    {{'BACKUPNOW_confirmencrypPassword' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input id="verifyEncryptPassword"
+                               name="verifyEncryptPassword"
+                               ng-match="backupNow.backupSettings.encryptionPassword"
+                               ng-model="backupNow.backupSettings.encryptionVPassword"
+                               ng-required="!backupNow.backupSettings.useBackupSettings"
+                               ng-disabled="backupNow.backupSettings.useBackupSettings"
+                               class="form-control"
+                               type="password" password-viewer 
+                               placeholder="Not Configured."/>
+                    </div>
+                    <span ng-if="backupNow.form._submitted && !backupNow.backupSettings.useBackupSettings">
+                        <span ng-if="backupNow.form.verifyEncryptPassword.$error.required" class="text-danger">
+                            {{'VALIDATIONMESSAGES_required' | translate}}
+                        </span>
+                        <span ng-if="!backupNow.form.verifyEncryptPassword.$error.required && backupNow.form.verifyEncryptPassword.$error.ngmatch" class="text-danger">
+                            {{ 'VALIDATIONMESSAGES_equalTo' | translate}}
+                        </span>
+                    </span>
+
+                </div>
+            </div>
+        </div>
+    </form>
+    <footer class="text-right">
+        <button id="btnTestBackupNowConnection" class="btn btn-default" ng-click="backupNow.form._submitted = true; backupNow.form.$valid && backupNow.testBackupNowConnection()">
+            {{'BACKUPNOW_testconnection' | translate}}
+        </button>
+        <button id="submitBackupNow" class="btn btn-primary" type="button" ng-click="backupNow.form._submitted = true; backupNow.form.$valid && backupNow.backup()">
+            {{'BACKUPANDRESTORE_btnbackupnow' | translate}}
+        </button>
+        <button id="cancelBackupNow" class="btn btn-default" type="button" ng-click="backupNow.close()">
+            {{'GENERIC_Cancel' | translate}}
+        </button>
+    </footer>
+</section>

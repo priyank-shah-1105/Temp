@@ -1,0 +1,79 @@
+﻿<section id="tab-iso">
+    <div>
+        <ul class="list-unstyled list-inline">
+            <li class="btn-group">
+                <button tabindex="0"
+                        id="lnkCreate"
+                        class="btn btn-primary"
+                        ng-click="editRepositoryController.addRepo();"
+                        ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                    <i class="ci ci-action-add-plus-float"></i>
+                    {{'SETTINGS_Repositories_Add'|translate}}
+                </button>
+            </li>
+        </ul>
+        <article>
+            <table class="table table-striped table-hover master-body table-condensed"
+                   st-skip-natural="true"
+                   st-table="editRepositoryController.repos"
+                   st-safe-src="editRepositoryController.backup">
+                <thead>
+                    <tr>
+                        <th tabindex="0" st-sort="'_state'">{{'SETTINGS_Repositories_State' | translate }}</th>
+                        <th tabindex="0" st-sort="'name'">{{'SETTINGS_Repositories_Repositories' | translate }}</th>
+                        <th tabindex="0" st-sort="'_imagetype'">{{'SETTINGS_Repositories_ImageType' | translate }}</th>
+                        <th tabindex="0" st-sort="'path'">{{'SETTINGS_Repositories_SourcePath' | translate }}</th>
+                        <th tabindex="0" st-sort="'isInUse'">{{'SETTINGS_Repositories_InUse' | translate }}</th>
+                        <!--<th tabindex="0" st-sort="'isRCM'">{{'SETTINGS_Repositories_IsRCM' | translate }}</th>-->
+                        <th tabindex="0">{{'SETTINGS_Repositories_AvailableActions' | translate }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- selected option is placed on object itself.
+                    On change repo is sent to editRepositoryController.actionTaken -->
+                    <tr ng-repeat="repo in editRepositoryController.repos">
+                        <!-- Changing available state to 'availablerepo' to avoid naming conflict -->
+                        <td>
+                            <span ng-switch="repo.state">
+                                <span ng-switch-when="available">
+                                    <statusicon value="'green'"></statusicon>
+                                </span>
+                                <span ng-switch-when="errors">
+                                    <statusicon value="'red'"></statusicon>
+                                </span>
+                                <span ng-switch-when="copying">
+                                    <spinner></spinner>
+                                </span><span ng-switch-when="pending">
+                                    <statusicon value="'standby'"></statusicon>
+                                </span>
+
+                            </span>
+                            {{repo._state | repoState}}
+                        </td>
+                        <td>{{repo.name}}</td>
+                        <td>{{repo._imagetype}}</td>
+                        <td>{{repo.filepath}}</td>
+                        <td>{{repo.isInUse | bool}}</td>
+                        <!--<td>{{repo.isRCM | bool}}</td>-->
+                        <td>
+                            <select class="form-control"
+                                    ng-model="editRepositoryController.repos[$index].selectedOption"
+                                    ng-options="option.id as option.name for option in repo.options"
+                                    ng-disabled="repo.options.length === 1 || $root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard') || repo.isRCM"
+                                    ng-change="editRepositoryController.actionTaken(repo)"></select>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            <div st-pagination="editRepositoryController.repos"
+                                 st-items-by-page="20"
+                                 st-displayed-pages="1"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </article>
+    </div>
+</section>

@@ -1,0 +1,49 @@
+﻿<section id="page_viewcomponents">
+
+    <form class="form-inline">
+        <div class="form-group">
+            <label for="exampleInputName2">{{'TEMPLATES_FilterByComponentType'|translate}} </label>
+            <select ng-if="viewComponents.filterItems"
+                    ng-options="type.id as type.name for type in viewComponents.filterItems"
+                    ng-model="viewComponents.selectedFilter"
+                    class="form-control"></select>
+        </div>
+    </form>
+
+    <table st-search-options="{model: viewComponents.selectedFilter, field: 'basicType'}"
+           class="table table-striped"
+           st-table="viewComponents.displayedComponents"
+           st-safe-src="viewComponents.components">
+        <thead>
+            <tr>
+                <td>
+                    {{'TEMPLATES_ComponentName'|translate}}
+                </td>
+                <td>
+                    {{'TEMPLATES_ComponentType'|translate}}
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="component in viewComponents.displayedComponents | orderComponents">
+                <td>
+                    {{component.name}}
+                </td>
+                <td>
+                    {{component.basicType}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <footer>
+        <ul class="list-inline">
+            <li class="pull-right">
+                <button id="closeModal"
+                        ng-click="viewComponents.close();"
+                        class="btn btn-primary">
+                    {{'GENERIC_Close' | translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

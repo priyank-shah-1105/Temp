@@ -1,0 +1,31 @@
+﻿<section id="component_add_users">
+    <div>
+        <ul class="list-inline">
+            <li>
+                <button class="btn btn-link" id="new_user_link" ng-click="addUsersController.addUsers();">
+                    <i class="ci ci-action-add-plus-float"></i>
+                    {{'TEMPLATES_AddUsers' | translate}}
+                </button>
+            </li>
+            <li class="customClassNoMargin">
+                <button class="btn btn-link" id="delete_user_link"
+                   ng-click="addUsersController.removeUsers()"
+                   ng-disabled="!(addUsersController.usersList | filter:{enabled:true}).length">
+                    <i class="ci ci-trash"></i>
+                    {{'TEMPLATES_RemoveUsers' | translate}}
+                </button>
+            </li>
+        </ul>
+    </div>
+    <div class="col-sm-4 checkboxlist" >
+        <div ng-repeat="user in addUsersController.usersList  | orderBy:'username'">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="user.enabled" />
+                    {{user.username}}
+                </label>
+            </div>
+
+        </div>
+    </div>
+</section>

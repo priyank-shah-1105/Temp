@@ -1,0 +1,54 @@
+﻿<section id="page_importconfig">
+    <error-display errors="uploadConfigController.errors"
+                   on-click="$root.ASM.RemoveError(error, uploadConfigController.errors)"
+                   on-expand-collapse=""></error-display>
+    <p>
+        {{'TEMPLATEBUILDER_Upload_Help'|translate}}
+    </p>
+
+    <div id="configFileForm">
+        <fieldset>
+            <legend class="visuallyhidden">
+            </legend>
+            <ul class="list-unstyled">
+                <li class="form-group">
+                    <div class="col-md-8">
+                        <form id="uploadConfig" name="uploadConfig">
+                            <div class="form-group">
+                                <p>{{'TEMPLATEBUILDER_Upload_Select_File'|translate}}</p>
+                                <div class="col-md-4">
+                                    <input required
+                                           uploader="uploader"
+                                           nv-file-select
+                                           id="configFile"
+                                           type="file"
+                                           text="Browse"
+                                           class=""
+                                           name="configFile" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </fieldset>
+    </div>
+
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+                <button id="submit_form_importconfig" class="btn btn-primary"
+                        ng-click="uploadConfigController.uploadConfigFile()"
+                        ng-disabled="!uploadConfigController.isFileSelected()">
+                    {{'GENERIC_Continue'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="cancel_form_importconfig" class="btn btn-default" ng-click="uploadConfigController.cancel()">
+                    {{'GENERIC_Cancel'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+
+</section>

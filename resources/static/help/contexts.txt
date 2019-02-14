@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contexts>
+  <context html="GUID-DE302F08-A5B3-4380-9138-8380C2009144.html" key="Settings:Users-HomePage"/>
+  <context html="GUID-4F98D4A9-4E41-4831-B348-D59B46016463.html" key="Dashboard:DeployNewService"/>
+  <context html="GUID-6B1FEB89-27E7-4720-9D7C-566403BFD433.html" key="delete service"/>
+  <context html="GUID-E95E031D-97A8-4AB2-8C20-9B9A767F8F3C.html" key="(Templates):CreateTemplate:BuildingAndPublishingServiceTemplate"/>
+  <context html="GUID-867D0995-352C-4DB4-B65A-602440BA6A94.html" key="Settings:CreatingUser"/>
+  <context html="GUID-09061359-0CFA-4480-9E81-BC461839BFC5.html" key="service details"/>
+  <context html="GUID-30B43E75-29F5-4346-8153-7DA9DF532BD3.html" key="template_add attachment"/>
+  <context html="GUID-982DFF2E-83DA-41B4-80FD-33EBC76A9B6A.html" key="serverpool:edit"/>
+  <context html="GUID-3CB7C7BE-8BE9-47DB-8117-98F28573B672.html" key="serverpools:tab"/>
+  <context html="GUID-29778BCC-D293-4885-9B5A-786AEF8CF107.html" key="repositories:homepage"/>
+  <context html="GUID-C89539DD-AAC1-4CA2-9DE1-9BB4F5ECB242.html" key="networksadding:editing "/>
+  <context html="GUID-24F76008-81FE-4F36-98BE-10284C22F296.html" key="Template:Editing Template Information"/>
+  <context html="GUID-402DAFDC-4465-461B-A3D0-E0F11C2DC3C2.html" key="configureDHCPsettings"/>
+  <context html="GUID-DCE48024-1840-480A-823F-1C926332134A.html" key="Resource"/>
+  <context html="GUID-9D0A415E-869C-4795-B5E6-E9906BCC2370.html" key="Application Logs"/>
+  <context html="GUID-10F9BC7E-8A2B-48E5-A9E5-3301C6866B64.html" key="template:view details"/>
+  <context html="GUID-F40CD627-3AA7-44C6-B110-0635A77BCDA6.html" key="initialsetupsummary"/>
+  <context html="GUID-90E8E840-A825-408C-8BEF-1F03A39F1F29.html" key="Uploading an SSL Certificate"/>
+  <context html="GUID-D2C936AF-C242-45C1-BFE6-867819245ADE.html" key="Backup and Restore"/>
+  <context html="GUID-4EAFC0F8-4BD8-4A01-B5A5-A123D49C00A1.html" key="Setings:Users:DirectoryServices:ConnectionSettings"/>
+  <context html="GUID-1BB3018F-26C2-4483-9767-CDFD93493F9C.html" key="Settings:Users:AboutRoles"/>
+  <context html="GUID-5635F5F5-CBAA-422B-BA36-A1047EE0C29A.html" key="Editing Default NTP Settings"/>
+  <context html="GUID-50AC1045-315A-45F7-869F-5BEAF59E98C7.html" key="Settings:Users:EnablingDisablingUsers"/>
+  <context html="GUID-70BAA643-AC73-42C4-9BC2-10F262D8A591.html" key="(Templates):CreateTemplate:BuildingTemplate"/>
+  <context html="GUID-879CE912-BE7B-4260-B65C-CA63B8A9C5CC.html" key="initialsetupproxysettings"/>
+  <context html="GUID-F05A8F3E-4524-43B0-9AB1-20F19AB167D1.html" key="Settings:Users:DirectoryServices:AttributeSettingsMatrix"/>
+  <context html="GUID-0957E277-D2F7-41C4-A718-CD1E15E3B71E.html" key="service resource_add resourse_Add network"/>
+  <context html="GUID-2002C7A9-44BF-473E-92AA-3A8364AF746D.html" key="networks:landingpage"/>
+  <context html="GUID-C6B64ADD-88C7-47FB-83DF-343BBF9EE401.html" key="networking:createoredit:VLANID"/>
+  <context html="GUID-432EC241-8D28-4EFB-A751-280A9FCA150B.html" key="(initial setup)Time Zone"/>
+  <context html="GUID-072C70BF-F26C-4B48-8A15-1D3E7E6A362F.html" key="service:service details: Service Deployment Settings"/>
+  <context html="GUID-3E434B9E-F1C6-439F-B578-80C3144BAA4F.html" key="(Templates):ComponentTypes:Server"/>
+  <context html="GUID-CB18BA64-A917-4A49-8534-F2A3791FB3CE.html" key="Settings:Users:DirectoryServices:AttributeSettings"/>
+  <context html="GUID-C6B6B706-1D45-458E-B47D-1D14FC416C3D.html" key="gettingstarted"/>
+  <context html="GUID-347E4F95-E735-466D-80E4-E5DE5E714F76.html" key="Editing Backup Settings And Details"/>
+  <context html="GUID-ECA74D5D-7553-463E-A847-62C6FE5447E3.html" key="Services"/>
+  <context html="GUID-3D5258EE-EF6A-4DB6-83CE-7DDA7E158E3C.html" key="Purging Log Entries"/>
+  <context html="GUID-8B9AA354-34DE-4336-979A-D42D800748D3.html" key="(Templates):ImportingTemplates"/>
+  <context html="GUID-98858DAC-3947-4DA9-ADCD-9C71BBBDC9B1.html" key="Settings:Users:DirectoryServices-HomePage"/>
+  <context html="GUID-152B27C5-8165-4121-A126-5701E9046597.html" key="creatingcredentials"/>
+  <context html="GUID-6FBA007F-1F1F-4B87-85E2-718DD23C981D.html" key="services:Edit Service Information"/>
+  <context html="GUID-BF3B9047-373C-486F-9D52-8A30133FBECE.html" key="(Templates)Overview"/>
+  <context html="GUID-C14F691C-340C-4A1C-89EB-77E3B82F2E46.html" key="Template_Upload external Template"/>
+  <context html="GUID-57681C39-16A9-49E8-AAA5-B83064D8CD31.html" key="view firmware compliance"/>
+  <context html="GUID-ADE94816-9B37-4E0F-80D8-3A28F1349E87.html" key="deployed service\u003eview detail\u003eupgrade component\u003eupdate service component"/>
+  <context html="GUID-4B948DC5-05D0-4B66-A887-1EA4C980EF58.html" key="discoverywizard:welcome"/>
+  <context html="GUID-F56F99E6-5661-4CB7-90D6-4B490282B213.html" key="(Templates):DeletingTemplate"/>
+  <context html="GUID-66027734-2F03-416D-8DC6-D695DD5ED40D.html" key="(Templates):ComponentTypesInASM"/>
+  <context html="GUID-74B9EE18-16EE-4A35-99FA-5E449BDCA479.html" key="Adding firmware repositories"/>
+  <context html="GUID-8C279792-C3A3-447F-BAA7-E90459206A7C.html" key="Editingcredentials"/>
+  <context html="GUID-ABA0A454-3A5B-4D1B-9F5D-34F83A1D6873.html" key="Settings:Users:DirectoryServices:AddingDirectoryService"/>
+  <context html="GUID-3820906D-846E-4A8A-BD74-222B96F2412C.html" key="Virtual Appliance Management"/>
+  <context html="GUID-0D3A9AE2-28E7-45E4-8407-F42A951D7E6A.html" key="serverpool:create"/>
+  <context html="GUID-1A4B7486-665C-42DE-BCEA-1E9511176DBA.html" key="Settings:Users:EditingUser"/>
+  <context html="GUID-2F45EC04-0CFA-4B42-90EF-C2F4C6F3C0B1.html" key="(Templates):ComponentTypes:ServerComponentSettingsMatrix"/>
+  <context html="GUID-6FDA6196-2F41-41ED-92BF-E698FC56CB5D.html" key="Settings:Users:DirectoryServices:ConnectionSettingsMatrix"/>
+  <context html="GUID-FFC60E06-0254-493D-AE4B-D9F664CF5739.html" key="Downloading the Certificate Signing Request"/>
+  <context html="GUID-4371BBAC-2E36-459C-BE17-FB9290E1E127.html" key="(Templates):ComponentTypes:ClusterSettingsMatrix"/>
+  <context html="GUID-95330B4B-072A-46E6-B0C7-2D085959F921.html" key="viewbundles"/>
+  <context html="GUID-0EA99976-B62D-4AC2-8A49-6A8529357678.html" key="Editing Automatically Scheduled Backups"/>
+  <context html="GUID-DB7868BF-0260-47B6-99B5-E67542B3097C.html" key="scheduled jobs"/>
+  <context html="GUID-10CD78FB-ED63-4B82-AF27-642386E3B299.html" key="(Templates):CloningTemplates"/>
+  <context html="GUID-E223F488-0D92-45A8-8F05-56F24B756FD2.html" key="Editing Proxy Settings"/>
+  <context html="GUID-AB959B7A-5D13-4ABD-8730-1118772710D2.html" key="License Management"/>
+  <context html="GUID-0B19223E-5C8A-41BE-B4CE-0ECD6064C157.html" key="Services:Add Service"/>
+  <context html="GUID-F2AFCFE6-F28E-4EA6-A26C-7E5CE94E09F1.html" key="Add OS Image Repository"/>
+  <context html="GUID-F12ACA5F-4870-4E8D-ACB0-7655354E9564.html" key="(Templates):BuildTemplate:EditTemplate"/>
+  <context html="GUID-07289072-3699-4567-AA67-8D7AF94880A0.html" key="Settings:Users:ImportingUsers"/>
+  <context html="GUID-92AB3E3B-1D37-4EBC-A667-9DF659BAA322.html" key="Generating a Certificate Signing Request"/>
+  <context html="GUID-25DAB7DA-314F-4FAE-927E-47F9A8ED1055.html" key="Backup Now"/>
+  <context html="GUID-A23B7FFC-9E91-42D5-A3FE-1B32757B2AA9.html" key="Overview"/>
+  <context html="GUID-90061F56-B1A1-4664-A3A8-3F7457BAFAB9.html" key="(Templates)CreatingTemplate"/>
+  <context html="GUID-70E23B3C-854B-4867-ABF6-F44E3E111ED9.html" key="(initial setup)License"/>
+  <context html="GUID-0D32AB59-08F7-4EFE-9287-7992D615F2E2.html" key="Initialsetupwelcome"/>
+  <context html="GUID-0A6214EF-4D65-4612-BDE1-D522525C2EB1.html" key="Template_Export Template"/>
+  <context html="GUID-CBFFF4B6-E4AD-475C-98C0-0A46371929B5.html" key="(Templates)HomePage"/>
+  <context html="GUID-B4C4600A-1B8A-49D1-9BE0-D8B75961FD65.html" key="credentials:landingpage"/>
+  <context html="GUID-1B478D09-7D69-4B87-9A82-E23A44993D22.html" key="Editing DHCP Settings"/>
+  <context html="GUID-34C736F1-E753-4380-8D74-EB6F0E91B80D.html" key="Settings:Users:DirectoryServices:Summary"/>
+  <context html="GUID-B476B03D-47C0-4562-919A-8ACD7DFD03D5.html" key="Setting_Virtual appliance_Update Repo path"/>
+  <context html="GUID-EB2075D8-B964-4603-859F-A1AF4304C7F4.html" key="(Templates):ComponentTypres:Cluster"/>
+  <context html="GUID-339DE4CE-CCB1-445D-8C54-54A9184C8C2E.html" key="discovery:discovereddevices"/>
+  <context html="GUID-98DAF563-A44D-4C04-BA55-805A62994E4B.html" key="resources tab:updating firmware"/>
+  <context html="GUID-7F039D53-6F3E-44D1-ACC5-A4ADEAEDFE72.html" key="Settings:DeletingUsers"/>
+  <context html="GUID-6C347A4C-1851-446D-877B-B97E3C21985E.html" key="(Templates):BuildTemplate:DeployingServiceOverview"/>
+  <context html="GUID-DA3C7061-F59F-4774-994F-50776FE69819.html" key="Settings:Users:DirectoryServices:EditingDirectoryServices"/>
+  <context html="GUID-031B9C79-C79C-4A3A-848B-FC4E045EB693.html" key="Settings:Users:DirectoryServices:DeletingDirectoryServices"/>
+</contexts>
+

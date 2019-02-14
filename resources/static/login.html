@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html ng-app="app-login" ng-strict-di>
+<head>
+    <title translate="ApplicationTitle"></title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <script type="text/javascript">
+        window.cacheKey = "VTHGGOTZ";
+    </script>
+
+    <script src="js/dell-clarity-components/dell-clarity-vendor.min.js?v=VTHGGOTZ"></script>
+    <script src="js/dell-clarity-components/dell-clarity-components.min.js?v=VTHGGOTZ"></script>
+    <script src="js/dell-clarity-components/dell-clarity-components.tmpl.min.js?v=VTHGGOTZ"></script>
+
+    <script src="js/libs.min.js?v=VTHGGOTZ"></script>
+    <script src="js/scripts.min.js?v=VTHGGOTZ"></script>
+
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="icon" type="image/ico" href="images/favicon.ico" />
+
+    <link rel="stylesheet" href="css/dell-ui-clarity/dell-ui-clarity.min.css?v=VTHGGOTZ" />
+    <link rel="stylesheet" href="js/dell-clarity-components/dell-clarity-components.min.css?v=VTHGGOTZ" />
+    <link rel="stylesheet" href="css/app/app.min.css?v=VTHGGOTZ" />
+
+    <script type="text/javascript">
+
+        var div = document.createElement("div");
+        div.innerHTML = "<!--[if lt IE 9]><i></i><![endif]-->";
+        var isIeLessThan9 = (div.getElementsByTagName("i").length === 1);
+        if (isIeLessThan9) {
+            alert("Please ensure you are using IE9 or greater and that compatibility view is turned off.");
+        }
+
+    </script>
+</head>
+<body ng-controller="AppLoginController">
+    <login config="data.settings" on-sign-in="actions.clickLogin(userData)"></login>
+</body>
+</html>

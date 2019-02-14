@@ -1,0 +1,74 @@
+﻿<div id="device_scale_servers">
+    <table id="scaleServersTable" class="table"
+           st-table="scaleServersController.scaleIOProtectionDomains"
+           st-safe-src="scaleServersController.safeSrc.scaleIOProtectionDomains">
+        <thead>
+            <tr>
+                <th>
+                    {{'DEVICES_EMC_SCALEIO_Server_ProtectionDomain'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_EMC_SCALEIO_Server_Type'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_EMC_SCALEIO_Server_Connection'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_EMC_SCALEIO_Server_Name'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_EMC_SCALEIO_Server_IPAddress'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat-start="server in scaleServersController.scaleIOProtectionDomains | scaleioServerFilter">
+                <td>
+                    <chevron item="server._show"
+                             id="serverChevron_{{$index}}">
+                        {{server.protectionDomainName}}
+                    </chevron>
+                </td>
+                <td colspan="4" ng-if="server._show"></td>
+                <td ng-if="!server._show">--</td>
+                <td ng-if="!server._show">--</td>
+                <td ng-if="!server._show">--</td>
+                <td ng-if="!server._show">--</td>
+            </tr>
+            <tr ng-repeat-start="pool in server.scaleIOServerTypes" ng-if="server._show">
+                <td></td>
+                <td>
+                    <chevron item="pool._show"
+                             id="poolChevron_{{$index}}"
+                             hide-chevron="!pool.scaleIOServerDetails.length">
+                        {{pool.name}}
+                    </chevron>
+                </td>
+                <td colspan="3"></td>
+            </tr>
+            <tr ng-repeat-end
+                ng-repeat="volume in pool.scaleIOServerDetails"
+                ng-if="pool._show">
+                <td colspan="2"></td>
+                <td>{{volume.connected}}</td>
+                <td>{{volume.name}}</td>
+                <td>
+                    <span ng-repeat="ip in volume.ipAddresses" class="col-xs-12">
+                        {{ip}}
+                    </span>
+                </td>
+            </tr>
+            <tr ng-if="" ng-repeat-end></tr>
+        </tbody>
+        <!--<tfoot>
+            <tr>
+                <td colspan="9" class="text-center">
+                    <div id="pager"
+                         st-pagination="(scaleServersController.scaleIOProtectionDomains | scaleioServerFilter)"
+                         st-items-by-page="20"
+                         st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>-->
+    </table>
+</div>

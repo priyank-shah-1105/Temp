@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Adding a template</title><link rel="prev" href="GUID-F5BFCACE-E4FA-4DB2-83EA-4DF3B93CDBDE.html" /><link rel="next" href="GUID-24F76008-81FE-4F36-98BE-10284C22F296.html" /><link href="static/screen.css?fAL4Y+sp" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-90061F56-B1A1-4664-A3A8-3F7457BAFAB9" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">VxFlex Manager</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Adding a template</h1>
+<div class="context" id="GUID-3FB0B171-3B61-4439-BE58-682A6A34EC37"><p>The <span class="uicontrol">Add a Template</span> feature allows you to create a new template, clone the components of an existing template into a new template, or import a pre-existing template. </p><p>For most environments, you can simply clone one of the sample templates provided with VxFlex Manager and make modifications as needed. Choose the sample template that is most appropriate for your environment.</p><p>To add a  template: </p></div>
+<ol class="steps" id="GUID-51A2E0CF-4BFD-4AC1-B3F9-D07085ABE616">
+<li id="STEP_2B23EF8F6810478FB5681F0E34CE5DFF"><p>On the menu bar, click <span class="uicontrol">Templates</span>.</p></li>
+<li id="STEP_322AB4C496954A33AF22B4D4566BAC0F"><p>On the <span class="uicontrol">Templates</span> page,
+click <span class="uicontrol">Add a Template</span>.</p>
+
+</li>
+<li id="STEP_60576533F61D4FA29BF4CAC1DA9C12EC"><p>In the <span class="uicontrol">Add a Template</span> dialog box, select one of the following options:</p>
+<p><ul id="UL_93FEBD8FE23B4ADA9C79CB13C76662DA"><li id="LI_D2C83E22BE5E4220B70BA98B469B6B3F"><span class="uicontrol">Clone an existing VxFlex Manager template</span></li><li id="LI_696A3D2EEF2C4B178D9D2C18C91BAF63"><span class="uicontrol">Upload External Template</span></li><li id="LI_835BBAF35A6C4697B2E3878585F2DD66"><span class="uicontrol">Create a new template</span></li></ul></p><p>If you select <span class="uicontrol">Clone an existing VxFlex Manager template</span>, select the <span class="uicontrol">Category</span> and the <span class="uicontrol">Template to be Cloned</span>. The components
+of the selected template are included in the new template.</p>
+</li>
+<li id="STEP_D96BD3C66D974D0EAB64D2CE2E377E2D"><p>Enter a <span class="uicontrol">Template Name</span>.</p></li>
+<li id="STEP_E6027D4287AF4EF18BA396E5F1EE677A"><p>From the <span class="uicontrol">Template Category</span> list, select a template category. To create a category, select <span class="uicontrol">Create New Category</span> from the list.</p>
+</li>
+<li id="STEP_A90780B790214D398A8C47F0B290E77D"><p>Enter a <span class="uicontrol">Template Description</span> (optional).</p></li>
+<li id="STEP_8A63F7A4D6574558AD95F314492C0BAF_unique_1"><p>To specify the RCM version to use for compliance, select the <span class="uicontrol">Perform compliance check with selected RCM version</span> check box and choose the version from the <span class="uicontrol">RCM version</span> list.</p><p><div class="note" id="GUID-2A32D8E1-00AF-41F3-9422-529906C6DABE_unique_1"><span class="notelabel">NOTE: </span>Changing the RCM version might update the firmware level on
+nodes for this service. Firmware on shared devices will still be
+maintained by the global default firmware repository.</div></p></li>
+
+<li id="STEP_BF2C71F179724437B587A6959D242E53_unique_1"><p>Specify the service permissions for  this template under <span class="uicontrol">Who should have access to the service deployed from this template?</span> by  performing one
+of the following actions:</p>
+<p><ul id="GUID-3906C4F9-C57A-4A23-B282-951E3DA5BEAC_unique_3">
+<li id="LI_E9130FF9DB7A46989A7057CE7A88933D_unique_3">To restrict access to administrators, select <span class="uicontrol">Only VxFlex Manager Administrators</span>.</li><li id="LI_757D82B65F1E405D9FA1B8E33193BB12_unique_3">To grant access to administrators and specific standard users, select <span class="uicontrol">VxFlex Manager Administrators and Specific Standard Users</span>  and perform the following steps:<ol id="GUID-BDB914B1-EE78-4916-B320-31822DD4DCDC_unique_3">
+<li id="LI_3D2A5F7C204A4717A973456FEB0003F6_unique_3"><p>Click <span class="uicontrol">Add User(s)</span> to add a standard user to the displayed list.</p><p> To remove a standard user from the list, select the user
+and click<span class="uicontrol"> Remove User(s)</span>.</p></li>
+<li id="LI_A1E6B408AF814EA486FA6A49E8EAE0C6_unique_3">After adding the standard users, select or clear the
+check box next to the standard users to grant or block access to use
+this template.</li>
+</ol></li>
+<li id="LI_4D696BEFAEC347DCA17186960A41B514_unique_3">To grant access to administrators and all standard users, select <span class="uicontrol">VxFlex Manager Administrators and All Standard Users</span>.</li></ul></p>
+</li>
+<li id="STEP_A6D1348B68A44E1F86285592891A56D6"><p>Click <span class="uicontrol">Next</span> to select the remaining options to complete the wizard.</p></li>
+</ol>
+<dl class="relations"><dt>Related Concepts</dt><dd class="choice_list"><ul data-inset="false" data-role="listview" data-theme="a"><li><a href="GUID-70BAA643-AC73-42C4-9BC2-10F262D8A591.html">Building a template
+overview</a></li></ul></dd><dt>Related Tasks</dt><dd class="choice_list"><ul data-inset="false" data-role="listview" data-theme="a"><li><a href="GUID-E95E031D-97A8-4AB2-8C20-9B9A767F8F3C.html">Building and
+publishing a template</a></li><li><a href="GUID-10CD78FB-ED63-4B82-AF27-642386E3B299.html">Cloning a template</a></li><li><a href="GUID-F56F99E6-5661-4CB7-90D6-4B490282B213.html">Deleting a template</a></li><li><a href="GUID-24F76008-81FE-4F36-98BE-10284C22F296.html">Editing template
+information</a></li><li><a href="GUID-0A6214EF-4D65-4612-BDE1-D522525C2EB1.html">Exporting a template</a></li><li><a href="GUID-8B9AA354-34DE-4336-979A-D42D800748D3.html">Importing a template</a></li></ul></dd></dl></article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?5ZiewaI5"></script></body></html>

@@ -1,0 +1,222 @@
+﻿<section id="Template_Settings">
+    <error-display errors="viewTemplateDetailsModalController.errors" on-click="$root.ASM.RemoveError(error, viewTemplateDetailsModalController.errors)" on-expand-collapse=""></error-display>
+    <form id="formDeploymentDetails"
+          class="form-horizontal"
+          role="form">
+
+        <div class="panel-group"
+             role="tablist"
+             style="padding:0;"
+             aria-multiselectable="true">
+            <div class="panel-heading"
+                 role="tab"
+                 id="head{{$index}}"
+                 ng-repeat="component in viewTemplateDetailsModalController.template.components | orderComponents"
+                 ng-if="viewTemplateDetailsModalController.componentVisible(component)">
+                <a tabindex="0"
+                   style="outline: none;text-decoration:none;"
+                   role="button"
+                   class="collapsed"
+                   data-toggle="collapse"
+                   data-target="#component_{{$index}}"
+                   aria-expanded="false"
+                   aria-controls="component_{{$index}}">
+                    <ul class="list-inline" style="margin-bottom:0;">
+                        <li style="color: #888; vertical-align: top;">
+                            <i class="collapsed-show ci-arrow-chev-right-2-med ci"></i>
+                            <i class="collapsed-hide ci-arrow-chev-down-2-med ci"></i>
+                        </li>
+                        <li>
+                            <h3 style="margin-top: 0; margin-bottom: 10px; border-bottom: none;">
+                                {{component.name}} <span ng-if="component.instances > 1">({{component.instances}} {{'TEMPLATEBUILDER_instances'|translate}})</span>
+                            </h3>
+                        </li>
+                    </ul>
+                </a>
+                <div class="col-xs-12 panel-collapse collapse"
+                     id="component_{{$index}}"
+                     aria-labelledby="head{{$parent.$index}}{{$index}}"
+                     role="tabpanel">
+
+                    <div class="panel-group"
+                         role="tablist"
+                         style="margin-top:8px;"
+                         aria-multiselectable="true">
+
+                        <div class="panel panel-default">
+
+                            <div ng-repeat="category in component.categories"
+                                 ng-if="viewTemplateDetailsModalController.categoryVisible(category, component)"
+                                 class="panel-heading"
+                                 role="tab"
+                                 id="category{{$index}}_component_{{$parent.$parent.$index}}">
+                                <a tabindex="0"
+                                   style="outline: none;text-decoration:none;"
+                                   role="button"
+                                   class="collapsed"
+                                   data-toggle="collapse"
+                                   data-target="#body{{$index}}_component_{{$parent.$parent.$index}}"
+                                   aria-expanded="false"
+                                   aria-controls="body{{$index}}_component_{{$parent.$parent.$index}}">
+                                    <ul class="list-inline" style="margin-bottom:0;">
+                                        <li style="color: #888; vertical-align: top;">
+                                            <i class="collapsed-show ci-arrow-chev-right-2-med ci"></i>
+                                            <i class="collapsed-hide ci-arrow-chev-down-2-med ci"></i>
+                                        </li>
+                                        <li>
+                                            <h3 style="margin-top: 0; margin-bottom: 10px; border-bottom: none;">
+                                                {{category.name}}
+                                            </h3>
+                                        </li>
+                                    </ul>
+                                </a>
+                                <div class="col-xs-12 panel-collapse collapse"
+                                     id="body{{$index}}_component_{{$parent.$parent.$index}}"
+                                     aria-labelledby="category{{$index}}_component_{{$parent.$parent.$index}}"
+                                     role="tabpanel">
+
+                                    <div class="panel-group"
+                                         role="tablist"
+                                         style="margin-top:8px;"
+                                         aria-multiselectable="true">
+
+                                        <!-- Groups of Settings -->
+                                        <div ng-repeat="group in category.settings | templatesettings | viewTemplateDetailsFilter:component | groupFilter">
+                                            <!-- no group, individual setting -->
+                                            <div ng-if="!group.group">
+                                                <div ng-if="!setting.group" ng-repeat="setting in category.settings | templatesettings | viewTemplateDetailsFilter:component" class="form-group">
+                                                    <div ng-switch="setting.datatype">
+                                                        <!--Custom Control: Network Config-->
+                                                        <vm-virtual-disk-configuration ng-switch-when="vmvirtualdiskconfiguration"
+                                                                                       read-only-mode="true"
+                                                                                       setting="setting"></vm-virtual-disk-configuration>
+                                                        <!--Custom Control: Network Config-->
+                                                        <network-configuration ng-switch-when="networkconfiguration"
+                                                                              read-only-mode="true"
+                                                                              setting="setting"></network-configuration>
+                                                        <!--Custom Control: RAID Config-->
+                                                        <raid-configuration ng-switch-when="raidconfiguration"
+                                                                            read-only-mode="true"
+                                                                            setting="setting"></raid-configuration>
+                                                        <!--Custom Control: Bios Config-->
+                                                        <bios-configuration ng-switch-when="biosconfiguration"
+                                                                            read-only-mode="true"
+                                                                            setting="setting"></bios-configuration>
+                                                        <!-- Custom Control: Configure NIOC  -->
+                                                        <nioc-setting ng-switch-when="niocconfiguration"
+                                                                      read-only-mode="true"
+                                                                      setting="setting"
+                                                                      errors="viewTemplateDetailsModalController.errors"></nioc-setting>
+                                                        <!-- Custom Control: OS Credentials  -->
+                                                        <credentials-settings ng-switch-when="oscredential"
+                                                                              category="category"
+                                                                              setting="setting"
+                                                                              read-only-mode="true"
+                                                                              credentials="viewTemplateDetailsModalController.credentials"></credentials-settings>
+                                                        <!-- Custom Control: Basic Setting -->
+                                                        <basic-setting ng-switch-default
+                                                                       category="category"
+                                                                       setting="setting"
+                                                                       read-only-mode="true"
+                                                                       component="component"></basic-setting>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Groups -->
+                                            <div class="panel-heading"
+                                                 role="tab"
+                                                 ng-if="group.group"
+                                                 id="headId{{$index}}_group_{{$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                                 style="border-bottom: none;">
+                                                <a tabindex="0"
+                                                   style="outline: none;"
+                                                   role="button"
+                                                   data-toggle="collapse"
+                                                   data-target="#target{{$index}}_group_{{$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                                   aria-expanded="true"
+                                                   class="in"
+                                                   aria-controls="device{{$index}}">
+                                                    <ul class="list-inline" style="margin-bottom: 0;">
+                                                        <li style="color: #888; vertical-align: top;">
+                                                            <i class="collapsed-show ci-arrow-chev-right-2-med ci"></i>
+                                                            <i class="collapsed-hide ci-arrow-chev-down-2-med ci"></i>
+                                                        </li>
+                                                        <li>
+                                                            <h4 style="margin-top: 0; margin-bottom: 10px; border-bottom: none;">
+                                                                {{group.group}}
+                                                            </h4>
+                                                        </li>
+                                                    </ul>
+                                                </a>
+                                                <div class="col-xs-12 panel-collapse collapse in"
+                                                     id="target{{$index}}_group_{{$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                                     aria-labelledby="headId{{$index}}_group_{{$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                                     role="tabpanel">
+
+                                                    <div ng-repeat="setting in category.settings  | templatesettings | viewTemplateDetailsFilter:component"
+                                                         ng-if="setting.group === group.group">
+                                                        <div ng-switch="setting.datatype" class="form-group">
+                                                            <!--Custom Control: Network Config-->
+                                                            <vm-virtual-disk-configuration ng-switch-when="vmvirtualdiskconfiguration"
+                                                                                           read-only-mode="true"
+                                                                                           setting="setting"></vm-virtual-disk-configuration>
+                                                            <!--Custom Control: Network Config-->
+                                                            <network-configuration ng-switch-when="networkconfiguration"
+                                                                                  read-only-mode="true"
+                                                                                  setting="setting"></network-configuration>
+                                                            <!--Custom Control: RAID Config-->
+                                                            <raid-configuration ng-switch-when="raidconfiguration"
+                                                                                read-only-mode="true"
+                                                                                setting="setting"></raid-configuration>
+                                                            <!--Custom Control: Bios Config-->
+                                                            <bios-configuration ng-switch-when="biosconfiguration"
+                                                                                read-only-mode="true"
+                                                                                setting="setting"></bios-configuration>
+                                                            <!-- Custom Control: Configure NIOC  -->
+                                                            <nioc-setting ng-switch-when="niocconfiguration"
+                                                                          read-only-mode="true"
+                                                                          setting="setting"></nioc-setting>
+                                                            <!-- Custom Control: OS Credentials  -->
+                                                            <credentials-settings ng-switch-when="oscredential"
+                                                                                  category="category"
+                                                                                  setting="setting"
+                                                                                  read-only-mode="true"
+                                                                                  credentials="viewTemplateDetailsModalController.credentials"
+                                                                                  errors="viewTemplateDetailsModalController.errors"></credentials-settings>
+                                                            <!-- Custom Control: Basic Setting -->
+                                                            <basic-setting ng-switch-default
+                                                                           category="category"
+                                                                           setting="setting"
+                                                                           read-only-mode="true"
+                                                                           component="component"></basic-setting>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </form>
+    <footer>
+        <button id="cancel_form_exporttemplate"
+                class="btn btn-primary pull-right"
+                ng-click="viewTemplateDetailsModalController.close()">
+            {{'GENERIC_Close' | translate}}
+        </button>
+    </footer>
+</section>

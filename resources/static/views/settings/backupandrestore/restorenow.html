@@ -1,0 +1,99 @@
+﻿<section id="page_restoreNow">
+    <error-display errors="restoreNow.errors"
+                   on-click="$root.ASM.RemoveError(error, restoreNow.errors)"
+                   on-expand-collapse=""></error-display>
+    <form id="restoreNow.form" 
+          name="restoreNow.form" 
+          role="form" 
+          class="form-horizontal" 
+          novalidate
+          form-validation="restoreNow.form._submitted">
+        <div>
+            <div class="form-group">
+                <label for="directoryPath" class="col-md-4 control-label">
+                    {{'RESTORENOW_backupdirpath' | translate}}*
+                    <a class="ci ci-info-circle-info text-primary" 
+                       popover 
+                       title="{{'RESTORENOW_backupdirpath' | translate}}" 
+                       data-content="{{'RESTORENOW_backupdirpathinfo' | translate}}">
+                    </a>
+                </label>
+
+                <div class="col-md-4">
+                    <input id="directoryPath"
+                           name="directoryPath" 
+                           type="text" 
+                           class="form-control" 
+                           placeholder="Not Configured" 
+                           required 
+                           ng-model="restoreNow.backupSettings.backupLocation" />
+                    <span ng-if="restoreNow.form.directoryPath.$error.required && restoreNow.form._submitted" class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="directoryUserName" class="col-md-4 control-label">
+                    {{'BACKUPNOW_backupDirUserName' | translate}}
+                </label>
+                <div class="col-md-4">
+                    <input id="directoryUserName" 
+                           type="text" 
+                           class="form-control" 
+                           placeholder="Not Configured" 
+                           ng-model="restoreNow.backupSettings.userName" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="directoryPassword" class="col-md-4 control-label">
+                    {{'RESTORENOW_backupDirPassword' | translate}}
+                </label>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input id="backupLocationPassword"
+                               name="backupLocationPassword"
+                               ng-model="restoreNow.backupSettings.backupLocationPassword"
+                               class="form-control"
+                               type="password" password-viewer 
+                               placeholder="Not Configured" />
+                    </div>
+                </div>
+            </div>
+
+            <p id="backupFileText">
+                {{'RESTORENOW_backupFileDescription' | translate}}
+            </p>
+
+            <div class="form-group">
+                <label for="encryptionPassword" class="col-md-4 control-label">
+                    {{'RESTORENOW_encrypPassword' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input id="encryptionPassword"
+                               name="encryptionPassword"
+                               ng-model="restoreNow.backupSettings.encryptionPassword"
+                               required
+                               class="form-control"
+                               type="password" password-viewer 
+                               placeholder="Not Configured" />
+                    </div>
+                    <span ng-if="restoreNow.form.encryptionPassword.$error.required && restoreNow.form._submitted" class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </form>
+    <footer class="text-right">
+        <button id="btnTestBackupNowConnection" class="btn btn-default" ng-click="restoreNow.form._submitted = true; restoreNow.form.$valid && restoreNow.testConnection()">
+            {{'RESTORENOW_testconnection' | translate}}
+        </button>
+        <button id="submitBackupNow" class="btn btn-primary" type="button" ng-click="restoreNow.form._submitted = true; restoreNow.form.$valid && restoreNow.restore()">
+            {{'BACKUPANDRESTORE_btnrestorenow' | translate}}
+        </button>
+        <button id="cancelBackupNow" class="btn btn-default" type="button" ng-click="restoreNow.close()">
+            {{'GENERIC_Cancel' | translate}}
+        </button>
+    </footer>
+</section>

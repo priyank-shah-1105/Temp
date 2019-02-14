@@ -1,0 +1,537 @@
+﻿<wizard on-finish="AddPoolWizardController.finishWizard()" on-cancel="modal.onCancel()">
+
+    <error-display errors="AddPoolWizardController.errors" on-click="$root.ASM.RemoveError(error, AddPoolWizardController.errors)" on-expand-collapse=""></error-display>
+
+
+    <!-- POOL INFORMATION-->
+    <wizard-step step-title="{{'ADDPOOL_PoolInformation_Title'|translate}}"
+                 on-next="AddPoolWizardController.validatePool()"
+                 on-enter="AddPoolWizardController.enterPoolInformation()">
+
+        <form class="form-horizontal"
+              name="AddPoolWizardController.forms.form_editpool_information"
+              id="AddPoolWizardController.forms.form_editpool_information"
+              form-validation="AddPoolWizardController.forms.form_editpool_information._submitted"
+              novalidate>
+            <section id="page_editpool_information">
+                <header>
+                    <h2>
+                        {{'ADDPOOL_PoolInformation_Title'|translate}}
+                    </h2>
+                </header>
+                <p>
+                    {{'ADDPOOL_PoolInformation_Instructions'|translate}}
+                </p>
+                <br />
+                <div class="form-group">
+                    <label class="control-label col-md-4">
+                        {{'ADDPOOL_PoolInformation_Name'|translate}}
+                    </label>
+                    <div class="col-md-7">
+                        <input id="pool_name"
+                               name="pool_name"
+                               type="text"
+                               class="form-control"
+                               ng-model="AddPoolWizardController.pool.name"
+                               required />
+                        <span ng-if="AddPoolWizardController.forms.form_editpool_information._submitted && AddPoolWizardController.forms.form_editpool_information.pool_name.$error.required"
+                              class="text-danger">
+                            {{'VALIDATIONMESSAGES_required' | translate}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4">
+                        {{'ADDPOOL_PoolInformation_Description'|translate}}
+                    </label>
+                    <div class="col-md-7">
+                        <textarea id="pool_description"
+                                  class="form-control"
+                                  rows="5"
+                                  ng-model="AddPoolWizardController.pool.description" />
+                    </div>
+                </div>
+            </section>
+        </form>
+
+    </wizard-step>
+
+
+    <!-- VIRTUAL MAC-->
+    <wizard-step step-title="{{'ADDPOOL_VirtualMAC_Title'|translate}}"
+                 on-next="AddPoolWizardController.validatePoolInfo()"
+                 on-enter="AddPoolWizardController.enterVirtualMAC()">
+
+        <form class="form-horizontal"
+              name="AddPoolWizardController.forms.form_edit_virtualmac"
+              id="AddPoolWizardController.forms.form_edit_virtualmac"
+              form-validation="AddPoolWizardController.forms.form_edit_virtualmac._submitted"
+              novalidate>
+            <section id="page_edit_virtualmac">
+                <header>
+                    <h2>
+                        {{'ADDPOOL_VirtualMAC_Title'|translate}}
+                    </h2>
+                </header>
+                <p>
+                    {{'ADDPOOL_VirtualMAC_Instructions'|translate}}
+                </p>
+                <br />
+                <div class="form-group">
+                    <label class="control-label col-md-8">
+                        {{'ADDPOOL_VirtualMAC_Identities'|translate}}
+                    </label>
+                    <div class="col-md-4">
+                        <input id="edit_virtualmac_identitycount"
+                               name="edit_virtualmac_identitycount"
+                               type="number"
+                               min="0"
+                               max="1024"
+                               ng-model="AddPoolWizardController.pool.virtualMACIdentityCount"
+                               required
+                               class="form-control" />
+                        <span ng-if="AddPoolWizardController.forms.form_edit_virtualmac._submitted
+                                    && AddPoolWizardController.forms.form_edit_virtualmac.edit_virtualmac_identitycount.$error.required"
+                              class="text-danger">
+                            {{'VALIDATIONMESSAGES_required' | translate}}
+                        </span>
+                        <span ng-if="AddPoolWizardController.forms.form_edit_virtualmac._submitted
+                                    && (AddPoolWizardController.forms.form_edit_virtualmac.edit_virtualmac_identitycount.$error.min ||
+                              AddPoolWizardController.forms.form_edit_virtualmac.edit_virtualmac_identitycount.$error.max) &&
+                              !AddPoolWizardController.forms.form_edit_virtualmac.edit_virtualmac_identitycount.$error.required"
+                              class="text-danger">
+                            {{'VALIDATIONMESSAGES_number' | translate}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4">
+                        {{'ADDPOOL_VirtualMAC_Prefix'|translate}}
+                    </label>
+                    <div class="col-md-4">
+                        <div id="address_prefix_label pull-right" class="quiet">
+                            {{'ADDPOOL_VirtualMAC_Prefix_Value'|translate}}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="select_address_prefix"
+                                name="select_address_prefix"
+                                class="form-control"
+                                ng-model="AddPoolWizardController.pool.virtualMACUserPrefixSelection"
+                                data-ng-options="mac.id as mac.name for mac in AddPoolWizardController.poolPrefixList"
+                                required>
+                            <option value="">{{'GENERIC_select'|translate}}</option>
+                        </select>
+                        <span ng-if="AddPoolWizardController.forms.form_edit_virtualmac._submitted
+                                    && AddPoolWizardController.forms.form_edit_virtualmac.select_address_prefix.$error.required"
+                              class="text-danger">
+                            {{'VALIDATIONMESSAGES_required' | translate}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label>
+                            <input id="virtualMACAutoGenerateOnDeploy"
+                                   type="checkbox"
+                                   class="checkbox checkbox-inline"
+                                   ng-true-value=true
+                                   ng-false-value=false
+                                   ng-model="AddPoolWizardController.pool.virtualMACAutoGenerateOnDeploy" />
+                            {{'ADDPOOL_VirtualMAC_Auto_Generate'|translate}}
+                        </label>
+                    </div>
+                </div>
+            </section>
+        </form>
+    </wizard-step>
+
+    <!-- VIRTUAL IQN-->
+    <wizard-step step-title="{{'ADDPOOL_VirtualIQN_Title'|translate}}"
+                 on-next="AddPoolWizardController.validateVirtualIQN()"
+                 on-enter="AddPoolWizardController.enterVirtualIQN()">
+
+        <form class="form-horizontal"
+              name="AddPoolWizardController.forms.form_edit_virtualiqn"
+              id="AddPoolWizardController.forms.form_edit_virtualiqn"
+              form-validation="AddPoolWizardController.forms.form_edit_virtualiqn._submitted"
+              novalidate>
+            <section id="page_edit_virtualiqn">
+                <header>
+                    <h2>
+                        {{'ADDPOOL_VirtualIQN_Title'|translate}}
+                    </h2>
+                </header>
+                <p>
+                    {{'ADDPOOL_VirtualIQN_Instructions'|translate}}
+                </p>
+                <br />
+
+                <div class="form-group">
+                    <label class="control-label col-md-6">
+                        {{'ADDPOOL_VirtualIQN_Identities'|translate}}
+                    </label>
+                    <div class="col-md-6">
+                        <input id="edit_virtualiqn_identitycount"
+                               name="edit_virtualiqn_identitycount"
+                               type="number"
+                               min="0"
+                               step="1"
+                               class="form-control"
+                               ng-model="AddPoolWizardController.pool.virtualIQNIdentityCount"
+                               required />
+                        <span ng-if="AddPoolWizardController.forms.form_edit_virtualiqn._submitted 
+                                    && AddPoolWizardController.forms.form_edit_virtualiqn.edit_virtualiqn_identitycount.$error.required"
+                              class="text-danger">
+                            {{'VALIDATIONMESSAGES_required' | translate}}
+                        </span>
+                        <span ng-if="AddPoolWizardController.forms.form_edit_virtualiqn._submitted && (AddPoolWizardController.forms.form_edit_virtualiqn.edit_virtualiqn_identitycount.$error.min ||
+                              AddPoolWizardController.forms.form_edit_virtualiqn.edit_virtualiqn_identitycount.$error.max) &&
+                              !AddPoolWizardController.forms.form_edit_virtualiqn.edit_virtualiqn_identitycount.$error.required"
+                              class="text-danger">
+                            {{'VALIDATIONMESSAGES_number' | translate}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-6">
+                        {{'ADDPOOL_VirtualIQN_Prefix'|translate}}
+                    </label>
+                    <div class="col-md-6">
+                        <input id="iqn_prefix"
+                               name="iqn_prefix"
+                               type="text"
+                               class="form-control"
+                               placeholder="Example: iqn.1988-11.com.dell"
+                               ng-model="AddPoolWizardController.pool.virtualIQNUserPrefix"
+                               required />
+                        <span ng-if="AddPoolWizardController.forms.form_edit_virtualiqn._submitted 
+                                    && AddPoolWizardController.forms.form_edit_virtualiqn.iqn_prefix.$error.required"
+                              class="text-danger">
+                            {{'VALIDATIONMESSAGES_required' | translate}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label>
+                            <input id="virtualIQNAutoGenerateOnDeploy"
+                                   type="checkbox"
+                                   class="checkbox checkbox-inline"
+                                   ng-model="AddPoolWizardController.pool.virtualIQNAutoGenerateOnDeploy" />
+                            {{'ADDPOOL_VirtualIQN_Auto_Generate'|translate}}
+                        </label>
+                    </div>
+                </div>
+            </section>
+        </form>
+    </wizard-step>
+
+    <!-- VIRTUAL WWPN-->
+    <wizard-step step-title="{{'ADDPOOL_VirtualWWPN_Title'|translate}}"
+                 on-next="AddPoolWizardController.validateVirtualWWPN()"
+                 on-enter="AddPoolWizardController.enterVirtualWWPN()">
+        <form class="form-horizontal"
+              name="AddPoolWizardController.forms.form_edit_virtualwwpn"
+              id="AddPoolWizardController.forms.form_edit_virtualwwpn"
+              form-validation="AddPoolWizardController.forms.form_edit_virtualwwpn._submitted"
+              novalidate>
+            <section id="page_edit_virtualwwpn">
+                <header>
+                    <h2>
+                        {{'ADDPOOL_VirtualWWPN_Title'|translate}}
+                    </h2>
+                </header>
+                <p>
+                    {{'ADDPOOL_VirtualWWPN_Instructions'|translate}}
+                </p>
+                <br />
+
+                <div class="form-group">
+                    <label class="control-label col-md-8">
+                        {{'ADDPOOL_VirtualWWPN_Identities'|translate}}
+                    </label>
+                    <div class="col-md-4">
+                        <input id="edit_virtualwwpn_identitycount"
+                               name="edit_virtualwwpn_identitycount"
+                               type="number"
+                               min="0"
+                               step="1"
+                               class="form-control"
+                               ng-model="AddPoolWizardController.pool.virtualWWPNIdentityCount"
+                               required />
+                        <span ng-if="AddPoolWizardController.forms.form_edit_virtualwwpn._submitted 
+                              && AddPoolWizardController.forms.form_edit_virtualwwpn.edit_virtualwwpn_identitycount.$error.required"
+                              class="text-danger">
+                            {{'VALIDATIONMESSAGES_required' | translate}}
+                        </span>
+                        <span ng-if="AddPoolWizardController.forms.form_edit_virtualwwpn._submitted 
+                              && (AddPoolWizardController.forms.form_edit_virtualwwpn.edit_virtualwwpn_identitycount.$error.min ||
+                              AddPoolWizardController.forms.form_edit_virtualwwpn.edit_virtualwwpn_identitycount.$error.max) &&
+                              !AddPoolWizardController.forms.form_edit_virtualwwpn.edit_virtualwwpn_identitycount.$error.required"
+                              class="text-danger">
+                            {{'VALIDATIONMESSAGES_number' | translate}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4">
+                        {{'ADDPOOL_VirtualWWPN_Prefix'|translate}}
+                    </label>
+                    <div class="col-md-4">
+                        <div id="address_prefix_label pull-right" class="quiet">
+                            {{'ADDPOOL_VirtualWWPN_Prefix_Value'|translate}}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="edit_virtualwwpn_iqnprefix"
+                                name="edit_virtualwwpn_iqnprefix"
+                                class="form-control"
+                                ng-model="AddPoolWizardController.pool.virtualWWPNUserPrefixSelection"
+                                data-ng-options="mac.id as mac.name for mac in AddPoolWizardController.poolPrefixList"
+                                required>
+                            <option value="">{{'GENERIC_select'|translate}}</option>
+                        </select>
+                        <span ng-if="AddPoolWizardController.forms.form_edit_virtualwwpn._submitted 
+                              && AddPoolWizardController.forms.form_edit_virtualwwpn.edit_virtualwwpn_iqnprefix.$error.required"
+                              class="text-danger">
+                            {{'VALIDATIONMESSAGES_required' | translate}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label>
+                            <input id="virtualWWPNAutoGenerateOnDeploy"
+                                   type="checkbox"
+                                   class="checkbox checkbox-inline"
+                                   ng-model="AddPoolWizardController.pool.virtualWWPNAutoGenerateOnDeploy" />
+                            {{'ADDPOOL_VirtualWWPN_Auto_Generate'|translate}}
+                        </label>
+                    </div>
+                </div>
+            </section>
+        </form>
+    </wizard-step>
+
+    <!-- VIRTUAL WWNN-->
+    <wizard-step step-title="{{'ADDPOOL_VirtualWWNN_Title'|translate}}"
+                 on-next="AddPoolWizardController.validateVirtualWWNN()"
+                 on-enter="AddPoolWizardController.enterVirtualWWNN()">
+
+        <form class="form-horizontal"
+              name="AddPoolWizardController.forms.form_edit_virtualwwnn"
+              id="AddPoolWizardController.forms.form_edit_virtualwwnn"
+              form-validation="AddPoolWizardController.forms.form_edit_virtualwwnn._submitted"
+              novalidate>
+            <section id="page_edit_virtualwwnn">
+                <header>
+                    <h2>
+                        {{'ADDPOOL_VirtualWWNN_Title'|translate}}
+                    </h2>
+                </header>
+                <p>
+                    {{'ADDPOOL_VirtualWWNN_Instructions'|translate}}
+                </p>
+                <br />
+
+                <div class="form-group">
+                    <label class="control-label col-md-8">
+                        {{'ADDPOOL_VirtualWWNN_Identities'|translate}}
+                    </label>
+                    <div class="col-md-4">
+                        <input id="edit_virtualwwnn_identitycount"
+                               name="edit_virtualwwnn_identitycount"
+                               type="number"
+                               min="0"
+                               step="1"
+                               class="form-control"
+                               ng-model="AddPoolWizardController.pool.virtualWWNNIdentityCount"
+                               required />
+                        <span ng-if="AddPoolWizardController.forms.form_edit_virtualwwnn._submitted 
+                              && AddPoolWizardController.forms.form_edit_virtualwwnn.edit_virtualwwnn_identitycount.$error.required"
+                              class="text-danger">
+                            {{'VALIDATIONMESSAGES_required' | translate}}
+                        </span>
+                        <span ng-if="AddPoolWizardController.forms.form_edit_virtualwwnn._submitted 
+                              && (AddPoolWizardController.forms.form_edit_virtualwwnn.edit_virtualwwnn_identitycount.$error.min ||
+                              AddPoolWizardController.forms.form_edit_virtualwwnn.edit_virtualwwnn_identitycount.$error.max) &&
+                              !AddPoolWizardController.forms.form_edit_virtualwwnn.edit_virtualwwnn_identitycount.$error.required"
+                              class="text-danger">
+                            {{'VALIDATIONMESSAGES_number' | translate}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4">
+                        {{'ADDPOOL_VirtualWWNN_Prefix'|translate}}
+                    </label>
+                    <div class="col-md-4">
+                        <div id="address_prefix_label pull-right" class="quiet">
+                            {{'ADDPOOL_VirtualWWNN_Prefix_Value'|translate}}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="edit_virtualwwnn_iqnprefix"
+                                name="edit_virtualwwnn_iqnprefix"
+                                class="form-control"
+                                disabled="disabled"
+                                aria-disabled="true"
+                                ng-model="AddPoolWizardController.pool.virtualWWNNUserPrefixSelection"
+                                data-ng-options="mac.id as mac.name for mac in AddPoolWizardController.poolPrefixList"
+                                required>
+                            <option value="">{{'GENERIC_select'|translate}}</option>
+                        </select>
+                        <span ng-if="AddPoolWizardController.forms.form_edit_virtualwwnn._submitted 
+                              && AddPoolWizardController.forms.form_editpool_information.edit_virtualwwnn_iqnprefix.$error.required"
+                              class="text-danger">
+                            {{'VALIDATIONMESSAGES_required' | translate}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label>
+                            <input id="virtualWWNNAutoGenerateOnDeploy"
+                                   type="checkbox"
+                                   class="checkbox checkbox-inline"
+                                   ng-model="AddPoolWizardController.pool.virtualWWNNAutoGenerateOnDeploy" />
+                            {{'ADDPOOL_VirtualWWNN_Auto_Generate'|translate}}
+                        </label>
+                    </div>
+                </div>
+            </section>
+        </form>
+    </wizard-step>
+
+    <!-- POOL SUMMARY-->
+    <wizard-step step-title="{{'ADDPOOL_Summary_Title'|translate}}"
+                 on-enter="AddPoolWizardController.enterPoolSummary()">
+
+        <section id="page_editpool_summary">
+            <header>
+                <h2>
+                    {{'ADDPOOL_Summary_Header'|translate}}
+                </h2>
+            </header>
+            <p ng-bind-html="'ADDPOOL_Summary_Instructions'|translate|htmlSafe">
+            </p>
+            <fieldset>
+                <legend>
+                    {{'ADDPOOL_Summary_Pool_Information'|translate}}
+                </legend>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-4">
+                            {{'ADDPOOL_Summary_Pool_Name'|translate}}
+                        </label>
+                        <div class="col-md-7">
+                            <span id="pool_name" class="form-control-static">{{AddPoolWizardController.pool.name}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4">
+                            {{'ADDPOOL_Summary_Pool_Description'|translate}}
+                        </label>
+                        <div class="col-md-7">
+                            <p id="pool_description" class="form-control-static">{{AddPoolWizardController.pool.description}}</p>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    {{'ADDPOOL_Summary_VirtualMAC_Information'|translate}}
+                </legend>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-7">
+                            {{'ADDPOOL_Summary_VirtualMAC_Identities'|translate}}
+                        </label>
+                        <div class="col-md-5">
+                            <span id="virtualmac_identitycount" class="form-control-static">{{AddPoolWizardController.pool.virtualMACIdentityCount}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-7">
+                            {{'ADDPOOL_Summary_VirtualMAC_Prefix'|translate}}
+                        </label>
+                        <div class="col-md-5">
+                            <span id="virtualmac_addressprefix" class="form-control-static">{{AddPoolWizardController.pool.getVirtualMACPrefix()}}</span>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    {{'ADDPOOL_Summary_VirtualIQN_Information'|translate}}
+                </legend>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-7">
+                            {{'ADDPOOL_Summary_VirtualIQN_Identities'|translate}}
+                        </label>
+                        <div class="col-md-5">
+                            <span id="virtualiqn_identitycount" class="form-control-static">{{AddPoolWizardController.pool.virtualIQNIdentityCount}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-7">
+                            {{'ADDPOOL_Summary_VirtualIQN_Prefix'|translate}}
+                        </label>
+                        <div class="col-md-5">
+                            <span id="virtualiqn_iqnprefix" class="form-control-static">{{AddPoolWizardController.pool.virtualIQNUserPrefix}}</span>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    {{'ADDPOOL_Summary_VirtualWWPN_Information'|translate}}
+                </legend>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-7">
+                            {{'ADDPOOL_Summary_VirtualWWPN_Identities'|translate}}
+                        </label>
+                        <div class="col-md-5">
+                            <span id="virtualwwpn_identitycount" class="form-control-static">{{AddPoolWizardController.pool.virtualWWPNIdentityCount}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-7">
+                            {{'ADDPOOL_Summary_VirtualWWPN_Prefix'|translate}}
+                        </label>
+                        <div class="col-md-5">
+                            <span id="virtualwpn_wwpnprefix" class="form-control-static">{{AddPoolWizardController.getVirtualWWPNPrefix()}}</span>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    {{'ADDPOOL_Summary_VirtualWWNN_Information'|translate}}
+                </legend>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-7">
+                            {{'ADDPOOL_Summary_VirtualWWNN_Identities'|translate}}
+                        </label>
+                        <div class="col-md-5">
+                            <span id="virtualwwnn_identitycount" class="form-control-static">{{AddPoolWizardController.pool.virtualWWNNIdentityCount}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-7">
+                            {{'ADDPOOL_Summary_VirtualWWNN_Prefix'|translate}}
+                        </label>
+                        <div class="col-md-5">
+                            <span id="virtualwwnn_wwnnprefix" class="form-control-static">{{AddPoolWizardController.getVirtualWWNNPrefix()}}</span>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </section>
+    </wizard-step>
+
+</wizard>

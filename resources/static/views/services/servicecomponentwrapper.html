@@ -1,0 +1,357 @@
+﻿<section id="page_service_component_wrapper">
+    <error-display errors="serviceComponentModalController.errors" on-click="$root.ASM.RemoveError(error, serviceComponentModalController.errors)" on-expand-collapse=""></error-display>
+    <div>
+        <i class="ci-health-warning-tri-bang text-warning"></i>
+        {{"SERVICE_DELETE_RESOURCES_Add_Warning" | translate}}
+    </div>
+    <br />
+    <form class="form-horizontal"
+          ng-if="!serviceComponentModalController.hideChooseForm"
+          name="serviceComponentModalController.forms.choose"
+          form-validation="serviceComponentModalController.forms.choose._showValidation">
+        <fieldset class="form-horizontal"
+                  ng-if="serviceComponentModalController.$scope.modal.params.action == 'add'
+              && serviceComponentModalController.$scope.modal.params.type !== 'cluster'
+              && serviceComponentModalController.$scope.modal.params.serviceId">
+
+            <!-- Non-Read only -->
+            <div ng-if="(!serviceComponentModalController.forms.choose._submitted || serviceComponentModalController.forms.choose.serviceToDuplicate.$error.required || serviceComponentModalController.forms.choose.numInstances.$error.required)">
+                <div class="form-group" ng-if="serviceComponentModalController.settings.newSetting === false ">
+                    <label class="control-label col-sm-6">
+                        {{'SERVICES_ResourcetoDuplicate'|translate}} *
+                    </label>
+                    <div class="col-sm-6">
+                        <select ng-model="serviceComponentModalController.settings.serviceToDuplicate"
+                                class="form-control"
+                                required
+                                name="serviceToDuplicate"
+                                ng-options="component as component.name for component in serviceComponentModalController.availableComponents">
+                            <option value="">
+                                {{serviceComponentModalController.constants.genericSelectOption.name}}
+                            </option>
+                        </select>
+                        <div class="text-danger" ng-if="serviceComponentModalController.forms.choose._submitted">
+                            <div ng-if="serviceComponentModalController.forms.choose.serviceToDuplicate.$error.required">
+                                {{'GENERIC_RequiredField'|translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-6">
+                        {{'SERVICES_NumberofInstances'|translate}}
+                    </label>
+                    <div class="col-sm-6">
+                        <input ng-model="serviceComponentModalController.settings.numInstances"
+                               type="number"
+                               required
+                               name="numInstances"
+                               min="1"
+                               max="30"
+                               class="form-control" />
+                        <div class="text-danger" ng-if="serviceComponentModalController.forms.choose._showValidation">
+                            <div ng-if="serviceComponentModalController.forms.choose.numInstances.$error.required">
+                                {{'GENERIC_RequiredField'|translate}}
+                            </div>
+                            <div ng-if="serviceComponentModalController.forms.choose.numInstances.$error.min">
+                                {{'VALIDATIONMESSAGES_minNumber' | translate:'{min:1}'}}
+                            </div>
+                            <div ng-if="serviceComponentModalController.forms.choose.numInstances.$error.max">
+                                {{'VALIDATIONMESSAGES_maxNumber' | translate:'{max:30}'}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Read only versions -->
+            <div ng-if="serviceComponentModalController.forms.choose._submitted && !serviceComponentModalController.forms.choose.numInstances.$error.required && !serviceComponentModalController.forms.choose.serviceToDuplicate.$error.required">
+                <div class="form-group" ng-if="!serviceComponentModalController.settings.newSetting">
+                    <label class="control-label col-sm-6">
+                        {{'SERVICES_ResourcetoDuplicate'|translate}} *
+                    </label>
+                    <div class="col-sm-6">
+                        {{serviceComponentModalController.settings.serviceToDuplicate.name}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-6">
+                        {{'SERVICES_NumberofInstances'|translate}}
+                    </label>
+                    <div class="col-sm-6">
+                        {{serviceComponentModalController.settings.numInstances}}
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+    <form name="serviceComponentModalController.forms.notNewSetting"
+          form-validation="serviceComponentModalController.forms.notNewSetting._submitted"
+          ng-if="serviceComponentModalController.settings.newSetting === false"
+          class="form-horizontal">
+        <hr>
+        <div ng-repeat="component in serviceComponentModalController.newComponents | orderComponents">
+            <!--<div class="form-group" ng-if="!(component.type == 'scaleio' || component.type == 'storage')">
+                <label class="control-label col-sm-6">
+                    {{'SERVICES_ComponentName'|translate}}
+                </label>
+                <div class="col-sm-6">
+                    <input type="text"
+                           class="form-control"
+                           ng-model="component.name" />
+                </div>
+            </div>-->
+
+            <div class="panel-group"
+                 id="parentServiceComponentWrapper{{$index}}"
+                 role="tablist"
+                 aria-multiselectable="false">
+                <div class="panel panel-default"
+                     ng-repeat="category in component.categories"
+                     ng-if="serviceComponentModalController.categoryVisible(category, component)">
+
+                    <div class="panel-heading"
+                         role="tab"
+                         id="headId{{$index}}_ParentId_{{$parent.$parent.$index}}">
+                        <h4 class="panel-title">
+                            <a role="button"
+                               ng-class=":: $index === 0 ?  'in' :'collapsed'"
+                               data-toggle="collapse"
+                               data-target="#collapse{{$index}}_ParentId_{{$parent.$parent.$index}}"
+                               aria-expanded="{{:: $index === 0}}"
+                               aria-controls="collapse{{$index}}_ParentId_{{$parent.$parent.$index}}"
+                               ng-click="serviceComponentModalController.scrollTo('headId'+$index+'_ParentId_'+$parent.$parent.$index)">
+                                <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                {{category.name}}
+                                <span class="pull-right text-danger"
+                                      ng-if="serviceComponentModalController.forms.notNewSetting._submitted && serviceComponentModalController.GlobalServices.hasInvalidElement('collapse' + $index)">
+                                    {{'GENERIC_UpdateRequiredFields'|translate}}
+                                </span>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse{{$index}}_ParentId_{{$parent.$parent.$index}}"
+                         class="panel-collapse collapse"
+                         ng-class="::{' in' : $index == 0}"
+                         role="tabpanel"
+                         aria-labelledby="headId{{$index}}_ParentId_{{$parent.$parent.$index}}">
+                        <div class="panel-body well">
+                            <!-- Groups of Settings -->
+                            <div ng-repeat="group in category.settings | serviceComponentFilter:component | groupFilter">
+                                <!-- no group, individual setting -->
+                                <div ng-if="!group.group">
+                                    <div ng-repeat="setting in category.settings | serviceComponentFilter:component" class="form-group">
+                                        <div ng-switch="setting.datatype">
+                                            <!--Custom Control: Network Config-->
+                                            <network-configuration ng-switch-when="networkconfiguration"
+                                                                   id="networkconfiguration"
+                                                                   class="col-sm-12"
+                                                                   read-only-mode="serviceComponentModalController.readOnlyMode"
+                                                                   setting="setting">
+                                            </network-configuration>
+                                            <!--Custom Control: RAID Config-->
+                                            <raid-configuration ng-switch-when="raidconfiguration"
+                                                                id="raidconfiguration"
+                                                                class="col-sm-12"
+                                                                read-only-mode="serviceComponentModalController.readOnlyMode"
+                                                                setting="setting"
+                                                                invalid-array="serviceComponentModalController.invalidFormElements"></raid-configuration>
+                                            <!--Custom Control: Bios Config-->
+                                            <bios-configuration ng-switch-when="biosconfiguration"
+                                                                id="biosconfiguration"
+                                                                class="col-sm-12"
+                                                                read-only-mode="serviceComponentModalController.readOnlyMode"
+                                                                setting="setting"></bios-configuration>
+                                            <!-- Custom Control: VM Virtual Disk Config -->
+                                            <vm-virtual-disk-configuration ng-switch-when="vmvirtualdiskconfiguration"
+                                                                           id="vmvirtualdiskconfiguration"
+                                                                           class="col-sm-12"
+                                                                           read-only-mode="serviceComponentModalController.readOnlyMode"
+                                                                           setting="setting"
+                                                                           component="component"
+                                                                           invalid-array="serviceComponentModalController.invalidFormElements"
+                                                                           form="serviceComponentModalController.forms.notNewSetting"></vm-virtual-disk-configuration>
+                                            <!-- Custom Control: Configure NIOC  -->
+                                            <nioc-setting ng-switch-when="niocconfiguration"
+                                                          class="col-sm-12"
+                                                          read-only-mode="serviceComponentModalController.readOnlyMode"
+                                                          setting="setting"
+                                                          errors="serviceComponentModalController.errors"
+                                                          invalid-array="serviceComponentModalController.invalidFormElements"
+                                                          form="serviceComponentModalController.forms.notNewSetting"></nioc-setting>
+                                            <!-- Custom Control: OS Credentials  -->
+                                            <credentials-settings ng-switch-when="oscredential"
+                                                                  setting="setting"
+                                                                  read-only-mode="serviceComponentModalController.readOnlyMode"
+                                                                  credentials="deployServiceWizard.credentials"
+                                                                  form="serviceComponentModalController.forms.notNewSetting"></credentials-settings>
+                                            <!-- Custom Control: Basic Setting -->
+                                            <basic-setting ng-switch-default
+                                                           category="category"
+                                                           setting="setting"
+                                                           read-only-mode="serviceComponentModalController.readOnlyMode"
+                                                           component="component"
+                                                           form="serviceComponentModalController.forms.notNewSetting"></basic-setting>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Groups -->
+                                <div class="panel-heading"
+                                     role="tab"
+                                     ng-if="group.group"
+                                     id="headId{{$index}}_group_{{$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                     style="border-bottom: none;">
+                                    <a tabindex="0"
+                                       style="outline: none;"
+                                       role="button"
+                                       data-toggle="collapse"
+                                       data-target="#target{{$index}}_group_{{$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                       aria-expanded="true"
+                                       class="in"
+                                       aria-controls="device{{$index}}">
+                                        <ul class="list-inline" style="margin-bottom: 0;">
+                                            <li style="color: #888; vertical-align: top;">
+                                                <i class="collapsed-show ci-arrow-chev-right-2-med ci"></i>
+                                                <i class="collapsed-hide ci-arrow-chev-down-2-med ci"></i>
+                                            </li>
+                                            <li>
+                                                <h4 style="margin-top: 0; margin-bottom: 10px; border-bottom: none;">
+                                                    {{group.group}}
+                                                </h4>
+                                            </li>
+                                        </ul>
+                                    </a>
+                                    <div class="col-xs-12 panel-collapse collapse in"
+                                         id="target{{$index}}_group_{{$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                         aria-labelledby="headId{{$index}}_group_{{$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                         role="tabpanel">
+
+                                        <div ng-repeat="setting in category.settings  | serviceComponentFilter:component"
+                                             ng-if="setting.group && setting.group === group.group">
+                                            <div ng-switch="setting.datatype" class="form-group">
+                                                <!--Custom Control: Network Config-->
+                                                <network-configuration ng-switch-when="networkconfiguration"
+                                                                       id="networkconfiguration"
+                                                                       class="col-sm-12"
+                                                                       read-only-mode="serviceComponentModalController.readOnlyMode"
+                                                                       setting="setting">
+                                                </network-configuration>
+                                                <!--Custom Control: RAID Config-->
+                                                <raid-configuration ng-switch-when="raidconfiguration"
+                                                                    id="raidconfiguration"
+                                                                    class="col-sm-12"
+                                                                    read-only-mode="serviceComponentModalController.readOnlyMode"
+                                                                    setting="setting"
+                                                                    invalid-array="serviceComponentModalController.invalidFormElements"></raid-configuration>
+                                                <!--Custom Control: Bios Config-->
+                                                <bios-configuration ng-switch-when="biosconfiguration"
+                                                                    id="biosconfiguration"
+                                                                    class="col-sm-12"
+                                                                    read-only-mode="serviceComponentModalController.readOnlyMode"
+                                                                    setting="setting"></bios-configuration>
+                                                <!-- Custom Control: VM Virtual Disk Config -->
+                                                <vm-virtual-disk-configuration ng-switch-when="vmvirtualdiskconfiguration"
+                                                                               id="vmvirtualdiskconfiguration"
+                                                                               class="col-sm-12"
+                                                                               read-only-mode="serviceComponentModalController.readOnlyMode"
+                                                                               setting="setting"
+                                                                               component="component"
+                                                                               invalid-array="serviceComponentModalController.invalidFormElements"
+                                                                               form="serviceComponentModalController.forms.notNewSetting"></vm-virtual-disk-configuration>
+                                                <!-- Custom Control: Configure NIOC  -->
+                                                <nioc-setting ng-switch-when="niocconfiguration"
+                                                              class="col-sm-12"
+                                                              read-only-mode="serviceComponentModalController.readOnlyMode"
+                                                              setting="setting"
+                                                              component="component"
+                                                              invalid-array="serviceComponentModalController.invalidFormElements"
+                                                              form="serviceComponentModalController.forms.notNewSetting"></nioc-setting>
+                                                <!-- Custom Control: OS Credentials  -->
+                                                <credentials-settings ng-switch-when="oscredential"
+                                                                      setting="setting"
+                                                                      errors="serviceComponentModalController.errors"
+                                                                      read-only-mode="serviceComponentModalController.readOnlyMode"
+                                                                      credentials="deployServiceWizard.credentials"
+                                                                      form="serviceComponentModalController.forms.notNewSetting"></credentials-settings>
+                                                <!-- Custom Control: Basic Setting -->
+                                                <basic-setting ng-switch-default
+                                                               category="category"
+                                                               setting="setting"
+                                                               read-only-mode="serviceComponentModalController.readOnlyMode"
+                                                               component="component"
+                                                               form="serviceComponentModalController.forms.notNewSetting"></basic-setting>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" ng-show="serviceComponentModalController.newComponents">
+            <div class="col-xs-12">
+                {{'COMPONENTEDITOR_RequiredFieldsRemaining'|translate}}
+                {{serviceComponentModalController.requiredFieldsRemaining(serviceComponentModalController.newComponents) + serviceComponentModalController.numInvalidCustomComponents(self.invalidFormElements)}}
+            </div>
+        </div>
+
+
+        <!-- Compute only, no volumes message -->
+        <div class="well" ng-if="serviceComponentModalController.showComputeOnlyMessage">
+            <ul class="list-inline">
+                <li>
+                    <i style="font-size:21px;" class="ci ci-storage-volume-2-double"></i>
+                </li>
+                <li>
+                    {{"SERVICES_ComputeOnlyNoVolumesAvailable" | translate}}
+                </li>
+            </ul>
+        </div>
+    </form>
+
+    <component-editor ng-if="serviceComponentModalController.settings && serviceComponentModalController.settings.newSetting === true && serviceComponentModalController.$scope.modal.params.availableComponents.length"
+                      config="serviceComponentModalController.$scope.modal.params"
+                      close-modal="serviceComponentModalController.close()"
+                      cancel-modal="serviceComponentModalController.cancel()"
+                      save="serviceComponentModalController.saveService(data)"
+                      multiple-instances-not-allowed="true"
+                      instances="serviceComponentModalController.settings.numInstances"
+                      template-id="{{serviceComponentModalController.$scope.modal.params.templateId}}"
+                      form="serviceComponentModalController.forms.componentEditor"
+                      choose-form="serviceComponentModalController.forms.choose"
+                      errors="serviceComponentModalController.errors"
+                      type="service"
+                      invalid-form-elements="serviceComponentModalController.invalidFormElements"></component-editor>
+
+    <footer ng-if="serviceComponentModalController.settings.newSetting === false">
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="save_new_setting"
+                        ng-if="serviceComponentModalController.newComponents"
+                        class="btn btn-primary"
+                        ng-click="serviceComponentModalController.forms.notNewSetting._submitted = true; serviceComponentModalController.adjustService()">
+                    {{'GENERIC_Save'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="continue"
+                        ng-if="!serviceComponentModalController.newComponents"
+                        class="btn btn-primary"
+                        ng-click="serviceComponentModalController.forms.choose._submitted = true; serviceComponentModalController.continue()">
+                    {{'SERVICES_Continue'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="cancel_ntp_form"
+                        class="btn btn-default"
+                        ng-click="serviceComponentModalController.cancel()">
+                    {{'SERVICES_Cancel'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

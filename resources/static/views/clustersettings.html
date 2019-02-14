@@ -1,0 +1,195 @@
+﻿<div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label" for="vCenterId">
+            {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2b_WhichvCenter' | translate}} *
+        </label>
+        <div class="col-sm-4">
+            <select class="form-control"
+                    name="vCenterId"
+                    id="vCenterId"
+                    required
+                    ng-if="!clusterSettingsController.readOnly"
+                    ng-model="clusterSettingsController.clusterSettings.vCenterId"
+                    ng-options="option.id as option.name for option in clusterSettingsController.clusterSettings.vCenters">
+                <option value="">
+                    {{ 'GENERIC_select' | translate}}
+                </option>
+            </select>
+            <div ng-if="clusterSettingsController.readOnly">
+                <list-lookup list="clusterSettingsController.clusterSettings.vCenters"
+                             key="clusterSettingsController.clusterSettings.vCenterId"
+                             property-name="'name'"></list-lookup>
+            </div>
+            <div ng-if="clusterSettingsController.form._submitted" class="text-danger">
+                <div ng-if="clusterSettingsController.form.vCenterId.$error.required">
+                    {{'GENERIC_RequiredField' | translate}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label" for="dataCenter">
+            {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2b_SelectaDataCenter' | translate}} *
+        </label>
+        <div ng-class="clusterSettingsController.readOnly ? 'col-sm-8' : 'col-sm-4'">
+            <select class="form-control"
+                    name="dataCenter"
+                    ng-change="clusterSettingsController.dataCenterChanged()"
+                    id="dataCenter"
+                    required
+                    ng-if="!clusterSettingsController.readOnly"
+                    ng-model="clusterSettingsController.dataCenterSelection"
+                    ng-options="option.id as option.name disable when option.disabled for option in clusterSettingsController.clusterSettings._dataCenters">
+                <option value="">
+                    {{ 'GENERIC_select' | translate}}
+                </option>
+            </select>
+            <div ng-if="clusterSettingsController.readOnly">
+                <div ng-if="!clusterSettingsController.isNew(clusterSettingsController.clusterSettings.dataCenters, clusterSettingsController.clusterSettings.dataCenter)">
+                    <list-lookup list="clusterSettingsController.clusterSettings.dataCenters"
+                                 key="clusterSettingsController.clusterSettings.dataCenter"
+                                 property-name="'name'"></list-lookup>
+                </div>
+                <div ng-if="clusterSettingsController.isNew(clusterSettingsController.clusterSettings.dataCenters, clusterSettingsController.clusterSettings.dataCenter)">
+                    {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_Summary_CreateNew'|translate}}
+                    {{clusterSettingsController.clusterSettings.dataCenter}}
+                </div>
+            </div>
+            <div ng-if="clusterSettingsController.form._submitted" class="text-danger">
+                <div ng-if="clusterSettingsController.form.dataCenter.$error.required">
+                    {{'GENERIC_RequiredField' | translate}}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4" ng-if="clusterSettingsController.dataCenterSelection === 'new' && !clusterSettingsController.readOnly">
+            <input class="form-control"
+                   name="dataCenter"
+                   id="dataCenter"
+                   required
+                   ng-model="clusterSettingsController.clusterSettings.dataCenter" />
+            <div ng-if="clusterSettingsController.form._submitted" class="text-danger">
+                <div ng-if="clusterSettingsController.form.dataCenter.$error.required">
+                    {{'GENERIC_RequiredField' | translate}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label" for="clusterOption">
+            {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2b_SelectaCluster' | translate}} *
+        </label>
+        <div ng-class="clusterSettingsController.readOnly ? 'col-sm-8' : 'col-sm-4'">
+            <select class="form-control"
+                    name="clusterOption"
+                    required
+                    ng-if="!clusterSettingsController.readOnly"
+                    ng-change="clusterSettingsController.clusterChanged()"
+                    id="clusterOption"
+                    ng-model="clusterSettingsController.clusterSelection"
+                    ng-options="option.id as option.name disable when option.disabled for option in clusterSettingsController.clusterSettings._clusters">
+                <option value="">
+                    {{ 'GENERIC_select' | translate}}
+                </option>
+            </select>
+            <div ng-if="clusterSettingsController.readOnly">
+                <div ng-if="!clusterSettingsController.isNew(clusterSettingsController.clusterSettings.clusters, clusterSettingsController.clusterSettings.cluster)">
+                    <list-lookup list="clusterSettingsController.clusterSettings.clusters"
+                                 key="clusterSettingsController.clusterSettings.cluster"
+                                 property-name="'name'"></list-lookup>
+                </div>
+                <div ng-if="clusterSettingsController.isNew(clusterSettingsController.clusterSettings.clusters, clusterSettingsController.clusterSettings.cluster)">
+                    {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_Summary_CreateNew'|translate}}
+                    {{clusterSettingsController.clusterSettings.cluster}}
+                </div>
+            </div>
+            <div ng-if="clusterSettingsController.form._submitted" class="text-danger">
+                <div ng-if="clusterSettingsController.form.clusterOption.$error.required">
+                    {{'GENERIC_RequiredField' | translate}}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4" ng-if="clusterSettingsController.clusterSelection === 'new' && !clusterSettingsController.readOnly">
+            <input class="form-control"
+                   name="cluster"
+                   required
+                   id="cluster"
+                   ng-model="clusterSettingsController.clusterSettings.cluster" />
+            <div ng-if="clusterSettingsController.form._submitted" class="text-danger">
+                <div ng-if="clusterSettingsController.form.cluster.$error.required">
+                    {{'GENERIC_RequiredField' | translate}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label">
+            {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2b_SelectVmWareCapabilities' | translate}}
+        </label>
+        <div class="col-sm-4" ng-if="!clusterSettingsController.readOnly">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox"
+                           ng-model="clusterSettingsController.clusterSettings.clusterHa"
+                           name="clusterHa">
+                    {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2b_ClusterHA' | translate}}
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox"
+                           ng-model="clusterSettingsController.clusterSettings.clusterDrs"
+                           name="clusterDrs">
+                    {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2b_ClusterDRS' | translate}}
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox"
+                           ng-model="clusterSettingsController.clusterSettings.vSan"
+                           name="vSan">
+                    {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2b_vSan' | translate}}
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-8" ng-if="clusterSettingsController.readOnly">
+            {{clusterSettingsController.joinCapabilities(clusterSettingsController.clusterSettings.clusterHa && ('TEMPLATES_CREATE_TEMPLATE_WIZARD_2b_ClusterHA'|translate),clusterSettingsController.clusterSettings.clusterDrs && ('TEMPLATES_CREATE_TEMPLATE_WIZARD_2b_ClusterDRS'|translate),clusterSettingsController.clusterSettings.vSan && ('TEMPLATES_CREATE_TEMPLATE_WIZARD_2b_vSan'|translate))}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label">
+            {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2b_Whattypeofvirtualswitchesareyouusing' | translate}}
+        </label>
+        <div class="col-sm-4" ng-if="!clusterSettingsController.readOnly">
+            <div class="radio">
+                <label>
+                    <input type="radio"
+                           name="switchType"
+                           id="switchType1"
+                           ng-model="clusterSettingsController.clusterSettings.switchType"
+                           value="standard">
+                    {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2b_Standard' | translate}}
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio"
+                           name="switchType"
+                           ng-model="clusterSettingsController.clusterSettings.switchType"
+                           id="switchType2"
+                           value="distributed">
+                    {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2b_Distributed' | translate}}
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-4" 
+             ng-if="clusterSettingsController.readOnly" 
+             ng-switch="clusterSettingsController.clusterSettings.switchType">
+            <div ng-switch-when="standard">
+                {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2b_Standard' |translate}}
+            </div>
+            <div ng-switch-when="distributed">
+                {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2b_Distributed' |translate}}
+            </div>
+        </div>
+    </div>
+</div>

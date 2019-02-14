@@ -1,0 +1,114 @@
+﻿<section id="page_backupSettingsandDetails">
+    <error-display errors="editBackupSettings.errors"
+                   on-click="$root.ASM.RemoveError(error, editBackupSettings.errors)"
+                   on-expand-collapse=""></error-display>
+    <form id="editBackupSettingsForm"
+          name="editBackupSettings.form"
+          form-validation="editBackupSettings.form.editBackupSettings.form._submitted"
+          role="form"
+          class="form-horizontal"
+          novalidate>
+        <div>
+            <div class="form-group">
+                <label for="directoryPath" class="col-md-4 control-label">
+                    {{'BACKUPNOW_backupdirpath' | translate}}*
+                    <a data-toggle="tooltip" data-trigger="focus" data-placement="right" title="{{'BACKUPNOW_backupdirpathinfo' | translate}}" data-content="{{'BACKUPNOW_backupdirpathinfo' | translate}}" data-html="true">
+                        <i class="ci-info-circle-info text-primary"></i>
+                    </a>
+                </label>
+                <div class="col-md-4">
+                    <input id="directoryPath" name="directoryPath" type="text" class="form-control" placeholder="Not Configured" required ng-model="editBackupSettings.backupSettings.backupLocation" />
+                    <span ng-if="editBackupSettings.form.directoryPath.$error.required && editBackupSettings.form.editBackupSettings.form._submitted" class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="directoryUserName" class="col-md-4 control-label">
+                    {{'BACKUPNOW_backupDirUserName' | translate}}
+                </label>
+                <div class="col-md-4">
+                    <input id="directoryUserName" type="text" class="form-control" placeholder="Not Configured" ng-model="editBackupSettings.backupSettings.userName" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="directoryPassword" class="col-md-4 control-label">
+                    {{'BACKUPNOW_backupDirPassword' | translate}}
+                </label>
+                <div class="col-md-4">
+
+                    <div class="input-group">
+                        <input id="directoryPassword"
+                               ng-model="editBackupSettings.backupSettings.backupLocationPassword"                               
+                               class="form-control"
+                               type="password" password-viewer
+                               placeholder="" />
+                    </div>
+
+                </div>
+            </div>
+
+            <p id="backupFileText">
+                {{'BACKUPNOW_backupFileDescription' | translate}}
+            </p>
+
+            <div class="form-group">
+                <label for="encryptionPassword" class="col-md-4 control-label">
+                    {{'BACKUPNOW_encrypPassword' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input id="encryptionPassword"
+                               name="encryptionPassword"
+                               ng-model="editBackupSettings.backupSettings.encryptionPassword"
+                               required
+                               class="form-control"
+                               type="password" password-viewer
+                               placeholder="" />
+                    </div>
+                    <span ng-if="editBackupSettings.form.encryptionPassword.$error.required && editBackupSettings.form.editBackupSettings.form._submitted" class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="verifyEncryptPassword" class="col-md-4 control-label">
+                    {{'BACKUPNOW_confirmencrypPassword' | translate}}*
+                </label>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input id="verifyEncryptPassword"
+                               name="verifyEncryptPassword"
+                               ng-match="editBackupSettings.backupSettings.encryptionPassword"
+                               ng-model="editBackupSettings.backupSettings.encryptionVPassword"
+                               required
+                               class="form-control"
+                               type="password" password-viewer
+                               placeholder="" />
+
+                    </div>
+                    <span ng-if="!editBackupSettings.form.verifyEncryptPassword.$error.required
+                          && editBackupSettings.form.verifyEncryptPassword.$error.ngmatch
+                          && editBackupSettings.form.editBackupSettings.form._submitted"
+                          class="text-danger">
+                        {{ 'VALIDATIONMESSAGES_equalTo' | translate}}
+                    </span>
+                    <span ng-if="editBackupSettings.form.verifyEncryptPassword.$error.required && editBackupSettings.form.editBackupSettings.form._submitted" class="text-danger">
+                        {{'VALIDATIONMESSAGES_required' | translate}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </form>
+    <footer class="text-right">
+        <button id="btnTestBackupNowConnection" class="btn btn-default" ng-click="editBackupSettings.form.editBackupSettings.form._submitted = true; editBackupSettings.form.$valid && editBackupSettings.testConnection()">
+            {{'BACKUPNOW_testconnection' | translate}}
+        </button>
+        <button id="submitBackupNow" class="btn btn-primary" type="button" ng-click="editBackupSettings.form.editBackupSettings.form._submitted = true; editBackupSettings.form.$valid && editBackupSettings.save()">
+            {{'GENERIC_Save' | translate}}
+        </button>
+        <button id="cancelBackupNow" class="btn btn-default" type="button" ng-click="editBackupSettings.close()">
+            {{'GENERIC_Cancel' | translate}}
+        </button>
+    </footer>
+</section>

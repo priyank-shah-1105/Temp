@@ -1,0 +1,24 @@
+﻿<section>
+    <p translate="SETTINGS_DirectoryServicesWizard_resourcesCannotBeEdited"
+       translate-values="{num:viewUndiscoveredResources.$scope.modal.params.list.length}"></p>
+    <chassis-table ng-if="viewUndiscoveredResources.$scope.modal.params.mode === 'chassis'"
+                   mode="view"
+                   chassis-list="viewUndiscoveredResources.$scope.modal.params.list"
+                   pending="viewUndiscoveredResources.no"></chassis-table>
+
+    <rack-table ng-if="viewUndiscoveredResources.$scope.modal.params.mode === 'rack'"
+                mode="view"
+                rack-list="viewUndiscoveredResources.$scope.modal.params.list"
+                pending="viewUndiscoveredResources.no"></rack-table>
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="closeUndiscoveredResources"
+                        class="btn btn-default"
+                        ng-click="viewUndiscoveredResources.close()">
+                    {{'SETTINGS_Cancel'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

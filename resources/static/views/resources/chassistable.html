@@ -1,0 +1,62 @@
+﻿<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th ng-if="chassisTableController.mode === 'edit'">
+                <input type="checkbox"
+                       ng-checked="chassisTableController.getAllChecked()"
+                       ng-disabled="chassisTableController.pending"
+                       ng-click="chassisTableController.selectAll()" />
+            </th>
+            <th>
+                {{'GENERIC_IpAddress'|translate}}
+            </th>
+            <th>
+                {{'GENERIC_AssetServiceTag'|translate}}
+            </th>
+            <th>
+                {{'GENERIC_Model'|translate}}
+                <!--<i class="ci ci-info-circle-info text-primary"
+                   data-toggle="tooltip"
+                   data-placement="right"
+                   title="{{'DEVICES_ModelToolTipText' | translate}}"></i>-->
+            </th>
+            <th>
+                {{'DISCOVERY_SupportedIOMs'|translate}}
+            </th>
+            <th>
+                {{'DISCOVERY_SupportedBlades'|translate}}
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="config in chassisTableController.chassisList">
+            <td ng-if="chassisTableController.mode === 'edit'">
+                <input type="checkbox"
+                       ng-disabled="chassisTableController.pending"
+                       ng-model="config.configureDevice" />
+            </td>
+            <td>
+                {{config.ipAddress}}
+            </td>
+            <td>
+                {{config.deviceid}}
+            </td>
+            <td>
+                {{config.model}}
+            </td>
+            <td>
+                {{config.numberOfIOMs}}
+            </td>
+            <td>
+                {{config.blades}}
+            </td>
+        </tr>
+    </tbody>
+    <tbody ng-if="chassisTableController.chassisList.length ==  0 && !chassisTableController.pending">
+        <tr>
+            <td colspan="{{chassisTableController.mode === 'edit' ? 6 : 5}}">
+                {{'DISCOVERY_EmptyChassisList'|translate}}
+            </td>
+        </tr>
+    </tbody>
+</table>

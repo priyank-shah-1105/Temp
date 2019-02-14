@@ -1,0 +1,147 @@
+﻿<section id="page_generatetroubleshootingbundle">
+    <error-display errors="generateTroubleshootingBundleModalController.errors"
+                   on-click="$root.ASM.RemoveError(error, generateTroubleshootingBundleModalController.errors)"
+                   on-expand-collapse=""></error-display>
+    <form class="form-horizontal"
+          id="firmwarepackageUpload"
+          method="post"
+          name="generateTroubleshootingBundleModalController.firmwarepackageUpload"
+          enctype="multipart/form-data"
+          form-validation="generateTroubleshootingBundleModalController.firmwarepackageUpload._submitted">
+        <div class="form-group">
+            <div class="radio">
+                <label for="createfromfile">
+                    <input id="createfromfile"
+                           type="radio"
+                           name="troubleshootingbundledest"
+                           value="export"
+                           ng-model="generateTroubleshootingBundleModalController.tsBundle.bundleDest"
+                           ng-disabled="generateTroubleshootingBundleModalController.disabled" />
+                    {{'SETTINGS_GenerateTroubleshootingBundle_SendToConfiguredSecureRemoteServices'|translate}}
+                    <a title=""
+                       popover
+                       data-content-template="SendToSRSInfo.html"
+                       data-trigger="hover">
+                        <i class="ci ci-info-circle-info"></i>
+                    </a>
+                </label>
+                <!--<div class="col-sm-11 col-sm-offset-1" ng-if="generateTroubleshootingBundleModalController.tsBundle.bundleDest === 'export'">
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <span ng-if="generateTroubleshootingBundleModalController.disabled">
+                                <i>{{"SETTINGS_GenerateTroubleshootingBundle_DellEMCSecureRemoteServices" | translate}}</i>
+                            </span>
+                            <ul class="list-inline" ng-if="!generateTroubleshootingBundleModalController.disabled">
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="radio">
+                <label for="networkpath" class="col-md-2 control-label">
+                    <input id="networkpath"
+                           type="radio"
+                           name="troubleshootingbundledest"
+                           value="network"
+                           ng-model="generateTroubleshootingBundleModalController.tsBundle.bundleDest" />
+                    {{'SETTINGS_GenerateTroubleshootingBundle_DownloadLocally'|translate}}
+                    <a title=""
+                       popover
+                       data-content-template="GenerateTroubleshootingBundleFilePathExample.html"
+                       data-trigger="hover">
+                        <i class="ci ci-info-circle-info"></i>
+                    </a>
+                </label>
+                <div class="col-sm-11 col-sm-offset-1" ng-if="generateTroubleshootingBundleModalController.tsBundle.bundleDest === 'network'">
+                    <div class="form-group">
+                        <label for="filepath" class="col-md-2 control-label">
+                            {{'SETTINGS_GenerateTroubleshootingBundle_Path'|translate}} *
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text"
+                                   id="filepath"
+                                   class="form-control"
+                                   name="filepath"
+                                   ng-model="generateTroubleshootingBundleModalController.tsBundle.filepath"
+                                   required />
+                            <span ng-show="generateTroubleshootingBundleModalController.firmwarepackageUpload._submitted
+                                  && generateTroubleshootingBundleModalController.tsBundle.bundleDest == 'network'
+                                  && generateTroubleshootingBundleModalController.firmwarepackageUpload.filepath.$error.required"
+                                  class="text-danger">
+                                {{'SETTINGS_GenerateTroubleshootingBundle_Edit_Field_Required' | translate}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="username" class="col-md-2 control-label">
+                            {{'SETTINGS_GenerateTroubleshootingBundle_UserName'|translate}}
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text"
+                                   name="username"
+                                   id="username"
+                                   class="form-control"
+                                   ng-model="generateTroubleshootingBundleModalController.tsBundle.username" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-md-2 control-label">
+                            {{'SETTINGS_GenerateTroubleshootingBundle_Password'|translate}}
+                        </label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input id="password"
+                                       name="password"
+                                       ng-model="generateTroubleshootingBundleModalController.tsBundle.password"
+                                       class="form-control"
+                                       type="password" password-viewer />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <!--ng-disabled="!generateTroubleshootingBundleModalController.firmwarepackageUpload.$valid"-->
+                            <button id="btnTestConnection"
+                                    class="btn btn-default pull-right"
+                                    ng-click="generateTroubleshootingBundleModalController.firmwarepackageUpload._submitted = true; generateTroubleshootingBundleModalController.firmwarepackageUpload.$valid && generateTroubleshootingBundleModalController.testConnection()">
+                                {{'SETTINGS_GenerateTroubleshootingBundle_TestConnection'|translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <br />
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="firmwarepackageSubmit"
+                        class="btn btn-primary"
+                        ng-click="generateTroubleshootingBundleModalController.firmwarepackageUpload._submitted = true;
+                        ((generateTroubleshootingBundleModalController.tsBundle.bundleDest === 'export' && generateTroubleshootingBundleModalController.firmwarepackageUpload.$valid)
+                        ||
+                        (generateTroubleshootingBundleModalController.tsBundle.bundleDest === 'network' && generateTroubleshootingBundleModalController.firmwarepackageUpload.$valid))
+                        && generateTroubleshootingBundleModalController.generateTsBundle()">
+                    {{'SETTINGS_GenerateTroubleshootingBundle_Generate'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="btnCancel"
+                        class="btn btn-default"
+                        ng-click="generateTroubleshootingBundleModalController.cancel()">
+                    {{'SETTINGS_GenerateTroubleshootingBundle_Cancel'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+    <script type="text/ng-template" id="SendToSRSInfo.html">
+        <div class="popover-body" ng-bind-html="'SETTINGS_GenerateTroubleshootingBundle_SendtoSRSInfo' | translate | htmlSafe"></div>
+    </script>
+    <script type="text/ng-template" id="GenerateTroubleshootingBundleFilePathExample.html">
+        <div class="popover-body" ng-bind-html="'SETTINGS_GenerateTroubleshootingBundle_FilePathExample' | translate | htmlSafe"></div>
+    </script>
+</section>

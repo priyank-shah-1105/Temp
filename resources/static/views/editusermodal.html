@@ -1,0 +1,165 @@
+﻿<div id="modal_editUser">
+    <error-display errors="editUser.errors" on-click="$root.ASM.RemoveError(error, editUserModal.errors)" on-expand-collapse=""></error-display>
+    <form class="form-horizontal"
+          id="adduserform"
+          name="editUserModal"
+          novalidate
+          form-validation="editUser.submitform">
+        <div class="form-group">
+            <label for="currentPassword" class="col-md-3 control-label">
+                {{'SETTINGS_CurrentPassword' | translate}}*
+                <a class="ci ci-info-circle-info text-primary"
+                   popover
+                   data-content="{{'SETTINGS_Enter_Login_Password' | translate}}"
+                   title="{{'SETTINGS_CurrentPassword' | translate}}">
+                </a>
+            </label>
+            <div class="col-md-3">
+                <input required name="currentPassword" type="password" class="form-control" id="currentPassword" placeholder="" ng-model="editUser.modalUser.currentpassword">
+                <span ng-if="editUserModal.currentPassword.$error.required && editUser.submitform == true" class="text-danger">
+                    {{'GENERIC_PasswordRequired' | translate}}
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="userName" class="col-md-3 control-label">
+                {{'GENERIC_UserName' | translate}}
+            </label>
+            <div class="col-md-3">
+                {{editUser.modalUser.username}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="userName" class="col-md-3 control-label">
+                {{'GENERIC_Domain' | translate}}
+            </label>
+            <div class="col-md-3">
+                {{editUser.modalUser.serverName}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="Password" class="col-md-3 control-label">
+                {{'GENERIC_Password' | translate}}*
+            </label>
+            <div class="col-md-3">
+                <input required name="Password" type="password" class="form-control" id="Password" placeholder="" ng-model="editUser.modalUser.password"  minlength="7" ng-maxlength="32">
+
+                <span ng-if="editUser.submitform == true" class="text-danger">
+                    <span ng-if="editUserModal.Password.$error.required">
+                        {{'GENERIC_PasswordRequired' | translate}}
+                    </span>
+                    <span ng-if="editUserModal.Password.$error.minlength || editUserModal.Password.$error.maxlength"
+                          translate="VALIDATIONMESSAGES_rangelength"
+                          translate-values="{min:7, max:32}">
+                    </span>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmationPassword" class="col-md-3 control-label">
+                {{'SETTINGS_ConfirmPassword' | translate}}*
+            </label>
+            <div class="col-md-3">
+                <input required
+                       name="confirmationPassword"
+                       type="password"
+                       class="form-control"
+                       id="confirmationPassword"
+                       placeholder=""
+                       ng-model="editUser.modalUser.confirmationPassword"
+                       password-matcher="editUser.modalUser.password">
+                <span ng-if="editUser.submitform === true">
+                    <span ng-if="editUserModal.confirmationPassword.$error.required" class="text-danger">
+                        {{'GENERIC_ConfirmPasswordRequired' | translate}}
+                    </span>
+                    <span ng-if="!editUserModal.confirmationPassword.$error.required && editUserModal.confirmationPassword.$error.passwordMatch" class="text-danger">
+                        {{'SETTINGS_Password_Match' | translate}}
+                    </span>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="firstName" class="col-md-3 control-label">
+                {{'GENERIC_FirstName' | translate}}
+            </label>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="firstName" placeholder="" ng-model="editUser.modalUser.firstname">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="lastName" class="col-md-3 control-label">
+                {{'GENERIC_LastName' | translate}}
+            </label>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="lastName" placeholder="" ng-model="editUser.modalUser.lastname">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="role" class="col-md-3 control-label">
+                {{'GENERIC_Role' | translate}}*
+            </label>
+            <div class="col-md-3">
+                <select required
+                        name="role"
+                        id="role"
+                        class="form-control"
+                        ng-options="role.id as role.name for role in editUser.roles"
+                        ng-model="editUser.modalUser.roleId">
+                    <option value="">{{'SETTINGS_USERS_SelectARole'|translate}}</option>
+                </select>
+                <span ng-if="editUser.submitform == true && editUserModal.role.$error.required" class="text-danger">
+                    {{'Role Required' | translate}}
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="email" class="col-md-3 control-label">
+                {{'GENERIC_Email' | translate}}
+            </label>
+            <div class="col-md-3">
+                <input type="email" name="email" class="form-control" id="email" placeholder="" ng-model="editUser.modalUser.email">
+                <span class="text-danger" ng-if="editUser.submitform == true && editUserModal.email.$invalid">
+                    {{'SETTINGS_EnterValidEmail' | translate}}
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="phone" class="col-md-3 control-label">
+                {{'GENERIC_Phone' | translate}}
+            </label>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="phone" placeholder="" ng-model="editUser.modalUser.phone">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="enableuser" class="col-md-3 control-label">
+                {{'SETTINGS_EnableUser' | translate}}
+            </label>
+            <div class="col-md-3">
+                <input type="checkbox" class="" id="enableuser" placeholder="" ng-model="editUser.modalUser.enabled">
+            </div>
+        </div>
+    </form>
+
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+                <button type="button"
+                        class="btn btn-primary"
+                        ng-click="editUser.submitform = true; editUserModal.$valid && editUser.saveUser()"
+                        id="edituserconfirm">
+                    {{'GENERIC_Save' | translate}}
+                </button>
+            </li>
+            <li>
+                <button type="button" class="btn btn-default" ng-click="editUser.cancel()" id="controllerEditAssetTagModalCancelButton">
+                    {{'GENERIC_Cancel' | translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</div>

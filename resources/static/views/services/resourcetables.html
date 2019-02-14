@@ -1,0 +1,496 @@
+﻿<section id="page_resource_tables">
+    <!-- Clusters -->
+    <div ng-if="resourceTablesController.mode !== 'delete' && resourceTablesController.resources.clusterlist.length > 0">
+        <h3>
+            <i class="ci-device-tower-three-cluster"></i>
+            {{'SERVICE_DELETE_RESOURCES_Clusters'|translate}}
+        </h3>
+
+        <table id="clusterTable" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th ng-if="resourceTablesController.mode === 'delete'"></th>
+                    <th ng-if="resourceTablesController.mode === 'delete' || resourceTablesController.mode === 'detail'"></th>
+                    <th>
+                        {{'SERVICE_DELETE_RESOURCES_Clusters_THDataCenterName'|translate}}
+                    </th>
+                    <th>
+                        {{'SERVICE_DELETE_RESOURCES_Clusters_THClusterName'|translate}}
+                    </th>
+                    <th>
+                        {{'SERVICE_DELETE_RESOURCES_Clusters_THManagement_IP'|translate}}
+                    </th>
+                    <th>
+                        {{'SERVICE_DELETE_RESOURCES_Clusters_THResource_ID'|translate}}
+                    </th>
+                    <th ng-if="resourceTablesController.mode === 'inventory'">
+                        {{'SERVICE_ADD_EXISTING_AvailableInventory'|translate}}
+                        <a class="ci ci-info-circle-info text-primary"
+                           popover
+                           data-trigger="hover"
+                           data-content-template="AvailableInventory.html"
+                           title="{{'SERVICE_ADD_EXISTING_AvailableInventory'|translate}}"></a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="cluster in resourceTablesController.resources.clusterlist" ng-style="resourceTablesController.isNew(cluster) && {'font-weight': 'bold'}">
+                    <td ng-if="resourceTablesController.mode === 'delete'">
+                        <input type="checkbox" ng-model="cluster.isSelected" />
+                    </td>
+                    <td ng-if="resourceTablesController.mode === 'delete' || resourceTablesController.mode === 'detail'" class="text-center">
+                        <a data-toggle="tooltip"
+                           title="{{cluster._status.text |translate}}"
+                           data-trigger="hover"
+                           id="clusterStatusIcon">
+                            <statusicon value="cluster._status.icon" ng-if="cluster._status.icon !== 'inprogress'"></statusicon>
+                            <spinner ng-if="cluster._status.icon === 'inprogress'"></spinner>
+                        </a>
+                    </td>
+                    <td>
+                        <i class="ci-state-shape-blank-tri" ng-if="resourceTablesController.isNew(cluster)" style="color:#bed430"></i>
+                        {{cluster.datacentername}}
+                    </td>
+                    <td>{{cluster.clustername}}</td>
+                    <td>
+                        <a id="ipLinkCluster{{$index}}"
+                           ng-click="resourceTablesController.goToIp(cluster.ipaddressurl)"
+                           ng-if="cluster.ipaddressurl">
+                            {{cluster.ipAddress}}
+                        </a>
+                        <span ng-if="!cluster.ipaddressurl">{{cluster.ipAddress}}</span>
+                    </td>
+                    <td>{{cluster.deviceid}}</td>
+                    <td ng-if="resourceTablesController.mode === 'inventory'">
+                        {{cluster.available | yesNo}}
+                        <statusicon ng-if="!cluster.available"
+                                    value="resourceTablesController.warning"
+                                    data-toggle="tooltip"
+                                    title="{{cluster.healthmessage}}"
+                                    data-trigger="hover"></statusicon>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- ScaleIO Gateways -->
+    <div ng-if="resourceTablesController.resources.scaleiolist.length > 0 && resourceTablesController.mode  !== 'delete'">
+        <h3>
+            <i class="ci-storage-volume-4"></i>
+            {{'SERVICE_DELETE_RESOURCES_ScaleIOGateways'|translate}}
+            <a class="ci ci-info-circle-info"
+               data-toggle="tooltip"
+               data-placement="right"
+               data-html="true"
+               title="{{'SERVICE_DELETE_RESOURCES_ScaleIOGateways_tooltip' | translate}}"></a>
+        </h3>
+        <table id="scaleioTable" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th ng-if="resourceTablesController.mode === 'delete'"></th>
+                    <th ng-if="resourceTablesController.mode === 'delete' || resourceTablesController.mode === 'detail'"></th>
+                    <th>
+                        {{'SERVICE_DELETE_RESOURCES_ScaleIOGateways_THHost_Name'|translate}}
+                    </th>
+                    <th>
+                        {{'SERVICE_DELETE_RESOURCES_ScaleIOGateways_THPrimary_MDM_IP'|translate}}
+                    </th>
+                    <th>
+                        {{'SERVICE_DELETE_RESOURCES_ScaleIOGateways_THManagement_IP'|translate}}
+                    </th>
+                    <th ng-if="resourceTablesController.mode === 'inventory'">
+                        {{'SERVICE_ADD_EXISTING_AvailableInventory'|translate}}
+                        <a class="ci ci-info-circle-info text-primary"
+                           popover
+                           data-trigger="hover"
+                           data-content-template="AvailableInventory.html"
+                           title="{{'SERVICE_ADD_EXISTING_AvailableInventory'|translate}}"></a>
+                    </th>
+                    <th ng-if="resourceTablesController.mode === 'detail'">
+                        {{"SERVICE_DELETE_RESOURCES_ScaleIOGateways_ProtectionDomain" | translate}}
+                    </th>
+                    <th ng-if="resourceTablesController.mode === 'detail'">
+                        {{"SERVICE_DELETE_RESOURCES_ScaleIOGateways_StoragePools" | translate}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="scaleio in resourceTablesController.resources.scaleiolist" ng-style="resourceTablesController.isNew(scaleio) && {'font-weight': 'bold'}">
+                <tr>
+                    <td ng-if="resourceTablesController.mode === 'delete'">
+                        <input type="checkbox" ng-model="scaleio.isSelected" />
+                    </td>
+                    <td ng-if="resourceTablesController.mode === 'delete' || resourceTablesController.mode === 'detail'" class="text-center">
+                        <a data-toggle="tooltip"
+                           title="{{scaleio._status.text |translate}}"
+                           data-trigger="hover"
+                           id="scaleioStatusIcon">
+                            <statusicon value="scaleio._status.icon" ng-if="scaleio._status.icon !== 'inprogress'"></statusicon>
+                            <spinner ng-if="scaleio._status.icon === 'inprogress'"></spinner>
+                        </a>
+                    </td>
+                    <td>
+                        <i class="ci-state-shape-blank-tri" ng-if="resourceTablesController.isNew(scaleio)" style="color:#bed430"></i>
+                        {{scaleio.hostname}}
+                    </td>
+                    <td>
+                        <span>{{scaleio.primarymdmipaddress}}</span>
+                    </td>
+                    <td>
+                        <a id="ipLinkScaleioIP{{$index}}"
+                           ng-click="resourceTablesController.goToIp(scaleio.ipaddressurl)"
+                           ng-if="scaleio.ipaddressurl">
+                            {{scaleio.ipAddress}}
+                        </a>
+                        <span ng-if="!scaleio.ipaddressurl">{{scaleio.ipAddress}}</span>
+                    </td>
+                    <td ng-if="resourceTablesController.mode === 'inventory'">
+                        {{scaleio.available | yesNo}}
+                        <statusicon ng-if="!scaleio.available"
+                                    value="resourceTablesController.warning"
+                                    data-toggle="tooltip"
+                                    title="{{'SERVICE_ADD_EXISTING_UnavailableScaleIOGatewayInventoryTooltip'|translate}}"
+                                    data-trigger="hover"></statusicon>
+                    </td>
+                    <td ng-if="resourceTablesController.mode === 'detail'">
+                        {{scaleio.protectionDomain}}
+                    </td>
+                    <td ng-if="resourceTablesController.mode === 'detail'">
+                        <div ng-repeat="storagePool in scaleio.storagePools">
+                            {{storagePool.name}}{{$last ? "" : ", "}}
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Storages -->
+    <div ng-if="resourceTablesController.resources.storagelist.length>0 && resourceTablesController.mode  !== 'delete'">
+        <h3>
+            <i class="ci-storage-volume-half-full-2"></i>
+            {{'SERVICE_DELETE_RESOURCES_Storage'|translate}}
+        </h3>
+        <table id="storageTable" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th ng-if="resourceTablesController.mode === 'delete' || resourceTablesController.mode === 'detail'"></th>
+                    <th>
+                        {{'SERVICE_RESOURCES_STORAGE_Volume'|translate}}
+                    </th>
+                    <th>
+                        {{'SERVICE_RESOURCES_STORAGE_Size'|translate}}
+                    </th>
+                    <th>
+                        {{'SERVICE_RESOURCES_STORAGE_Type'|translate}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="storage in resourceTablesController.resources.storagelist" ng-style="resourceTablesController.isNew(storage) && {'font-weight': 'bold'}">
+                <tr>
+                    <td ng-if="resourceTablesController.mode === 'detail'" class="text-center">
+                        <a data-toggle="tooltip"
+                           title="{{storage._status.text |translate}}"
+                           data-trigger="hover"
+                           id="storageStatusIcon">
+                            <statusicon value="storage._status.icon" ng-if="storage._status.icon !== 'inprogress'"></statusicon>
+                            <spinner ng-if="storage._status.icon === 'inprogress'"></spinner>
+                        </a>
+                    </td>
+                    <td>
+                        <i class="ci-state-shape-blank-tri" ng-if="resourceTablesController.isNew(storage)" style="color:#bed430"></i>
+                        {{storage.volumelist[0].name}}
+                    </td>
+                    <td>{{storage.volumelist[0].size}}</td>
+                    <td>{{storage.volumelist[0].type}}</td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Servers -->
+    <div ng-if="resourceTablesController.resources.serverlist.length>0">
+        <h3>
+            <!--<i class="ci-device-tower-chassis"></i>-->
+            <i class="ci-device-tower"></i>
+            {{'SERVICE_DELETE_RESOURCES_Physical_Servers'|translate}}
+        </h3>
+        <table id="serverTable" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th ng-if="resourceTablesController.mode === 'delete'"></th>
+                    <th ng-if="resourceTablesController.mode === 'delete' || resourceTablesController.mode === 'detail'"></th>
+                    <th>
+                        {{'SERVICE_DELETE_RESOURCES_Physical_Servers_THHost_Name'|translate}}
+                    </th>
+                    <th ng-if="resourceTablesController.mode !== 'inventory'">
+                        {{'SERVICE_DELETE_RESOURCES_Physical_Servers_TH_VxFlexOSManagement_IP'|translate}}
+                    </th>
+                    <th>
+                        {{'SERVICE_DELETE_RESOURCES_Physical_Servers_THiDRACManagement_IP'|translate}}
+                    </th>
+                    <th>
+                        {{'SERVICE_DELETE_RESOURCES_Physical_Servers_THHypervisor_IP'|translate}}
+                    </th>
+                    <th>
+                        {{'SERVICE_DELETE_RESOURCES_Physical_Servers_THResource_ID'|translate}}
+                    </th>
+                    <th ng-if="resourceTablesController.mode === 'inventory'">
+                        {{'SERVICE_ADD_EXISTING_AvailableInventory'|translate}}
+                        <a class="ci ci-info-circle-info text-primary"
+                           popover
+                           data-trigger="hover"
+                           data-content-template="AvailableInventory.html"
+                           title="{{'SERVICE_ADD_EXISTING_AvailableInventory'|translate}}"></a>
+                    </th>
+                    <th ng-if="resourceTablesController.mode === 'detail'">
+                        {{"SERVICE_DELETE_RESOURCES_Physical_Servers_TH_VxFlexOSMode" | translate}}
+                        <a class="ci ci-info-circle-info"
+                           data-toggle="tooltip"
+                           data-placement="right"
+                           data-html="true"
+                           title="{{'SERVICE_DELETE_RESOURCES_Physical_Servers_TH_tooltipstorageonly' | translate}}"></a>
+                    </th>
+                    <th ng-if="resourceTablesController.mode === 'detail'">
+                        {{"SERVICE_DELETE_RESOURCES_Physical_Servers_TH_MDMRole" | translate}}
+                        <a class="ci ci-info-circle-info"
+                           data-toggle="tooltip"
+                           data-placement="right"
+                           title="{{'SERVICE_DELETE_RESOURCES_Physical_Servers_TH_MDMTooltip' | translate}}"></a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="server in resourceTablesController.resources.serverlist" ng-style="resourceTablesController.isNew(server) && {'font-weight': 'bold'}">
+                    <td ng-if="resourceTablesController.mode === 'delete'">
+                        <input type="radio" id="serverDelete{{$index}}" name="serverDelete" value="{{server.id}}" ng-model="resourceTablesController.resources.selectedServer" />
+                    </td>
+                    <td ng-if="resourceTablesController.mode === 'delete' || resourceTablesController.mode === 'detail'" class="text-center">
+                        <a data-toggle="tooltip"
+                           title="{{server._status.text |translate}}"
+                           data-trigger="hover"
+                           id="serverStatusIcon">
+                            <statusicon value="server._status.icon" ng-if="server._status.icon !== 'inprogress' && server._status.icon !== 'servicemode'"></statusicon>
+                            <spinner ng-if="server._status.icon === 'inprogress'"></spinner>
+                            <i class="ci-action-circle-wrench"
+                               style="color:#efad18"
+                               ng-if="server._status.icon === 'servicemode'"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <i class="ci-state-shape-blank-tri" ng-if="resourceTablesController.isNew(server)" style="color:#bed430"></i>
+                        {{server.hostname}}
+                    </td>
+                    <td ng-if="resourceTablesController.mode !== 'inventory'">
+                        <span>{{server.vxflexosmanagementipaddress}}</span>
+                    </td>
+                    <td>
+                        <a id="ipLinkServeriDRAC{{$index}}"
+                           ng-click="resourceTablesController.goToIp(server.ipaddressurl)"
+                           ng-if="server.ipaddressurl">
+                            {{server.ipAddress}}
+                        </a>
+                        <span ng-if="!server.ipaddressurl">{{server.ipAddress}}</span>
+                    </td>
+                    <td>
+                        <div ng-if="server.ipaddresslist.length">
+                            <chevron item="server._toggle" ng-if="server.ipaddresslist.length > 4">
+                                {{server.ipaddresslist.length}}
+                            </chevron>
+                            <div ng-repeat="ip in server.ipaddresslist" ng-if="server.ipaddresslist.length < 5 || server._toggle">
+                                <a id="ipLinkVm{{$parent.$index}}_ip{{$index}}"
+                                   ng-click="resourceTablesController.goToIp(ip.ipaddressurl)"
+                                   ng-if="ip.ipaddressurl">
+                                    {{ip.ipaddress}}
+                                </a>
+                                <span ng-if="!ip.ipaddressurl">
+                                    {{ip.ipaddress}}
+                                </span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{server.deviceid}}</td>
+                    <td ng-if="resourceTablesController.mode === 'inventory'">
+                        {{server.available | yesNo}}
+                        <statusicon ng-if="!server.available"
+                                    value="resourceTablesController.warning"
+                                    data-toggle="tooltip"
+                                    title="{{server.healthmessage}}"
+                                    data-trigger="hover"></statusicon>
+                    </td>
+                    <td ng-if="resourceTablesController.mode === 'detail'">
+                        {{server.osMode}}
+                    </td>
+                    <td ng-if="resourceTablesController.mode === 'detail'">
+                        {{server.mdmRole}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Applications -->
+    <div ng-if="resourceTablesController.resources.applicationList.length>0">
+        <h4>
+            <i class="ci ci ci-app-window"></i>
+            {{'SERVICE_ADD_EXISTING_Applications'|translate}}
+        </h4>
+        <table id="appTable" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th ng-if="resourceTablesController.mode === 'delete'"></th>
+                    <th ng-if="resourceTablesController.mode === 'delete' || resourceTablesController.mode === 'detail'"></th>
+                    <th>
+                        {{'SERVICE_ADD_EXISTING_IP'|translate}}
+                    </th>
+                    <th>
+                        {{'SERVICE_ADD_EXISTING_AssetServiceTag'|translate}}
+                    </th>
+                    <th ng-if="resourceTablesController.mode === 'inventory'">
+                        {{'SERVICE_ADD_EXISTING_AvailableInventory'|translate}}
+                        <a class="ci ci-info-circle-info text-primary"
+                           popover
+                           data-trigger="hover"
+                           data-content-template="AvailableInventory.html"
+                           title="{{'SERVICE_ADD_EXISTING_AvailableInventory'|translate}}"></a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="app in resourceTablesController.resources.applicationList" ng-style="resourceTablesController.isNew(app) && {'font-weight': 'bold'}">
+                    <td ng-if="resourceTablesController.mode === 'delete'">
+                        <input type="checkbox" ng-model="app.isSelected" />
+                    </td>
+                    <td ng-if="resourceTablesController.mode === 'delete' || resourceTablesController.mode === 'detail'" class="text-center">
+                        <i class="ci-state-shape-blank-tri" ng-if="resourceTablesController.isNew(app)" style="color:#bed430"></i>
+                        <a data-toggle="tooltip"
+                           title="{{app._status.text |translate}}"
+                           data-trigger="hover"
+                           id="vmStatusIcon">
+                            <statusicon value="app._status.icon" ng-if="app._status.icon !== 'inprogress'"></statusicon>
+                            <spinner ng-if="app._status.icon === 'inprogress'"></spinner>
+                        </a>
+                    </td>
+                    <td>
+                        <a id="ipLinkApp{{$index}}"
+                           ng-click="resourceTablesController.goToIp(app.ipaddressurl)"
+                           ng-if="app.ipaddressurl">
+                            {{app.ipAddress}}
+                        </a>
+                        <span ng-if="!app.ipaddressurl">{{app.ipAddress}}</span>
+                    </td>
+                    <td>{{vm.deviceid}}</td>
+                    <td ng-if="resourceTablesController.mode === 'inventory'">
+                        {{app.available | yesNo}}
+                        <statusicon ng-if="!app.available"
+                                    value="resourceTablesController.warning"
+                                    data-toggle="tooltip"
+                                    title="{{app.healthmessage}}"
+                                    data-trigger="hover"></statusicon>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- VMs -->
+    <div ng-if="resourceTablesController.resources.vmlist.length>0">
+        <h3>
+            <i class="ci-app-virtual-machine"></i>
+            {{'SERVICE_DELETE_RESOURCES_Virtual_Machines'|translate}}
+        </h3>
+        <table id="vmTable" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th ng-if="resourceTablesController.mode === 'delete'"></th>
+                    <th ng-if="resourceTablesController.mode === 'delete' || resourceTablesController.mode === 'detail'"></th>
+                    <th>
+                        {{'SERVICE_DELETE_RESOURCES_Virtual_Machines_THHost_Name'|translate}}
+                    </th>
+                    <th>
+                        {{'SERVICE_DELETE_RESOURCES_Virtual_Machines_OS_IP'|translate}}
+                    </th>
+                    <th>
+                        {{'SERVICE_DELETE_RESOURCES_Virtual_Machines_THCPUs'|translate}}
+                    </th>
+                    <th>
+                        {{'SERVICE_DELETE_RESOURCES_Virtual_Machines_THDisk_Size'|translate}}
+                    </th>
+                    <th>
+                        {{'SERVICE_DELETE_RESOURCES_Virtual_Machines_THMemory'|translate}}
+                    </th>
+                    <th ng-if="resourceTablesController.mode === 'inventory'">
+                        {{'SERVICE_ADD_EXISTING_AvailableInventory'|translate}}
+                        <a class="ci ci-info-circle-info text-primary"
+                           popover
+                           data-trigger="hover"
+                           data-content-template="AvailableInventory.html"
+                           title="{{'SERVICE_ADD_EXISTING_AvailableInventory'|translate}}"></a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="vm in resourceTablesController.resources.vmlist" ng-style="resourceTablesController.isNew(vm) && {'font-weight': 'bold'}">
+                    <td ng-if="resourceTablesController.mode === 'delete'">
+                        <input type="checkbox" ng-model="vm.isSelected" />
+                    </td>
+                    <td ng-if="resourceTablesController.mode === 'delete' || resourceTablesController.mode === 'detail'" class="text-center">
+                        <a data-toggle="tooltip"
+                           title="{{vm._status.text |translate}}"
+                           data-trigger="hover"
+                           id="vmStatusIcon">
+                            <statusicon value="vm._status.icon" ng-if="vm._status.icon !== 'inprogress'"></statusicon>
+                            <spinner ng-if="vm._status.icon === 'inprogress'"></spinner>
+                        </a>
+                    </td>
+                    <td>{{vm.vm_hostname}}</td>
+                    <td>
+                        <div ng-if="vm.ipaddresslist.length">
+                            <chevron item="vm._toggle" ng-if="vm.ipaddresslist.length > 4">
+                                {{vm.ipaddresslist.length}}
+                            </chevron>
+                            <div ng-repeat="ip in vm.ipaddresslist" ng-if="vm.ipaddresslist.length < 5 || vm._toggle">
+                                <a id="ipLinkVm{{$parent.$index}}_ip{{$index}}"
+                                   ng-click="resourceTablesController.goToIp(ip.ipaddressurl)"
+                                   ng-if="ip.ipaddressurl">
+                                    {{ip.ipaddress}}
+                                </a>
+                                <span ng-if="!ip.ipaddressurl">
+                                    {{ip.ipaddress}}
+                                </span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{vm.vm_cpus}}</td>
+                    <td>{{vm.vm_disksize}}</td>
+                    <td>{{vm.vm_memory}}</td>
+                    <td ng-if="resourceTablesController.mode === 'inventory'">
+                        {{vm.available | yesNo}}
+                        <statusicon ng-if="!vm.available"
+                                    value="resourceTablesController.warning"
+                                    data-toggle="tooltip"
+                                    title="{{vm.healthmessage}}"
+                                    data-trigger="hover"></statusicon>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+    <script type="text/ng-template" id="AvailableInventory.html">
+        <div class="popover-body" ng-bind-html="'SERVICE_ADD_EXISTING_AvailableInventoryToolTip' | translate | htmlSafe"></div>
+    </script>
+</section>

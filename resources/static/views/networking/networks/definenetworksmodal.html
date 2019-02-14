@@ -1,0 +1,109 @@
+﻿<section id="define_networks">
+    <error-display errors="defineNetworksController.errors"
+                   on-click="$root.ASM.RemoveError(error, defineNetworksController.errors)"
+                   on-expand-collapse=""></error-display>
+    <div ng-bind-html="'SETUPWIZARD_DefineNetworksDescription'|translate|htmlSafe"></div>
+    <br />
+    <ul class="list-inline list-unstyled">
+        <li>
+            <button id="lnkCreate"
+                    class="btn btn-default"
+                    ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                    ng-click="defineNetworksController.doUpdates('create')">
+                <i class="ci-action-add-plus-float"></i>
+                {{'NETWORKS_Define'|translate}}
+            </button>
+        </li>
+        <li>
+            <button id="lnkEdit" class="btn btn-default"
+                    ng-disabled="defineNetworksController.displayedNetworkData.length == 0 || $root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                    ng-click="defineNetworksController.doUpdates('edit')">
+                <i class="ci-doc-blank-pencil-edit-o"></i>
+                {{'NETWORKS_Edit'|translate}}
+            </button>
+        </li>
+        <li>
+            <button id="delete_network_default"
+                    class="btn btn-default"
+                    ng-disabled="defineNetworksController.displayedNetworkData.length == 0 || $root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                    ng-click="defineNetworksController.deleteNetwork(); $event.stopPropagation();">
+                <i class="ci-trash"></i>
+                {{'NETWORKS_Delete'|translate}}
+            </button>
+        </li>
+        <!--<li>
+            <button id="refresh_networks_link"
+                    class="btn btn-link"
+                    ng-click="defineNetworksController.refresh(); $event.stopPropagation();">
+                <i class="ci-arrow-curve-forward-right-refresh"></i>
+            </button>
+        </li>-->
+    </ul>
+    <table id="networks_table"
+           class="table table-hover master-body"
+           st-table="defineNetworksController.displayedNetworkData"
+           st-safe-src="defineNetworksController.networkData">
+        <thead>
+        <tr>
+            <th tabindex="0" st-sort="name" st-sort-default="true">
+                {{'NETWORKS_TH_Name'|translate}}
+            </th>
+            <th tabindex="0" st-sort="description">
+                {{'NETWORKS_TH_Description'|translate}}
+            </th>
+            <th tabindex="0" st-sort="_networkName">
+                {{'NETWORKS_TH_NetworkType'|translate}}
+            </th>
+            <th tabindex="0" st-sort="vlanid">
+                {{'NETWORKS_TH_VLANID'|translate}}
+            </th>
+        </tr>
+        </thead>
+        <tbody ng-if="defineNetworksController.displayedNetworkData.length != 0">
+        <tr tabindex="0"
+            ng-repeat="network in defineNetworksController.displayedNetworkData"
+            ng-class="{'st-selected': defineNetworksController.selectedNetwork.id == network.id}"
+            ng-click="defineNetworksController.click_tableRow(network)">
+            <td>
+                {{network.name}}
+            </td>
+            <td>
+                {{network.description}}
+            </td>
+            <td>
+                {{network._networkName}}
+            </td>
+            <td>
+                {{network.vlanid}}
+            </td>
+        </tr>
+        </tbody>
+        <tbody ng-if="defineNetworksController.displayedNetworkData.length == 0">
+        <tr>
+            <td colspan="8">
+                {{'NETWORKS_Empty'|translate}}
+            </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="8" class="text-center">
+                <div st-pagination="defineNetworksController.displayedNetworkData"
+                     st-items-by-page="20"
+                     st-displayed-pages=""></div>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="closeModal"
+                        class="btn btn-default"
+                        ng-click="defineNetworksController.close()">
+                    {{'SETTINGS_Close'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

@@ -1,0 +1,215 @@
+﻿<section id="page_dhcpSettings">
+    <error-display errors="editDhcpSettingsModalController.errors"
+                   on-click="editDhcpSettingsModalController.ASM.RemoveError(error, editDhcpSettingsModalController.errors)"
+                   on-expand-collapse=""></error-display>
+    <form id="dhcpSettingsForm"
+          name="settingsForm"
+          class="form-horizontal"
+          form-validation="editDhcpSettingsModalController.submitted">
+
+        <fieldset>
+
+            <div class="form-group">
+                <label for="enableDHCPServer" class="col-md-4 control-label">
+                    {{'SETTINGS_DHCPSettingsEnable'|translate}}
+                </label>
+                <div class="col-md-8">
+                    <input id="enableDHCPServer"
+                           type="checkbox"
+                           ng-model="editDhcpSettingsModalController.settings.enableDhcpServer"
+                           ng-checked="editDhcpSettingsModalController.settings.enableDhcpServer" />
+                </div>
+            </div>
+
+            <div>
+                <div class="form-group">
+                    <label for="subnet" class="col-md-4 control-label">
+                        {{'SETTINGS_DHCPSettingsSubnet'|translate}}
+                    </label>
+                    <div class="col-md-8">
+                        <input id="subnet"
+                               class="form-control"
+                               type="text"
+                               name="subnet"
+                               ng-model="editDhcpSettingsModalController.settings.subnet"
+                               ng-required="editDhcpSettingsModalController.settings.enableDhcpServer"
+                               ng-disabled="!editDhcpSettingsModalController.settings.enableDhcpServer" />
+                        <span class="text-danger">
+                            <span ng-if="editDhcpSettingsModalController.submitted && settingsForm.subnet.$error.required">
+                                {{'GENERIC_RequiredField' | translate}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="netmask" class="col-md-4 control-label">
+                        {{'SETTINGS_DHCPSettingsNetMask'|translate}}
+                    </label>
+                    <div class="col-md-8">
+                        <input id="netmask"
+                               class="form-control"
+                               type="text"
+                               name="netmask"
+                               ng-model="editDhcpSettingsModalController.settings.netmask"
+                               ng-required="editDhcpSettingsModalController.settings.enableDhcpServer"
+                               ng-disabled="!editDhcpSettingsModalController.settings.enableDhcpServer" />
+                        <span class="text-danger">
+                            <span ng-if="editDhcpSettingsModalController.submitted && settingsForm.netmask.$error.required">
+                                {{'GENERIC_RequiredField' | translate}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="startingIpAddress" class="col-md-4 control-label">
+                        {{'SETTINGS_DHCPSettingsStartingIP'|translate}}
+                    </label>
+                    <div class="col-md-8">
+                        <input id="startingIpAddress"
+                               class="form-control"
+                               type="text"
+                               name="startingIpAddress"
+                               ng-model="editDhcpSettingsModalController.settings.startingIpAddress"
+                               ng-required="editDhcpSettingsModalController.settings.enableDhcpServer"
+                               ng-disabled="!editDhcpSettingsModalController.settings.enableDhcpServer" />
+                        <span class="text-danger" ng-if="editDhcpSettingsModalController.submitted">
+                            <span ng-if="settingsForm.startingIpAddress.$error.required">
+                                {{'GENERIC_RequiredField' | translate}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="endingIpAddress" class="col-md-4 control-label">
+                        {{'SETTINGS_DHCPSettingsEndingIP'|translate}}
+                    </label>
+                    <div class="col-md-8">
+                        <input id="endingIpAddress"
+                               class="form-control"
+                               type="text"
+                               name="endingIpAddress"
+                               ng-model="editDhcpSettingsModalController.settings.endingIpAddress"
+                               ng-required="editDhcpSettingsModalController.settings.enableDhcpServer"
+                               ng-disabled="!editDhcpSettingsModalController.settings.enableDhcpServer" />
+                        <span class="text-danger" ng-if="editDhcpSettingsModalController.submitted">
+                            <span ng-if="settingsForm.endingIpAddress.$error.required">
+                                {{'GENERIC_RequiredField' | translate}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">
+                        {{'SETTINGS_DHCPSettingsDefaultLeaseTime'|translate}}
+                    </label>
+                    <div class="col-md-8">
+
+                        <select ng-model="editDhcpSettingsModalController.settings.defaultLeaseTimeDays"
+                                id="defaultLeaseTimeDays"
+                                ng-options="n for n in [] | range:0:editDhcpSettingsModalController.ranges.days"
+                                ng-disabled="!editDhcpSettingsModalController.settings.enableDhcpServer"></select>
+                        <select ng-model="editDhcpSettingsModalController.settings.defaultLeaseTimeHours"
+                                id="defaultLeaseTimeHours"
+                                ng-options="n for n in [] | range:0:editDhcpSettingsModalController.ranges.hours"
+                                ng-disabled="!editDhcpSettingsModalController.settings.enableDhcpServer"></select>
+                        <select ng-model="editDhcpSettingsModalController.settings.defaultLeaseTimeMinutes"
+                                id="defaultLeaseTimeMinutes"
+                                ng-options="n for n in [] | range:0:editDhcpSettingsModalController.ranges.minutes"
+                                ng-disabled="!editDhcpSettingsModalController.settings.enableDhcpServer"></select>
+                        <select ng-model="editDhcpSettingsModalController.settings.defaultLeaseTimeSeconds"
+                                id="defaultLeaseTimeSeconds"
+                                ng-options="n for n in [] | range:0:editDhcpSettingsModalController.ranges.seconds"
+                                ng-disabled="!editDhcpSettingsModalController.settings.enableDhcpServer"></select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">
+                        {{'SETTINGS_DHCPSettingsMaxLeaseTime'|translate}}
+                    </label>
+                    <div class="col-md-8">
+                        <select ng-model="editDhcpSettingsModalController.settings.maxLeaseTimeDays"
+                                id="maxLeaseTimeDays"
+                                ng-options="n for n in [] | range:0:editDhcpSettingsModalController.ranges.days"
+                                ng-disabled="!editDhcpSettingsModalController.settings.enableDhcpServer"></select>
+                        <select ng-model="editDhcpSettingsModalController.settings.maxLeaseTimeHours"
+                                id="maxLeaseTimeHours"
+                                ng-options="n for n in [] | range:0:editDhcpSettingsModalController.ranges.hours"
+                                ng-disabled="!editDhcpSettingsModalController.settings.enableDhcpServer"></select>
+                        <select ng-model="editDhcpSettingsModalController.settings.maxLeaseTimeMinutes"
+                                id="maxLeaseTimeMinutes"
+                                ng-options="n for n in [] | range:0:editDhcpSettingsModalController.ranges.minutes"
+                                ng-disabled="!editDhcpSettingsModalController.settings.enableDhcpServer"></select>
+                        <select ng-model="editDhcpSettingsModalController.settings.maxLeaseTimeSeconds"
+                                id="maxLeaseTimeSeconds"
+                                ng-options="n for n in [] | range:0:editDhcpSettingsModalController.ranges.seconds"
+                                ng-disabled="!editDhcpSettingsModalController.settings.enableDhcpServer"></select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="gateway" class="col-md-4 control-label">
+                        {{'SETTINGS_DHCPSettingsGateway'|translate}}
+                    </label>
+                    <div class="col-md-8">
+                        <input id="gateway"
+                               class="form-control"
+                               type="text"
+                               ng-model="editDhcpSettingsModalController.settings.gateway"
+                               ng-disabled="!editDhcpSettingsModalController.settings.enableDhcpServer" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="dns" class="col-md-4 control-label">
+                        {{'SETTINGS_DHCPSettingsDNS'|translate}}
+                    </label>
+                    <div class="col-md-8">
+                        <input id="dns"
+                               class="form-control"
+                               type="text"
+                               ng-model="editDhcpSettingsModalController.settings.dns"
+                               ng-disabled="!editDhcpSettingsModalController.settings.enableDhcpServer" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="domain" class="col-md-4 control-label">
+                        {{'SETTINGS_DHCPSettingsDomain'|translate}}
+                    </label>
+                    <div class="col-md-8">
+                        <input id="domain"
+                               class="form-control"
+                               type="text"
+                               ng-model="editDhcpSettingsModalController.settings.domain"
+                               ng-disabled="!editDhcpSettingsModalController.settings.enableDhcpServer" />
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+    </form>
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="submitDhcpSettings"
+                        class="btn btn-primary"
+                        ng-click="editDhcpSettingsModalController.submitted = true; settingsForm.$valid && editDhcpSettingsModalController.save()"
+                        form="edit_ntp_form">
+                    {{'SETTINGS_Save'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="btnCancel"
+                        class="btn btn-default"
+                        ng-click="editDhcpSettingsModalController.cancel()">
+                    {{'SETTINGS_Cancel'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

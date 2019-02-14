@@ -1,0 +1,249 @@
+﻿<section id="page_updatecomponents">
+    <error-display errors="updateComponentsController.errors" on-click="$root.ASM.RemoveError(error, updateComponentsController.errors)" on-expand-collapse=""></error-display>
+    <p>
+        {{'SERVICE_UPGRADE_COMPONENTS_Message1'|translate}}
+    </p>
+    <ul>
+        <li ng-bind-html="'SERVICE_UPGRADE_COMPONENTS_ApplyNowMessage' | translate | htmlSafe"></li>
+        <li ng-bind-html="'SERVICE_UPGRADE_COMPONENTS_SaveMessage' | translate | htmlSafe"></li>
+    </ul>
+    <form id="form_updatecomponents"
+          name="updateComponentsController.form"
+          class="form-horizontal"
+          form-validation="updateComponentsController.form._submitted">
+
+
+
+
+        <div ng-repeat="component in updateComponentsController.serviceSettings.components | orderComponents"
+             ng-if="updateComponentsController.componentVisible(component)"
+             class="form-group panel-group">
+            <div class="col-xs-12">
+                <h3>
+                    {{component.name}}
+                </h3>
+
+                <div class="panel panel-default"
+                     ng-repeat="category in component.categories"
+                     ng-if="updateComponentsController.categoryVisible(category, component)">
+                    <div class="panel-heading"
+                         role="tab"
+                         id="headId{{$index}}_component_{{$parent.$parent.$index}}">
+                        <h4 class="panel-title">
+                            <a role="button"
+                               ng-class=":: $index === 0 ?  'in' :'collapsed'"
+                               data-toggle="collapse"
+                               data-target="#collapse{{$index}}_component_{{$parent.$parent.$index}}"
+                               aria-expanded="{{:: $index === 0}}"
+                               aria-controls="collapse{{$index}}_component_{{$parent.$parent.$index}}">
+                                <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                {{category.name}}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse{{$index}}_component_{{$parent.$parent.$index}}"
+                         class="panel-collapse collapse"
+                         ng-class="::{' in' : $index == 0}"
+                         role="tabpanel"
+                         aria-labelledby="headId{{$index}}_component_{{$parent.$parent.$index}}">
+                        <div class="panel-body well">
+
+                            <div>
+                                <!-- Groups of Settings -->
+                                <div ng-repeat="group in category.settings | updateComponents | groupFilter">
+                                    <!-- no group, individual setting -->
+                                    <div ng-if="!group.group">
+                                        <div ng-repeat="setting in category.settings | updateComponents:component">
+                                            <div ng-switch="setting.datatype" class="form-group">
+                                                <!--Custom Control: Network Config-->
+                                                <network-configuration id="networkconfiguration"
+                                                                      ng-switch-when="networkconfiguration"
+                                                                      class="col-sm-12"
+                                                                      read-only-mode="false"
+                                                                      setting="setting"></network-configuration>
+                                                <!--Custom Control: RAID Config-->
+                                                <raid-configuration id="raidconfiguration"
+                                                                    ng-switch-when="raidconfiguration"
+                                                                    class="col-sm-12"
+                                                                    read-only-mode="false"
+                                                                    setting="setting"
+                                                                    templateinvalid="false"
+                                                                    invalid-array="updateComponentsController.invalidArray"></raid-configuration>
+                                                <!--Custom Control: Bios Config-->
+                                                <bios-configuration id="biosconfiguration"
+                                                                    ng-switch-when="biosconfiguration"
+                                                                    class="col-sm-12"
+                                                                    read-only-mode="false"
+                                                                    setting="setting"
+                                                                    form="updateComponentsController.forms.step2"></bios-configuration>
+                                                <!-- Custom Control: VM Virtual Disk Config -->
+                                                <vm-virtual-disk-configuration ng-switch-when="vmvirtualdiskconfiguration"
+                                                                               id="vmvirtualdiskconfiguration"
+                                                                               class="col-sm-12"
+                                                                               read-only-mode="false"
+                                                                               component="component"
+                                                                               setting="setting"></vm-virtual-disk-configuration>
+                                                <!-- Custom Control: Configure NIOC  -->
+                                                <nioc-setting ng-switch-when="niocconfiguration"
+                                                              errors="updateComponentsController.errors"
+                                                              class="col-sm-12"
+                                                              read-only-mode="false"
+                                                              setting="setting"
+                                                              invalid-array="updateComponentsController.invalidArray"></nioc-setting>
+                                                <!-- Custom Control: OS Credentials  -->
+                                                <credentials-settings ng-switch-when="oscredential"
+                                                                      category="category"
+                                                                      setting="setting"
+                                                                      read-only-mode="false"
+                                                                      errors="updateComponentsController.errors"
+                                                                      component="component"
+                                                                      form="updateComponentsController.forms.step2"
+                                                                      credentials="updateComponentsController.credentials"></credentials-settings>
+                                                <!-- Custom Control: Basic Setting -->
+                                                <basic-setting category="category"
+                                                               ng-switch-default
+                                                               setting="setting"
+                                                               read-only-mode="false"
+                                                               component="component"
+                                                               form="updateComponentsController.forms.step2"></basic-setting>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Groups -->
+                                    <div class="panel-heading"
+                                         role="tab"
+                                         ng-if="group.group"
+                                         id="headId{{$index}}_group_{{$parent.$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                         style="border-bottom: none;">
+                                        <a tabindex="0"
+                                           style="outline: none;"
+                                           role="button"
+                                           data-toggle="collapse"
+                                           data-target="#target{{$index}}_group_{{$parent.$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                           aria-expanded="true"
+                                           class="in"
+                                           aria-controls="device{{$index}}">
+                                            <ul class="list-inline" style="margin-bottom: 0;">
+                                                <li style="color: #888; vertical-align: top;">
+                                                    <i class="collapsed-show ci-arrow-chev-right-2-med ci"></i>
+                                                    <i class="collapsed-hide ci-arrow-chev-down-2-med ci"></i>
+                                                </li>
+                                                <li>
+                                                    <h4 style="margin-top: 0; margin-bottom: 10px; border-bottom: none;">
+                                                        {{group.group}}
+                                                    </h4>
+                                                </li>
+                                            </ul>
+                                        </a>
+                                        <div class="col-xs-12 panel-collapse collapse in"
+                                             id="target{{$index}}_group_{{$parent.$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                             aria-labelledby="headId{{$index}}_group_{{$parent.$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                             role="tabpanel">
+
+                                            <div ng-repeat="setting in category.settings  | updateComponents:component"
+                                                 ng-if="setting.group === group.group">
+                                                <div ng-switch="setting.datatype" class="form-group">
+                                                    <!--Custom Control: Network Config-->
+                                                    <network-configuration id="networkconfiguration"
+                                                                          ng-switch-when="networkconfiguration"
+                                                                          class="col-sm-12"
+                                                                          read-only-mode="false"
+                                                                          setting="setting"></network-configuration>
+                                                    <!--Custom Control: RAID Config-->
+                                                    <raid-configuration id="raidconfiguration"
+                                                                        ng-switch-when="raidconfiguration"
+                                                                        class="col-sm-12"
+                                                                        read-only-mode="false"
+                                                                        setting="setting"
+                                                                        invalid-array="updateComponentsController.invalidArray"></raid-configuration>
+                                                    <!--Custom Control: Bios Config-->
+                                                    <bios-configuration id="biosconfiguration"
+                                                                        ng-switch-when="biosconfiguration"
+                                                                        class="col-sm-12"
+                                                                        read-only-mode="false"
+                                                                        setting="setting"
+                                                                        form="updateComponentsController.forms.step2"></bios-configuration>
+                                                    <!-- Custom Control: VM Virtual Disk Config -->
+                                                    <vm-virtual-disk-configuration ng-switch-when="vmvirtualdiskconfiguration"
+                                                                                   id="vmvirtualdiskconfiguration"
+                                                                                   class="col-sm-12"
+                                                                                   read-only-mode="false"
+                                                                                   component="component"
+                                                                                   setting="setting"></vm-virtual-disk-configuration>
+                                                    <!-- Custom Control: Configure NIOC  -->
+                                                    <nioc-setting ng-switch-when="niocconfiguration"
+                                                                  class="col-sm-12"
+                                                                  read-only-mode="false"
+                                                                  setting="setting"
+                                                                  invalid-array="updateComponentsController.invalidArray"></nioc-setting>
+                                                    <!-- Custom Control: OS Credentials  -->
+                                                    <credentials-settings ng-switch-when="oscredential"
+                                                                          category="category"
+                                                                          errors="updateComponentsController.errors"
+                                                                          setting="setting"
+                                                                          read-only-mode="false"
+                                                                          component="component"
+                                                                          form="updateComponentsController.forms.step2"
+                                                                          credentials="updateComponentsController.credentials"></credentials-settings>
+                                                    <!-- Custom Control: Basic Setting -->
+                                                    <basic-setting category="category"
+                                                                   ng-switch-default
+                                                                   setting="setting"
+                                                                   read-only-mode="false"
+                                                                   component="component"
+                                                                   form="updateComponentsController.forms.step2"></basic-setting>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </form>
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li ng-if="updateComponentsController.serviceSettings">
+                {{'COMPONENTEDITOR_RequiredFieldsRemaining'|translate}} {{updateComponentsController.remainingFields()}}
+            </li>
+            <li>
+                <button type="button"
+                        class="btn btn-primary"
+                        ng-if="updateComponentsController.serviceSettings"
+                        ng-disabled="updateComponentsController.remainingFields() > 0"
+                        ng-click="updateComponentsController.save(true)"
+                        id="usersFormApply">
+                    {{'SERVICE_UPGRADE_COMPONENTS_ApplyNow' | translate}}
+                </button>
+            </li>
+            <li>
+                <button type="button"
+                        class="btn btn-primary"
+                        ng-if="updateComponentsController.serviceSettings"
+                        ng-disabled="updateComponentsController.remainingFields() > 0"
+                        ng-click="updateComponentsController.save(false)"
+                        id="usersFormSave">
+                    {{'GENERIC_Save' | translate}}
+                </button>
+            </li>
+            <li>
+                <button type="button"
+                        class="btn btn-default"
+                        ng-click="updateComponentsController.cancel()"
+                        id="usersFormCancel">
+                    {{'GENERIC_Cancel' | translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

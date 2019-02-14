@@ -1,0 +1,36 @@
+﻿<section id="page_edit_service">
+    <error-display errors="editService.errors" on-click="$root.ASM.RemoveError(error, editService.errors)" on-expand-collapse=""></error-display>
+    <form id="editServiceForm"
+          name="editService.editServiceForm"
+          class="form-horizontal"
+          role="form"
+          novalidate
+          form-validation="editService.editServiceForm._submitted">
+        <p style="display: none">
+            {{'SERVICE_DETAIL_EditServiceHelpText'|translate}}
+        </p>
+        <fieldset>
+            <service-information service="editService.service"
+                                 form="editService.editServiceForm"
+                                 deploying="false"
+                                 read-only="false"></service-information>
+        </fieldset>
+    </form>
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+                <button id="submit_editService.editServiceForm" class="btn btn-primary"
+                        ng-click="editService.editServiceForm._submitted = true; editService.editServiceForm.$valid && editService.submit()">
+                    {{'GENERIC_Save'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="cancel_editService.editServiceForm"
+                        class="btn btn-default"
+                        ng-click="editService.close()">
+                    {{'GENERIC_Cancel'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

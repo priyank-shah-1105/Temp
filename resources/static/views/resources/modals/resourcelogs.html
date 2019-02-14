@@ -1,0 +1,80 @@
+﻿<section id="page_viewlogs">
+    <error-display errors="resourceLogsController.errors"
+                   on-click="$root.ASM.RemoveError(error, resourceLogsController.errors)"
+                   on-expand-collapse=""></error-display>
+
+
+    <ul class="list-unstyled list-inline">
+        <li>
+            <button id="exportAllLink"
+                    class="btn btn-default"
+                    ng-disabled="ASM.IsInRole('readonly') || ASM.IsInRole('standard')"
+                    ng-click="resourceLogsController.exportLogs()">
+                <i class="ci-arrow-bold-line-export-up"></i> {{'LOGS_RESOURCE_SEVERITIES_ExportAll' | translate }}
+            </button>
+        </li>
+        <li>
+            <form class="form-inline">
+                <div class="form-group">
+                    <label>
+                        {{'LOGS_RESOURCE_SEVERITIES_ViewbySeverity'|translate}}
+                    </label>
+                    <select id="ddlView"
+                            ng-model="resourceLogsController.filter"
+                            class="form-control"
+                            ng-options="severity.id as severity.name for severity in resourceLogsController.constants.logSeverities track by severity.id">
+                        <option value="">{{'GENERIC_All' | translate}}</option>
+                    </select>
+                </div>
+            </form>
+        </li>
+    </ul>
+
+    <table class="table table-striped table-hover" st-table="resourceLogsController.logs"
+           st-safe-src="resourceLogsController.logsSafe" st-search-options="{model: resourceLogsController.filter, strict: true, field: 'severity'}">
+        <thead>
+            <tr>
+                <th st-sort="severity" class="iconColumn">
+                    {{'GENERIC_Severity'|translate}}
+                </th>
+                <th st-sort="description">
+                    {{'GENERIC_Description'|translate}}
+                </th>
+                <th st-sort="date">
+                    {{'GENERIC_DateTime'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody ng-if="resourceLogsController.logs.length !== 0">
+            <tr ng-repeat="log in resourceLogsController.logs">
+                <td class="iconColumn">
+                    <statusicon value="log.severity"></statusicon>
+                </td>
+                <td>
+                    {{log.description}}
+                </td>
+                <td>
+                    <datetime-display time="log.date" time-format="'LLL'" />
+                </td>
+            </tr>
+        </tbody>
+        <tbody ng-if="resourceLogsController.logs.length === 0">
+            <tr>
+                <td colspan="3">
+                    {{'LOGS_RESOURCE_SEVERITIES_EmptyTable'|translate}}
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-center">
+                    <div st-pagination=""
+                         st-items-by-page="50"
+                         st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+
+</section>

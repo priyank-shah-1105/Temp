@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Configuring
+resources or chassis</title><link rel="prev" href="GUID-02A7870B-5BD2-435F-9974-110A60206AA9.html" /><link rel="next" href="GUID-2768FB1F-FC4D-432D-99CA-BDBDB3EE0FCD.html" /><link href="static/screen.css?mSUyqg2y" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-7CB57D8F-2E95-4A8B-AD28-A4D97FEAEB34" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">Active System Manager Release 8.4</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Configuring
+resources or chassis</h1>
+<div class="context" id="GUID-0633F575-7129-4579-A330-48602CE55972">Use the <span class="uicontrol">Configure Chassis</span> wizard to perform the following operations:<ul id="GUID-7A9C4FD3-A589-41F4-8FF2-E4454C1776F5">
+<li id="LI_875BDB00F99C4DA598263FFCFF742557">Remove one or more resources from ASM environment.
+You can perform this operation only when you launch this wizard from <span class="uicontrol">Getting Started </span>page.</li>
+<li id="LI_9DBAF5EE213B40738877EF687095F98D">Enables you create your own custom firmware repository,
+import firmware repository from Dell Repository Manager (DRM), and
+perform firmware compliance check on the resources. You can perform
+this operation only when you launch this wizard from <span class="uicontrol">Getting
+Started </span>page</li>
+<li id="LI_6BDA3EC9888E4FDEB6DC1FD3B76F33FD">Enables you to on board or reconfigure one or more
+chassis and servers and I/O modules within the chassis.<div class="note" id="GUID-AB280E8A-A5B4-403D-AA24-067114CA718C"><span class="notelabel">NOTE: </span><p>When you configure the chassis and iDRAC users, the existing user account on the Chassis and iDRAC are erased and by the new user settings that is entered on the Chassis Configuration Wizard.</p></div></li>
+</ul><p>Before you begin, it is recommended to gather
+the following information:<ul id="GUID-B8A523EA-FC84-4029-8589-36A354938B08">
+<li id="LI_C2A788801029426191DA2AA9B8450330"><p>User names and passwords of accounts
+that can access the resources.</p></li>
+<li id="LI_F67FB468239B4A1E9DA1F6450732621B"><p>Optionally, SMTP server and email
+address for an account to receive alerts.</p></li>
+<li id="LI_D237FB2DD81D4D63AB090CC498880920"><p>Optionally, NTP server IP addresses</p></li>
+<li id="LI_4D166284AC914D279535109DB0D84898"><p>(Optional) Chassis Management Controller
+(CMC) and Integrated Dell Remote Access Controller (iDRAC) VLAN IDs.</p></li>
+</ul></p></div>
+<ol class="steps" id="GUID-1E19B8A5-8650-4038-B8E8-371180E7A713">
+<li id="STEP_3729B1B7A9AB48EFA2B644361D72610A"><p>On the <span class="uicontrol">Welcome</span> screen,
+read the instructions, and click <span class="uicontrol">Next</span>.</p>
+</li>
+<li id="STEP_3CF8F6FA681547E0B820691FD3DAE3EE"><p>The <span class="uicontrol">Discovered Resources</span> page lists the resources discovered in ASM. If you do not want one
+or more resources to be in ASM environment, select the resources,
+and click <span class="uicontrol">Remove Resource from ASM</span>. Click <span class="uicontrol">Next</span>.</p>
+<p><div class="note" id="GUID-79EE5E3A-9E0C-4BBB-B56D-6E9128DF6DEF"><span class="notelabel">NOTE: </span>The <span class="uicontrol">Discovered Resources</span>, <span class="uicontrol">Default
+Firmware Repository</span>, and <span class="uicontrol">Firmware Compliance</span> pages are displayed only when you start this wizard from the <span class="uicontrol">Getting Started</span> page.</div></p>
+</li>
+<li id="STEP_D28A3A0B5D0D4EC398FF1D93DD613529"><p>On the <span class="uicontrol">Default Firmware Repository</span> page, create and import your own custom repositories from DRM to
+use as the default firmware level for your discovered resources. Click <span class="uicontrol">Next</span>. </p>
+<p>The <span class="uicontrol">Firmware Compliance</span> page
+lists the resources that do not meet the firmware requirements specified
+by the default repository. </p>
+</li>
+<li id="STEP_A54E7428DA7041DFB6B28C232CFB0C11"><p>On the <span class="uicontrol">Firmware Compliance</span> page, select the resources to update the firmware running on the
+resources automatically to meet the firmware requirements specified
+in the default repository. Click <span class="uicontrol">Next</span>.</p>
+</li>
+<li id="STEP_B712158FACA24074B4CBBEFE5300467D"><p>In the <span class="uicontrol">Chassis Configuration </span>page, select one or more chassis to configure the following global
+settings, and then click <span class="uicontrol">Next</span>. For more information,
+see <a data-scope="local" href="GUID-3416E41B-1961-44B7-8C15-45EFB7BCBBE5.html" title="">Configure Global Chassis Configuration Settings</a>.</p>
+<p><ol id="GUID-80242DBB-7416-423B-AC12-A4E60ECCC2F2">
+<li id="LI_AEB37327F5F64B4F86D4891CC75B84DE"><p>Under <span class="uicontrol">Users</span>, configure more CMC and iDRAC local users.</p></li>
+<li id="LI_9414F7765B9F4744B10BDE12EDE58E85"><p>Under <span class="uicontrol">Monitoring</span>, change the default monitoring settings.</p></li>
+<li id="LI_43AEA404B0DE475495B2B8BB6875EA83"><p>Under <span class="uicontrol">NTP</span>,
+select the time zone and NTP servers.</p></li>
+<li id="LI_4A17CEEB925445ACB0A3079A51BE9927"><p>Under <span class="uicontrol">Power Config</span>, configure power budget and redundancy attributes.</p></li>
+<li id="LI_FB38A3C619D7460D88A42F4214DED1F3"><p>Under <span class="uicontrol">Networking</span>, add networking settings for the chassis.</p></li>
+</ol></p>
+</li>
+<li id="STEP_E820226E00FC4498BB621912971496DA"><p>On the <span class="uicontrol">Unique Chassis Settings</span> page, configure specific chassis settings on chassis individually,
+and then click <span class="uicontrol">Next</span>. For more information,
+see <a data-scope="local" href="GUID-55862FC4-5A15-4830-9C05-E6DDD2B91EC8.html" title="">Configuring Unique Chassis Settings</a>.</p></li>
+<li id="STEP_8CA4E1B448E24E4CAB38E77C1BD3D3B4"><p>On the <span class="uicontrol">Unique Server Settings</span> page, enter the iDRAC DNS name for the servers within the chassis,
+and then click <span class="uicontrol">Next</span>. For more information,
+see <a data-scope="local" href="GUID-64A7DFAF-BA33-4D57-9452-587390FEFDBC.html" title="">Configuring Unique Server Settings</a>.</p></li>
+<li id="STEP_29C1740D782746B6865BA1A36CFC3EEA"><p>On the <span class="uicontrol">Unique IO Module Settings</span> page, enter a host name for each I/O module on chassis, and then
+click <span class="uicontrol">Next</span>. For more information, see <a data-scope="local" href="GUID-D8071F08-4F4A-419A-8BC5-B7DB4D1DAD8A.html" title="">Configuring
+Unique I/O Module Settings</a>.</p></li>
+<li id="STEP_C3CA5262B3194410AB07CAD8A5402C20"><p>On the <span class="uicontrol">Uplink Port Configuration </span>page, configure uplink ports on the MXL switches within the chassis,
+and then click <span class="uicontrol">Next</span>. For more information,
+see <a data-scope="local" href="GUID-3E7F5240-5A9A-498F-BD6E-D3241D166BAB.html" title="">Configuring Uplink Ports</a></p></li>
+<li id="STEP_20DB47294C974726A76CD2E5362A8DFC"><p>On the <span class="uicontrol">Summary</span> page,
+verify the chassis configuration settings and click <span class="uicontrol">Finish</span> to configure the chassis.</p></li>
+</ol>
+<dl class="relations"><dt>Related Concepts</dt><dd class="choice_list"><ul data-inset="false" data-role="listview" data-theme="a"><li><a href="GUID-3E7F5240-5A9A-498F-BD6E-D3241D166BAB.html">I/O module configuration</a></li></ul></dd><dt>Related Tasks</dt><dd class="choice_list"><ul data-inset="false" data-role="listview" data-theme="a"><li><a href="GUID-7E1DCE1D-CB66-4682-A3D8-A1C55F649528.html">Completing the
+chassis configuration</a></li><li><a href="GUID-73665B98-3C81-4B29-87A6-AB986ED5E821.html">Configuring
+default firmware repository</a></li><li><a href="GUID-3416E41B-1961-44B7-8C15-45EFB7BCBBE5.html">Configuring
+global chassis settings</a></li><li><a href="GUID-D8071F08-4F4A-419A-8BC5-B7DB4D1DAD8A.html">Configuring
+unique I/O module settings</a></li><li><a href="GUID-55862FC4-5A15-4830-9C05-E6DDD2B91EC8.html">Configuring
+unique chassis settings </a></li><li><a href="GUID-2768FB1F-FC4D-432D-99CA-BDBDB3EE0FCD.html">Removing discovered
+resources</a></li><li><a href="GUID-74403F65-DED9-4BBF-A6C0-B89A67EB011E.html">Running firmware
+compliance</a></li></ul></dd></dl></article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?MavHWBUW"></script></body></html>

@@ -1,0 +1,979 @@
+﻿<section id="page_templatebuildersvg">
+    <section id="summary">
+        <div class="row" style="min-width: 1100px">
+            <div class="col-xs-8">
+                <article id="servicearticle">
+                    <div ng-if="servicesvg.service.serviceErrorMessage && servicesvg.service.serviceErrorMessage !== ''"
+                         ng-model="servicesvg.service.serviceErrorMessage"
+                         class="alert alert-danger"
+                         id="error-banner"></div>
+                    <div ng-if="servicesvg.service.health === 'servicemode'"
+                         class="alert alert-warning"
+                         id="warning-banner-service-mode">
+                        <i class="ci-action-circle-wrench"></i>
+                        {{"DEVICESDETAILS_WarningMessageForServiceMode"|translate}}
+                    </div>
+                    <div ng-if="servicesvg.service.health === 'incomplete' && servicesvg.service.canScaleupStorage"
+                         class="alert alert-info"
+                         id="info-banner-incomplete">
+                        <!--<i class="ci-action-circle-minus"></i>-->
+                        <i class="ci-info-circle-info text-default"></i>
+                        {{"DEVICESDETAILS_InfoMessageForIncomplete_part1"|translate}}
+                        <a id="lnkAddResources_link"
+                           style="color:white;text-decoration: underline;"
+                           ng-click="servicesvg.addComponent('storage')"
+                           ng-disabled="$root.ASM.IsInRole('readonly') || !servicesvg.service.canEdit || servicesvg.service.state == 'In Progress'">
+                           {{'SERVICE_DETAIL_AddServices'|translate}}
+                        </a>
+                        {{"DEVICESDETAILS_InfoMessageForIncomplete_part2"|translate}}
+                    </div>
+
+                    <div id="resourceimage">
+                        <div>
+
+                            <div ng-show="servicesvg.render == true" id="drawingContainer" style="min-width: 400px; border: 1px solid #aaaaaa; overflow-x: auto; overflow-y: hidden; position: relative;">
+
+                                <div id="wideDiv">
+                                    <svg style="min-width: 600px; overflow: visible; padding-left: 50px;" id="serviceBuilderSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" xml:space="preserve" ng-attr-height="{{servicesvg.svgheight}}px">
+                                    <rect id="deselectionBG" opacity="0" x="0" y="0" ng-click="servicesvg.removeSelection()" width="100%" height="100%"></rect>
+                            <!--SVG lines-->
+                                    <svg id="TemplateBuilderSVGLines" style="position: absolute; top: 0; overflow: visible;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ng-attr-x="{{servicesvg.Xlines}}" y="1%" xml:space="preserve" ng-attr-height="{{servicesvg.svgheight}}px" width="100%"></svg>
+                                    <svg id="TemplateBuilderSVGSelectedLines" style="position: absolute; top: 0; overflow: visible;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ng-attr-x="{{servicesvg.Xlines}}" y="1%" xml:space="preserve" ng-attr-height="{{servicesvg.svgheight}}px" width="100%"></svg>
+                                    <svg id="TemplateBuilderSVGHoverLines" style="position: absolute; top: 0; overflow: visible;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ng-attr-x="{{servicesvg.Xlines}}" y="1%" xml:space="preserve" ng-attr-height="{{servicesvg.svgheight}}px" width="100%"></svg>
+                    
+                            <!--Server components-->
+                                    <g id="serverWidth">
+                                    <svg id="{{component.id}}" ng-repeat="component in servers = (servicesvg.service.components | filter: { type: 'server' })" ng-attr-x="{{(servicesvg.intervalX * ($index)) + servicesvg.centerValue(servers.length) }}%" y="43%">
+                                    <g ng-attr-transform="scale({{servicesvg.componentscale}})" id="component_1_">
+              
+                                    <circle opacity="0" xmlns="http://www.w3.org/2000/svg" id="topright" cx="1.09" cy="1.14" r="0.6" />
+                                    <circle opacity="0" xmlns="http://www.w3.org/2000/svg" id="topleft" cx="66.89" cy="1.14" r="0.6" />
+                                    <circle opacity="0" xmlns="http://www.w3.org/2000/svg" id="bottomleft" cx="1.09" cy="66.93" r="0.6" />
+                                    <circle opacity="0" xmlns="http://www.w3.org/2000/svg" id="bottomright" cx="66.89" cy="66.93" r="0.6" />
+                                    <g id="background">
+                                    <rect x="2.93" y="2.82" fill="#FFFFFF" width="62.11" height="62.43" />
+		                                </g>
+                        
+                                    <g id="server">
+                                 <!--   <path ng-class="{'invalidservice': servicesvg.service.isserviceValid == false}" fill="#848484" d="M45.27,28.02v-15.8c0-1.24-1.01-2.26-2.26-2.26H24.96c-1.25,0-2.26,1.02-2.26,2.26v43.64 c0,1.24,1.01,2.26,2.26,2.26h17.66c1.75,0,2.66-0.79,2.66-2.26V28.02z M25.71,12.97h16.55v6.02H25.71V12.97z M25.71,20.5h16.55 v6.02H25.71V20.5z M34.84,54.35h-1.71v-14.3h1.71V54.35z M33.99,37.05c-1.66,0-3.01-1.35-3.01-3.01c0-1.67,1.35-3.01,3.01-3.01 c1.67,0,3.01,1.34,3.01,3.01C37,35.7,35.65,37.05,33.99,37.05z" />-->
+                                    <path ng-class="{'invalidservice': servicesvg.service.isserviceValid == false}" fill="#848484" d="M47.7,11.8H20.2c-1.1,0-2.1,0.9-2.1,2.1v39.8c0,1.1,0.9,2.1,2.1,2.1h27.5      c1.1,0,2.1-0.9,2.1-2.1V13.8C49.8,12.7,48.8,11.8,47.7,11.8z M47,53H20.9V14.5H47V53z" />
+                                    <path ng-class="{'invalidservice': servicesvg.service.isserviceValid == false}" fill="#848484" d="M44.3,17.3H23.7v6.1l20.6,0V17.3z M26,21.5v-2.1h4.6v2.1H26z" />
+                                    <path ng-class="{'invalidservice': servicesvg.service.isserviceValid == false}" fill="#848484" d="M23.7,50.1h20.6V44l-20.6,0V50.1z M30.6,46v2.1H26V46H30.6z" />
+                                    <path ng-class="{'invalidservice': servicesvg.service.isserviceValid == false}" fill="#848484" d="M44.3,32.4v-6.1l-20.6,0v6.1H44.3z M30.6,28.2v2.1H26v-2.1H30.6z" />
+                                    <path ng-class="{'invalidservice': servicesvg.service.isserviceValid == false}" fill="#848484" d="M23.7,41.3l20.6,0v-6.1H23.7V41.3z M30.6,37.1l0,2.1l-4.6,0l0-2.1L30.6,37.1z" />
+
+
+
+
+                                   
+                                    </g>
+                                    <g ng-if="component.instances > 1">
+                                    <!--<g id="server-multi">
+                                    <g>
+                                    <g>
+                                    <path ng-class="{'invalidTemplate': component.isComponentValid == false}" fill="#E7E7E7" d="M21,55.2c-1.6,0-2.9-1.3-2.9-2.9V8.9C18.1,7.3,19.4,6,21,6h17.9c1.5,0,2.8,1.2,2.8,2.8v15.3l0,0.5v27.8       c0,1.8-1.2,2.8-3.2,2.8H21z" />
+                                    <path fill="#FFFFFF" d="M38.9,6.5c1.3,0,2.3,1,2.3,2.3v15.8h0v27.8c0,1.5-0.9,2.3-2.7,2.3H21c-1.3,0-2.4-1.1-2.4-2.4V8.9       c0-1.3,1.1-2.4,2.4-2.4H38.9 M38.9,5.5H21c-1.9,0-3.4,1.5-3.4,3.4v43.4c0,1.9,1.5,3.4,3.4,3.4h17.5c2.3,0,3.7-1.2,3.7-3.3V24.6       v-1h0V8.8C42.2,7,40.7,5.5,38.9,5.5L38.9,5.5z" />
+				                        </g>
+                                    <g>
+                                    <path ng-class="{'invalidTemplate': component.isComponentValid == false}" fill="#CCCCCC" d="M24,58.2c-1.6,0-2.9-1.3-2.9-2.9V12c0-1.6,1.3-2.9,2.9-2.9h17.9c1.5,0,2.8,1.2,2.8,2.8v15.3l0,0.5v27.8       c0,1.8-1.2,2.8-3.2,2.8H24z" />
+                                    <path fill="#FFFFFF" d="M41.9,9.6c1.3,0,2.3,1,2.3,2.3v15.8h0v27.8c0,1.5-0.9,2.3-2.7,2.3H24c-1.3,0-2.4-1.1-2.4-2.4V12       c0-1.3,1.1-2.4,2.4-2.4H41.9 M41.9,8.6H24c-1.9,0-3.4,1.5-3.4,3.4v43.4c0,1.9,1.5,3.4,3.4,3.4h17.5c2.3,0,3.7-1.2,3.7-3.3V27.6       v-1h0V11.8C45.2,10,43.7,8.6,41.9,8.6L41.9,8.6z" />
+				                        </g>
+                                    <g>
+                                    <path ng-class="{'invalidTemplate': component.isComponentValid == false}" fill="#848484" d="M27.1,61.2c-1.5,0-2.8-1.2-2.8-2.8V14.8c0-1.5,1.2-2.8,2.8-2.8h18c1.5,0,2.8,1.2,2.8,2.8v15.3l0,0.5       v27.8c0,1.8-1.2,2.8-3.2,2.8H27.1z" />
+                                    <path fill="#FFFFFF" d="M45.1,12.6c1.3,0,2.3,1,2.3,2.3v15.8h0v27.8c0,1.5-0.9,2.3-2.7,2.3H27.1c-1.3,0-2.3-1-2.3-2.3V14.8       c0-1.2,1-2.3,2.3-2.3H45.1 M45.1,11.6H27.1c-1.8,0-3.3,1.5-3.3,3.3v43.6c0,1.8,1.5,3.3,3.3,3.3h17.7c2.3,0,3.7-1.2,3.7-3.3       V30.6v-1h0V14.8C48.4,13,46.9,11.6,45.1,11.6L45.1,11.6z" />
+				                        </g>
+                                    <rect x="27.8" y="15.6" fill="#FFFFFF" width="16.5" height="6" />
+                                    <rect x="27.8" y="23.1" fill="#FFFFFF" width="16.5" height="6" />
+                                    <rect x="35.2" y="42.6" fill="#FFFFFF" width="1.7" height="14.3" />
+                                    <path fill="#FFFFFF" d="M36.1,39.6c-1.7,0-3-1.3-3-3c0-1.7,1.3-3,3-3c1.7,0,3,1.3,3,3C39.1,38.3,37.8,39.6,36.1,39.6z" />
+			                                </g>
+		                                </g>-->
+                                    <g id="single-digit" ng-if="component.instances < 10">
+                                    <g id="base">
+                                    <path fill="#CCE5F1" d="M13.4,60.1c-1.4,0-2.5-1.1-2.5-2.5v-10c0-1.4,1.1-2.5,2.5-2.5h11c1.4,0,2.5,1.1,2.5,2.5v10      c0,1.4-1.1,2.5-2.5,2.5H13.4z" />
+                                    <path fill="#FFFFFF" d="M24.4,45.5c1.1,0,2,0.9,2,2v10c0,1.1-0.9,2-2,2h-11c-1.1,0-2-0.9-2-2v-10c0-1.1,0.9-2,2-2L24.4,45.5       M24.4,44.5h-11c-1.7,0-3,1.3-3,3v10c0,1.7,1.3,3,3,3h11c1.7,0,3-1.3,3-3v-10C27.4,45.9,26.1,44.5,24.4,44.5L24.4,44.5z" />
+			                            </g>
+                                    <text transform="matrix(1 0 0 1 16.4418 55.7225)" fill="#5C5C5C" font-family="'Roboto-Regular'" font-size="9px">{{component.instances}}</text>
+		                                </g>
+                                    <g id="multi-digit" ng-if="component.instances > 9">
+                                    <g id="base_1_">
+                                    <path fill="#CCE5F1" d="M10.1,60.1c-1.4,0-2.5-1.1-2.5-2.5v-10c0-1.4,1.1-2.5,2.5-2.5h16c1.4,0,2.5,1.1,2.5,2.5v10      c0,1.4-1.1,2.5-2.5,2.5H10.1z" />
+                                    <path fill="#FFFFFF" d="M26.1,45.5c1.1,0,2,0.9,2,2v10c0,1.1-0.9,2-2,2h-16c-1.1,0-2-0.9-2-2v-10c0-1.1,0.9-2,2-2L26.1,45.5       M26.1,44.5h-16c-1.7,0-3,1.3-3,3v10c0,1.7,1.3,3,3,3h16c1.7,0,3-1.3,3-3v-10C29.1,45.9,27.9,44.5,26.1,44.5L26.1,44.5z" />
+			                            </g>
+                                    <text transform="matrix(1 0 0 1 17.6972 56.0225)" text-anchor="middle" fill="#5C5C5C" font-family="'Roboto-Regular'" font-size="9px">{{component.instances}}</text>
+		                                </g>
+                                    </g>
+                                    <service-svg-health-icon health="component.componentStatus.resourcestate"></service-svg-health-icon>
+                                        <!--hover and click effects-->
+                                    <g id="hover">
+                                    <rect ng-if="servicesvg.componentHover == component" x="2.49" y="2.54" fill="none" stroke="#000" stroke-width="1" stroke-miterlimit="10" width="63" height="63" />
+		                                </g>
+                                    <g id="selection">
+                                    <rect ng-if="servicesvg.selectedComponent == component" x="2.49" y="2.54" fill="none" stroke="#1586C2" stroke-width="4" stroke-miterlimit="10" width="63" height="63" />
+		                                </g>
+                                    <rect data-toggle="tooltip" data-original-title="{{component.name}}" ng-click="servicesvg.selectLine(component)" style="cursor: pointer" ng-mouseenter="servicesvg.hoverLine(component)" ng-mouseleave="servicesvg.removeHovers()" x="2.49" y="2.54" fill="#000" opacity="0" stroke="#000" stroke-width="4" stroke-miterlimit="10" width="63" height="63"
+                                          popover
+                                          popover-class="large"
+                                          title="{{component.name}}"
+                                          data-content-template="component-popover-content.html" />
+                                            <!--Application Icon-->
+                                    <g class="Application AddOn" ng-if="servicesvg.hasApplication(component)">
+                                    <path fill="#FFFFFF" d="M60.7,25.77H41.01c-0.74,0-1.34-0.6-1.34-1.34V7.75c0-0.74,0.6-1.34,1.34-1.34H60.7 c0.74,0,1.34,0.6,1.34,1.34v16.68C62.04,25.17,61.44,25.77,60.7,25.77z" />
+                                    <path ng-class="{'selectedaddon': servicesvg.selectedComponent == ('application_' + component.id ), 'hoverpath': servicesvg.componentHover == ('application_' + component.id )}" fill="#848484" d="M60.16,7.39H41.55c-0.53,0-0.96,0.43-0.96,0.96v15.4c0,0.53,0.43,0.96,0.96,0.96h18.61 c0.53,0,0.96-0.43,0.96-0.96V8.35C61.12,7.82,60.69,7.39,60.16,7.39z M58.56,8.67h1.28v1.28h-1.28V8.67z M56.31,8.67h1.28 v1.28h-1.28V8.67z M54.07,8.67h1.28v1.28h-1.28V8.67z M60.16,22.79c0,0.35-0.29,0.64-0.64,0.64H42.19 c-0.35,0-0.64-0.29-0.64-0.64V11.88c0-0.35,0.29-0.64,0.64-0.64h17.33c0.35,0,0.64,0.29,0.64,0.64 C60.16,11.88,60.16,22.79,60.16,22.79z" />
+                                    <rect class="AddOn" ng-mouseenter="servicesvg.componentHover = ('application_' + component.id)" ng-mouseleave="servicesvg.componentHover = null" ng-click="servicesvg.selectLine(component)" opacity="0" xmlns="http://www.w3.org/2000/svg" id="applicationRect" x="37.5" y="5.96" width="26.09" height="21.35"
+                                          popover
+                                          popover-class="large"
+                                          title="{{component.name}}"
+                                          data-content-template="application-popover-content.html" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </g>
+                            
+                            <!--VM components-->
+                                    <g id="vmWidth">
+                                    <svg id="{{component.id}}" ng-repeat="component in vms = (servicesvg.service.components | filter: { type: 'vm' })" ng-attr-x="{{(servicesvg.intervalX * ($index)) + servicesvg.centerValue(vms.length) }}%" y="3%">
+       
+                                    <g ng-attr-transform="scale({{servicesvg.componentscale}})" id="component_1_">
+              
+                                    <circle opacity="0" xmlns="http://www.w3.org/2000/svg" id="topright" cx="1.09" cy="1.14" r="0.6" />
+                                    <circle opacity="0" xmlns="http://www.w3.org/2000/svg" id="topleft" cx="66.89" cy="1.14" r="0.6" />
+                                    <circle opacity="0" xmlns="http://www.w3.org/2000/svg" id="bottomleft" cx="1.09" cy="66.93" r="0.6" />
+                                    <circle opacity="0" xmlns="http://www.w3.org/2000/svg" id="bottomright" cx="66.89" cy="66.93" r="0.6" />
+
+                                    <g id="background">
+                                    <rect x="2.93" y="2.82" fill="#FFFFFF" width="62.11" height="62.43" />
+		                                </g>
+                        
+                                    <g ng-if="component.instances == 1 || !component.instances" id="vm">
+                                    <path ng-class="{'invalidservice': servicesvg.service.isserviceValid == false}" fill="#848484" d="M53.75,51.45c1.99,0,3.6-1.6,3.6-3.6V20.23c0-1.98-1.61-3.6-3.6-3.6H14.23c-1.99,0-3.6,1.61-3.6,3.6 v27.62c0,1.99,1.61,3.6,3.6,3.6L53.75,51.45L53.75,51.45z M53.55,47.65H14.43V20.43h39.12V47.65z" /> <path ng-class="{'invalidservice': servicesvg.service.isserviceValid == false}" fill="#848484" d="M21.99,28.01h2.19l3.02,9.54h0.03l3.09-9.54h2.14l-4.12,12.06h-2.35L21.99,28.01z" /> <path ng-class="{'invalidservice': servicesvg.service.isserviceValid == false}" fill="#848484" d="M33.47,28.01h2.97l3.33,9.44h0.03l3.24-9.44h2.94v12.06h-2.01v-9.31h-0.04l-3.35,9.31h-1.74 l-3.34-9.31h-0.03v9.31h-2.01V28.01z" />
+		                                </g>
+                                    <g ng-if="component.instances > 1">
+                                    <g id="vm-multi">
+                                    <g>
+                                    <g id="shade_3_1_">
+                                    <path ng-class="{'invalidTemplate': component.isComponentValid == false}" fill="#E7E7E7" d="M50.2,46.8c2,0,3.6-1.6,3.6-3.6V15.6c0-2-1.6-3.6-3.6-3.6H10.6c-2,0-3.6,1.6-3.6,3.6v27.6       c0,2,1.6,3.6,3.6,3.6L50.2,46.8L50.2,46.8z" />
+				                    </g>
+                                    <g id="shade_2_1_">
+                                    <g>
+                                    <path ng-class="{'invalidTemplate': component.isComponentValid == false}" fill="#CCCCCC" d="M13.6,50.3c-2.3,0-4.1-1.8-4.1-4.1V18.6c0-2.3,1.8-4.1,4.1-4.1h39.5c2.3,0,4.1,1.8,4.1,4.1v27.6        c0,2.3-1.8,4.1-4.1,4.1H13.6z" />
+                                    <path fill="#FFFFFF" d="M53.2,15c2,0,3.6,1.6,3.6,3.6v27.6c0,2-1.6,3.6-3.6,3.6H13.6c-2,0-3.6-1.6-3.6-3.6V18.6        c0-2,1.6-3.6,3.6-3.6H53.2 M53.2,14H13.6C11.1,14,9,16.1,9,18.6v27.6c0,2.5,2.1,4.6,4.6,4.6h39.5c2.5,0,4.6-2.1,4.6-4.6V18.6        C57.8,16.1,55.7,14,53.2,14L53.2,14z" />
+					                </g>
+				                    </g>
+                                    <g id="shade_1">
+                                    <g>
+                                    <path ng-class="{'invalidTemplate': component.isComponentValid == false}" fill="#848484" d="M16.6,53.4c-2.3,0-4.1-1.8-4.1-4.1V21.6c0-2.3,1.8-4.1,4.1-4.1h39.5c2.3,0,4.1,1.8,4.1,4.1v27.6        c0,2.3-1.8,4.1-4.1,4.1H16.6z" />
+                                    <path fill="#FFFFFF" d="M56.1,18c2,0,3.6,1.6,3.6,3.6v27.6c0,2-1.6,3.6-3.6,3.6H16.6c-2,0-3.6-1.6-3.6-3.6V21.6        c0-2,1.6-3.6,3.6-3.6H56.1 M56.1,17H16.6c-2.5,0-4.6,2.1-4.6,4.6v27.6c0,2.5,2.1,4.6,4.6,4.6h39.5c2.5,0,4.6-2.1,4.6-4.6V21.6        C60.8,19.1,58.7,17,56.1,17L56.1,17z" />
+					                </g>
+                                    <rect x="16.8" y="21.8" fill="#FFFFFF" width="39.1" height="27.2" />
+                                    <g>
+                                    <path ng-class="{'invalidTemplate': component.isComponentValid == false}" fill="#848484" d="M24.4,29.4h2.2l3,9.5h0l3.1-9.5h2.1l-4.1,12.1h-2.4L24.4,29.4z" />
+                                    <path ng-class="{'invalidTemplate': component.isComponentValid == false}" fill="#848484" d="M35.9,29.4h3l3.3,9.4h0l3.2-9.4h2.9v12.1h-2v-9.3h0L43,41.5h-1.7l-3.3-9.3h0v9.3h-2L35.9,29.4        L35.9,29.4z" />
+					                            </g>
+				                            </g>
+			                            </g>
+		                            </g>
+                                    <g id="single-digit" ng-if="component.instances < 10">
+                                    <g id="base">
+                                    <path fill="#CCE5F1" d="M13.4,60.1c-1.4,0-2.5-1.1-2.5-2.5v-10c0-1.4,1.1-2.5,2.5-2.5h11c1.4,0,2.5,1.1,2.5,2.5v10      c0,1.4-1.1,2.5-2.5,2.5H13.4z" />
+                                    <path fill="#FFFFFF" d="M24.4,45.5c1.1,0,2,0.9,2,2v10c0,1.1-0.9,2-2,2h-11c-1.1,0-2-0.9-2-2v-10c0-1.1,0.9-2,2-2L24.4,45.5       M24.4,44.5h-11c-1.7,0-3,1.3-3,3v10c0,1.7,1.3,3,3,3h11c1.7,0,3-1.3,3-3v-10C27.4,45.9,26.1,44.5,24.4,44.5L24.4,44.5z" />
+			                            </g>
+                                    <text transform="matrix(1 0 0 1 16.4418 55.7225)" fill="#5C5C5C" font-family="'Roboto-Regular'" font-size="9px">{{component.instances}}</text>
+		                                </g>
+                                    <g id="multi-digit" ng-if="component.instances > 9">
+                                    <g id="base_1_">
+                                    <path fill="#CCE5F1" d="M10.1,60.1c-1.4,0-2.5-1.1-2.5-2.5v-10c0-1.4,1.1-2.5,2.5-2.5h16c1.4,0,2.5,1.1,2.5,2.5v10      c0,1.4-1.1,2.5-2.5,2.5H10.1z" />
+                                    <path fill="#FFFFFF" d="M26.1,45.5c1.1,0,2,0.9,2,2v10c0,1.1-0.9,2-2,2h-16c-1.1,0-2-0.9-2-2v-10c0-1.1,0.9-2,2-2L26.1,45.5       M26.1,44.5h-16c-1.7,0-3,1.3-3,3v10c0,1.7,1.3,3,3,3h16c1.7,0,3-1.3,3-3v-10C29.1,45.9,27.9,44.5,26.1,44.5L26.1,44.5z" />
+			                            </g>
+                                    <text transform="matrix(1 0 0 1 17.6972 56.0225)" text-anchor="middle" fill="#5C5C5C" font-family="'Roboto-Regular'" font-size="9px">{{component.instances}}</text>
+		                                </g>
+                                </g>
+            
+                                    <service-svg-health-icon health="component.componentStatus.resourcestate"></service-svg-health-icon>
+                                    <!--hover and click effects-->
+                                    <g id="hover">
+                                    <rect ng-if="servicesvg.componentHover == component" x="2.49" y="2.54" fill="none" stroke="#000" stroke-width="1" stroke-miterlimit="10" width="63" height="63" />
+		                                </g>
+                                    <g id="selection">
+                                    <rect ng-if="servicesvg.selectedComponent == component" x="2.49" y="2.54" fill="none" stroke="#1586C2" stroke-width="4" stroke-miterlimit="10" width="63" height="63" />
+		                                </g>
+                                    <rect data-toggle="tooltip" data-original-title="{{component.name}}" ng-click="servicesvg.selectLine(component)" style="cursor: pointer" ng-mouseenter="servicesvg.hoverLine(component)" ng-mouseleave="servicesvg.removeHovers()" x="2.49" y="2.54" fill="#000" opacity="0" stroke="#000" stroke-width="4" stroke-miterlimit="10" width="63" height="63"
+                                          popover
+                                          popover-class="large"
+                                          title="{{component.name}}"
+                                          data-content-template="component-popover-content.html" />
+
+                                        <!--Application Icon-->
+                                    <g class="Application AddOn" ng-if="servicesvg.hasApplication(component)">
+                                    <path fill="#FFFFFF" d="M60.7,25.77H41.01c-0.74,0-1.34-0.6-1.34-1.34V7.75c0-0.74,0.6-1.34,1.34-1.34H60.7 c0.74,0,1.34,0.6,1.34,1.34v16.68C62.04,25.17,61.44,25.77,60.7,25.77z" />
+                                    <path ng-class="{'selectedaddon': servicesvg.selectedComponent == ('application_' + component.id ), 'hoverpath': servicesvg.componentHover == ('application_' + component.id )}" fill="#848484" d="M60.16,7.39H41.55c-0.53,0-0.96,0.43-0.96,0.96v15.4c0,0.53,0.43,0.96,0.96,0.96h18.61 c0.53,0,0.96-0.43,0.96-0.96V8.35C61.12,7.82,60.69,7.39,60.16,7.39z M58.56,8.67h1.28v1.28h-1.28V8.67z M56.31,8.67h1.28 v1.28h-1.28V8.67z M54.07,8.67h1.28v1.28h-1.28V8.67z M60.16,22.79c0,0.35-0.29,0.64-0.64,0.64H42.19 c-0.35,0-0.64-0.29-0.64-0.64V11.88c0-0.35,0.29-0.64,0.64-0.64h17.33c0.35,0,0.64,0.29,0.64,0.64 C60.16,11.88,60.16,22.79,60.16,22.79z" />
+
+                                    <rect class="AddOn" ng-mouseenter="servicesvg.componentHover = ('application_' + component.id)" ng-mouseleave="servicesvg.componentHover = null" ng-click="servicesvg.selectLine(component)" opacity="0" xmlns="http://www.w3.org/2000/svg" id="applicationRect" x="37.5" y="5.96" width="26.09" height="21.35"
+                                          popover
+                                          popover-class="large"
+                                          title="{{component.name}}"
+                                          data-content-template="application-popover-content.html" />
+                                        </g>
+                                     </g>
+                                </svg>
+                                </g>
+                            <!--Cluster components-->
+                                    <g id="clusterWidth">
+                                    <svg id="{{component.id}}" ng-repeat="component in clusters = (servicesvg.service.components | clusterFilter)" ng-attr-x="{{(servicesvg.intervalX * ($index)) + servicesvg.centerValue(clusters.length)}}%" y="23%">
+                                    <g ng-attr-transform="scale({{servicesvg.componentscale}})" id="component_1_">
+              
+                                    <circle opacity="0" xmlns="http://www.w3.org/2000/svg" id="topright" cx="1.09" cy="1.14" r="0.6" />
+                                    <circle opacity="0" xmlns="http://www.w3.org/2000/svg" id="topleft" cx="66.89" cy="1.14" r="0.6" />
+                                    <circle opacity="0" xmlns="http://www.w3.org/2000/svg" id="bottomleft" cx="1.09" cy="66.93" r="0.6" />
+                                    <circle opacity="0" xmlns="http://www.w3.org/2000/svg" id="bottomright" cx="66.89" cy="66.93" r="0.6" />
+
+                                    <g id="background">
+                                    <rect x="2.93" y="2.82" fill="#FFFFFF" width="62.11" height="62.43" />
+		                                </g>
+                        
+                                    <g id="cluster">
+                                        <!--<polygon ng-class="{'invalidservice': servicesvg.service.isserviceValid == false}" fill="#848484" points="22.67,54.11 26.61,52.14 26.61,27.24 45.3,17.89 45.3,13.86 22.67,25.17 				" /> <polygon ng-class="{'invalidservice': servicesvg.service.isserviceValid == false}" fill="#848484" points="16.64,51.1 20.58,49.13 20.58,24.23 39.27,14.89 39.27,10.85 16.64,22.16 				" /> <polygon ng-class="{'invalidservice': servicesvg.service.isserviceValid == false}" fill="#848484" points="28.7,57.23 51.33,45.92 51.33,16.98 28.7,28.3 				" />-->
+                                    <path fill="#848484" ng-class="{'invalidservice': servicesvg.service.isserviceValid == false}" d="M25.2,10l17.4,0c1.2,0,2.2,1,2.2,2.2l0,42c0,1.2-1,2.2-2.2,2.2l-17,0c-1.7,0-2.6-0.7-2.6-2.2l0-42  C23,11,24,10,25.2,10z M32.4,53.5l2.9,0l0-13l-2.9,0L32.4,53.5z M33.9,36.1c1.6,0,2.9-1.3,2.9-2.9c0-1.6-1.3-2.9-2.9-2.9  c-1.6,0-2.9,1.3-2.9,2.9C31,34.8,32.3,36.1,33.9,36.1z M26,26l15.8,0l0-4.3l-15.8,0L26,26z M25.9,18.7l15.9,0l0-4.3l-15.9,0  L25.9,18.7z M52,34.7l0-4.3l-4.3,0l0-2.9l4.3,0l0-4.3l-4.3,0l0-2.9l4.3,0c1.6,0,2.9,1.3,2.9,2.9l0,30.4c0,1.6-1.3,2.9-2.9,2.9  l-4.3,0l0-21.7L52,34.7z M15.7,20.2l4.3,0l0,2.9l-4.3,0l0,4.3l4.3,0l0,2.9l-4.3,0l0,4.3l4.3,0l0,21.7l-4.3,0c-1.6,0-2.9-1.3-2.9-2.9  l0-30.4C12.8,21.5,14.1,20.2,15.7,20.2z" />
+                                    </g>
+                                    <g id="Networked_1_" ng-if="component.showNetworkInfo">
+                                    <path fill="#FFFFFF" d="M50.59,40.89c-5.82,0-10.55,4.73-10.55,10.55c0,5.82,4.73,10.56,10.55,10.56 c5.82,0,10.55-4.73,10.55-10.56C61.14,45.63,56.41,40.89,50.59,40.89z" /> <path fill="#848484" d="M50.59,60.5c-4.99,0-9.05-4.06-9.05-9.06c0-4.99,4.06-9.05,9.05-9.05c4.99,0,9.05,4.06,9.05,9.05 C59.64,56.44,55.58,60.5,50.59,60.5z" /> <path fill="#FFFFFF" d="M50.59,44.39c-3.89,0-7.05,3.16-7.05,7.05c0,3.89,3.16,7.06,7.05,7.06s7.05-3.16,7.05-7.06 C57.64,47.56,54.48,44.39,50.59,44.39z" /> <path fill="#FFFFFF" d="M62.1,52.2h-7v-0.26c0-0.82-0.67-1.5-1.5-1.5h-0.26v-5.26h-5.51v5.26h-0.26c-0.83,0-1.5,0.67-1.5,1.5 v0.26h-6.99c-0.83,0-1.5,0.67-1.5,1.5v0.76c0,0.82,0.67,1.5,1.5,1.5h6.99v0.26c0,0.82,0.67,1.5,1.5,1.5h6.02 c0.83,0,1.5-0.67,1.5-1.5v-0.26h7c0.82,0,1.5-0.67,1.5-1.5V53.7C63.59,52.87,62.92,52.2,62.1,52.2z" /> <path fill="#848484" d="M62.1,53.2h-8v-1.26c0-0.27-0.22-0.5-0.5-0.5h-1.26v-5.26h-3.51v5.26h-1.26c-0.27,0-0.5,0.22-0.5,0.5 v1.26h-7.99c-0.27,0-0.5,0.22-0.5,0.5v0.76c0,0.27,0.23,0.5,0.5,0.5h7.99v1.26c0,0.27,0.23,0.5,0.5,0.5h6.02 c0.27,0,0.5-0.23,0.5-0.5v-1.26h8c0.27,0,0.5-0.22,0.5-0.5V53.7C62.59,53.42,62.37,53.2,62.1,53.2z" />
+		                                </g>
+                                    <g id="Application_1_" ng-if="servicesvg.hasApplication(component)">
+                                    <path fill="#FFFFFF" d="M60.7,25.77H41.01c-0.74,0-1.34-0.6-1.34-1.34V7.75c0-0.74,0.6-1.34,1.34-1.34H60.7 c0.74,0,1.34,0.6,1.34,1.34v16.68C62.04,25.17,61.44,25.77,60.7,25.77z" /> <path fill="#848484" d="M60.16,7.39H41.55c-0.53,0-0.96,0.43-0.96,0.96v15.4c0,0.53,0.43,0.96,0.96,0.96h18.61 c0.53,0,0.96-0.43,0.96-0.96V8.35C61.12,7.82,60.69,7.39,60.16,7.39z M58.56,8.67h1.28v1.28h-1.28V8.67z M56.31,8.67h1.28 v1.28h-1.28V8.67z M54.07,8.67h1.28v1.28h-1.28V8.67z M60.16,22.79c0,0.35-0.29,0.64-0.64,0.64H42.19 c-0.35,0-0.64-0.29-0.64-0.64V11.88c0-0.35,0.29-0.64,0.64-0.64h17.33c0.35,0,0.64,0.29,0.64,0.64 C60.16,11.88,60.16,22.79,60.16,22.79z" />
+                                        </g>
+                                    <service-svg-health-icon health="component.componentStatus.resourcestate"></service-svg-health-icon>
+                                <!--hover and click effects-->
+                                    <g id="hover">
+                                    <rect ng-if="servicesvg.componentHover == component" x="2.49" y="2.54" fill="none" stroke="#000" stroke-width="1" stroke-miterlimit="10" width="63" height="63" />
+		                                </g>
+                                    <g id="selection">
+                                    <rect ng-if="servicesvg.selectedComponent == component" x="2.49" y="2.54" fill="none" stroke="#1586C2" stroke-width="4" stroke-miterlimit="10" width="63" height="63" />
+		                                </g>
+                                    <rect data-toggle="tooltip" data-original-title="{{component.name}}" ng-click="servicesvg.selectLine(component)" style="cursor: pointer" ng-mouseenter="servicesvg.hoverLine(component)" ng-mouseleave="servicesvg.removeHovers()" x="2.49" y="2.54" fill="#000" opacity="0" stroke="#000" stroke-width="4" stroke-miterlimit="10" width="63" height="63"
+                                          popover
+                                          popover-class="large"
+                                          title="{{component.name}}"
+                                          data-content-template="component-popover-content.html" />
+                                    </g>
+                                </svg>
+                            </g>
+                            <!--Storage components-->
+                                    <g id="storageWidth">
+                                    <svg id="{{component.id}}" ng-repeat="component in storages = (servicesvg.service.components | filter: { type: 'storage' })" ng-attr-x="{{(servicesvg.intervalX * ($index)) + servicesvg.centerValue(storages.length) }}%" y="63%">
+                                    <g ng-attr-transform="scale({{servicesvg.componentscale}})" id="component_1_">
+              
+                                    <circle opacity="0" xmlns="http://www.w3.org/2000/svg" id="topright" cx="1.09" cy="1.14" r="0.6" />
+                                    <circle opacity="0" xmlns="http://www.w3.org/2000/svg" id="topleft" cx="66.89" cy="1.14" r="0.6" />
+                                    <circle opacity="0" xmlns="http://www.w3.org/2000/svg" id="bottomleft" cx="1.09" cy="66.93" r="0.6" />
+                                    <circle opacity="0" xmlns="http://www.w3.org/2000/svg" id="bottomright" cx="66.89" cy="66.93" r="0.6" />
+
+                                    <g id="background">
+                                    <rect x="2.93" y="2.82" fill="#FFFFFF" width="62.11" height="62.43" />
+		                                </g>
+                        
+                                    <g ng-if="component.instances == 1 || !component.instances" id="storage">
+                                    <path ng-class="{'invalidservice': servicesvg.service.isserviceValid == false}" fill="#848484" d="M42.81,31.57c-2.24-0.92-5.36-1.5-8.82-1.5c-3.46,0-6.58,0.58-8.82,1.5c-2.02,0.83-3.27,1.9-3.27,3.01 v9.93c0,1.1,1.25,2.18,3.27,3.02c2.24,0.93,5.36,1.49,8.82,1.49c3.46,0,6.58-0.57,8.82-1.49c2.02-0.84,3.27-1.91,3.27-3.02 v-9.93C46.08,33.47,44.82,32.4,42.81,31.57z" /> <path ng-class="{'invalidservice': servicesvg.service.isserviceValid == false}" fill="#848484" d="M33.99,15.09c4.23,0,8.08,0.72,10.89,1.88c3.06,1.26,4.95,3.11,4.95,5.23v23.68 c0,2.12-1.89,3.97-4.95,5.23c-2.81,1.16-6.66,1.88-10.89,1.88c-4.23,0-8.08-0.72-10.89-1.88c-3.06-1.26-4.95-3.11-4.95-5.23 V22.2c0-2.12,1.9-3.97,4.95-5.23C25.91,15.81,29.76,15.09,33.99,15.09L33.99,15.09z M43.95,19.03 c-2.53-1.05-6.05-1.69-9.96-1.69c-3.91,0-7.43,0.65-9.96,1.69c-2.28,0.94-3.69,2.15-3.69,3.41v23.2c0,1.25,1.41,2.46,3.69,3.4 c2.53,1.05,6.05,1.69,9.96,1.69c3.91,0,7.43-0.64,9.96-1.69c2.28-0.94,3.69-2.15,3.69-3.4v-23.2 C47.65,21.19,46.23,19.98,43.95,19.03z" />
+		                                </g>
+                        
+                                    <g ng-if="component.instances > 1">
+                                    <g id="storage-multi">
+                                    <g id="shade_3_2_">
+                                    <path ng-class="{'invalidTemplate': component.isComponentValid == false}" fill="#E7E7E7" d="M30.1,11.1c4.2,0,8.1,0.7,10.9,1.9c3.1,1.3,5,3.1,5,5.2v23.7c0,2.1-1.9,4-5,5.2      c-2.8,1.2-6.7,1.9-10.9,1.9s-8.1-0.7-10.9-1.9c-3.1-1.3-5-3.1-5-5.2V18.2c0-2.1,1.9-4,5-5.2C22,11.8,25.9,11.1,30.1,11.1      L30.1,11.1z" />
+			                            </g>
+                                    <g id="shade_2_4_">
+                                    <path ng-class="{'invalidTemplate': component.isComponentValid == false}" fill="#CCCCCC" d="M33.2,52.6c-4.2,0-8.1-0.7-11.1-1.9c-3.4-1.4-5.3-3.4-5.3-5.7V21.3c0-2.3,1.9-4.3,5.3-5.7      c3-1.2,6.9-1.9,11.1-1.9s8.1,0.7,11.1,1.9c3.4,1.4,5.3,3.4,5.3,5.7V45c0,2.3-1.9,4.3-5.3,5.7C41.3,51.9,37.3,52.6,33.2,52.6z" />
+                                    <g>
+                                    <path fill="#FFFFFF" d="M33.2,14.2c4.2,0,8.1,0.7,10.9,1.9c3.1,1.3,5,3.1,5,5.2V45c0,2.1-1.9,4-5,5.2       c-2.8,1.2-6.7,1.9-10.9,1.9s-8.1-0.7-10.9-1.9c-3.1-1.3-5-3.1-5-5.2V21.3c0-2.1,1.9-4,5-5.2C25.1,14.9,29,14.2,33.2,14.2        M33.2,13.2c-4.2,0-8.2,0.7-11.3,2c-3.6,1.5-5.6,3.7-5.6,6.2V45c0,2.5,2,4.7,5.6,6.2c3.1,1.3,7.1,2,11.3,2s8.2-0.7,11.3-2       c3.6-1.5,5.6-3.7,5.6-6.2V21.3c0-2.5-2-4.7-5.6-6.2C41.4,13.9,37.4,13.2,33.2,13.2L33.2,13.2z" />
+				                        </g>
+			                            </g>
+                                    <g id="shade_1_1_">
+                                    <path ng-class="{'invalidTemplate': component.isComponentValid == false}" fill="#848484" d="M36.2,55.6c-4.2,0-8.1-0.7-11.1-1.9c-3.4-1.4-5.3-3.4-5.3-5.7V24.3c0-2.3,1.9-4.3,5.3-5.7      c3-1.2,6.9-1.9,11.1-1.9s8.1,0.7,11.1,1.9c3.4,1.4,5.3,3.4,5.3,5.7V48c0,2.3-1.9,4.3-5.3,5.7C44.3,54.9,40.3,55.6,36.2,55.6z" />
+                                    <path fill="#FFFFFF" d="M36.2,17.2c4.2,0,8.1,0.7,10.9,1.9c3.1,1.3,5,3.1,5,5.2V48c0,2.1-1.9,4-5,5.2c-2.8,1.2-6.7,1.9-10.9,1.9      s-8.1-0.7-10.9-1.9c-3.1-1.3-5-3.1-5-5.2V24.3c0-2.1,1.9-4,5-5.2C28.1,17.9,32,17.2,36.2,17.2 M36.2,16.2c-4.2,0-8.2,0.7-11.3,2      c-3.6,1.5-5.6,3.7-5.6,6.2V48c0,2.5,2,4.7,5.6,6.2c3.1,1.3,7.1,2,11.3,2s8.2-0.7,11.3-2c3.6-1.5,5.6-3.7,5.6-6.2V24.3      c0-2.5-2-4.7-5.6-6.2C44.4,16.9,40.4,16.2,36.2,16.2L36.2,16.2z" />
+			                            </g>
+                                    <path fill="#FFFFFF" d="M46.2,21.1c-2.5-1-6-1.7-10-1.7s-7.4,0.6-10,1.7c-2.3,0.9-3.7,2.1-3.7,3.4v23.2c0,1.3,1.4,2.5,3.7,3.4     c2.5,1,6,1.7,10,1.7s7.4-0.6,10-1.7c2.3-0.9,3.7-2.2,3.7-3.4V24.5C49.9,23.3,48.4,22.1,46.2,21.1z" />
+                                    <path ng-class="{'invalidTemplate': component.isComponentValid == false}" fill="#848484" d="M45,33.7c-2.2-0.9-5.4-1.5-8.8-1.5s-6.6,0.6-8.8,1.5c-2,0.8-3.3,1.9-3.3,3v9.9c0,1.1,1.3,2.2,3.3,3     c2.2,0.9,5.4,1.5,8.8,1.5s6.6-0.6,8.8-1.5c2-0.8,3.3-1.9,3.3-3v-9.9C48.3,35.6,47,34.5,45,33.7z" />
+		                                </g>
+                                        
+                                        
+                                    <g id="single-digit" ng-if="component.instances < 10">
+                                    <g id="base">
+                                    <path fill="#CCE5F1" d="M13.4,60.1c-1.4,0-2.5-1.1-2.5-2.5v-10c0-1.4,1.1-2.5,2.5-2.5h11c1.4,0,2.5,1.1,2.5,2.5v10      c0,1.4-1.1,2.5-2.5,2.5H13.4z" />
+                                    <path fill="#FFFFFF" d="M24.4,45.5c1.1,0,2,0.9,2,2v10c0,1.1-0.9,2-2,2h-11c-1.1,0-2-0.9-2-2v-10c0-1.1,0.9-2,2-2L24.4,45.5       M24.4,44.5h-11c-1.7,0-3,1.3-3,3v10c0,1.7,1.3,3,3,3h11c1.7,0,3-1.3,3-3v-10C27.4,45.9,26.1,44.5,24.4,44.5L24.4,44.5z" />
+			                            </g>
+                                    <text transform="matrix(1 0 0 1 16.4418 55.7225)" fill="#5C5C5C" font-family="'Roboto-Regular'" font-size="9px">{{component.instances}}</text>
+		                                </g>
+                                    <g id="multi-digit" ng-if="component.instances > 9">
+                                    <g id="base_1_">
+                                    <path fill="#CCE5F1" d="M10.1,60.1c-1.4,0-2.5-1.1-2.5-2.5v-10c0-1.4,1.1-2.5,2.5-2.5h16c1.4,0,2.5,1.1,2.5,2.5v10      c0,1.4-1.1,2.5-2.5,2.5H10.1z" />
+                                    <path fill="#FFFFFF" d="M26.1,45.5c1.1,0,2,0.9,2,2v10c0,1.1-0.9,2-2,2h-16c-1.1,0-2-0.9-2-2v-10c0-1.1,0.9-2,2-2L26.1,45.5       M26.1,44.5h-16c-1.7,0-3,1.3-3,3v10c0,1.7,1.3,3,3,3h16c1.7,0,3-1.3,3-3v-10C29.1,45.9,27.9,44.5,26.1,44.5L26.1,44.5z" />
+			                            </g>
+                                    <text transform="matrix(1 0 0 1 17.6972 56.0225)" text-anchor="middle" fill="#5C5C5C" font-family="'Roboto-Regular'" font-size="9px">{{component.instances}}</text>
+		                                </g>
+                                </g>
+                                    <g id="Networked_1_" ng-if="component.showNetworkInfo">
+                                    <path fill="#FFFFFF" d="M50.59,40.89c-5.82,0-10.55,4.73-10.55,10.55c0,5.82,4.73,10.56,10.55,10.56 c5.82,0,10.55-4.73,10.55-10.56C61.14,45.63,56.41,40.89,50.59,40.89z" /> <path fill="#848484" d="M50.59,60.5c-4.99,0-9.05-4.06-9.05-9.06c0-4.99,4.06-9.05,9.05-9.05c4.99,0,9.05,4.06,9.05,9.05 C59.64,56.44,55.58,60.5,50.59,60.5z" /> <path fill="#FFFFFF" d="M50.59,44.39c-3.89,0-7.05,3.16-7.05,7.05c0,3.89,3.16,7.06,7.05,7.06s7.05-3.16,7.05-7.06 C57.64,47.56,54.48,44.39,50.59,44.39z" /> <path fill="#FFFFFF" d="M62.1,52.2h-7v-0.26c0-0.82-0.67-1.5-1.5-1.5h-0.26v-5.26h-5.51v5.26h-0.26c-0.83,0-1.5,0.67-1.5,1.5 v0.26h-6.99c-0.83,0-1.5,0.67-1.5,1.5v0.76c0,0.82,0.67,1.5,1.5,1.5h6.99v0.26c0,0.82,0.67,1.5,1.5,1.5h6.02 c0.83,0,1.5-0.67,1.5-1.5v-0.26h7c0.82,0,1.5-0.67,1.5-1.5V53.7C63.59,52.87,62.92,52.2,62.1,52.2z" /> <path fill="#848484" d="M62.1,53.2h-8v-1.26c0-0.27-0.22-0.5-0.5-0.5h-1.26v-5.26h-3.51v5.26h-1.26c-0.27,0-0.5,0.22-0.5,0.5 v1.26h-7.99c-0.27,0-0.5,0.22-0.5,0.5v0.76c0,0.27,0.23,0.5,0.5,0.5h7.99v1.26c0,0.27,0.23,0.5,0.5,0.5h6.02 c0.27,0,0.5-0.23,0.5-0.5v-1.26h8c0.27,0,0.5-0.22,0.5-0.5V53.7C62.59,53.42,62.37,53.2,62.1,53.2z" />
+		                                </g>
+                                    <g id="Application_1_" ng-if="servicesvg.hasApplication(component)">
+                                    <path fill="#FFFFFF" d="M60.7,25.77H41.01c-0.74,0-1.34-0.6-1.34-1.34V7.75c0-0.74,0.6-1.34,1.34-1.34H60.7 c0.74,0,1.34,0.6,1.34,1.34v16.68C62.04,25.17,61.44,25.77,60.7,25.77z" /> <path fill="#848484" d="M60.16,7.39H41.55c-0.53,0-0.96,0.43-0.96,0.96v15.4c0,0.53,0.43,0.96,0.96,0.96h18.61 c0.53,0,0.96-0.43,0.96-0.96V8.35C61.12,7.82,60.69,7.39,60.16,7.39z M58.56,8.67h1.28v1.28h-1.28V8.67z M56.31,8.67h1.28 v1.28h-1.28V8.67z M54.07,8.67h1.28v1.28h-1.28V8.67z M60.16,22.79c0,0.35-0.29,0.64-0.64,0.64H42.19 c-0.35,0-0.64-0.29-0.64-0.64V11.88c0-0.35,0.29-0.64,0.64-0.64h17.33c0.35,0,0.64,0.29,0.64,0.64 C60.16,11.88,60.16,22.79,60.16,22.79z" />
+		                                </g>
+                                    <service-svg-health-icon health="component.componentStatus.resourcestate"></service-svg-health-icon>
+                                        <!--hover and click effects-->
+                                    <g id="hover">
+                                    <rect ng-if="servicesvg.componentHover == component" x="2.49" y="2.54" fill="none" stroke="#000" stroke-width="1" stroke-miterlimit="10" width="63" height="63" />
+		                                </g>
+                                    <g id="selection">
+                                    <rect ng-if="servicesvg.selectedComponent == component" x="2.49" y="2.54" fill="none" stroke="#1586C2" stroke-width="4" stroke-miterlimit="10" width="63" height="63" />
+		                                </g>
+                                    <rect data-toggle="tooltip" data-original-title="{{component.name}}" ng-click="servicesvg.selectLine(component)" style="cursor: pointer" ng-mouseenter="servicesvg.hoverLine(component)" ng-mouseleave="servicesvg.removeHovers()" x="2.49" y="2.54" fill="#000" opacity="0" stroke="#000" stroke-width="4" stroke-miterlimit="10" width="63" height="63"
+                                          popover
+                                          popover-class="large"
+                                          title="{{component.name}}"
+                                          data-content-template="component-popover-content.html" />
+                                    </g>
+                                </svg>
+                            </g>
+                        </svg>
+                                </div>
+
+                                <!--end of relative positioning-->
+                            </div>
+
+                            <!--Application Popover-->
+                            <script type="text/ng-template" id="application-popover-content.html">
+                                <div class="popover-body">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>{{'SERVICE_DETAIL_Install_Order'|translate}}</th>
+                                                <th>{{'SERVICE_DETAIL_Name'|translate}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="application in servicesvg.selectedComponent.relatedcomponents" ng-if="application.installOrder >= 1">
+                                                <td>{{application.installOrder}}</td>
+                                                <td>{{application.name}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <footer class="text-right" style="padding-bottom: 15px;">
+                                        <ul class="list-inline">
+                                            <li>
+                                                <button class="btn btn-primary" ng-click="servicesvg.viewLogs(servicesvg.selectedComponent)">
+                                                    {{'SERVICE_DETAIL_View_Logs'|translate}}
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button class="btn btn-primary" ng-click="servicesvg.deleteApplications(servicesvg.selectedComponent)">
+                                                    {{'SERVICE_DETAIL_Stop_Managing_Applications'|translate}}
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button class="btn btn-primary" ng-click="servicesvg.editApplications(servicesvg.selectedComponent)">
+                                                    {{'GENERIC_Add'|translate}}
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </footer>
+                                </div>
+                            </script>
+
+                            <!--Component Popover-->
+                            <script type="text/ng-template" id="component-popover-content.html">
+                                <div class="popover-body">
+                                    <div class="row"
+                                         ng-if="servicesvg.selectedComponent.deviceTypeListData.ipaddressurl
+                                                && servicesvg.selectedComponent.type !== 'vm'">
+                                        <div class="col-xs-6">
+                                            <label>
+                                                {{ 'SERVICE_DETAIL_ManagementIPAddress' | translate }}
+                                            </label>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <a class="btn btn-link"
+                                               ng-if="servicesvg.selectedComponent.deviceTypeListData.ipaddressurl"
+                                               ng-attr-target="_blank"
+                                               style="padding-left:0;padding-bottom: 0px;"
+                                               ng-href="{{servicesvg.selectedComponent.deviceTypeListData.ipaddressurl}}"
+                                               ng-disabled="$root.ASM.IsInRole('readonly')">
+                                                {{servicesvg.selectedComponent.deviceTypeListData.ipAddress}}
+                                            </a>
+                                            <span ng-if="!servicesvg.selectedComponent.deviceTypeListData.ipaddressurl">
+                                                {{servicesvg.selectedComponent.deviceTypeListData.ipAddress}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row"
+                                         ng-if="servicesvg.selectedComponent.deviceTypeListData.hypervisorIPAddress && servicesvg.selectedComponent.type !== 'vm'">
+                                        <div class="col-xs-6">
+                                            <label>{{ 'SERVICE_DETAIL_OS_IP_Address' | translate }}</label>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <a class="btn btn-link"
+                                               ng-if="servicesvg.selectedComponent.deviceTypeListData.hypervisorIPAddressUrl"
+                                               ng-attr-target="_blank"
+                                               style="padding-left: 0; padding-bottom: 0px;"
+                                               ng-href="{{servicesvg.selectedComponent.deviceTypeListData.hypervisorIPAddressUrl}}"
+                                               ng-disabled="$root.ASM.IsInRole('readonly')">
+                                                {{servicesvg.selectedComponent.deviceTypeListData.hypervisorIPAddress}}
+                                            </a>
+                                            <span ng-if="!servicesvg.selectedComponent.deviceTypeListData.hypervisorIPAddressUrl">
+                                                {{servicesvg.selectedComponent.deviceTypeListData.hypervisorIPAddress}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row"
+                                         ng-if="servicesvg.selectedComponent.type !== 'vm' && servicesvg.selectedComponent.type !=='cluster' && servicesvg.selectedComponent.type !=='scaleio' && servicesvg.selectedComponent.type !=='storage'">
+                                        <div class="col-xs-6">
+                                            <label>{{ 'SERVICE_DETAIL_ResourceHealth' | translate }}</label>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <statusicon value="servicesvg.selectedComponent.deviceTypeListData.health"
+                                                        ng-if="servicesvg.selectedComponent.deviceTypeListData.health !== 'servicemode'"></statusicon>
+                                            <i class="ci-action-circle-wrench"
+                                               style="color:#efad18"
+                                               ng-if="servicesvg.selectedComponent.deviceTypeListData.health === 'servicemode'"></i>
+                                            <span ng-if="servicesvg.selectedComponent.deviceTypeListData.health == 'green'">
+                                                {{servicesvg.selectedComponent.deviceTypeListData.health | resourceHealth }}
+                                            </span>
+                                            <span ng-if="servicesvg.selectedComponent.deviceTypeListData.health !== 'green'">
+                                                {{servicesvg.selectedComponent.deviceTypeListData.healthmessage }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row"
+                                         ng-if="servicesvg.selectedComponent.type !== 'vm' && servicesvg.selectedComponent.type !== 'cluster'">
+                                        <div class="col-xs-6">
+                                            <label> {{ 'SERVICE_DETAIL_FirmwareCompliance' | translate }}</label>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <span ng-if="servicesvg.selectedComponent.deviceTypeListData.compliant == 'compliant'">
+                                                <statusicon value="'green'"></statusicon>
+                                                <list-lookup list="servicesvg.constants.firmwareStatus"
+                                                             id="firmwareStatus"
+                                                             key="servicesvg.selectedComponent.deviceTypeListData.compliant"
+                                                             property-name="'name'"></list-lookup>
+                                            </span>
+                                            <span ng-if="servicesvg.selectedComponent.deviceTypeListData.compliant != 'compliant'">
+                                                <statusicon ng-if="servicesvg.selectedComponent.deviceTypeListData.compliant != 'unknown'" value="'yellow'"></statusicon>
+                                                <statusicon ng-if="servicesvg.selectedComponent.deviceTypeListData.compliant == 'unknown'" value="'unknown'"></statusicon>
+                                                <button class="btn btn-link"
+                                                        style="padding-left: 0;"
+                                                        ng-click="servicesvg.openFirmwareReport()"
+                                                        id="getFirmwareReportLink"
+                                                        ng-disabled="!servicesvg.service.manageFirmware"
+                                                        ng-if="servicesvg.service.firmwareCompliant !== 'unknown'">
+                                                    <list-lookup list="servicesvg.constants.firmwareStatus"
+                                                                 id="firmwareStatus"
+                                                                 key="servicesvg.selectedComponent.deviceTypeListData.compliant"
+                                                                 property-name="'name'"></list-lookup>
+                                                </button>
+                                                <span ng-if="servicesvg.service.firmwareCompliant == 'unknown'">
+                                                    <list-lookup list="servicesvg.constants.firmwareStatus"
+                                                                 id="firmwareStatus"
+                                                                 key="servicesvg.selectedComponent.deviceTypeListData.compliant"
+                                                                 property-name="'name'"></list-lookup>
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <label>
+                                                {{ 'SERVICE_DETAIL_DeploymentStatus' | translate }}
+                                            </label>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <span ng-repeat="state in servicesvg.constants.componentStatus" ng-if="state.id === (servicesvg.selectedComponent.componentStatus.status | lowercase)">
+                                                <statusicon value="state.color"></statusicon> {{state.name}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <footer>
+                                        <ul class="list-inline">
+                                            <li>
+                                                <button class="btn btn-primary" ng-click="servicesvg.viewLogs(servicesvg.selectedComponent)">
+                                                    {{'SERVICE_DETAIL_View_Logs'|translate}}
+                                                </button>
+                                            </li>
+                                            <!--<li ng-if="servicesvg.selectedComponent.type == 'server' && servicesvg.service.canMigrate">
+                                                <button class="btn btn-primary" ng-click="servicesvg.doMigrate()"
+                                                        ng-disabled="servicesvg.service.canMigrate && !$root.ASM.IsInRole('readonly')"
+                                                        id="{{'component_migrate_' + servicesvg.selectedComponent.id}}">
+                                                    {{'MIGRATE_SERVER_Title'|translate}}
+                                                </button>
+                                            </li>-->
+                                            <li ng-if="servicesvg.selectedComponent.type == 'server'">
+                                                <button class="btn btn-primary" ng-click="servicesvg.portviewServer(servicesvg.selectedComponent)">
+                                                    {{'DEVICE_PortView' | translate}}
+                                                </button>
+                                            </li>
+                                            <li ng-if="servicesvg.selectedComponent.type == 'server'">
+                                                <button class="btn btn-primary" 
+                                                        ng-if="servicesvg.selectedComponent.componentStatus.health !== 'servicemode' && servicesvg.selectedComponent.componentStatus.health !== 'inprogress'"
+                                                        ng-disabled="!servicesvg.service.enableServiceMode || $root.ASM.IsInRole('readonly');" 
+                                                        ng-click="servicesvg.toggleServiceMode(servicesvg.selectedComponent, true)">
+                                                    {{'DEVICESDETAILS_EnterServiceMode' | translate}}
+                                                </button>
+                                                <button class="btn btn-primary"
+                                                        ng-if="servicesvg.selectedComponent.componentStatus.health === 'servicemode'"
+                                                        ng-click="servicesvg.toggleServiceMode(servicesvg.selectedComponent, false)">
+                                                    {{'DEVICESDETAILS_ExitServiceMode' | translate}}
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </footer>
+                                </div>
+                            </script>
+
+                            <!-- Legend -->
+                            <div style="background-color: #E3E3E3; padding: 5px;">
+                                <ul class="list-inline" style="margin:0">
+                                    <li style="margin-right: 27px;">
+                                        <label>  {{'SERVICE_DETAIL_Legend_Label'|translate}}</label>
+                                    </li>
+                                    <!--<li ng-repeat="state in servicesvg.constants.resourceStates" style="margin-right: 35px;font-size:12px">
+                                        <statusicon value="state.color" ng-if="state.id !== 'cancelled' && state.id !== 'inprogress'" style="font-size:11px;"></statusicon>
+                                        <i ng-if="state.id === 'inprogress'" style="font-size:11px;"  class="ci-state-standby-clock text-primary"></i>
+                                        <i ng-if="state.id === 'pending'" style="font-size:11px; color: #999" class="ci-state-standby-clock"></i>
+                                        <i ng-if="state.id === 'cancelled'" style="font-size:11px; color: #999" class="ci-action-circle-remove-slash-o"></i>
+
+
+                                        {{state.name}}
+                                    </li>-->
+                                    <li style="margin-right: 35px;font-size:12px">
+                                        <statusicon value="'GREEN'"></statusicon> {{'SERVICE_DETAIL_Healthy'|translate}}
+                                    </li>
+                                    <li style="margin-right: 35px;font-size:12px">
+                                        <statusicon value="'WARNING'"></statusicon> {{'SERVICE_DETAIL_Legend_Warning'|translate}}
+                                    </li>
+                                    <li style="margin-right: 35px;font-size:12px">
+                                        <statusicon value="'CRITICAL'"></statusicon> {{'SERVICE_DETAIL_Legend_Critical'|translate}}
+                                    </li>
+                                    <li style="margin-right: 35px;font-size:12px">
+                                        <i style="color: #999" class="ci-state-standby-clock"></i> {{'SERVICES_DEPLOY_STATE_Pending'|translate}}
+                                    </li>
+                                    <li style="margin-right: 35px;font-size:12px">
+                                        <i class="text-primary ci-state-standby-clock"></i> {{'SERVICE_DETAIL_Legend_InProgress'|translate}}
+                                    </li>
+                                    <li style="margin-right: 35px;font-size:12px">
+                                        <i style="color: #333333" class="ci-action-circle-remove-slash"></i> {{'SERVICE_DETAIL_Legend_Cancelled'|translate}}
+                                    </li>
+                                    <li style="margin-right: 35px;font-size:12px">
+                                        <i class="ci-action-circle-wrench" style="color:#efad18"></i> {{'SERVICE_DETAIL_Legend_ServiceMode'|translate}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div style="margin-top: -90px; width: 100%; text-align: center; color: #848484; min-width: 400px;">
+                            {{'SERVICE_DETAIL_Topology_Help'|translate}}
+                        </div>
+                    </div>
+                    <div id="resourcedetails" style="margin-top:100px">
+                        <resource-tables ng-if="servicesvg.service.id"
+                                         mode="detail"
+                                         resources="servicesvg.service"></resource-tables>
+                    </div>
+                </article>
+            </div>
+            <div class="col-xs-4">
+                <aside id="serviceActions" class="well">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h3>
+                                <i class="ci-deploy"></i>
+                                {{'SERVICE_DETAIL_Service_Information'|translate}}
+                                <button class="btn btn-link pull-right"
+                                        id="lnkEditService"
+                                        ng-click="servicesvg.editService()"
+                                        ng-disabled="$root.ASM.IsInRole('readonly') || !servicesvg.service.canEdit || servicesvg.service.state == 'In Progress'">
+                                    <i class="info ci-edit-pencil"></i>
+                                    {{'GENERIC_Edit'|translate}}
+                                </button>
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p>{{servicesvg.service.description}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label>
+                                {{'SERVICE_DETAIL_Overall_Service_Health'|translate}}
+                                <a class="ci ci-info-circle-info text-primary"
+                                   popover
+                                   popover-class="large"
+                                   data-trigger="hover"
+                                   data-content-template="ServiceTooltip.html">
+                                </a>
+                            </label>
+                        </div>
+                        <div class="col-xs-6">
+                            <!--<statusicon value="servicesvg.service.health"></statusicon>-->
+                            <span ng-switch="servicesvg.service.health">
+                                <span ng-switch-when="green">
+                                    <statusicon data-toggle="tooltip"
+                                                title="{{'GENERIC_Healthy' | translate}}"
+                                                value="'GREEN'"></statusicon>
+                                </span>
+                                <span ng-switch-when="yellow">
+                                    <statusicon data-toggle="tooltip"
+                                                title="{{'GENERIC_Warning' | translate}}"
+                                                value="'WARNING'"></statusicon>
+                                </span>
+                                <span ng-switch-when="red">
+                                    <statusicon data-toggle="tooltip"
+                                                title="{{'GENERIC_Critical' | translate}}"
+                                                value="'CRITICAL'"></statusicon>
+                                </span>
+                                <span ng-switch-when="pending">
+                                    <statusicon data-toggle="tooltip"
+                                                title="{{'GENERIC_Pending' | translate}}"
+                                                value="'STANDBY'"></statusicon>
+                                </span>
+                                <span ng-switch-when="unknown">
+                                    <i style="margin-right: 5px;"
+                                       data-toggle="tooltip"
+                                       title="{{'GENERIC_InProgress' | translate}}"
+                                       class="ci-state-standby-clock text-primary"></i>
+                                </span>
+                                <span ng-switch-when="cancelled">
+                                    <i style="margin-right: 5px; color: #333333"
+                                       class="ci-action-circle-remove-slash"
+                                       data-toggle="tooltip"
+                                       title="{{'GENERIC_Cancelled' | translate}}"></i>
+                                </span>
+                                <span ng-switch-when="incomplete">
+                                    <i style="margin-right: 5px; color: #EE6411"
+                                       class="ci-action-circle-minus"
+                                       data-toggle="tooltip"
+                                       title="{{'GENERIC_Incomplete' | translate}}"></i>
+                                </span>
+                                <span ng-switch-when="servicemode">
+                                    <i class="ci-action-circle-wrench"
+                                       style="margin-right: 5px; color:#efad18"
+                                       data-toggle="tooltip"
+                                       title="{{'GENERIC_ServiceMode' | translate}}"></i>
+                                </span>
+                            </span>
+
+                            <span>{{servicesvg.service.health | serviceHealth}}</span>
+                        </div>
+                    </div>
+                    <div style="margin: 10px 0px 10px 20px">
+                        <div class="row">
+                            <span class="col-xs-6">
+                                <label>
+                                    {{'SERVICE_DETAIL_Resource_Health'|translate}}
+                                </label>
+                            </span>
+                            <span class="col-xs-6">
+                                <statusicon value="servicesvg.service.resourceHealth" ng-if="servicesvg.service.resourceHealth !== 'servicemode'"></statusicon>
+                                <i class="ci-action-circle-wrench" style="margin-right: 5px; color:#efad18" ng-if="servicesvg.service.resourceHealth === 'servicemode'"></i>
+                                <span>{{servicesvg.service.resourceHealth | resourceHealth}}</span>
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span class="col-xs-6">
+                                <label>
+                                    {{'SERVICE_DETAIL_Compliance'|translate}}
+                                </label>
+                            </span>
+                            <span class="col-xs-6">
+                                <span ng-if="servicesvg.service.firmwareCompliant == 'compliant'">
+                                    <i style="margin-right: 5px;"
+                                       class="success ci-health-square-check"></i>
+                                    <list-lookup list="servicesvg.const_firmwareStatus"
+                                                 id="firmwareStatus"
+                                                 key="servicesvg.service.firmwareCompliant"
+                                                 property-name="'name'">
+                                    </list-lookup>
+                                </span>
+                                <span ng-if="servicesvg.service.firmwareCompliant != 'compliant'">
+                                    <statusicon ng-if="servicesvg.service.firmwareCompliant !== 'unknown'" value="'yellow'"></statusicon>
+                                    <statusicon ng-if="servicesvg.service.firmwareCompliant == 'unknown'" value="'unknown'"></statusicon>
+                                    <button class="btn btn-link" style="padding: 0 0 0 5px;"
+                                            ng-click="servicesvg.openFirmwareReport('service')"
+                                            id="getFirmwareReportLink"
+                                            ng-disabled="!servicesvg.service.manageFirmware || !servicesvg.service.firmwarePackageName"
+                                            ng-if="servicesvg.service.firmwareCompliant !== 'unknown'">
+                                        <list-lookup list="servicesvg.const_firmwareStatus"
+                                                     id="firmwareStatus"
+                                                     key="servicesvg.service.firmwareCompliant"
+                                                     property-name="'name'">
+                                        </list-lookup>
+                                    </button>
+                                    <span ng-if="servicesvg.service.firmwareCompliant === 'unknown'">
+                                        <list-lookup list="servicesvg.const_firmwareStatus"
+                                                     id="firmwareStatus"
+                                                     key="servicesvg.service.firmwareCompliant"
+                                                     property-name="'name'">
+                                        </list-lookup>
+                                    </span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span class="col-xs-6">
+                                <label>
+                                    {{'SERVICE_DETAIL_Deployment_State'|translate}}
+                                </label>
+                            </span>
+                            <span class="col-xs-6">
+                                <span ng-switch="servicesvg.service.state">
+                                    <span ng-switch-when="Deployed"><statusicon value="'green'"></statusicon></span>
+                                    <span ng-switch-when="Warning"><statusicon value="'yellow'"></statusicon></span>
+                                    <span ng-switch-when="Error"><statusicon value="'red'"></statusicon></span>
+                                    <span ng-switch-default><statusicon value="'standby'"></statusicon></span>
+                                    <span ng-switch-when="In Progress">
+                                        <i style="margin-right: 5px;"
+                                           class="info ci-state-standby-clock"></i>
+                                    </span>
+                                    <span ng-switch-when="Cancelled">
+                                        <i style="margin-right: 5px; color: #333333"
+                                           class="ci-action-circle-remove-slash"></i>
+                                    </span>
+                                    <span ng-switch-when="Incomplete">
+                                        <i style="margin-right: 5px; color: #EE6411"
+                                           class="ci-action-circle-minus"></i>
+                                    </span>
+                                    <span ng-switch-when="Service Mode">
+                                        <i class="ci-action-circle-wrench"
+                                           style="margin-right: 5px; color:#efad18"></i>
+                                    </span>
+                                </span>
+                                {{servicesvg.service.state}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label>
+                                {{'SERVICE_DETAIL_Deployed_By'|translate}}
+                            </label>
+                        </div>
+                        <div class="col-xs-6">
+                            {{servicesvg.service.deployedBy}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label>
+                                {{'SERVICE_DETAIL_Deployed_On'|translate}}
+                            </label>
+                        </div>
+                        <div class="col-xs-6">
+                            <datetime-display time="servicesvg.service.deployedOn" time-format="'LLL'" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label>
+                                {{'SERVICE_DETAIL_Reference_Template'|translate}}
+                            </label>
+                        </div>
+                        <div class="col-xs-6">
+                            {{servicesvg.service.template}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="servicesvg.service.allStandardUsers || servicesvg.service.assignedUsers.length">
+                        <div class="col-xs-6">
+                            <label>
+                                {{'SERVICE_DETAIL_User_Permissions'|translate}}
+                            </label>
+                        </div>
+                        <div class="col-xs-6">
+                            {{'GENERIC_Enabled'|translate}}
+                        </div>
+                    </div>
+                    <div class="row" ng-if="!servicesvg.service.allStandardUsers && !servicesvg.service.assignedUsers.length">
+                        <div class="col-xs-6">
+                            <label>
+                                {{'SERVICE_DETAIL_User_Permissions'|translate}}
+                            </label>
+                        </div>
+                        <div class="col-xs-6">
+                            {{'GENERIC_Disabled'|translate}}
+                        </div>
+                    </div>
+                    <br />
+                    <h3>
+                        <i class="ci ci-power-bolt-2"></i>
+                        {{'SERVICE_DETAIL_Service_Actions'|translate}}
+                        <button ng-click="servicesvg.deleteService()"
+                                class="btn btn-link"
+                                id="lnkRemoveService"
+                                ng-if="!(servicesvg.service.health == 'unknown' || servicesvg.service.health == 'pending')"
+                                ng-disabled="$root.ASM.IsInRole('readonly') || servicesvg.service.state === 'Service Mode'">
+                                <i class="ci-trash critical"></i>
+                            {{'SERVICE_DETAIL_RemoveService'|translate}}
+                        </button>
+                    </h3>
+                    <ul id="btnList" class="list-unstyled list-inline clearfix">
+                        <li ng-if="servicesvg.service.canCancel === true">
+                            <button ng-click="servicesvg.cancelService()"
+                                    class="btn btn-danger btn-sm"
+                                    id="lnkCancelService"
+                                    ng-disabled="$root.ASM.IsInRole('readonly')">
+                                <i class="ci-state-critical-health"></i>
+                                {{'GENERIC_Cancel'|translate}}
+                            </button>
+                        </li>
+
+                        <li id="listItemRetryButton" ng-show="!(servicesvg.service.health == 'unknown' || servicesvg.service.health == 'pending')">
+                            <button class="btn btn-primary btn-sm"
+                                    data-toggle="tooltip"
+                                    title="{{servicesvg.service.componentUpdateRequired ? 'SERVICE_DETAIL_UpdateRequired' : '' |translate}}"
+                                    data-trigger="hover"
+                                    id="lnkRetryService"
+                                    ng-click="servicesvg.retryService_Modal()"
+                                    ng-disabled="$root.ASM.IsInRole('readonly')
+                                                || !servicesvg.service.canRetry
+                                                || servicesvg.service.componentUpdateRequired
+                                                || servicesvg.service.cancelInprogress
+                                                || servicesvg.service.state === 'Service Mode'">
+                                <i class="glyphicon ci-arrow-curve-forward-right-refresh"></i>
+                                {{'GENERIC_Retry'|translate}}
+                            </button>
+                        </li>
+                        <li id="listItemUpdateInventory" ng-if="!(servicesvg.service.health == 'unknown' || servicesvg.service.health == 'pending' || servicesvg.service.health == 'cancelled') && servicesvg.service.canUpdateInventory">
+                            <button class="btn btn-primary btn-sm"
+                                    id="lnkUpdateInventory"
+                                    ng-disabled="$root.ASM.IsInRole('readonly') || servicesvg.service.state === 'Service Mode'"
+                                    ng-click="servicesvg.updateInventory()">
+                                <i class="ci-arrow-curve-forward-right-refresh"></i>
+                                {{'SERVICES_SERVICE_UpdateInventoryButton'|translate}}
+                            </button>
+                        </li>
+                        <li ng-click="servicesvg.viewSettings()">
+                            <button class="btn btn-primary btn-sm"
+                                    id="lnkViewSettings">
+                                <i class="ci-arrow-box-updates"></i>
+                                {{'SERVICE_DETAIL_View_All_Settings'|translate}}
+                            </button>
+                        </li>
+
+                        <li ng-if="!(servicesvg.service.health == 'unknown' || servicesvg.service.health == 'pending')">
+                            <button class="btn btn-primary btn-sm"
+                                    id="lnkExportService"
+                                    ng-disabled="$root.ASM.IsInRole('readonly')"
+                                    ng-click="servicesvg.exportService()">
+                                <i class="ci-arrow-bold-line-export-up"></i>
+                                {{'SERVICE_DETAIL_ExporttoFile'|translate}}
+                            </button>
+                        </li>
+                        <li>
+                            <button id="generateTroubleshootLink"
+                                    class="btn btn-primary btn-sm"
+                                    ng-click="servicesvg.generateTroubleBundle_modal()"
+                                    ng-disabled="$root.ASM.IsInRole('readonly')">
+                                <i class="ci-doc-blank-comment-add"></i>
+                                {{'SERVICE_DETAIL_Generate_Troubleshoot_Bundle'|translate}}
+                            </button>
+                        </li>
+                        <li>
+                            <button id="lnkViewFirmwareReport"
+                                    class="btn btn-primary btn-sm"
+                                    data-toggle="tooltip"
+                                    title="{{'SERVICE_DETAIL_ViewComplianceReportToolTip'|translate}}"
+                                    data-trigger="hover"
+                                    ng-click="servicesvg.openFirmwareReport('service'); servicesvg.clearTooltips()"
+                                    ng-disabled="!servicesvg.service.manageFirmware || !servicesvg.service.firmwarePackageName"
+                                    ng-if="servicesvg.service.health !== 'unknown'">
+                                <i class="ci-action-sort-list"></i>
+                                {{'SERVICE_DETAIL_View_Firmware_Report'|translate}}
+                            </button>
+                        </li>
+                    </ul>
+                    <br />
+                    <h3>
+                        <i class="ci ci-power-bolt-2"></i>
+                        {{'SERVICE_DETAIL_Resource_Actions'|translate}}
+                    </h3>
+                    <ul id="resourceActions" class="list-unstyled list-inline clearfix">
+                        <li ng-if="servicesvg.service.health == 'unknown'|| servicesvg.service.health == 'pending'">
+                            <span>{{'SERVICE_DETAIL_NoActions' | translate}}</span>
+                        </li>
+                        <li ng-if="!(servicesvg.service.health == 'unknown' || servicesvg.service.health == 'pending') && servicesvg.service.componentUpdateRequired">
+                            <button class="btn btn-primary btn-sm"
+                                    id="lnkUpdateComponents"
+                                    ng-disabled="$root.ASM.IsInRole('readonly') || servicesvg.service.cancelInprogress || servicesvg.service.state === 'Service Mode'"
+                                    ng-click="servicesvg.updateServiceComponents()">
+                                <span class="ci-arrow-box-updates"></span>
+                                {{'SERVICE_DETAIL_Update_Components'|translate}}
+                            </button>
+                        </li>
+                        <li id="listItemAddActions">
+                            <div class="dropdown resourcedropdown">
+                                <button class="btn btn-primary dropdown-toggle btn-sm"
+                                        type="button"
+                                        id="addComponent"
+                                        ng-model="servicesvg.addResource"
+                                        ng-disabled="servicesvg.service.state === 'Service Mode'"
+                                        ng-change="servicesvg.addComponent(servicesvg.addResource)"
+                                        ng-hide="servicesvg.service.health == 'unknown'
+                                                    || servicesvg.service.health === 'cancelled'
+                                                    || servicesvg.service.health === 'pending'
+                                                    || servicesvg.service.cancelInprogress
+                                                    || servicesvg.service.componentUpdateRequired
+                                                    || !(servicesvg.service.canScaleupServer
+                                                    || servicesvg.service.canScaleupStorage
+                                                    || servicesvg.service.canScaleupCluster
+                                                    || servicesvg.service.canScaleupVM
+                                                    || servicesvg.service.canScaleupApplication
+                                                    || servicesvg.service.canScaleupNetwork)"
+                                        data-toggle="dropdown">
+                                    <span class="col-sm-14">
+                                        <i class="ci-action-add-plus-float"></i>
+                                        {{'SERVICE_DETAIL_AddServices' | translate}}
+                                    </span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li role="presentation"
+                                        ng-disabled="$root.ASM.IsInRole('readonly')"
+                                        value=""
+                                        id="{{'addComponent_' + component.id}}"
+                                        ng-repeat="component in servicesvg.addableComponents">
+                                        <button class="btn btn-link" role="menuitem"
+                                                ng-click="component.disabled() || servicesvg.addComponent(component.id)"
+                                                tabindex="-1"
+                                                ng-disabled="component.disabled()">
+                                            {{component.name}}
+                                        </button>
+                                    </li>
+                                </ul>
+
+
+                            </div>
+                        </li>
+                        <li ng-if="servicesvg.service.canDeleteResources && !(servicesvg.service.health == 'unknown' || servicesvg.service.health == 'pending')" ng-click="servicesvg.doDeleteResources()">
+                            <button class="btn btn-primary btn-sm" id="lnkDeleteResources" ng-disabled="servicesvg.service.cancelInprogress || $root.ASM.IsInRole('readonly') || servicesvg.service.state === 'Service Mode'">
+                                <i class="ci-trash"></i>
+                                {{'SERVICE_DETAIL_Delete_Resource'|translate}}
+                            </button>
+                        </li>
+                    </ul>
+                    <br />
+                    <h3 id="recentActivityTitle">
+                        <span class="ci-schedule-clock-2"></span>
+                        {{'SERVICE_DETAIL_Recent_Activity'|translate}}
+                    </h3>
+                    <ul id="activityLogItems" class="list-unstyled" ng-if="servicesvg.service.components.length !== 0">
+                        <li ng-repeat="al in servicesvg.service.activityLogs">
+                            <span>{{al.logMessage}}</span>
+                            <!-- <span class="activityUserName pull-left" data-bind="text: logUser"></span>
+                <span class="activityDate pull-right" data-bind="time: logTimeStamp, timeFormat: 'LLL'"></span>-->
+                        </li>
+                    </ul>
+                </aside>
+            </div>
+        </div>
+    </section>
+    <script type="text/ng-template" id="ServiceTooltip.html">
+        <div class="popover-body" ng-bind-html="'SERVICE_DETAIL_HealthToolTip' | translate | htmlSafe"></div>
+    </script>
+
+</section>

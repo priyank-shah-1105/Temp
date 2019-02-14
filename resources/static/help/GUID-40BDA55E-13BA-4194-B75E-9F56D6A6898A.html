@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Server (OS Installation
+only) Component Settings</title><link rel="prev" href="GUID-3E434B9E-F1C6-439F-B578-80C3144BAA4F.html" /><link rel="next" href="GUID-33E8F572-A039-48CC-8F15-E4D84F784F3F.html" /><link href="static/screen.css?mSUyqg2y" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-40BDA55E-13BA-4194-B75E-9F56D6A6898A" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">VxRack FLEX Manager</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Server (OS Installation
+only) Component Settings</h1>
+<p>On <span class="uicontrol">Getting Starte</span>d page, click <span class="uicontrol">Publish Template</span>. On<span class="uicontrol"> Template</span> page,
+click <span class="uicontrol">Create Template</span>. On Create Template page:</p>
+<p><span class="uicontrol"> Template Name</span> field: Enter
+Template name in the<span class="uicontrol"> Template Name</span> field.</p>
+<p><span class="uicontrol">Template Category</span>: Select category
+of template from the <span class="uicontrol">Template Category </span>drop-down
+menu.</p>
+<p> Click<b> Save</b>, it directs you to <span class="uicontrol">Template
+Builder</span> page. On the <span class="uicontrol">Template Builder</span> page, click <span class="uicontrol">Add Server</span>. It directs you to
+Server Component window. From the <span class="uicontrol">Select a Component </span>drop-down menu, select <span class="uicontrol">Server (O/S Installation only)</span>. After that<span class="uicontrol"> # of Instances</span> drop-down menu
+is displayed. From the <span class="uicontrol"># of Instances</span> drop-down
+menu, select the number of the server instances that you want to add,
+after that click <span class="uicontrol">Continue</span>. Under <span class="uicontrol">OS Settings</span>, few
+fields, drop-down menu and check box are displayed. These all are
+listed here:<ul id="GUID-D35845D2-22BE-4F2D-9FA4-01533C425D9F">
+<li id="LI_B0BEBF749F594C6884F893822BDC5A0A"><span class="uicontrol">Auto-generate Host Name</span></li>
+<li id="LI_A1EA2FAB807F498791BD48F04229AF3B"><span class="uicontrol">Host Name Template</span></li>
+<li id="LI_7814092AC45A441092E063C2AC26F5E4"><span class="uicontrol">OS Image</span></li>
+<li id="LI_811FD3B07B264A75810EB3DC451C80DA"><span class="uicontrol">Administrator password</span></li>
+<li id="LI_0D4C3A19074C44CF8080FCEF0A083698"><span class="uicontrol">Confirm administrator password</span></li>
+<li id="LI_3AF5B6F471EA4C64B9105281BB92A2C4"><span class="uicontrol">Time Zone</span></li>
+<li id="LI_7F0F19159B0D42C0BE2806ADAB650E14"><span class="uicontrol">NTP Server</span></li>
+<li id="LI_07BD2504FFD44DF6929D09F0F31CC8D9"><span class="uicontrol">Server Pool</span></li>
+</ul></p>
+<p> <b>Auto-generate Host Name:</b></p>
+<p>If you select the <span class="uicontrol">Auto-generate Host Name</span> check box, a <span class="uicontrol">Host Name Template </span>field is
+displayed. You must use this variable while generating a host name.
+ For Example, a hostname template must start with a letter.  The variable
+portion of the hostname template can be designated to use a service
+tag or a number to ensure uniqueness. The template may also include
+a variable for the model or vendor of the server if information about
+these values is available. It can be service tag or Service tag+ Vendor+
+Unique number. If you clear the <span class="uicontrol">Auto-generate Host Name</span> check box, <span class="uicontrol">Host Name Template</span> field disappears.</p>
+<div class="note" id="GUID-A8193BFF-ACCF-41C8-93B5-A73C71AD5C6F"><span class="notelabel">NOTE: </span>Auto-generate Host name feature is applicable for both the server, server(O/S Installation only). If there are multiple instances of deployment, you have to select Auto-generate Host name.</div>
+<p><b> OS Image:</b></p>
+<p>From the <span class="uicontrol">OS Image</span> drop-down
+menu, select OS Image.</p>
+<p><b> Administrator password:</b></p>
+<p>Enter your administrator password.</p>
+<p><b>Confirm administrator password:</b></p>
+<p>Reenter your administrator password to confirm password.</p>
+<p><b>Timezone</b>:</p>
+<p>After you select OS Image Type, <span class="uicontrol">Timezone</span> and <span class="uicontrol">NTP Server</span> fields are displayed. Select
+time zone from the <span class="uicontrol">Timezone</span> drop-down menu.</p>
+<p> <b>NTP Server:</b></p>
+<p>This is an optional component for all operating systems
+except Hyper-V. You can specify NTP server for bare metal OS installation,
+ESXi installation.</p>
+<div class="note" id="GUID-707D04F1-72C4-43CF-A3C3-F56DF9D6E727"><span class="notelabel">NOTE: </span> It is recommended
+to enter an IP address in the NTP Server field as sometimes when there
+is not time synchronization with environment a service deployment
+may fail.</div>
+<p><b>Server Pool:</b></p>
+<p>Enter the server pool name in the Server Pool field.
+Click <span class="uicontrol">Add</span>. It directs you to <span class="uicontrol">Template
+Builder</span> page. There you can see the newly added template.
+This template is used only for deploying Operating System on server.</p>
+<div class="note" id="GUID-4A3BA1C0-CFBC-4284-893A-5DA17B380B09"><span class="notelabel">NOTE: </span>Here you will not get any option for Hardware, BIOS, and network configuration. You are required to check that manually weather or not server has hard disks available and network is configured on rack switch or blade chassis.</div>
+</article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?UzZSRggC"></script></body></html>

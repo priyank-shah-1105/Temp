@@ -1,0 +1,51 @@
+﻿<div id="deviceInfoCol1" class="row">
+    <div class="col-xs-12 col-sm-8 col-md-4">
+        <div class="row">
+            <div class="col-xs-12">
+                <h4>
+                    {{'DEVICES_DETAILS_ChassisControllers_PrimaryChassisController'|translate}}
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="ikvmPresent">
+                    {{'DEVICES_DETAILS_IKVM_Present'|translate}}
+                </label>
+            </div>
+            <div class="col-sm-6" id="ikvmPresent">
+                {{deviceIkvmController.device.ikvmpresent}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="ikvmName">
+                    {{'DEVICES_DETAILS_IKVM_Name'|translate}}
+                </label>
+            </div>
+            <div class="col-sm-6" id="ikvmName">
+                {{deviceIkvmController.device.ikvmname}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="ikvmManufacture">
+                    {{'DEVICES_DETAILS_IKVM_Manufacturer'|translate}}
+                </label>
+            </div>
+            <div class="col-sm-6" id="ikvmManufacture">
+                {{deviceIkvmController.device.ikvmmanufacturer}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="ikvmVersion">
+                    {{'DEVICES_DETAILS_IKVM_FirmwareVersion'|translate}}
+                </label>
+            </div>
+            <div class="col-sm-6" id="ikvmVersion">
+                {{deviceIkvmController.device.ikvmfirmwareversion}}
+            </div>
+        </div>
+    </div>
+</div>

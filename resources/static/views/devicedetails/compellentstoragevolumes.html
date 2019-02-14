@@ -1,0 +1,34 @@
+﻿<div id="device_compellentstoragevolumes">
+    <table class="table"
+           st-table="deviceCompellentStorageController.device.volumes"
+           st-safe-src="deviceCompellentStorageController.safeSource">
+        <thead>
+            <tr>
+                <th>
+                    {{'DEVICES_DETAILS_COMPELLENT_Volumes_Name'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_COMPELLENT_Volumes_LogicalSize'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_COMPELLENT_Volumes_ReplayProfile'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_COMPELLENT_Volumes_StorageProfile'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_COMPELLENT_Volumes_DiskFolder'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="volume in deviceCompellentStorageController.device.volumes">
+                <td>{{volume.name}}</td>
+                <td>{{volume.logicalsize}}</td>
+                <td>{{volume.replayprofile}}</td>
+                <td>{{volume.storageprofile}}</td>
+                <td>{{volume.diskfolder}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

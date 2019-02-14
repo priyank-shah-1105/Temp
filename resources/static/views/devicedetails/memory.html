@@ -1,0 +1,64 @@
+﻿<section id="device_memory">
+    <table class="table"
+           st-table="deviceMemoryController.device.memorydata"
+           st-safe-src="deviceMemoryController.safeSource">
+        <thead>
+            <tr>
+                <th st-sort="'instanceid'">
+                    {{'DEVICES_DETAILS_MEMORY_ID'|translate}}
+                </th>
+                <th st-sort="'banklabel'">
+                    {{'DEVICES_DETAILS_MEMORY_BankLabel'|translate}}
+                </th>
+                <th st-sort="'currentoperatingspeed'">
+                    {{'DEVICES_DETAILS_MEMORY_CurrentSpeed'|translate}}
+                </th>
+                <th st-sort="'manufacturer'">
+                    {{'DEVICES_DETAILS_MEMORY_Manufacturer'|translate}}
+                </th>
+                <th st-sort="'memorytype'">
+                    {{'DEVICES_DETAILS_MEMORY_MemoryType'|translate}}
+                </th>
+                <th st-sort="'partnumber'">
+                    {{'DEVICES_DETAILS_MEMORY_PartNumber'|translate}}
+                </th>
+                <th st-sort="'rank'">
+                    {{'DEVICES_DETAILS_MEMORY_Rank'|translate}}
+                </th>
+                <th st-sort="'serialnumber'">
+                    {{'DEVICES_DETAILS_MEMORY_SerialNumber'|translate}}
+                </th>
+                <th st-sort="'size'">
+                    {{'DEVICES_DETAILS_MEMORY_Size'|translate}}
+                </th>
+                <th st-sort="'speed'">
+                    {{'DEVICES_DETAILS_MEMORY_Speed'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="m in deviceMemoryController.device.memorydata">
+                <td>{{m.instanceid}}</td>
+                <td>{{m.banklabel}}</td>
+                <td>{{m.currentoperatingspeed}}</td>
+                <td>{{m.manufacturer}}</td>
+                <td>{{m.memorytype}}</td>
+                <td>{{m.partnumber}}</td>
+                <td>{{m.rank}}</td>
+                <td>{{m.serialnumber}}</td>
+                <td>{{m.size}}</td>
+                <td>{{m.speed}}</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="10" class="text-center">
+                    <div id="pager"
+                         st-pagination="deviceMemoryController.device.memorydata"
+                         st-items-by-page="20"
+                         st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</section>

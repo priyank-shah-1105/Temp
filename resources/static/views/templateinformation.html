@@ -1,0 +1,201 @@
+﻿<fieldset>
+    <div class="form-group" ng-if="templateInformationController.templateUploadedName">
+        <label class="col-sm-4 control-label" for="templateUploadedName{{templateInformationController.uniqueId}}">
+            {{'TEMPLATES_TemplateUploaded' | translate}} *
+        </label>
+        <div class="col-sm-4">
+            <div id="templateUploadedName{{templateInformationController.uniqueId}}">
+                {{templateInformationController.templateUploadedName}}
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label" for="templateName{{templateInformationController.uniqueId}}">
+            {{'TEMPLATES_TemplateName' | translate}} *
+        </label>
+        <div class="col-sm-4">
+            <input type="text"
+                   ng-if="!templateInformationController.readOnly"
+                   id="templateName{{templateInformationController.uniqueId}}"
+                   class="form-control"
+                   required
+                   name="name"
+                   maxlength="32"
+                   ng-model="templateInformationController.template.name" />
+            <div ng-if="templateInformationController.readOnly">
+                {{templateInformationController.template.name}}
+            </div>
+            <div ng-if="templateInformationController.form._submitted" class="text-danger">
+                <div ng-if="templateInformationController.form.name.$error.required">
+                    {{'GENERIC_RequiredField' | translate}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label" for="templatecategory{{templateInformationController.uniqueId}}">
+            {{'TEMPLATES_TemplateCategoryStar' | translate}}
+        </label>
+        <div class="col-sm-4">
+            <select id="templatecategory{{templateInformationController.uniqueId}}"
+                    class="form-control"
+                    name="category"
+                    ng-if="!templateInformationController.readOnly"
+                    ng-change="templateInformationController.templateCategoryChanged()"
+                    ng-model="templateInformationController.categoryOption"
+                    ng-options="category.id as category.name disable when category.disabled for category in templateInformationController.categories"
+                    required>
+                <option value="">{{'TEMPLATES_SelectorCreateNewCategory'|translate}}</option>
+            </select>
+            <div ng-if="templateInformationController.form._submitted" class="text-danger">
+                <div ng-if="templateInformationController.form.category.$error.required">
+                    {{'GENERIC_RequiredField' | translate}}
+                </div>
+            </div>
+            <!-- Read only -->
+            <div ng-if="templateInformationController.readOnly">
+                <div ng-if="!templateInformationController.isNewCat()">
+                    <list-lookup list="templateInformationController.categories"
+                                 key="templateInformationController.template.category"
+                                 property-name="'name'"></list-lookup>
+                </div>
+                <div ng-if="templateInformationController.isNewCat()">
+                    {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_Summary_CreateNew'|translate}}
+                    {{templateInformationController.template.category}}
+                </div>
+            </div>
+        </div>
+        <!--ng-if creating new new category-->
+        <div ng-if="templateInformationController.categoryOption === 'new' && !templateInformationController.readOnly">
+            <div class="col-sm-4">
+                <input type="text"
+                       ng-if="!templateInformationController.readOnly"
+                       id="createcategory{{templateInformationController.uniqueId}}"
+                       name="catName"
+                       class="form-control"
+                       ng-model="templateInformationController.template.category"
+                       placeholder="{{'TEMPLATES_NewCategoryName'|translate}}"
+                       required />
+                <div ng-if="templateInformationController.form._submitted" class="text-danger">
+                    <div ng-if="templateInformationController.form.catName.$error.required">
+                        {{'GENERIC_RequiredField' | translate}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label" for="description{{templateInformationController.uniqueId}}">
+            {{'TEMPLATES_TemplateDescription' | translate}}
+        </label>
+        <div class="col-sm-4">
+            <textarea type="text"
+                      rows="4"
+                      cols="50"
+                      ng-if="!templateInformationController.readOnly"
+                      id="description{{templateInformationController.uniqueId}}"
+                      class="form-control"
+                      name="description"
+                      ng-model="templateInformationController.template.description" />
+            <div ng-if="templateInformationController.readOnly">
+                {{templateInformationController.template.description}}
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label" for="firmwarepackage{{templateInformationController.uniqueId}}">
+            {{ 'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_ReleaseCertificationMatrix' | translate }} *
+            <!--<span ng-bind-html="'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_updateFirmwareonServerswhenDeployed'|translate|htmlSafe"></span>-->
+            <i class="ci ci-info-circle-info text-primary"
+               data-toggle="tooltip"
+               data-placement="right"
+               title="{{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_ReleaseCertificationMatrix_tooltip' | translate}}"></i>
+        </label>
+        <div class="col-sm-4" ng-if="!templateInformationController.readOnly">
+            <!--<div class="form-group">
+                <div class="col-xs-12">
+                    <div class="checkbox">
+                        <label>
+                            <input id="manageFirmware{{templateInformationController.uniqueId}}"
+                                   type="checkbox"
+                                   ng-model="templateInformationController.template.manageFirmware" />
+                            {{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_PerformFirmwareCompliance'|translate}}
+                        </label>
+                    </div>
+                </div>
+            </div>-->
+            <div class="form-group" ng-if="templateInformationController.template.manageFirmware">
+                <div class="col-xs-12">
+                    <select id="firmwarepackage{{templateInformationController.uniqueId}}"
+                            class="form-control"
+                            name="firmwarePackage"
+                            ng-model="templateInformationController.template.firmwarePackageId"
+                            ng-options="package.id as package.name for package in templateInformationController.firmwares"
+                            required>
+                        <option value="">{{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_Select' |translate}}</option>
+                    </select>
+                    <div ng-if="templateInformationController.form._submitted" class="text-danger">
+                        <div ng-if="templateInformationController.form.firmwarePackage.$error.required">
+                            {{'GENERIC_RequiredField' | translate}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<div class="col-sm-4" ng-if="!templateInformationController.readOnly">
+            {{ 'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_firmwareOnSharedDevices' | translate}}
+        </div>-->
+        <div class="col-sm-4" ng-if="templateInformationController.readOnly">
+            {{templateInformationController.template.manageFirmware | yesNo}}
+            <span ng-if="templateInformationController.template.manageFirmware">
+                -
+                <list-lookup list="templateInformationController.firmwares"
+                             key="templateInformationController.template.firmwarePackageId"
+                             property-name="'name'"></list-lookup>
+            </span>
+        </div>
+    </div>
+    <!--
+            allStandardUsers property has a getter of get_allStandardusers(context) and a setter of updateAllStandardUsersProp(context)
+                -->
+    <div class="form-group">
+        <label class="col-sm-4 control-label" for="grantedUsers">
+            {{ 'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_WhoShouldHaveAccess' | translate }}
+        </label>
+        <div class="col-sm-8" ng-if="!templateInformationController.readOnly">
+            <select id="grantedUsers"
+                    class="form-control"
+                    name="grantedUsers"
+                    ng-change="templateInformationController.updateAllStandardUsersProp(templateInformationController.template)"
+                    ng-model="templateInformationController.template._allStandardUsers"
+                    required>
+                <option value="">{{'TEMPLATES_CREATE_TEMPLATE_WIZARD_2a_Select' |translate}}</option>
+                <option value="admins">{{'TEMPLATES_AdminsOnly' |translate}}</option>
+                <option value="specific">{{'TEMPLATES_SpecificStandardUsers' |translate}}</option>
+                <option value="allStandard">{{'TEMPLATES_AllStandardUsers' |translate}}</option>
+            </select>
+            <div ng-if="templateInformationController.form._submitted" class="text-danger">
+                <div ng-if="templateInformationController.form.grantedUsers.$error.required">
+                    {{'GENERIC_RequiredField' | translate}}
+                </div>
+            </div>
+            <!--ng-if specific standard users-->
+            <div ng-if="templateInformationController.template._allStandardUsers === 'specific'" class="form-group">
+                <add-users users-list="templateInformationController.template.assignedUsers"></add-users>
+            </div>
+        </div>
+        <div class="col-sm-8"
+             ng-if="templateInformationController.readOnly"
+             ng-switch="templateInformationController.get_allStandardusers(templateInformationController.template)">
+            <div ng-switch-when="admins">
+                {{'TEMPLATES_AdminsOnly'|translate}}
+            </div>
+            <div ng-switch-when="specific">
+                {{'TEMPLATES_SpecificStandardUsers'|translate}}
+            </div>
+            <div ng-switch-when="allStandard">
+                {{'TEMPLATES_AllStandardUsers'|translate}}
+            </div>
+        </div>
+    </div>
+</fieldset>

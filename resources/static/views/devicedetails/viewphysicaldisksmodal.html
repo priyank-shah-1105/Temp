@@ -1,0 +1,44 @@
+﻿<div id="deviceDetailsPhysicalDisks">
+    <div class="row">
+        <div class="col-xs-12">
+            <ul class="list-inline">
+                <li>
+                    {{'DEVICES_DETAILS_LOCAL_STORAGE_Layout'| translate}}:
+                </li>
+                <li>
+                    {{viewPhysicalDisksController.$scope.modal.params.layout}}
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <ul class="list-inline">
+                <li>
+                    {{'DEVICES_DETAILS_LOCAL_STORAGE_Size'| translate}}:
+                </li>
+                <li>
+                    {{viewPhysicalDisksController.$scope.modal.params.size}}
+                </li>
+            </ul>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-xs-12">
+            <physical-disks disks="viewPhysicalDisksController.$scope.modal.params.disks"></physical-disks>
+        </div>
+    </div>
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+                <button id="btnSaveServiceTag"
+                        type="submit"
+                        class="btn btn-primary"
+                        ng-click="viewPhysicalDisksController.cancel()">
+                    {{'GENERIC_Close'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</div>

@@ -1,0 +1,97 @@
+﻿<section id="page_licenseManagement">
+    <error-display errors="addLicenseModalController.errors"
+                   on-click="$root.ASM.RemoveError(error, addLicenseModalController.errors)"
+                   on-expand-collapse=""></error-display>
+    <header>
+        <p>
+            {{'SETTINGS_AddLicenseDescription'|translate}}
+        </p>
+    </header>
+    <div id="page_licenseManagementForm"
+         class="form-horizontal"
+         role="form">
+        <fieldset>
+            <div class="form-group">
+                <label class="col-md-2 control-label">
+                    {{'SETTINGS_UploadLicense'|translate}}
+                </label>
+                <div class="col-md-4">
+                    <form name="addLicenseModalController.uploadLicenseForm">
+                        <div id="fileWrapper">
+                            <input uploader="uploader"
+                                   nv-file-select
+                                   ng-model="addLicenseModalController.fileModel"
+                                   id="idLocationFileUpload"
+                                   type="file"
+                                   text="Browse"
+                                   name="idLocationFileUpload" />
+                        </div>
+                    </form>
+                    <!--<form id="licenseUpload"
+                          method="post"
+                          name="uploadLicense"
+                          enctype="multipart/form-data"
+                          show-validation>
+                        <div class="form-group">
+                            <p>{{'SETTINGS_ChooseFile' | translate}}</p>
+                            <div class="col-md-2" id="fileWrapper">
+                                <input required
+                                       id="idLocationFileUpload"
+                                       type="file"
+                                       text="Browse"
+                                       class=""
+                                       name="idLocationFileUpload"/>
+                            </div>
+                        </div>
+                    </form>-->
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">
+                    {{'SETTINGS_Type'|translate}}
+                </label>
+                <p class="form-control-static col-md-8">
+                    {{addLicenseModalController.setupData.type}}
+                </p>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">
+                    {{'SETTINGS_TotalResources'|translate}}
+                </label>
+                <p class="form-control-static col-md-8">
+                    {{addLicenseModalController.setupData.totalnodes}}
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">
+                    {{'SETTINGS_ExpirationDate'|translate}}
+                </label>
+                <p class="form-control-static col-md-8">
+                    {{addLicenseModalController.setupData.expirationdate | date:'MMMM d, y h:mm:ss a'}}
+                </p>
+            </div>
+        </fieldset>
+    </div>
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="btnAddLicenseForm"
+                        class="btn btn-primary"
+                        ng-click="addLicenseModalController.updateLicense()"
+                        ng-disabled="addLicenseModalController.uploadLicenseForm.$invalid 
+                            || !addLicenseModalController.fileIsUploaded"
+                        form="edit_ntp_form">
+                    {{'SETTINGS_Save'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="btnCancelLicenseForm"
+                        class="btn btn-default"
+                        ng-click="addLicenseModalController.cancel()">
+                    {{'SETTINGS_Cancel'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

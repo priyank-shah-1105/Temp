@@ -1,0 +1,66 @@
+﻿<div id="device_blades">
+    <table id="bladesTable" class="table"
+           st-table="deviceBladesController.device.blades"
+           st-safe-src="deviceBladesController.safeSrc.blades">
+        <thead>
+            <tr>
+                <th>
+                    {{'DEVICES_DETAILS_Blades_State'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_Blades_PowerState'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_Blades_ManagementIP'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_Blades_Hostname'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_Blades_Location'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_Blades_ServiceTag'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_Blades_SystemModel'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_Blades_CPUs'|translate}}
+                </th>
+                <th>
+                    {{'DEVICES_DETAILS_Blades_Memory'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="blade in deviceBladesController.device.blades">
+            <td>{{blade.state}}</td>
+            <td>{{blade.powerstate}}</td>
+            <td>
+                <a id="lnkViewBladeDetails"
+                   class="btn btn-link" 
+                   ng-href="{{'#/device/' + deviceBladesController.device.id + '/' + deviceBladesController.device.deviceType}}">
+                    {{blade.ipaddress}}
+                </a>
+            </td>
+            <td>{{blade.hostname}}</td>
+            <td>{{blade.location}}</td>
+            <td>{{blade.servicetag}}</td>
+            <td>{{blade.systemmodel}}</td>
+            <td>{{blade.cpus}}</td>
+            <td>{{blade.memory}}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9" class="text-center">
+                    <div id="pager"
+                         st-pagination="deviceBladesController.device.blades"
+                         st-items-by-page="20"
+                         st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

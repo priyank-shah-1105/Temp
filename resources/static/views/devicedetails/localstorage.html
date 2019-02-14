@@ -1,0 +1,119 @@
+﻿<div id="device_controllers">
+    <div class="row">
+        <div class="col-xs-12">
+            <ul class="list-inline">
+                <li>
+                 {{'SERVICES_Filter_By'|translate}}:
+                </li>
+                <li>
+                    <select ng-options="option.id as option.name for option in deviceLocalStorageController.filterOptions"
+                            ng-model="deviceLocalStorageController.filter"
+                            class="form-control"></select>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <table id="controllersTable" class="table"
+           st-table="deviceLocalStorageController.device.localstoragedata"
+           st-safe-src="deviceLocalStorageController.safeSource">
+        <thead>
+        <tr>
+            <th></th>
+            <th>
+                {{'DEVICES_DETAILS_LOCAL_STORAGE_ControllerName'|translate}}
+            </th>
+            <th>
+                {{'DEVICES_DETAILS_LOCAL_STORAGE_DeviceDescription'|translate}}
+            </th>
+            <th>
+                {{'DEVICES_DETAILS_LOCAL_STORAGE_PCISlot'|translate}}
+            </th>
+            <th>
+                {{'DEVICES_DETAILS_LOCAL_STORAGE_FirmwareVersion'|translate}}
+            </th>
+            <th>
+                {{'DEVICES_DETAILS_LOCAL_STORAGE_DriverVersion'|translate}}
+            </th>
+            <th>
+                {{'DEVICES_DETAILS_LOCAL_STORAGE_CacheMemorySize'|translate}}
+            </th>
+        </tr>
+        </thead>
+        <tbody ng-repeat="controller in deviceLocalStorageController.device.localstoragedata">
+        <tr>
+            <td>
+                <chevron item="controller._showDisks"></chevron>
+            </td>
+            <td>{{controller.raidControllerName}}</td>
+            <td>{{controller.raidDeviceDescription}}</td>
+            <td>
+                {{controller.raidPCISlot}}
+            </td>
+            <td>{{controller.raidFirmwareVersion}}</td>
+            <td>{{controller.raidDriverVersion}}</td>
+            <td>{{controller.raidCacheMemorySize}}</td>
+        </tr>
+        <tr ng-if="controller._showDisks">
+            <td></td>
+            <td colspan="6" style="background-color: #f2f2f2">
+                <table ng-if="deviceLocalStorageController.filter === 'logical'"
+                       class="table"
+                       style="background-color: inherit">
+                    <thead>
+                    <tr>
+                        <th>
+                            {{'DEVICES_DETAILS_LOCAL_STORAGE_LogicalDiskName' | translate}}
+                        </th>
+                        <th>
+                            {{'DEVICES_DETAILS_LOCAL_STORAGE_State' | translate}}
+                        </th>
+                        <th>
+                            {{'DEVICES_DETAILS_LOCAL_STORAGE_Layout' | translate}}
+                        </th>
+                        <th>
+                            {{'DEVICES_DETAILS_LOCAL_STORAGE_Size' | translate}}
+                        </th>
+                        <th>
+                            {{'DEVICES_DETAILS_LOCAL_STORAGE_MediaType' | translate}}
+                        </th>
+                        <th>
+                            {{'DEVICES_DETAILS_LOCAL_STORAGE_ReadPolicy' | translate}}
+                        </th>
+                        <th>
+                            {{'DEVICES_DETAILS_LOCAL_STORAGE_WritePolicy' | translate}}
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="disk in controller.logicaldiskdata">
+                        <td>
+                            {{disk.logicalDiskName}}
+                            <a ng-click="deviceLocalStorageController.viewDisks(disk)">
+                                {{'DEVICES_DETAILS_LOCAL_STORAGE_ViewPhysicalDisks'|translate}}
+                            </a>
+                        </td>
+                        <td>{{disk.state}}</td>
+                        <td>{{disk.layout}}</td>
+                        <td>{{disk.size}}</td>
+                        <td>{{disk.mediaType}}</td>
+                        <td>{{disk.readPolicy}}</td>
+                        <td>{{disk.writePolicy}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <physical-disks disks="controller.physicaldiskdata" ng-if="deviceLocalStorageController.filter === 'physical'"></physical-disks>
+            </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="9" class="text-center">
+                <div id="pager"
+                     st-pagination=""
+                     st-items-by-page="20"
+                     st-displayed-pages="7"></div>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+</div>

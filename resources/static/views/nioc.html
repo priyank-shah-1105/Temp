@@ -1,0 +1,288 @@
+﻿<div class="skip-form-group">
+    <div class="col-sm-12">
+        {{'NIOC_CUSTOM_CONTROL_helptext'|translate}}
+     </div>
+    <div class="col-sm-6">
+        <label class="control-label"
+               for="{{niocController.getInputName($index)}}"
+               data-toggle="tooltip"
+               data-placement="right"
+               data-html="true"
+               title="{{niocController.setting.tooltip}}">
+            {{ (niocController.setting.id | translateLabel : niocController.category.id : niocController.setting.name) | titleCase }}
+        </label>
+        <span ng-if="niocController.setting.required">*</span>
+        <span id="{{'label_' + niocController.setting.id}}"
+              ng-if="niocController.setting.tooltip && !niocController.setting.useinfotooltip"
+              data-toggle="tooltip"
+              data-placement="right"
+              data-html="true"
+              title="{{niocController.setting.tooltip}}">
+            <i class="ci ci-info-circle-info text-primary"></i>
+        </span>
+        <span id="{{'label_info_' + niocController.setting.id}}"
+              ng-if="niocController.setting.tooltip && niocController.setting.useinfotooltip"
+              data-toggle="tooltip"
+              data-placement="right"
+              data-html="true"
+              title="{{niocController.setting.tooltip}}">
+            <i class="ci ci-info-circle-info text-primary"></i>
+        </span>
+    </div>
+    <div class="col-sm-6">
+        <div>
+
+            <input type="checkbox"
+                   style="height: 32px"
+                   ng-model="niocController.setting.value.configure"
+                   ng-disabled="!niocController.editMode"
+                   ng-change="niocController.refresh()"
+                   id="{{'configureCheckbox_' + niocController.id}}" />
+            <div>
+                <table class="table" ng-if="niocController.setting.value.configure">
+                    <thead>
+                        <tr>
+                            <th>
+                                {{'NIOC_CUSTOM_CONTROL_TH_NetworkResourcePool'|translate}}
+                            </th>
+                            <th>
+                                {{'NIOC_CUSTOM_CONTROL_TH_ShareValue'|translate}}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong id="{{'label_management_' + niocController.id}}">
+                                    {{'NIOC_CUSTOM_CONTROL_LABEL_management'|translate}}
+                                </strong>
+                            </td>
+                            <td>
+                                <div class="col-xs-12" style="max-width:130px;">
+                                    <input ng-style="niocController.getInputStyle('management')"
+                                           ng-model="niocController.setting.value.management"
+                                           type="number"
+                                           ng-disabled="!niocController.editMode"
+                                           required
+                                           name="{{niocController.getInputName('management')}}"
+                                           ng-class="{ 'ng-invalid' : niocController.inputInvalid('management')}"
+                                           class="form-control skip-input"
+                                           ng-change="niocController.inputChanged('management')"
+                                           id="{{niocController.getInputName('management')}}" />
+                                </div>
+                                <!-- Validation Messages -->
+                                <div class="text-danger col-xs-12" ng-if="niocController.form._submitted && niocController.inputInvalid('management')">
+                                    {{niocController.getValidationMessage('management')}}
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong id="{{'label_vMotion_' + niocController.id}}">
+                                    {{'NIOC_CUSTOM_CONTROL_LABEL_vMotion'|translate}}
+                                </strong>
+                            </td>
+                            <td>
+                                <div class="col-xs-12" style="max-width:130px;">
+                                    <input ng-style="niocController.getInputStyle('vmotion')"
+                                           ng-disabled="!niocController.editMode"
+                                           ng-model="niocController.setting.value.vmotion"
+                                           type="number"
+                                           required
+                                           name="{{niocController.getInputName('vmotion')}}"
+                                           ng-class="{ 'ng-invalid' : niocController.inputInvalid('vmotion')}"
+                                           class="form-control skip-input"
+                                           ng-change="niocController.inputChanged('vmotion')"
+                                           id="{{niocController.getInputName('vmotion')}}" />
+                                </div>
+                                <!-- Validation Messages -->
+                                <div class="text-danger col-xs-12" ng-if="niocController.form._submitted && niocController.inputInvalid('vmotion')">
+                                    {{niocController.getValidationMessage('vmotion')}}
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong id="{{'label_vsan_' + niocController.id}}">
+                                    {{'NIOC_CUSTOM_CONTROL_LABEL_vsan'|translate}}
+                                </strong>
+                            </td>
+                            <td>
+                                <div class="col-xs-12" style="max-width:130px;">
+                                    <input ng-style="niocController.getInputStyle('vsan')"
+                                           ng-disabled="!niocController.editMode"
+                                           ng-model="niocController.setting.value.vsan"
+                                           type="number"
+                                           required
+                                           name="{{niocController.getInputName('vsan')}}"
+                                           ng-class="{ 'ng-invalid' : niocController.inputInvalid('vsan')}"
+                                           class="form-control skip-input"
+                                           ng-change="niocController.inputChanged('vsan')"
+                                           id="{{niocController.getInputName('vsan')}}" />
+                                </div>
+                                <!-- Validation Messages -->
+                                <div class="text-danger col-xs-12" ng-if="niocController.form._submitted && niocController.inputInvalid('vsan')">
+                                    {{niocController.getValidationMessage('vsan')}}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong id="{{'label_vm_' + niocController.id}}">
+                                    {{'NIOC_CUSTOM_CONTROL_LABEL_vm'|translate}}
+                                </strong>
+                            </td>
+                            <td>
+                                <div class="col-xs-12" style="max-width:130px;">
+                                    <input ng-style="niocController.getInputStyle('virtualMachine')"
+                                           ng-disabled="!niocController.editMode"
+                                           ng-model="niocController.setting.value.virtualMachine"
+                                           type="number"
+                                           required
+                                           name="{{niocController.getInputName('virtualMachine')}}"
+                                           ng-class="{ 'ng-invalid' : niocController.inputInvalid('virtualMachine')}"
+                                           class="form-control skip-input"
+                                           ng-change="niocController.inputChanged('virtualMachine')"
+                                           id="{{niocController.getInputName('virtualMachine')}}" />
+                                </div>
+                                <!-- Validation Messages -->
+                                <div class="text-danger col-xs-12" ng-if="niocController.form._submitted && niocController.inputInvalid('virtualMachine')">
+                                    {{niocController.getValidationMessage('virtualMachine')}}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong id="{{'label_iscsi_' + niocController.id}}">
+                                    {{'NIOC_CUSTOM_CONTROL_LABEL_iscsi'|translate}}
+                                </strong>
+                            </td>
+                            <td>
+                                <div class="col-xs-12" style="max-width:130px;">
+                                    <input ng-style="niocController.getInputStyle('iSCSI')"
+                                           ng-disabled="!niocController.editMode"
+                                           ng-model="niocController.setting.value.iSCSI"
+                                           type="number"
+                                           required
+                                           name="{{niocController.getInputName('iSCSI')}}"
+                                           ng-class="{ 'ng-invalid' : niocController.inputInvalid('iSCSI')}"
+                                           class="form-control skip-input"
+                                           ng-change="niocController.inputChanged('iSCSI')"
+                                           id="{{niocController.getInputName('iSCSI')}}" />
+                                </div>
+                                <!-- Validation Messages -->
+                                <div class="text-danger col-xs-12" ng-if="niocController.form._submitted && niocController.inputInvalid('iSCSI')">
+                                    {{niocController.getValidationMessage('iSCSI')}}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong id="{{'label_nfs_' + niocController.id}}">
+                                    {{'NIOC_CUSTOM_CONTROL_LABEL_nfs'|translate}}
+                                </strong>
+                            </td>
+                            <td>
+                                <div class="col-xs-12" style="max-width:130px;">
+                                    <input ng-style="niocController.getInputStyle('nfs')"
+                                           ng-disabled="!niocController.editMode"
+                                           ng-model="niocController.setting.value.nfs"
+                                           type="number"
+                                           required
+                                           name="{{niocController.getInputName('nfs')}}"
+                                           ng-class="{ 'ng-invalid' : niocController.inputInvalid('nfs')}"
+                                           class="form-control skip-input"
+                                           ng-change="niocController.inputChanged('nfs')"
+                                           id="{{niocController.getInputName('nfs')}}" />
+                                </div>
+                                <!-- Validation Messages -->
+                                <div class="text-danger col-xs-12" ng-if="niocController.form._submitted && niocController.inputInvalid('nfs')">
+                                    {{niocController.getValidationMessage('nfs')}}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong id="{{'label_protection_' + niocController.id}}">
+                                    {{'NIOC_CUSTOM_CONTROL_LABEL_protection'|translate}}
+                                </strong>
+                            </td>
+                            <td>
+                                <div class="col-xs-12" style="max-width:130px;">
+                                    <input ng-style="niocController.getInputStyle('vdp')"
+                                           ng-disabled="!niocController.editMode"
+                                           ng-model="niocController.setting.value.vdp"
+                                           type="number"
+                                           required
+                                           name="{{niocController.getInputName('vdp')}}"
+                                           ng-class="{ 'ng-invalid' : niocController.inputInvalid('vdp')}"
+                                           class="form-control skip-input"
+                                           ng-change="niocController.inputChanged('vdp')"
+                                           id="{{niocController.getInputName('vdp')}}" />
+                                </div>
+                                <!-- Validation Messages -->
+                                <div class="text-danger col-xs-12" ng-if="niocController.form._submitted && niocController.inputInvalid('vdp')">
+                                    {{niocController.getValidationMessage('vdp')}}
+                                </div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td>
+                            <strong id="{{'label_replication_' + niocController.id}}">
+                                {{'NIOC_CUSTOM_CONTROL_LABEL_replication'|translate}}
+                            </strong>
+                        </td>
+                        <td>
+                            <div class="col-xs-12" style="max-width:130px;">
+                                <input ng-style="niocController.getInputStyle('hbr')"
+                                       ng-disabled="!niocController.editMode"
+                                       ng-model="niocController.setting.value.hbr"
+                                       type="number"
+                                       required
+                                       name="{{niocController.getInputName('hbr')}}"
+                                       ng-class="{ 'ng-invalid' : niocController.inputInvalid('hbr')}"
+                                       class="form-control skip-input"
+                                       ng-change="niocController.inputChanged('hbr')"
+                                       id="{{niocController.getInputName('hbr')}}" />
+                            </div>
+                            <!-- Validation Messages -->
+                            <div class="text-danger col-xs-12" ng-if="niocController.form._submitted && niocController.inputInvalid('hbr')">
+                                {{niocController.getValidationMessage('hbr')}}
+                            </div>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td>
+                                <strong id="{{'label_replication_' + niocController.id}}">
+                                    {{'NIOC_CUSTOM_CONTROL_LABEL_faultTolerance'|translate}}
+                                </strong>
+                            </td>
+                            <td>
+                                <div class="col-xs-12" style="max-width:130px;">
+                                    <input ng-style="niocController.getInputStyle('faultTolerance')"
+                                           ng-disabled="!niocController.editMode"
+                                           ng-model="niocController.setting.value.faultTolerance"
+                                           type="number"
+                                           required
+                                           name="{{niocController.getInputName('faultTolerance')}}"
+                                           ng-class="{ 'ng-invalid' : niocController.inputInvalid('faultTolerance')}"
+                                           class="form-control skip-input"
+                                           ng-change="niocController.inputChanged('faultTolerance')"
+                                           id="{{niocController.getInputName('faultTolerance')}}" />
+                                </div>
+                                <!-- Validation Messages -->
+                                <div class="text-danger col-xs-12" ng-if="niocController.form._submitted && niocController.inputInvalid('faultTolerance')">
+                                    {{niocController.getValidationMessage('faultTolerance')}}
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div class="clearfix"></div>
+</div>

@@ -1,0 +1,101 @@
+﻿<section id="device_firmwarerevisions">
+    <ul id="firmwareSoftware" class="list-unstyled list-inline">
+        <li>
+            <strong>
+                {{'GENERIC_View'|translate}}
+            </strong>
+        </li>
+        <li>
+            <label class="radio-inline">
+                <input type="radio"
+                       name="radComponentSelection"
+                       id="radComponentSelectionFW"
+                       ng-model="deviceFirmwareController.componentSelection"
+                       ng-value="'fw'" />
+                {{'DEVICES_DETAILS_FIRMWARE_Components'|translate}}
+            </label>
+            <label class="radio-inline">
+                <input type="radio"
+                       name="radComponentSelection"
+                       id="radComponentSelectionSW"
+                       ng-model="deviceFirmwareController.componentSelection"
+                       ng-value="'sw'" />
+                {{'DEVICES_DETAILS_SOFTWARE_Components'|translate}}
+            </label>
+        </li>
+    </ul>
+    <table class="table"
+           st-table="deviceFirmwareController.device.firmwares"
+           st-safe-src="deviceFirmwareController.firmwaressafeSource"
+           ng-if="deviceFirmwareController.componentSelection=='fw'">
+        <thead>
+            <tr>
+                <th st-sort="'firmwarename'">
+                    {{'DEVICES_DETAILS_FIRMWARE_Component'|translate}}
+                </th>
+                <th st-sort="'firmwareversion'">
+                    {{'DEVICES_DETAILS_FIRMWARE_Version'|translate}}
+                </th>
+                <th st-sort="'firmwarelastupdatetime'">
+                    {{'DEVICES_DETAILS_FIRMWARE_LastUpdated'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="firmware in deviceFirmwareController.device.firmwares">
+                <td>{{firmware.firmwarename}}</td>
+                <td>{{firmware.firmwareversion}}</td>
+                <td><datetime-display time="firmware.firmwarelastupdatetime" time-format="'LLL'" /></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9" class="text-center">
+                    <div id="pager"
+                         st-pagination="deviceFirmwareController.device.firmwares"
+                         st-items-by-page="20"
+                         st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <table class="table"
+           st-table="deviceFirmwareController.device.softwares"
+           st-safe-src="deviceFirmwareController.softwaressafeSource"
+           ng-if="deviceFirmwareController.componentSelection=='sw'">
+        <thead>
+            <tr>
+                <th st-sort="'softwarename'">
+                    {{'DEVICES_DETAILS_SOFTWARE_Component'|translate}}
+                </th>
+                <th st-sort="'vendor'">
+                    {{'DEVICES_DETAILS_SOFTWARE_Vendor'|translate}}
+                </th>
+                <th st-sort="'softwareversion'">
+                    {{'DEVICES_DETAILS_SOFTWARE_Version'|translate}}
+                </th>
+                <th st-sort="'softwarelastupdatetime'">
+                    {{'DEVICES_DETAILS_SOFTWARE_LastUpdated'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="software in deviceFirmwareController.device.softwares">
+                <td>{{software.softwarename}}</td>
+                <td>{{software.vendor}}</td>
+                <td>{{software.softwareversion}}</td>
+                <td><datetime-display time="software.softwarelastupdatetime" time-format="'LLL'" /></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="9" class="text-center">
+                    <div id="pager"
+                         st-pagination="deviceFirmwareController.device.softwares"
+                         st-items-by-page="20"
+                         st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</section>

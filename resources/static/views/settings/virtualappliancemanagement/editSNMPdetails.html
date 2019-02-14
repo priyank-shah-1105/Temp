@@ -1,0 +1,174 @@
+<section id="page_SNMPSettings">
+    <error-display errors="generateTroubleshootingBundleModalController.errors"
+                   on-click="$root.ASM.RemoveError(error, generateTroubleshootingBundleModalController.errors)"
+                   on-expand-collapse=""></error-display>
+    <header>
+        <p>
+            Enter the details of the SNMP that you want
+        </p>
+    </header>
+    <form id="SNMPSettingsForm"
+          role="form"
+          class="form-horizontal"
+          name="settingsForm"
+          form-validation="generateTroubleshootingBundleModalController.firmwarepackageUpload._submitted">
+        <fieldset>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 control-label">
+                        Community String:
+                    </label>
+                    <div class="col-md-4">
+                        <input id="community_string"
+                               name="community_string"
+                               type="text"
+                               class="form-control"
+                               ng-model="generateTroubleshootingBundleModalController.addCS.communityString">
+                    </div>
+                    <div class="col-sm-1">
+                        <button class="btn btn-primary" id="addCS" ng-click="generateTroubleshootingBundleModalController.firmwarepackageUpload._submitted = true; generateTroubleshootingBundleModalController.firmwarepackageUpload.$valid && generateTroubleshootingBundleModalController.testAddCS()">ADD</button>
+                    </div>
+
+                    <div class="col-sm-1">
+                        <button class="btn btn-primary" id="deleteCS" ng-click="generateTroubleshootingBundleModalController.firmwarepackageUpload._submitted = true; generateTroubleshootingBundleModalController.firmwarepackageUpload.$valid && generateTroubleshootingBundleModalController.testDeleteCS()">DELETE</button>
+                    </div>
+                </div>
+
+                <!--generateTroubleshootingBundleModalController.tsBundle.username-->
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 control-label">
+                        Forwarding Details
+                    </label>
+                    <div class="col-md-4">
+                        <input id="forwarding_details"
+                               name="forwarding_details"
+                               type="text"
+                               class="form-control"
+                               ng-model="generateTroubleshootingBundleModalController.addForwarding.communityString"/>
+                    </div>
+                    <div class="col-sm-1">
+                        <button class="btn btn-primary" id="addForwarding" ng-click="generateTroubleshootingBundleModalController.firmwarepackageUpload._submitted = true; generateTroubleshootingBundleModalController.firmwarepackageUpload.$valid && generateTroubleshootingBundleModalController.testAddFowarding()">ADD</button>
+                    </div>
+
+                    <div class="col-sm-1">
+                        <button class="btn btn-primary" id="deleteForwarding" ng-click="generateTroubleshootingBundleModalController.firmwarepackageUpload._submitted = true; generateTroubleshootingBundleModalController.firmwarepackageUpload.$valid && generateTroubleshootingBundleModalController.testDeleteFowarding()">DELETE</button>
+                    </div>
+                </div>
+
+            </div>
+            <!--<div class="form-group">-->
+                <!--<label for="portNumber" class="col-md-4 control-label">-->
+                    <!--{{'SETTINGS_Port'|translate}}-->
+                <!--</label>-->
+                <!--<div class="col-md-4">-->
+                    <!--<input id="portNumber"-->
+                           <!--name="portNumber"-->
+                           <!--type="number"-->
+                           <!--min="0"-->
+                           <!--ng-change="editProxySettingsModalController.settings.proxyPort = editProxySettingsModalController.settings.proxyPort === null ? 0 : editProxySettingsModalController.settings.proxyPort"-->
+                           <!--step="1"-->
+                           <!--class="form-control"-->
+                           <!--ng-model="editProxySettingsModalController.settings.proxyPort"-->
+                           <!--ng-disabled="!editProxySettingsModalController.settings.enableProxy"/>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<label for="useProxyCreds" class="col-md-4 control-label">-->
+                    <!--{{'SETTINGS_UseProxyCredentials'|translate}}-->
+                <!--</label>-->
+                <!--<div class="col-md-4">-->
+                    <!--<input id="useProxyCreds"-->
+                           <!--name="useProxyCreds"-->
+                           <!--type="checkbox"-->
+                           <!--ng-model="editProxySettingsModalController.settings.enableProxyCredentials"-->
+                           <!--ng-checked="editProxySettingsModalController.settings.enableProxyCredentials"-->
+                           <!--ng-disabled="!editProxySettingsModalController.settings.enableProxy"/>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<label for="username" class="col-md-4 control-label">-->
+                    <!--{{'SETTINGS_UserName'|translate}}-->
+                <!--</label>-->
+                <!--<div class="col-md-4">-->
+                    <!--<input id="username"-->
+                           <!--name="username"-->
+                           <!--type="text"-->
+                           <!--class="form-control"-->
+                           <!--ng-model="editProxySettingsModalController.settings.proxyUsername"-->
+                           <!--ng-disabled="!editProxySettingsModalController.settings.enableProxy || !editProxySettingsModalController.settings.enableProxyCredentials"/>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<label for="password" class="col-md-4 control-label">-->
+                    <!--{{'SETTINGS_Password'|translate}}-->
+                <!--</label>-->
+                <!--<div class="col-md-4">-->
+                    <!--<div class="input-group">-->
+                        <!--<input id="password"-->
+                               <!--name="password"-->
+                               <!--ng-model="editProxySettingsModalController.settings.proxyPassword"-->
+                               <!--required-->
+                               <!--class="form-control"-->
+                               <!--type="password" password-viewer-->
+                               <!--placeholder=""-->
+                               <!--ng-disabled="!editProxySettingsModalController.settings.enableProxy || !editProxySettingsModalController.settings.enableProxyCredentials"/>-->
+                    <!--</div>-->
+                    <!--<div class="text-danger" ng-if="editProxySettingsModalController.submitted">-->
+                        <!--<div ng-if="settingsForm.password.$error.required">{{'SETTINGS_PasswordRequired'|translate}}</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<label for="verifyPassword" class="col-md-4 control-label">-->
+                    <!--{{'SETTINGS_ConfirmPassword'|translate}}-->
+                <!--</label>-->
+                <!--<div class="col-md-4">-->
+                    <!--<div class="input-group">-->
+                        <!--<input id="verifyPassword"-->
+                               <!--name="verifyPassword"-->
+                               <!--ng-match="editProxySettingsModalController.settings.proxyPassword"-->
+                               <!--ng-model="editProxySettingsModalController.settings.proxyVerifyPassword"-->
+                               <!--required-->
+                               <!--class="form-control"-->
+                               <!--type="password" password-viewer-->
+                               <!--placeholder=""-->
+                               <!--ng-disabled="!editProxySettingsModalController.settings.enableProxy || !editProxySettingsModalController.settings.enableProxyCredentials"/>-->
+
+                    <!--</div>-->
+                    <!--<div class="text-danger" ng-if="editProxySettingsModalController.submitted">-->
+                        <!--<div ng-if="!settingsForm.verifyPassword.$error.required && settingsForm.verifyPassword.$error.ngmatch">{{'SETTINGS_PasswordMatch'|translate}}</div>-->
+                        <!--<div ng-if="settingsForm.verifyPassword.$error.required">{{'SETTINGS_VerifiedPassword'|translate}}</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        </fieldset>
+    </form>
+    <footer>
+        <!--<ul class="list-inline pull-right">-->
+            <!--<li>-->
+                <!--<button id="btnTestProxy"-->
+                        <!--class="btn btn-default"-->
+                        <!--ng-disabled="!editProxySettingsModalController.settings.enableProxy"-->
+                        <!--ng-click="editProxySettingsModalController.submitted = true; settingsForm.$valid && editProxySettingsModalController.testProxy()">-->
+                    <!--{{'SETTINGS_TestProxy'|translate}}-->
+                <!--</button>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<button id="submitProxySettings"-->
+                        <!--class="btn btn-primary"-->
+                        <!--ng-click="editProxySettingsModalController.submitted = true; settingsForm.$valid && editProxySettingsModalController.save()">-->
+                    <!--{{'SETTINGS_Save'|translate}}-->
+                <!--</button>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<button id="cancel_ntp_form"-->
+                        <!--class="btn btn-default"-->
+                        <!--ng-click="editProxySettingsModalController.cancel()">-->
+                    <!--{{'SETTINGS_Cancel'|translate}}-->
+                <!--</button>-->
+            <!--</li>-->
+        <!--</ul>-->
+    </footer>
+</section>

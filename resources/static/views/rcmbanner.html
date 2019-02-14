@@ -1,0 +1,40 @@
+﻿<div id="rcm_banner"
+     ng-if="rcmBannerController.getShowBanner()"
+     class="row">
+    <div class="alert"
+         role="alert"
+         style="margin-bottom: 0px;padding-bottom: 14px;background-color:#6bacde;color:white;">
+        <ul class="list-inline">
+            <li>
+                <i class="ci-info-circle-info text-default"></i>
+            </li>
+            <li>
+                {{'INDEX_Banner_Actions_AnewRCMversionisavailablefordownload' | translate}}
+                <a ng-click="rcmBannerController.viewDetails()" style="color:white;text-decoration: underline;">{{ "INDEX_Banner_Actions_Viewfordetails" | translate}}</a>
+            </li>
+            <li class="pull-right">
+                <ul class="list-inline">
+                    <li>
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle"
+                                    style="border: none; color: white;"
+                                    type="button"
+                                    id="RcmBannerDropdown"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                {{"INDEX_Banner_Actions_Actions" | translate}}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="RcmBannerDropdown">
+                                <li><a href="JavaScript:void(0)" ng-click="rcmBannerController.viewDetails();">{{"INDEX_Banner_Actions_View" | translate}}</a></li>
+                                <li><a href="JavaScript:void(0)" ng-click="rcmBannerController.hide();">{{"INDEX_Banner_Actions_Hide" | translate}}</a></li>
+                                <li><a href="JavaScript:void(0)" ng-click="rcmBannerController.dismiss();">{{"INDEX_Banner_Actions_Dismiss" | translate}}</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

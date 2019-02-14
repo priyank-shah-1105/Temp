@@ -1,0 +1,44 @@
+﻿<div id="device_netapp">
+    <table class="table"
+           st-table="deviceNetAppVolumesController.device.volumes"
+           st-safe-src="deviceNetAppVolumesController.safeSource">
+        <thead>
+            <tr>
+                <th st-sort="'name'">
+                    {{'DEVICES_DETAILS_Volumes_Name'|translate}}
+                </th>
+                <th st-sort="'logicalsize'">
+                    {{'DEVICES_DETAILS_Volumes_LogicalSize'|translate}}
+                </th>
+                <th st-sort="'replayprofile'">
+                    {{'DEVICES_DETAILS_Volumes_ReplayProfile'|translate}}
+                </th>
+                <th st-sort="'storageprofile'">
+                    {{'DEVICES_DETAILS_Volumes_StorageProfile'|translate}}
+                </th>
+                <th st-sort="'diskfolder'">
+                    {{'DEVICES_DETAILS_Volumes_DiskFolder'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="volume in deviceNetAppVolumesController.device.volumes">
+            <td>{{volume.name}}</td>
+            <td>{{volume.logicalsize}}</td>
+            <td>{{volume.replayprofile}}</td>
+            <td>{{volume.storageprofile}}</td>
+            <td>{{volume.diskfolder}}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5" class="text-center">
+                    <div id="pager"
+                         st-pagination="deviceNetAppVolumesController.device.volumes"
+                         st-items-by-page="20"
+                         st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

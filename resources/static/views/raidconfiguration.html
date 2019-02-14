@@ -1,0 +1,356 @@
+﻿<div id="page_raidconfiguration" class="skip-form-group">
+    <div class="col-sm-6">
+        <div class="form-group">
+            <div class="col-sm-6">
+                <label class="control-label">
+                    {{'RAIDCONFIGURATION_Title'|translate}}
+                </label>
+            </div>
+            <div class="col-sm-6">
+                <div class="radio">
+                    <label for="raidtype_basic_{{raidConfigurationController.id}}">
+                        <input id="raidtype_basic_{{raidConfigurationController.id}}"
+                               type="radio"
+                               value="basic"
+                               ng-change="raidConfigurationController.raidTypeChange()"
+                               name="raid_{{raidConfigurationController.radioGuid}}"
+                               ng-model="raidConfigurationController.setting.value.raidtype"
+                               ng-disabled="!raidConfigurationController.editMode"
+                               class="raidType" />
+                        {{'RAIDCONFIGURATION_Basic'|translate}}
+                    </label>
+                </div>
+                <div class="radio">
+                    <label for="raidtype_advanced_{{raidConfigurationController.id}}">
+                        <input id="raidtype_advanced_{{raidConfigurationController.id}}"
+                               type="radio"
+                               value="advanced"
+                               ng-change="raidConfigurationController.raidTypeChange()"
+                               name="raid_{{raidConfigurationController.radioGuid}}"
+                               ng-model="raidConfigurationController.setting.value.raidtype"
+                               ng-disabled="!raidConfigurationController.editMode"
+                               class="raidType" />
+                        {{'RAIDCONFIGURATION_Advanced'|translate}}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6">
+        <div ng-if="raidConfigurationController.setting.value.raidtype != 'none'" class="form-group">
+            <div class="col-sm-12">
+                <select id="ddlBasicRaidLevel_{{raidConfigurationController.id}}"
+                        class="form-control"
+                        ng-required="raidConfigurationController.setting.value.raidtype === 'basic'"
+                        ng-options="item.id as item.name for item in raidConfigurationController.constants.basicRaidOptions"
+                        ng-model="raidConfigurationController.setting.value.basicraidlevel"
+                        ng-disabled="raidConfigurationController.setting.value.raidtype === 'advanced' || !raidConfigurationController.editMode"></select>
+            </div>
+        </div>
+        <div ng-show="raidConfigurationController.setting.value.raidtype == 'advanced'">
+            <!--Add Internal Virtual Disk-->
+            <div class="form-group" ng-if="raidConfigurationController.editMode">
+                <div class="col-sm-12">
+                    <button ng-if="raidConfigurationController.editMode"
+                            ng-click="raidConfigurationController.addVirtualDisk(raidConfigurationController.setting.value)"
+                            type="button"
+                            id="btnAddVirtualDisk_{{raidConfigurationController.id}}"
+                            ng-disabled="!raidConfigurationController.editMode"
+                            class="btn btn-primary">
+                        {{'RAIDCONFIGURATION_AddNewVirtualDisk'|translate}}
+                    </button>
+                </div>
+            </div>
+            <div class="form-group" ng-if="raidConfigurationController.setting.value.virtualdisks.length == 0">
+                <div class="col-sm-12">
+                    {{'RAIDCONFIGURATION_EmptyVirtualDisks'|translate}}
+                </div>
+            </div>
+
+            <div class="form-group skip-form-group" ng-show="raidConfigurationController.setting.value.virtualdisks.length > 0">
+                <div class="col-sm-12">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>
+                                    {{'RAIDCONFIGURATION_VirtualDisk'|translate}}
+                                </th>
+                                <th>
+                                    {{'RAIDCONFIGURATION_RAIDLevel'|translate}}
+                                </th>
+                                <th>
+                                    {{'RAIDCONFIGURATION_NumberOfDisks'|translate}}
+                                </th>
+                                <th></th>
+                                <th>
+                                    {{'RAIDCONFIGURATION_DiskType'|translate}}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="virtualdisk in raidConfigurationController.setting.value.virtualdisks"
+                                ng-class="{ 'ng-invalid' : raidConfigurationController.validVirtualDisk(virtualdisk, 'internal', $index) != true }"
+                                id="{{virtualdisk.id}}_internal">
+                                <td>
+                                    <button id="btnDeleteVirtualDisk_{{virtualdisk.id}}_{{$index}}"
+                                            class="btnDeleteVirtualDisk btn btn-link form-control ci-trash"
+                                            type="button"
+                                            ng-click="raidConfigurationController.deleteVirtualDisk(raidConfigurationController.setting.value, virtualdisk); raidConfigurationController.validateForm()"
+                                            ng-if="raidConfigurationController.editMode">
+                                        <i class="icon-ic-delete-trash-core"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <strong class="form-control-static">
+                                        {{$index + 1}}
+                                    </strong>
+                                </td>
+                                <td>
+                                    <select id="ddlAdvancedRaidLevel_{{raidConfigurationController.id}}"
+                                            class="form-control inline-control "
+                                            ng-change="raidConfigurationController.validateForm()"
+                                            ng-model="virtualdisk.raidlevel"
+                                            ng-options="item.id as item.name for item in raidConfigurationController.constants.basicRaidOptions"
+                                            ng-disabled="!raidConfigurationController.editMode"></select>
+                                </td>
+                                <td>
+                                    <select id="ddlDiskComparator_{{raidConfigurationController.id}}"
+                                            class="form-control inline-control "
+                                            ng-change="raidConfigurationController.validateForm()"
+                                            ng-model="virtualdisk.comparator"
+                                            ng-options="item.id as item.name for item in raidConfigurationController.constants.comparators"
+                                            ng-disabled="!raidConfigurationController.editMode"></select>
+                                </td>
+                                <td>
+                                    <input type="number"
+                                           id="ddlNumberOfDisks_{{raidConfigurationController.id}}"
+                                           class="form-control inline-control "
+                                           ng-change="raidConfigurationController.validateForm()"
+                                           ng-model="virtualdisk.numberofdisks"
+                                           min="1"
+                                           step="1"
+                                           ng-disabled="!raidConfigurationController.editMode" />
+                                </td>
+                                <td>
+                                    <select id="ddlDiskType_{{raidConfigurationController.id}}"
+                                            class="form-control inline-control "
+                                            ng-change="raidConfigurationController.validateForm()"
+                                            ng-model="virtualdisk.disktype"
+                                            ng-options="item.id as item.name for item in raidConfigurationController.constants.diskTypes"
+                                            ng-disabled="!raidConfigurationController.editMode"></select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox col-xs-8">
+                    <label for="enableglobalhotspares_{{raidConfigurationController.id}}">
+                        <input type="checkbox"
+                               name="enableglobalhotspares"
+                               id="enableglobalhotspares_{{raidConfigurationController.id}}"
+                               ng-model="raidConfigurationController.setting.value.enableglobalhotspares"
+                               ng-disabled="!raidConfigurationController.editMode" />
+                        <strong>
+                            {{'RAIDCONFIGURATION_EnableGlobalHotSpares'|translate}}
+                        </strong>
+                        <a 
+                           data-toggle="tooltip"
+                           data-html="true"
+                           data-placement="right"
+                           title="{{'RAIDCONFIGURATION_EnableGlobalHotspareTooltip' | translate}}">
+                            <i class="ci-info-circle-info"></i>
+                        </a>
+                    </label>
+                </div>
+            </div>
+            <div ng-if="raidConfigurationController.setting.value.enableglobalhotspares" class="form-group">
+                <label for="globalhotspares_{{raidConfigurationController.id}}" class="control-label col-sm-6">
+                    {{'RAIDCONFIGURATION_TotalHotSpares'|translate}}
+                </label>
+                <div class="col-sm-6">
+                    <input id="globalhotspares_{{raidConfigurationController.id}}"
+                           class="form-control"
+                           type="number"
+                           min="0"
+                           ng-model="raidConfigurationController.setting.value.globalhotspares"
+                           ng-disabled="!raidConfigurationController.editMode" />
+                </div>
+            </div>
+            <div ng-if="raidConfigurationController.setting.value.enableglobalhotspares" class="form-group">
+                <label for="minimumssd_{{raidConfigurationController.id}}" class="control-label col-sm-6">
+                    {{'RAIDCONFIGURATION_MinimumSSD'|translate}}
+                </label>
+                <div class="col-sm-6">
+                    <input id="minimumssd_{{raidConfigurationController.id}}"
+                           class="form-control"
+                           type="number"
+                           min="0"
+                           ng-model="raidConfigurationController.setting.value.minimumssd"
+                           ng-disabled="!raidConfigurationController.editMode" />
+                </div>
+            </div>
+            <!--Add External Virtual Disk-->
+            <div class="form-group" ng-if="raidConfigurationController.editMode">
+                <div class="col-sm-12">
+                    <button type="button"
+                            ng-click="raidConfigurationController.addExternalVirtualDisk()"
+                            class="btn btn-primary">
+                        {{'RAIDCONFIGURATION_AddExternalVirtualDisk'|translate}}
+                    </button>
+                    <a 
+                       data-toggle="tooltip"
+                       data-placement="right"
+                       data-html="true"
+                       title="{{'RAIDCONFIGURATION_AddExternalDiskTootip' | translate}}">
+                        <i class="ci-info-circle-info"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="form-group" ng-if="raidConfigurationController.setting.value.externalvirtualdisks.length == 0">
+                <div class="col-sm-12">
+                    {{'RAIDCONFIGURATION_EmptyVirtualDisks'|translate}}
+                </div>
+            </div>
+
+            <div class="form-group skip-form-group" ng-if="raidConfigurationController.setting.value.externalvirtualdisks.length > 0">
+                <div class="col-sm-12">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>
+                                    {{'RAIDCONFIGURATION_VirtualDisk'|translate}}
+                                </th>
+                                <th>
+                                    {{'RAIDCONFIGURATION_RAIDLevel'|translate}}
+                                </th>
+                                <th>
+                                    {{'RAIDCONFIGURATION_NumberOfDisks'|translate}}
+                                </th>
+                                <th></th>
+                                <th>
+                                    {{'RAIDCONFIGURATION_DiskType'|translate}}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="externalvirtualdisk in raidConfigurationController.setting.value.externalvirtualdisks"
+                                ng-class="{ 'ng-invalid': raidConfigurationController.validVirtualDisk(externalvirtualdisk, 'external', $index) != true }"
+                                id="{{virtualdisk.id}}_external">
+                                <td>
+                                    <button id="btnDeleteExternalVirtualDisk_{{raidConfigurationController.id}}"
+                                            class="btnDeleteExternalVirtualDisk btn btn-link form-control ci-trash"
+                                            type="button"
+                                            ng-click="raidConfigurationController.deleteExternalVirtualDisk(raidConfigurationController.setting.value, externalvirtualdisk);raidConfigurationController.validateForm()"
+                                            ng-if="raidConfigurationController.editMode">
+                                        <i class="icon-ic-delete-trash-core"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <strong class="form-control-static">
+                                        {{$index + 1}}
+                                    </strong>
+                                </td>
+                                <td>
+                                    <select id="ddlAdvancedRaidLevelExternal_{{raidConfigurationController.id}}" class="form-control inline-control "
+                                            ng-change="raidConfigurationController.validateForm()"
+                                            ng-model="externalvirtualdisk.raidlevel"
+                                            ng-options="item.id as item.name for item in raidConfigurationController.constants.basicRaidOptions"
+                                            ng-disabled="!raidConfigurationController.editMode"></select>
+                                </td>
+                                <td>
+                                    <select id="ddlDiskComparatorExternal_{{raidConfigurationController.id}}"
+                                            class="form-control inline-control "
+                                            ng-change="raidConfigurationController.validateForm()"
+                                            ng-model="externalvirtualdisk.comparator"
+                                            ng-options="item.id as item.name for item in raidConfigurationController.constants.comparators"
+                                            ng-disabled="!raidConfigurationController.editMode"></select>
+                                </td>
+                                <td>
+                                    <input type="number"
+                                           id="ddlNumberOfDisksExternal_{{raidConfigurationController.id}}"
+                                           class="form-control inline-control "
+                                           ng-change="raidConfigurationController.validateForm()"
+                                           ng-model="externalvirtualdisk.numberofdisks"
+                                           min="1"
+                                           step="1"
+                                           ng-disabled="!raidConfigurationController.editMode" />
+                                </td>
+                                <td>
+                                    <select id="ddlDiskTypeExternal_{{raidConfigurationController.id}}"
+                                            class="form-control inline-control "
+                                            ng-change="raidConfigurationController.validateForm()"
+                                            ng-model="externalvirtualdisk.disktype"
+                                            ng-options="item.id as item.name for item in raidConfigurationController.constants.diskTypes"
+                                            ng-disabled="!raidConfigurationController.editMode"></select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div ng-if="raidConfigurationController.setting.value.raidtype == 'advanced'" class="form-group">
+            <div class="checkbox col-xs-8">
+                <label for="enableglobalhotsparesexternal_{{raidConfigurationController.id}}">
+                    <input type="checkbox"
+                           name="enableglobalhotsparesexternal"
+                           id="enableglobalhotsparesexternal_{{raidConfigurationController.id}}"
+                           ng-model="raidConfigurationController.setting.value.enableglobalhotsparesexternal"
+                           ng-disabled="!raidConfigurationController.editMode" />
+                    <strong>
+                        {{'RAIDCONFIGURATION_EnableGlobalHotSpares'|translate}}
+                    </strong>
+                    <a 
+                       data-toggle="tooltip"
+                       data-placement="right"
+                       data-html="true"
+                       title="{{'RAIDCONFIGURATION_EnableGlobalHotspareTooltip' | translate}}">
+                        <i class="ci-info-circle-info"></i>
+                    </a>
+                </label>
+            </div>
+        </div>
+        <div ng-if="raidConfigurationController.setting.value.raidtype == 'advanced' && raidConfigurationController.setting.value.enableglobalhotsparesexternal" class="form-group">
+            <label for="globalhotsparesexternal_{{raidConfigurationController.id}}" class="control-label col-sm-6">
+                {{'RAIDCONFIGURATION_TotalHotSpares'|translate}}
+            </label>
+            <div class="col-sm-6">
+                <input id="globalhotsparesexternal_{{raidConfigurationController.id}}"
+                       class="form-control"
+                       type="number"
+                       min="0"
+                       ng-model="raidConfigurationController.setting.value.globalhotsparesexternal"
+                       ng-disabled="!raidConfigurationController.editMode" />
+            </div>
+        </div>
+
+        <div ng-if="raidConfigurationController.setting.value.raidtype == 'advanced' && raidConfigurationController.setting.value.enableglobalhotsparesexternal" class="form-group">
+            <label for="minimumssdexternal_{{raidConfigurationController.id}}" class="control-label col-sm-6">
+                {{'RAIDCONFIGURATION_MinimumSSD'|translate}}
+            </label>
+            <div class="col-sm-6">
+                <input id="minimumssdexternal_{{raidConfigurationController.id}}"
+                       class="form-control"
+                       type="number"
+                       min="0"
+                       ng-model="raidConfigurationController.setting.value.minimumssdexternal"
+                       ng-disabled="!raidConfigurationController.editMode" />
+            </div>
+        </div>
+        <div ng-if="raidConfigurationController.form._submitted && raidConfigurationController.hasNoDisks()" class="form-group">
+            <div class="col-sm-12">
+                <div class="has-error text-danger ng-invalid" id="error_{{raidConfigurationController.validityObj.id}}">
+                    {{'RAIDCONFIGURATION_Atleastonediskmustbepresent'|translate}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

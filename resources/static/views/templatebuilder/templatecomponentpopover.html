@@ -1,0 +1,43 @@
+﻿<section id="Template_builder_component_popover">
+    <div ng-if="templateComponentPopoverController.component.relatedcomponents.length >= 1">
+        <strong>
+            {{'TEMPLATEBUILDER_AssociatedResources'|translate}}
+        </strong>
+        <ul class="list-unstyled">
+            <li style="padding-left: 10px;" ng-repeat="related in templateComponentPopoverController.component.relatedcomponents">
+                <strong>
+                    {{related.name}} <span ng-if="related.instances > 1">({{related.instances}} {{'TEMPLATEBUILDER_instances'|translate}})</span>
+                </strong>
+            </li>
+        </ul>
+    </div>
+    <br />
+    <footer class="text-right">
+        <ul class="list-inline" style="max-height:210px;overflow:auto;">
+            <li>
+                <button ng-disabled="templateComponentPopoverController.mode !== 'edit' || $root.ASM.IsInRole('readonly')"
+                        ng-click="templateComponentPopoverController.editComponent({component: templateComponentPopoverController.component})"
+                        class="btn btn-primary btn-edit"
+                        id="component_details_{{templateComponentPopoverController.component.id}}">
+                    {{'GENERIC_Edit'|translate}}
+                </button>
+            </li>
+            <li>
+                <button ng-disabled="templateComponentPopoverController.mode !== 'edit' || $root.ASM.IsInRole('readonly')"
+                        ng-click="templateComponentPopoverController.cloneComponent({id: templateComponentPopoverController.component.id})"
+                        class="btn btn-primary btn-duplicate"
+                        id="component_duplicate_{{templateComponentPopoverController.component.id}}">
+                    {{'TEMPLATEBUILDER_Duplicate'|translate}}
+                </button>
+            </li>
+            <li>
+                <button ng-disabled="templateComponentPopoverController.mode !== 'edit' || $root.ASM.IsInRole('readonly')"
+                        ng-click="templateComponentPopoverController.deleteComponent({id: templateComponentPopoverController.component.id})"
+                        class="btn btn-primary btn-delete"
+                        id="component_delete_{{templateComponentPopoverController.component.id}}">
+                    {{'GENERIC_Delete'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>

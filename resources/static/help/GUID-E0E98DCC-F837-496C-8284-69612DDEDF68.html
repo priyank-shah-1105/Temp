@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Deploying multiple
+instances of service</title><link rel="prev" href="GUID-4F98D4A9-4E41-4831-B348-D59B46016463.html" /><link rel="next" href="GUID-30B43E75-29F5-4346-8153-7DA9DF532BD3.html" /><link href="static/screen.css?mSUyqg2y" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-E0E98DCC-F837-496C-8284-69612DDEDF68" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">Active System Manager Release 8.4</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Deploying multiple
+instances of service</h1>
+<div class="prereq" id="GUID-2C739074-B86C-4986-9C56-96B862BE3E21"><div class="note" id="GUID-BDF47B21-0A4C-4614-9C4A-F932A898B337"><span class="notelabel">NOTE: </span>You cannot deploy a
+service using a template that is in draft state. Publish the template
+before you use the template to deploy a service. </div>To deploy
+multiple instances of service, you must perform the following tasks:</div>
+<ol class="steps" id="GUID-F2B7C058-AB81-43EE-B181-DBD9F279EBB3">
+<li id="STEP_827C8A3416874998BF678C5C94152793"><p>On the <span class="uicontrol">Template</span> page,
+select a template. </p></li>
+<li id="STEP_8E8256B9F4304871AA6040766B7035D6"><p>Click <span class="uicontrol">Deploy Service</span>. <span class="uicontrol">Deploy Service </span>window is displayed.</p>
+</li>
+<li id="STEP_70208F2B36164EFBB5FE95F7C40E377B"><p>On the <span class="uicontrol">Deploy Service</span> window, under<span class="uicontrol"> Service Information</span>:</p>
+<ul id="GUID-C1CDB7E0-E02E-482C-B20D-6B4E074267E5">
+<li id="CHOICE_EEEE9A8D00F845B5AF696EF7CFAB23A8">Select template from the <span class="uicontrol">Select Published
+Template</span> drop-down menu.</li>
+</ul>
+<ul id="GUID-3EEA914E-C3C6-43EB-9AE1-5EDDC37900DD">
+<li id="CHOICE_E85CDDAD850C4703A431868AA822B476">Enter service name in <span class="uicontrol">Service Name</span> field.</li>
+</ul>
+<p><div class="note" id="GUID-0AF11765-CCAC-4045-85AE-F7AEF3853704"><span class="notelabel">NOTE: </span> For the multiple instances of deployment, this service name is the
+base name for the service which needs to be deployed. The first service
+is called by the name which is provided in Service Name field. Rest
+of the services are indicated by number after base service name.</div></p>
+</li>
+<li id="STEP_2974C9FCCEBF447A92526435C5FB77E5"><p>Type the number of deployments in <span class="uicontrol">Number of Deployments</span> fields.</p></li>
+<li id="STEP_8B90E560CDD24D33BF92F68B9E2BCD36"><p>Click<span class="uicontrol"> Next</span>. It directs
+you to <span class="uicontrol">Deployment Settings</span> in the <span class="uicontrol">Deploy Service</span> window.</p>
+<p><div class="note" id="GUID-F8520EAF-CDC7-46CE-B68F-055C65EC5C68"><span class="notelabel">NOTE: </span>When deploying multiple instances of a service, Autogeneration of
+hostname is required to be configured in a template.  When this option
+is enabled, the user will not be prompted to enter a hostname upon
+deployment.</div></p>
+</li>
+<li id="STEP_48A7B5DFDB9A4BB6A0AFCEDBF5987DDF"><p>Click <span class="uicontrol">Next</span>. It directs
+you to <span class="uicontrol">Schedule Deployment </span>option under <span class="uicontrol">Deploy Service</span> window. Under<span class="uicontrol"> Schedule Deployment</span>, two options are there:</p>
+<ul id="GUID-8EBEE90E-D727-4BEA-8CD6-574EF10AB84F">
+<li id="CHOICE_18929C228F394DB08D064094991E466D"><span class="uicontrol">Deploy Now</span>: To deploy the
+service immediately, select the option Deploy Now.</li>
+</ul>
+<ul id="GUID-14AF5862-D0AE-47FB-9399-3507FAE130C7">
+<li id="CHOICE_440F547F460F4256996AEC07CA7BB596"><span class="uicontrol">Schedule later</span>: To deploy
+the service later, select the option Schedule later.</li>
+</ul>
+</li>
+<li id="STEP_CC99113A623344BAACDB647BEB11FF7B"><p>Select desired date and time from the <span class="uicontrol">Date and Time</span> drop-down menu.</p></li>
+<li id="STEP_215ED20B87A44B18B88CCB127220D6BF"><p>Click <span class="uicontrol">Finish</span>.</p>
+</li>
+<li id="STEP_D01F14B39308468C8C9FC3EEF47D8E45"><p>If you have selected <span class="uicontrol">Deploy Now</span> option after clicking<span class="uicontrol"> Finish</span>, you get a message,
+stating that; <span class="uicontrol">Are you sure you wish to deploy the service? </span>  Click <span class="uicontrol">Yes</span> to deploy now.</p>
+<p><div class="note" id="GUID-9782DF67-6FD3-4314-A01B-548F36BA95B3"><span class="notelabel">NOTE: </span>If you want to deploy multiple service on many servers. It is recommended
+to break these up into smaller group of templates. It is recommended
+to put 5–10 servers in a single template. </div></p>
+</li>
+</ol>
+</article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?MavHWBUW"></script></body></html>

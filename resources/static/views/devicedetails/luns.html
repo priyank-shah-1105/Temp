@@ -1,0 +1,65 @@
+﻿<div id="device_luns">
+    <table id="lunsTable" class="table"
+           st-table="deviceLunsController.device.luns"
+           st-safe-src="deviceLunsController.safeSrc.luns">
+        <thead>
+            <tr>
+                <th st-sort="state">
+                    {{'GENERIC_State'|translate}}
+                </th>
+                <th st-sort="name">
+                    {{'DEVICES_EMC_LUNName'|translate}}
+                </th>
+                <th st-sort="id">
+                    {{'GENERIC_ID'|translate}}
+                </th>
+                <th st-sort="capacity">
+                    {{'GENERIC_Capacity'|translate}}
+                </th>
+                <th st-sort="allocated" ng-if="deviceLunsController.device.deviceType !== 'emcvnx'">
+                    {{'DEVICES_EMC_Allocated'|translate}}
+                </th>
+                <!--<th st-sort="sizeUsed">
+                    {{'GENERIC_Used'|translate}}
+                </th>-->
+                <th st-sort="pool" ng-if="deviceLunsController.device.deviceType !== 'emcvnx'">
+                    {{'DEVICES_EMC_Pool'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="lun in deviceLunsController.device.luns">
+                <td>
+                    <div ng-switch="lun.state">
+                        <span ng-switch-when="ready">
+                            <statusicon value="'green'"></statusicon>
+                        </span>
+                        <span ng-switch-when="errors">
+                            <statusicon value="'red'"></statusicon>
+                        </span>
+                        <span ng-switch-when="unknown">
+                            <statusicon value="'unknown'"></statusicon>
+                        </span>
+                        {{lun.state}}
+                    </div>
+                </td>
+                <td>{{lun.name}}</td>
+                <td>{{lun.id}}</td>
+                <td>{{lun.capacity}}</td>
+                <td ng-if="deviceLunsController.device.deviceType !== 'emcvnx'">{{lun.allocated}}</td>
+                <!--<td>{{lun.sizeUsed}}</td>-->
+                <td ng-if="deviceLunsController.device.deviceType !== 'emcvnx'">{{lun.pool}}</td>
+            </tr>
+        </tbody>
+        <!--<tfoot>
+            <tr>
+                <td colspan="9" class="text-center">
+                    <div id="pager"
+                         st-pagination="deviceLunsController.device.luns"
+                         st-items-by-page="20"
+                         st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>-->
+    </table>
+</div>

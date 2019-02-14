@@ -1,0 +1,274 @@
+﻿<section id="page_deployServiceWizard">
+    <wizard on-finish="deployServiceWizard.finishWizard()" on-cancel="deployServiceWizard.cancel()">
+        <error-display errors="deployServiceWizard.errors"
+                       on-click="$root.ASM.RemoveError(error, deployServiceWizard.errors)"
+                       on-expand-collapse=""></error-display>
+
+        <wizard-step step-title="{{'SERVICES_NEW_SERVICE_DeployService'|translate}}"
+                     on-next="deployServiceWizard.validateStep1()">
+            <section id="page_service_information">
+                <header>
+                    <h2 ng-if="!deployServiceWizard.service.template.name">
+                        {{'SETUPWIZARD_WelcomeTitle'|translate}}
+                    </h2>
+                    <h2 ng-if="deployServiceWizard.service.template.name">
+                        {{ 'SERVICES_NEW_SERVICE_DeployInterp' | translate }} {{deployServiceWizard.service.template.name}}
+                    </h2>
+                </header>
+                <form id="service_info"
+                      name="deployServiceWizard.forms.step1"
+                      class="form-horizontal"
+                      role="form"
+                      novalidate
+                      form-validation="deployServiceWizard.forms.step1._submitted">
+                    <fieldset>
+                        <service-information ng-if="deployServiceWizard.$scope.modal.params.templateId ? deployServiceWizard.service.template : true"
+                                             service="deployServiceWizard.service"
+                                             form="deployServiceWizard.forms.step1"
+                                             deploying="true"
+                                             read-only="false"></service-information>
+                    </fieldset>
+                </form>
+            </section>
+        </wizard-step>
+        <wizard-step step-title="{{'SERVICES_NEW_SERVICE_DeploymentSettings'|translate}}"
+                     on-next="deployServiceWizard.validateStep2()">
+            <form name="deployServiceWizard.forms.step2"
+                  form-validation="deployServiceWizard.forms.step2._submitted"
+                  novalidate>
+                <header>
+                    <h2 ng-if="deployServiceWizard.service.template.name">
+                        {{ 'SERVICES_NEW_SERVICE_DeployInterp' | translate:{ serviceName: deployServiceWizard.service.template.name } }}
+                    </h2>
+                </header>
+                <div>
+                    <button type="button"
+                            class="btn-primary btn"
+                            ng-click="deployServiceWizard.viewDetails()">
+                        <i class="ci ci-action-sort-list"></i>
+                        {{'RESOURCE_CREATE_SERVER_POOL_ViewDetails'|translate}}
+                    </button>
+                </div>
+                <div ng-repeat="component in deployServiceWizard.service.template.components | orderComponents"
+                     ng-if="deployServiceWizard.componentVisible(component)">
+                    <h3>
+                        {{component.name}}
+                    </h3>
+                    <div ng-repeat="category in component.categories" ng-if="deployServiceWizard.categoryVisible(category, component)">
+                        <h4>
+                            {{category.name}}
+                        </h4>
+                        <!-- Groups of Settings -->
+                        <div ng-repeat="group in category.settings | deploysettings | settingVisible:component | groupFilter">
+                            <!-- no group, individual setting -->
+                            <div ng-if="!group.group">
+                                <div ng-repeat="setting in category.settings | deploysettings | settingVisible:component">
+                                    <div ng-switch="setting.datatype" class="form-group">
+                                        <!--Custom Control: Network Config-->
+                                        <network-configuration id="networkconfiguration"
+                                                              ng-switch-when="networkconfiguration"
+                                                              class="col-sm-12"
+                                                              read-only-mode="false"
+                                                              setting="setting"></network-configuration>
+                                        <!--Custom Control: RAID Config-->
+                                        <raid-configuration id="raidconfiguration"
+                                                            ng-switch-when="raidconfiguration"
+                                                            class="col-sm-12"
+                                                            read-only-mode="false"
+                                                            setting="setting"
+                                                            templateinvalid="false"
+                                                            invalid-array="deployServiceWizard.invalidArray"></raid-configuration>
+                                        <!--Custom Control: Bios Config-->
+                                        <bios-configuration id="biosconfiguration"
+                                                            ng-switch-when="biosconfiguration"
+                                                            class="col-sm-12"
+                                                            read-only-mode="false"
+                                                            setting="setting"
+                                                            form="deployServiceWizard.forms.step2"></bios-configuration>
+                                        <!-- Custom Control: VM Virtual Disk Config -->
+                                        <vm-virtual-disk-configuration ng-switch-when="vmvirtualdiskconfiguration"
+                                                                       id="vmvirtualdiskconfiguration"
+                                                                       class="col-sm-12"
+                                                                       read-only-mode="false"
+                                                                       component="component"
+                                                                       setting="setting"></vm-virtual-disk-configuration>
+                                        <!-- Custom Control: Configure NIOC  -->
+                                        <nioc-setting ng-switch-when="niocconfiguration"
+                                                      read-only-mode="false"
+                                                      setting="setting"
+                                                      errors="deployServiceWizard.errors"
+                                                      invalid-array="deployServiceWizard.invalidArray"></nioc-setting>
+                                        <!-- Custom Control: OS Credentials  -->
+                                        <credentials-settings ng-switch-when="oscredential"
+                                                              class="col-sm-12"
+                                                              category="category"
+                                                              setting="setting"
+                                                              read-only-mode="false"
+                                                              credentials="deployServiceWizard.credentials"></credentials-settings>
+                                        <!-- Custom Control: Basic Setting -->
+                                        <basic-setting ng-switch-default
+                                                       category="category"
+                                                       setting="setting"
+                                                       component="component"
+                                                       read-only-mode="false"
+                                                       form="deployServiceWizard.forms.step2"></basic-setting>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Groups -->
+                            <div class="panel-heading"
+                                 role="tab"
+                                 ng-if="group.group"
+                                 id="headId{{$index}}_group_{{$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                 style="border-bottom: none;">
+                                <a tabindex="0"
+                                   style="outline: none;"
+                                   role="button"
+                                   data-toggle="collapse"
+                                   data-target="#target{{$index}}_group_{{$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                   aria-expanded="{{:: $first}}"
+                                   ng-class=":: $first ?  'in' :'collapsed'"
+                                   aria-controls="device{{$index}}">
+                                    <ul class="list-inline" style="margin-bottom: 0;">
+                                        <li style="color: #888; vertical-align: top;">
+                                            <i class="collapsed-show ci-arrow-chev-right-2-med ci"></i>
+                                            <i class="collapsed-hide ci-arrow-chev-down-2-med ci"></i>
+                                        </li>
+                                        <li>
+                                            <h4 style="margin-top: 0; margin-bottom: 10px; border-bottom: none;">
+                                                {{group.group}}
+                                            </h4>
+                                        </li>
+                                    </ul>
+                                </a>
+                                <div class="col-xs-12 panel-collapse collapse"
+                                     ng-class="::{' in' : $first}"
+                                     id="target{{$index}}_group_{{$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                     aria-labelledby="headId{{$index}}_group_{{$parent.$index}}_component_{{$parent.$parent.$parent.$parent.$index}}"
+                                     role="tabpanel">
+
+                                    <div ng-repeat="setting in category.settings  | deploysettings | settingVisible:component"
+                                         ng-if="setting.group === group.group">
+                                        <div ng-switch="setting.datatype" class="form-group">
+                                            <!--Custom Control: Network Config-->
+                                            <network-configuration id="networkconfiguration"
+                                                                  ng-switch-when="networkconfiguration"
+                                                                  class="col-sm-12"
+                                                                  read-only-mode="false"
+                                                                  setting="setting"></network-configuration>
+                                            <!--Custom Control: RAID Config-->
+                                            <raid-configuration id="raidconfiguration"
+                                                                ng-switch-when="raidconfiguration"
+                                                                class="col-sm-12"
+                                                                read-only-mode="false"
+                                                                setting="setting"
+                                                                templateinvalid="false"
+                                                                invalid-array="deployServiceWizard.invalidArray"></raid-configuration>
+                                            <!--Custom Control: Bios Config-->
+                                            <bios-configuration id="biosconfiguration"
+                                                                ng-switch-when="biosconfiguration"
+                                                                class="col-sm-12"
+                                                                read-only-mode="false"
+                                                                setting="setting"
+                                                                form="deployServiceWizard.forms.step2"></bios-configuration>
+                                            <!-- Custom Control: VM Virtual Disk Config -->
+                                            <vm-virtual-disk-configuration ng-switch-when="vmvirtualdiskconfiguration"
+                                                                           id="vmvirtualdiskconfiguration"
+                                                                           class="col-sm-12"
+                                                                           read-only-mode="false"
+                                                                           component="component"
+                                                                           setting="setting"></vm-virtual-disk-configuration>
+                                            <!-- Custom Control: Configure NIOC  -->
+                                            <nioc-setting ng-switch-when="niocconfiguration"
+                                                          class="col-sm-12"
+                                                          read-only-mode="false"
+                                                          setting="setting"
+                                                          errors="deployServiceWizard.errors"
+                                                          invalid-array="deployServiceWizard.invalidArray"></nioc-setting>
+                                            <!-- Custom Control: OS Credentials  -->
+                                            <credentials-settings ng-switch-when="oscredential"
+                                                                  category="category"
+                                                                  setting="setting"
+                                                                  read-only-mode="false"
+                                                                  credentials="deployServiceWizard.credentials"></credentials-settings>
+                                            <!-- Custom Control: Basic Setting -->
+                                            <basic-setting ng-switch-default
+                                                           category="category"
+                                                           setting="setting"
+                                                           component="component"
+                                                           read-only-mode="false"
+                                                           form="deployServiceWizard.forms.step2"></basic-setting>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </wizard-step>
+        <wizard-step step-title="{{'SERVICES_DEPLOY_ScheduleDeployment'|translate}}"
+                     on-next="deployServiceWizard.validateStep3()"
+                     novalidate>
+            <section id="page_initialsetup_summary" class="">
+                <header>
+                    <h2 ng-if="deployServiceWizard.service.template.name">
+                        {{ 'SERVICES_NEW_SERVICE_DeployInterp' | translate:{ serviceName: deployServiceWizard.service.template.name } }}
+                    </h2>
+                </header>
+                <form id="deploywizard_schedule_form"
+                      name="deployServiceWizard.forms.step3"
+                      novalidate
+                      class="form-horizontal"
+                      form-validation="deployServiceWizard.forms.step3._submitted">
+                    <div>
+                        <section id="summary">
+                            <fieldset class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="deploynow">
+                                        <input id="deploynow"
+                                               type="radio"
+                                               name="schedule"
+                                               value="deploynow"
+                                               ng-model="deployServiceWizard.service.scheduleType" />
+                                        {{'SERVICES_DEPLOY_DeployNow'|translate}}
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="schedule">
+                                        <input id="schedule"
+                                               type="radio"
+                                               name="schedule"
+                                               value="schedule"
+                                               ng-model="deployServiceWizard.service.scheduleType" />
+                                        {{'SERVICES_DEPLOY_DeployLater'|translate}}
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <div class="input-group date"
+                                             datetimepicker-options="{{deployServiceWizard.datePicker.options}}"
+                                             datetimepicker
+                                             ng-model="deployServiceWizard.datePicker.selectedDate">
+                                            <input type="text"
+                                                   class="form-control"
+                                                   ng-disabled="deployServiceWizard.service.scheduleType === 'deploynow'"
+                                                   placeholder="{{'GENERIC_StartDate' | translate}}"
+                                                   ng-bind="deployServiceWizard.datePicker.selectedDate" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                        <div ng-if="deployServiceWizard.timeInvalid()">{{'ERROR_InvalidDate'|translate}}</div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </section>
+                    </div>
+                </form>
+            </section>
+        </wizard-step>
+    </wizard>
+</section>
+

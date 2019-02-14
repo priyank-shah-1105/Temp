@@ -1,0 +1,356 @@
+﻿<wizard on-finish="newServerPoolWizardController.finishWizard()"
+        on-cancel="newServerPoolWizardController.cancel()"
+        edit-mode="newServerPoolWizardController.editMode">
+
+    <wizard-step step-title="{{'RESOURCE_CREATE_SERVER_POOL_Welcome' | translate}}"
+                 ng-if="!newServerPoolWizardController.editMode">
+        <h2>{{'RESOURCE_CREATE_SERVER_POOL_Welcome'|translate}}</h2>
+        <p>{{'RESOURCE_CREATE_SERVER_POOL_WelcomeMessage' | translate}}</p>
+    </wizard-step>
+
+    <wizard-step step-title="{{'RESOURCE_CREATE_SERVER_POOL_ServerPoolInformation'|translate}}"
+                 on-next="newServerPoolWizardController.validatePoolInfo()">
+        <h2>{{'RESOURCE_CREATE_SERVER_POOL_ServerPoolInformation'|translate}}</h2>
+        <form name="newServerPoolWizardController.forms.poolInfoForm"
+              form-validation="newServerPoolWizardController.forms.poolInfoForm._submitted"
+              novalidate
+              id="poolInfoForm"
+              class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-sm-4">
+                    {{'RESOURCE_CREATE_SERVER_POOL_ServerPoolNameStar'|translate}}
+                </label>
+                <div class="col-sm-8">
+                    <input type="text"
+                           class="form-control"
+                           name="name"
+                           ng-model="newServerPoolWizardController.pool.name"
+                           required />
+                    <div class="text-danger" ng-if="newServerPoolWizardController.forms.poolInfoForm._submitted">
+                        <div ng-if="newServerPoolWizardController.forms.poolInfoForm.name.$error.required">
+                            {{'GENERIC_RequiredField' | translate}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4">
+                    {{'RESOURCE_CREATE_SERVER_POOL_Description'|translate}}
+                </label>
+                <div class="col-sm-8">
+                    <textarea class="form-control"
+                              name="description"
+                              ng-model="newServerPoolWizardController.pool.description"></textarea>
+                </div>
+            </div>
+        </form>
+    </wizard-step>
+
+    <wizard-step step-title="{{'RESOURCE_CREATE_SERVER_POOL_AddServers'|translate}}"
+                 ng-if="!newServerPoolWizardController.calledFromDiscoverWizard"
+                st-table="newServerPoolWizardController.devices"
+                st-safe-src="newServerPoolWizardController.safeSource">
+        <form class="form-horizontal">
+            <i class="ci-search-discover-mag-glass text-primary pull-right form-control-static" style="margin: 0 10px"></i>
+            <input placeholder="{{'RESOURCE_CREATE_SERVER_POOL_BeginTypingSearch' | translate}}" class="form-control" type="text" st-search="" style="width: 170px; float: right; margin-bottom: 20px" />
+        </form>
+        <table id="serverTable"
+               class="table">
+            <thead>
+                <tr>
+                    <th tabindex="0">
+                        <input type="checkbox"
+                               ng-checked="newServerPoolWizardController.pool.servers.length === newServerPoolWizardController.safeSource.length"
+                               ng-click="newServerPoolWizardController.selectAllServers()" />
+                    </th>
+                    <th st-sort="health" tabindex="0">
+                        {{'GENERIC_Health' | translate}}
+                    </th>
+                    <th st-sort="state" tabindex="0">
+                        {{'GENERIC_State'|translate}}
+                    </th>
+                    <th st-sort="$root.ASM.getters.ipaddress('ipAddress')" tabindex="0">
+                        {{'GENERIC_IpAddress'|translate}}
+                    </th>
+                    <th st-sort="serviceTag">
+                        {{'GENERIC_AssetServiceTag'|translate}}
+                    </th>
+                    <th st-sort="model" tabindex="0">
+                        {{'GENERIC_Model'|translate}}
+                    </th>
+                    <th st-sort="serverpool" tabindex="0">
+                        {{'RESOURCE_CREATE_SERVER_POOL_ServerPools'|translate}}
+                    </th>
+                    <th st-sort="processorcount" tabindex="0">
+                        {{'GENERIC_cpus'|translate}}
+                    </th>
+                    <th st-sort="memory" tabindex="0">
+                        {{'GENERIC_Memory'|translate}}
+                    </th>
+                    <th st-sort="nics" tabindex="0">
+                        {{'SERVERPOOLS_Ports'|translate}}
+                    </th>
+            </thead>
+            <tbody ng-if="newServerPoolWizardController.devices.length > 0">
+                <tr ng-repeat="server in newServerPoolWizardController.devices">
+                    <td>
+                        <input type="checkbox"
+                               ng-model="server.selected"
+                               ng-click="newServerPoolWizardController.updateServers();" />
+                    </td>
+                    <td>
+                        <statusicon value="server.health"></statusicon>
+                        {{server.healthmessage}}
+                    </td>
+                    <td>
+                        {{server.state | availableManagedStates}}
+                    </td>
+                    <td>
+                        <a id="ipLink"
+                           ng-href="{{server.ipaddressurl}}"
+                           target="_blank"
+                           ng-if="serveripaddressurl != ''">
+                            {{server.ipAddress}}
+                        </a>
+                    </td>
+                    <td>{{server.serviceTag}}</td>
+                    <td>{{server.model}}</td>
+                    <td>{{server.displayserverpools}}</td>
+                    <td>{{server.processorcount}}</td>
+                    <td>{{server.memory}}</td>
+                    <td>{{server.nics || 0}}</td>
+                </tr>
+            </tbody>
+            <tbody ng-if="newServerPoolWizardController.devices.length < 0">
+                <tr>
+                    <td colspan="11">
+                        {{'GENERIC_EmptyTable'|translate}}
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot ng-if="newServerPoolWizardController.devices.length > 0">
+                <tr>
+                    <td colspan="11" class="text-center">
+                        <div st-pagination=""
+                             st-items-by-page="newServerPoolWizardController.smartTableOptions.itemsPerPage"
+                             st-displayed-pages="newServerPoolWizardController.smartTableOptions.pagesShown"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </wizard-step>
+    <wizard-step step-title="{{'RESOURCE_CREATE_SERVER_POOL_AssignUsers'|translate}}">
+        <table id="users_table"
+               class="table"
+               st-table="newServerPoolWizardController.users"
+               st-safe-src="newServerPoolWizardController.safeUsers">
+            <thead>
+                <tr>
+                    <th tabindex="0">
+                        <input type="checkbox"
+                               ng-checked="newServerPoolWizardController.pool.users.length === newServerPoolWizardController.safeUsers.length"
+                               ng-click="newServerPoolWizardController.selectAllUsers()" />
+                    </th>
+                    <th st-sort="username" tabindex="0">
+                        {{'GENERIC_UserName' | translate}}
+                    </th>
+                    <th st-sort="domain" tabindex="0">
+                        {{'GENERIC_Domain' | translate}}
+                    </th>
+                    <th st-sort="roleDisplay" tabindex="0">
+                        {{'GENERIC_Role' | translate}}
+                    </th>
+                    <th st-sort="lastname" tabindex="0">
+                        {{'GENERIC_LastName' | translate}}
+                    </th>
+                    <th st-sort="firstname" tabindex="0">
+                        {{'GENERIC_FirstName' | translate}}
+                    </th>
+                    <th st-sort="state" tabindex="0">
+                        {{'GENERIC_State' | translate}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="user in newServerPoolWizardController.users">
+                    <td>
+                        <input type="checkbox"
+                               ng-model="user.selected"
+                               ng-click="newServerPoolWizardController.updateUsers();" />
+                    </td>
+                    <td>
+                        {{user.username}}
+                    </td>
+                    <td>
+                        <span ng-if="!user.serverName">
+                            {{'GENERIC_LocalUser'|translate}}
+                        </span>
+                        <span ng-if="user.serverName">
+                            {{user.serverName}}
+                        </span>
+                    </td>
+                    <td>
+                        {{user.roleDisplay}}
+                    </td>
+                    <td>
+                        {{user.lastname}}
+                    </td>
+                    <td>
+                        {{user.firstname}}
+                    </td>
+                    <td>
+                        {{user.state}}
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-if="newServerPoolWizardController.users.length === 0">
+                <tr>
+                    <td colspan="7">
+                        {{'GENERIC_EmptyTable'|translate}}
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot ng-if="newServerPoolWizardController.users.length > 0">
+                <tr>
+                    <td colspan="7" class="text-center">
+                        <div st-pagination=""
+                             st-items-by-page="newServerPoolWizardController.smartTableOptions.itemsPerPage"
+                             st-displayed-pages="newServerPoolWizardController.smartTableOptions.pagesShown"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </wizard-step>
+    <wizard-step step-title="{{'RESOURCE_CREATE_SERVER_POOL_Summary'|translate}}"
+                 ng-if="!newServerPoolWizardController.editMode">
+        <div class="row">
+            <div class="col-sm-4">
+                <label>
+                    {{'RESOURCE_CREATE_SERVER_POOL_ServerPoolNameStar'|translate}}
+                </label>
+            </div>
+            <div class="col-sm-8">
+                {{newServerPoolWizardController.pool.name}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <label>
+                    {{'RESOURCE_CREATE_SERVER_POOL_Description'|translate}}
+                </label>
+            </div>
+            <div class="col-sm-8">
+                {{newServerPoolWizardController.pool.description}}
+            </div>
+        </div>
+
+        <div class="row" ng-if="!newServerPoolWizardController.calledFromDiscoverWizard">
+            <div class="col-sm-12">
+                <br /><br />
+                <h3>{{'RESOURCE_CREATE_SERVER_POOL_AddServers'|translate}}</h3>
+                <table id="serverTable2" class="table">
+                    <thead>
+                        <tr>
+                            <th tabindex="0">
+                                {{'RESOURCE_CREATE_SERVER_POOL_ManagementIP' | translate}}
+                            </th>
+                            <th tabindex="0">
+                                {{'RESOURCE_CREATE_SERVER_POOL_ServiceTag' | translate}}
+                            </th>
+                            <th tabindex="0">
+                                {{'RESOURCE_CREATE_SERVER_POOL_Model' | translate}}
+                            </th>
+                            <th tabindex="0">
+                                {{'RESOURCE_CREATE_SERVER_POOL_ServerPools' | translate}}
+                            </th>
+                            <th tabindex="0">
+                                {{'RESOURCE_CREATE_SERVER_POOL_CPUs' | translate}}
+                            </th>
+                            <th tabindex="0">
+                                {{'RESOURCE_CREATE_SERVER_POOL_Memory' | translate}}
+                            </th>
+                            <th tabindex="0">
+                                {{'SERVERPOOLS_Ports' | translate}}
+                            </th>
+                            <th tabindex="0">
+                                {{'RESOURCE_CREATE_SERVER_POOL_Location' | translate}}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="server in newServerPoolWizardController.pool.servers">
+                            <td>
+                                <a id="ipLink"
+                                   ng-href="{{server.ipaddressurl}}"
+                                   target="_blank"
+                                   ng-if="serveripaddressurl != ''">
+                                    {{server.ipAddress}}
+                                </a>
+                            </td>
+                            <td>{{server.serviceTag}}</td>
+                            <td>{{server.model}}</td>
+                            <td>{{server.serverpool}}</td>
+                            <td>{{server.processorcount}}</td>
+                            <td>{{server.memory}}</td>
+                            <td>{{server.nics || 0}}</td>
+                            <td>{{server.location}}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+        </div>
+        <br /><br />
+        <h3>{{'RESOURCE_CREATE_SERVER_POOL_AssignUsers'|translate}}</h3>
+        <table id="userTable2" class="table">
+            <thead>
+                <tr>
+                    <th tabindex="0">
+                        {{'GENERIC_UserName' | translate}}
+                    </th>
+                    <th tabindex="0">
+                        {{'GENERIC_Domain' | translate}}
+                    </th>
+                    <th tabindex="0">
+                        {{'GENERIC_Role' | translate}}
+                    </th>
+                    <th tabindex="0">
+                        {{'RESOURCE_CREATE_SERVER_POOL_LastLogin' | translate}}
+                    </th>
+                    <th tabindex="0">
+                        {{'GENERIC_State' | translate}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="user in newServerPoolWizardController.pool.users">
+                    <td>
+                        {{user.username}}
+                    </td>
+                    <td>
+                        <span ng-if="!user.serverName">
+                            {{'GENERIC_LocalUser'|translate}}
+                        </span>
+                        <span ng-if="user.serverName">
+                            {{user.serverName}}
+                        </span>
+                    </td>
+                    <td>
+                        {{user.roleDisplay}}
+                    </td>
+                    <td>
+                        <datetime-display time="user.lastlogin" time-format="'LLL'"></datetime-display>
+                    </td>
+                    <td>
+                        {{user.state}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br /><br />
+
+    </wizard-step>
+
+
+</wizard>

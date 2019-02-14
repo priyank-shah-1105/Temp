@@ -1,0 +1,206 @@
+﻿<section id="tab-firmware">
+    <div id="page_firmwarepackages">
+        <div id="firmwarepackages" ng-class="{ 'col-sm-8': editFirmwareController.mode === 'standard', '': editFirmwareController.mode === 'minimal' }">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-12 control-label">
+                        {{'EDIT_FIRMWARE_DownloadRCM' | translate }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">{{'EDIT_FIRMWARE_Default_Release_Certification_Matrix' | translate }}</label>
+                    <div class="col-sm-7">
+                        <select id="ddlDefaultFirmware"
+                                class="form-control"
+                                ng-disabled="editFirmwareController.safeSource.length == 0 || $root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                                ng-model="editFirmwareController.selectedDropdownItem"
+                                ng-options="listItem.id as listItem.name for listItem in editFirmwareController.firmwareDropdownList"
+                                ng-change="editFirmwareController.onDefaultFirmwareChanged()">
+                            <option value="" ng-if="editFirmwareController.selectedDropdownItem==''">
+                                {{'GENERIC_select' | translate}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <button id="new_firmwarepackage_link"
+                                class="btn btn-primary"
+                                ng-disabled="$root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')"
+                                ng-click="editFirmwareController.addFirmwareRepo()">
+                            <i class="ci-action-add-plus-float "></i>
+                            {{'EDIT_FIRMWARE_AddRepository' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <table id="firmwarepackageTable"
+                   class="table table-wrap table-striped table-hover master-body table-condensed"
+                   st-skip-natural="true"
+                   st-table="editFirmwareController.firmwarePackages"
+                   st-safe-src="editFirmwareController.safeSource">
+                <thead>
+                    <tr>
+                        <th tabindex="0" st-sort="'state'" style="min-width: 80px;">
+                            {{'EDIT_FIRMWARE_THState' | translate }}
+                        </th>
+                        <th tabindex="0" st-sort="'name'" style="min-width: 100px;">
+                            {{'EDIT_FIRMWARE_THRepository_Name' | translate }}
+                        </th>
+                        <th tabindex="0" st-sort="'source'">
+                            {{'EDIT_FIRMWARE_TH_Source' | translate }}
+                        </th>
+                        <!--<th tabindex="0" st-sort="'userbundles'" ng-if="editFirmwareController.mode === 'standard'">-->
+                        <!--<th tabindex="0" st-sort="'customBundles'" ng-if="editFirmwareController.mode === 'standard'">
+                            {{'EDIT_FIRMWARE_THCustom_Bundles' | translate }}
+                        </th>-->
+                        <th tabindex="0" style="min-width: 160px;">
+                            {{'EDIT_FIRMWARE_THAvailableActions' | translate}}
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr ng-repeat="fwItem in editFirmwareController.firmwarePackages track by $index"
+                        ng-class="{'st-selected': editFirmwareController.selectedRow.id == fwItem.id}"
+                        ng-click="editFirmwareController.selectedRow = fwItem">
+                        <td>
+                            <span ng-switch="fwItem.state">
+                                <span ng-switch-when="available">
+                                    <i class="ci-health-circle-check text-success"></i>
+                                </span>
+                                <span ng-switch-when="errors">
+                                    <statusicon value="'red'"></statusicon>
+                                </span>
+                                <span ng-switch-when="copying">
+                                    <spinner color="{{editFirmwareController.selectedRow.id == fwItem.id ? 'white' : ''}}"></spinner>
+                                </span><span ng-switch-when="pending">
+                                    <statusicon value="'standby'"></statusicon>
+                                </span>
+                            </span>
+                            {{fwItem.state | repoState}}
+                        </td>
+                        <td>
+                            {{fwItem.name}}
+                        </td>
+                        <td>
+                            {{fwItem.source}}
+                        </td>
+                        <!--<td ng-if="editFirmwareController.mode === 'standard'">-->
+
+                            <!--{{fwItem.userbundles.length ? fwItem.userbundles.length : ''}}-->
+                            <!--{{fwItem.customBundles ? fwItem.customBundles : ''}}-->
+                        <!--</td>-->
+                        <td>
+                            <select class="form-control"
+                                    ng-model="fwItem.selectedOption"
+                                    ng-options="option as option.name for option in fwItem.options"
+                                    ng-disabled="fwItem.options.length === 1
+                                    || $root.ASM.IsInRole('readonly')
+                                    || $root.ASM.IsInRole('standard')"
+                                    ng-change="fwItem.selectedOption.action(fwItem)"></select>
+                        </td>
+                        <!--                        <td class="text-center">-->
+                        <!--                            <a ng-click="editFirmwareController.doDelete(fwItem)"-->
+                        <!--                               ng-style="editFirmwareController.selectedRow.id == fwItem.id && {'color' : 'white'}"-->
+                        <!--                               ng-if="fwItem.state !== 'copying'-->
+                        <!--                               && fwItem.state !== 'pending'-->
+                        <!--                               && fwItem.packageSource !== 'embedded'-->
+                        <!--                               && !fwItem.defaultpackage-->
+                        <!--                               && !fwItem.isInUse">-->
+                        <!--                                <i class="ci-trash"></i>-->
+                        <!--                            </a>-->
+                        <!--                        </td>-->
+                    </tr>
+                    <tr ng-if="editFirmwareController.firmwarePackages.length === 0">
+                        <td colspan="4">
+                            {{"EDIT_FIRMWARE_NoReleaseCertificationMatrixadded" | translate}}
+                            <a ng-click="editFirmwareController.addFirmwareRepo()"
+                               ng-if="$root.ASM.IsInRole('administrator') || $root.ASM.IsInRole('standard')">
+                                {{"EDIT_FIRMWARE_AddNow"| translate}}
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            <div id="pager-firmwarepackage"
+                                 st-pagination=""
+                                 st-items-by-page="20"
+                                 st-displayed-pages="7"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <aside id="firmwareInfo" class="col-sm-4" ng-if="editFirmwareController.mode == 'standard'">
+            <div id="picAndDetails">
+                <span><strong>{{editFirmwareController.selectedRow.name}}</strong></span>
+                <p>{{editFirmwareController.selectedRow.description}}</p>
+            </div>
+
+            <ul class="list-unstyled list-inline">
+                <li>
+                    <button id="lnkViewFirmwarePackageDetails" class="btn btn-primary" ng-click="editFirmwareController.doViewBundles()">
+                        <i class="ci-action-line-consistency "></i>
+                        {{'EDIT_FIRMWARE_View_Bundles' | translate }}
+                    </button>
+                </li>
+                <!--<li>
+                    <button id="lnkAddBundle"
+                            class="btn btn-primary"
+                            ng-click="editFirmwareController.newCustomBundle(editFirmwareController.selectedRow);"
+                            ng-disabled="editFirmwareController.selectedRow.source.toLowerCase() == 'embedded' ||
+                                        (editFirmwareController.selectedRow.source.toLowerCase() != 'embedded' &&
+                                        editFirmwareController.selectedRow.state.toLowerCase() != 'available') ||
+                                        $root.ASM.IsInRole('readonly') || $root.ASM.IsInRole('standard')">
+                        <i class="ci-action-add-plus-float"></i>
+                        {{'EDIT_FIRMWARE_Add_Custom_Bundle' | translate }}
+                    </button>
+                </li>-->
+            </ul>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td><strong>{{'EDIT_FIRMWARE_Bundles' | translate }}</strong></td>
+                        <td>{{editFirmwareController.selectedRow.bundles}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{{'EDIT_FIRMWARE_Components' | translate }}</strong></td>
+                        <td>{{editFirmwareController.selectedRow.components}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{{'EDIT_FIRMWARE_Created_On' | translate }}</strong></td>
+                        <td><datetime-display time="editFirmwareController.selectedRow.created" time-format="'LLL'"></datetime-display></td>
+                    </tr>
+                    <tr>
+                        <td><strong>{{'EDIT_FIRMWARE_Last_Updated' | translate }}</strong></td>
+                        <td><datetime-display time="editFirmwareController.selectedRow.updated" time-format="'LLL'"></datetime-display></td>
+                    </tr>
+                    <!--<tr ng-if="editFirmwareController.selectedRow.userbundles.length">
+                        <td><strong>{{'EDIT_FIRMWARE_Custom_Bundles' | translate }}</strong></td>
+                        <td>{{editFirmwareController.selectedRow.userbundles.length}}</td>
+                    </tr>-->
+                    <tr ng-if="editFirmwareController.selectedRow.customBundles">
+                        <td><strong>{{'EDIT_FIRMWARE_Custom_Bundles' | translate }}</strong></td>
+                        <td>{{editFirmwareController.selectedRow.customBundles}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>{{'EDIT_FIRMWARE_Services_Affected' | translate }}</strong></td>
+                        <td>
+                            <span ng-repeat="serviceItem in editFirmwareController.selectedRow.services">
+                                <a ng-href="service/{{serviceItem.id}}/details">{{serviceItem.name}}</a><span ng-if="!$last">,</span>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </aside>
+    </div>
+
+</section>

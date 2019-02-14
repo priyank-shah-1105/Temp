@@ -1,0 +1,71 @@
+﻿<section id="page_components">
+    <error-display errors="$root.errors" on-click="$root.ASM.RemoveError(error)" on-expand-collapse=""></error-display>
+    <p>{{'VIEW_BUNDLE_DETAILS_Description' | translate }}</p>
+
+    <table ng-if="vbd.viewData.viewType=='firmware'" id="componentTable" class="table table-striped table-hover col-md-12"
+           st-skip-natural="true" st-table="vbd.viewData.displayedData.firmwarecomponents" st-safe-src="vbd.viewModel.firmwarecomponents">
+        <thead>
+            <tr>
+                <th tabindex="0" st-sort="'firmwarename'">{{'VIEW_BUNDLE_DETAILS_THName' | translate }}</th>
+                <th tabindex="0" st-sort="'firmwaretype'">{{'VIEW_BUNDLE_DETAILS_THType' | translate }}</th>
+                <th tabindex="0" st-sort="'firmwareversion'">{{'VIEW_BUNDLE_DETAILS_THVersion' | translate }}</th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="fcItem in vbd.viewData.displayedData.firmwarecomponents">
+            <tr>
+                <td>{{fcItem.firmwarename}}</td>
+                <td>{{fcItem.firmwaretype}}</td>
+                <td>{{fcItem.firmwareversion}}</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="6" class="text-center">
+                    <div id="pager-firmwarepackage" st-pagination="vbd.viewData.displayedData.firmwarecomponents" st-items-by-page="20" st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>
+
+    </table>
+
+    <table ng-if="vbd.viewData.viewType=='software'" id="softwareTable" class="table table-striped table-hover col-md-12"
+           st-skip-natural="true" st-table="vbd.viewData.displayedData.softwarecomponents" st-safe-src="vbd.viewModel.softwarecomponents">
+        <thead>
+        <tr>
+            <th tabindex="0" st-sort="'softwarename'">{{'VIEW_BUNDLE_DETAILS_THSoftwareName' | translate }}</th>
+            <th tabindex="0" st-sort="'vendor'">{{'VIEW_BUNDLE_DETAILS_THVendor' | translate }}</th>
+            <th tabindex="0" st-sort="'softwaretype'">{{'VIEW_BUNDLE_DETAILS_THSoftwareType' | translate }}</th>
+            <th tabindex="0" st-sort="'softwareversion'">{{'VIEW_BUNDLE_DETAILS_THSoftwareVersion' | translate }}</th>
+        </tr>
+        </thead>
+        <tbody ng-repeat="fcItem in vbd.viewData.displayedData.softwarecomponents">
+        <tr>
+            <td>{{fcItem.softwarename}}</td>
+            <td>{{fcItem.vendor}}</td>
+            <td>{{fcItem.softwaretype}}</td>
+            <td>{{fcItem.softwareversion}}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="6" class="text-center">
+                <div id="pager-softwarepackage" st-pagination="vbd.viewData.displayedData.softwarecomponents" st-items-by-page="20" st-displayed-pages="7"></div>
+            </td>
+        </tr>
+        </tfoot>
+
+    </table>
+
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+                <button id="btnCloseComponentForm" class="btn btn-primary" ng-click="vbd.close()">
+                    {{'GENERIC_Close' | translate }}
+                </button>
+            </li>
+        </ul>
+
+    </footer>
+
+
+</section>

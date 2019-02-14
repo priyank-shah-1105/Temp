@@ -1,0 +1,573 @@
+﻿<section id="page_services">
+    <error-display errors="$rootScope.errors"
+                   on-click="$root.ASM.RemoveError(error)"
+                   on-expand-collapse=""></error-display>
+    <header>
+        <div ng-if="!services.filterBy">
+            <h1>{{'SERVICES_Title' | translate}}</h1>
+        </div>
+        <div ng-if="services.filterBy">
+            <h1 ng-repeat="service in services.constants.serviceHealths | filter:{id:services.filterBy}">{{service.name}}</h1>
+        </div>
+    </header>
+
+    <div class="row">
+        <article class="col-sm-8" ng-click="services.selectedService = undefined">
+            <div class="row">
+                <div class="col-xs-12">
+                    <ul class="list-unstyled list-inline">
+                        <li>
+                            <button class="btn btn-primary"
+                                    id="deployLink"
+                                    ng-if="services.readyTemplateList.length === 0"
+                                    ng-disabled="true">
+                                <i class="ci-deploy"
+                                   data-toggle="tooltip"
+                                   data-placement="right"
+                                   title="{{'SERVICES_No_Published_Templates_Tooltip' | translate}}">
+                                </i>
+                                {{'SERVICES_DeployNewService'|translate}}
+                            </button>
+                            <button class="btn btn-primary"
+                                    ng-click="services.deployNewService()"
+                                    id="deployLink"
+                                    ng-disabled="ASM.IsInRole('readonly')"
+                                    ng-if="services.readyTemplateList.length > 0">
+                                <i class="ci-deploy"></i>
+                                {{'SERVICES_DeployNewService' | translate}}
+                            </button>
+                        </li>
+                        <li>
+                            <button class="btn btn-primary"
+                                    ng-disabled="ASM.IsInRole('readonly') || ASM.IsInRole('standard')"
+                                    ng-click="services.addExistingService()">
+                                <i class="ci-action-add-plus-float"></i>
+                                {{'SERVICES_Add_Existing_Service' | translate}}
+                            </button>
+                        </li>
+                        <li>
+                            <button id="exportAllLink"
+                                    class="btn btn-default"
+                                    ng-disabled="ASM.IsInRole('readonly')"
+                                    ng-click="services.downloadAll()">
+                                <i class="ci-arrow-bold-line-export-up"></i>
+                                {{'SERVICES_Export_To_File' | translate}}
+                            </button>
+                        </li>
+                        <li class="pull-right">
+                            <ul class="list-inline view-toggles">
+                                <li ng-click="services.tileView = false; services.clearTooltips(); services.storeView()"
+                                            data-toggle="tooltip"
+                                           title="{{'SERVICES_Grid_View' | translate}}">
+                                    <button class="btn btn-lg btn-link" id="btnGridView"
+                                            ng-disabled="services.tileView === false">
+                                        <i class="ci-action-sort-list"></i>
+                                    </button>
+                                </li>
+                                <li>
+                                    <i class="view-toggles-separator"></i>
+                                </li>
+                                <li ng-click="services.tileView = true; services.clearTooltips(); services.storeView()"
+                                    data-toggle="tooltip"
+                                    title="{{'SERVICES_Tile_View' | translate}}">
+                                    <button class="btn btn-lg btn-link" id="btnTileView"
+                                          ng-disabled="services.tileView === true">
+                                        <i class="ci-action-sort-grid2"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+ 
+            <form id="templateMenu" class="form-horizontal">
+                <ul class="list-inline">
+                    <li>
+                        <label class="control-label" for="ddlView">
+                            {{'SERVICES_Filter_By' | translate}}
+                        </label>
+                    </li>
+                    <li>
+                        <select id="ddlView"
+                                class="form-control"
+                                ng-disabled="services.viewModel.length == 0"
+                                ng-model="services.filterBy"
+                                ng-change="services.filterSafeSource();"
+                                ng-options="state.dropdown as state.name for state in services.groups">
+                            <option value="">{{'SERVICES_All'|translate}} {{services.unFilteredServiceList.length >= 0 ? '(' + services.unFilteredServiceList.length + ')' : ''}}</option>
+                        </select>
+                    </li>
+                </ul>
+            </form>
+
+            <br ng-if="services.tileView === true"/>
+
+            <!-- Tile view-->
+            <div id="serviceicons" ng-if="services.tileView === true">
+                <!-- All States -->
+                <section ng-if="!services.filterBy">
+                    <ul class="list-inline">
+                        <li ng-repeat="tile in services.groups"
+                            style="margin-bottom:28px;"
+                            ng-click="tile.count && (services.filterBy = tile.dropdown); services.filterSafeSource(); $event.stopPropagation();">
+                            <service-tile selected-item="services.selectedService"
+                                          tile-info="tile"
+                                          disabled="!tile.count"></service-tile>
+                            <strong class="textBelowTile">{{tile.name}}</strong>
+                        </li>
+                    </ul>
+                </section>
+                <!-- Filtered State -->
+                <ul ng-if="services.filterBy" class="list-inline">
+                    <li ng-repeat="service in services.safeSource"
+                        ng-class="{'active':services.selectedService === service}"
+                        ng-click="services.selectedService = service; $event.stopPropagation();">
+                        <service-tile selected-item="services.selectedService"
+                                      tile-info="service"></service-tile>
+                        <strong class="textBelowTile">{{service.name}}</strong>
+                    </li>
+                </ul>
+            </div>
+            <!-- List view -->
+            <div id="servicelist" ng-if="services.tileView === false">
+                <h2 ng-repeat="service in services.constants.serviceHealths | filter: (!!services.filterBy) && {id:services.filterBy}">
+                    {{service.name}} ({{services.safeSource.length}})
+                </h2>
+                <h2 ng-if="!services.filterBy">
+                    {{'SERVICES_AllServices'|translate}}
+                    <span ng-if="services.safeSource.length">
+                        ({{services.safeSource.length}})
+                    </span>
+                </h2>
+                <div id="services">
+                    <table class="table table-striped table-hover master-body table-condensed"
+                           st-table="services.displayedData"
+                           st-safe-src="services.safeSource">
+                        <thead>
+                            <tr>
+                                <th tabindex="0"
+                                    st-sort-default="true"
+                                    st-sort="health">
+                                    {{'SERVICES_THStatus' | translate}}
+                                </th>
+                                <th tabindex="0" st-sort="'name'">
+                                    {{'SERVICES_THName' | translate}}
+                                </th>
+                                <th tabindex="0" st-sort="'deployedBy'">
+                                    {{'SERVICES_THDeployed_By' | translate}}
+                                </th>
+                                <th tabindex="0" st-sort="'deployedOn'">
+                                    {{'SERVICES_THDeployed_On' | translate}}
+                                </th>
+                                <th>
+                                    {{'SERVICES_THComponents'|translate}}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="serviceItem in services.displayedData"
+                                ng-class="{'st-selected': services.selectedService.id == serviceItem.id}"
+                                ng-click="services.selectedService = serviceItem; $event.stopPropagation();">
+                                <td ng-switch="serviceItem.health" class="text-center">
+                                    <div ng-switch-when="green">
+                                        <statusicon data-toggle="tooltip"
+                                                    title="{{'GENERIC_Healthy' | translate}}"
+                                                    value="'GREEN'"></statusicon>
+                                    </div>
+                                    <div ng-switch-when="yellow">
+                                        <statusicon data-toggle="tooltip"
+                                                    title="{{'GENERIC_Warning' | translate}}"
+                                                    value="'WARNING'"></statusicon>
+                                    </div>
+                                    <div ng-switch-when="red">
+                                        <statusicon data-toggle="tooltip"
+                                                    title="{{'GENERIC_Critical' | translate}}"
+                                                    value="'CRITICAL'"></statusicon>
+                                    </div>
+                                    <div ng-switch-when="pending">
+                                        <statusicon data-toggle="tooltip"
+                                                    title="{{'GENERIC_Pending' | translate}}"
+                                                    value="'STANDBY'"></statusicon>
+                                    </div>
+                                    <div ng-switch-when="unknown">
+                                        <i style="margin-right: 5px;"
+                                           data-toggle="tooltip"
+                                           title="{{'GENERIC_InProgress' | translate}}"
+                                           class="ci-state-standby-clock text-primary"></i>
+                                    </div>
+                                    <div ng-switch-when="cancelled">
+                                        <i style="color: #333333"
+                                           class="ci-action-circle-remove-slash"
+                                           data-toggle="tooltip"
+                                           title="{{'GENERIC_Cancelled' | translate}}"></i>
+                                    </div>
+                                    <div ng-switch-when="incomplete">
+                                        <i class="ci-action-circle-minus"
+                                           style="color: #EE6411"
+                                           data-toggle="tooltip"
+                                           title="{{'GENERIC_Incomplete' | translate}}"></i>
+                                    </div>
+                                    <div ng-switch-when="servicemode">
+                                        <i class="ci-action-circle-wrench"
+                                           style="color:#efad18"
+                                           data-toggle="tooltip"
+                                           title="{{'GENERIC_ServiceMode' | translate}}"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a ng-click="services.viewDetails(serviceItem.id)">
+                                        {{serviceItem.name}}
+                                    </a>
+                                </td>
+                                <td>
+                                    {{serviceItem.deployedBy}}
+                                </td>
+                                <td>
+                                    <datetime-display time="serviceItem.deployedOn" time-format="'LLL'" />
+                                </td>
+                                <td class="tabledetailsIcons">
+                                    <ul class="list-inline">
+                                        <li>
+                                            <i class="ci-storage-volume-half-full-2"
+                                               data-toggle="tooltip"
+                                               title="{{'GENERIC_Storage' | translate}}"
+                                               ng-class="{'component-icon-on' : (serviceItem.count_storage > 0), 'component-icon-off' : (serviceItem.count_storage == 0), 'active' : serviceItem.id === services.selectedService.id }"></i>
+                                        </li>
+                                        <li>
+                                            <i class="ci-device-tower"
+                                               data-toggle="tooltip"
+                                               title="{{'GENERIC_Server' | translate}}"
+                                               ng-class="{'component-icon-on' : (serviceItem.count_server > 0), 'component-icon-off' : (serviceItem.count_server == 0), 'active' : serviceItem.id === services.selectedService.id}"></i>
+                                        </li>
+                                        <li>
+                                            <i class="ci-device-tower-three-cluster"
+                                               data-toggle="tooltip"
+                                               title="{{'GENERIC_Cluster' | translate}}"
+                                               ng-class="{'component-icon-on' : (serviceItem.count_cluster > 0), 'component-icon-off' : (serviceItem.count_cluster == 0), 'active' : serviceItem.id === services.selectedService.id}"></i>
+                                        </li>
+                                        <!--<li>
+                                            <i class="ci-app-virtual-machine"
+                                               data-toggle="tooltip"
+                                               title="{{'GENERIC_VirtualMachine' | translate}}"
+                                               ng-class="{
+                                               'component-icon-on' : (serviceItem.count_vm > 0),
+                                               'component-icon-off' : (serviceItem.count_vm == 0),
+                                               'active' : serviceItem.id === services.selectedService.id
+                                               }"></i>
+                                        </li>-->
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    <div st-pagination=""
+                                         st-items-by-page="services.smartTableOptions.itemsPerPage"
+                                         st-displayed-pages="services.smartTableOptions.pages"></div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div ng-if="services.safeSource.length === 0">
+                {{'SERVICES_NoMatchSearch' | translate}}
+            </div>
+        </article>
+        <div class="col-sm-4">
+            <aside class="well">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div ng-if="!services.selectedService" id="serviceDetails2">
+                            <h2 class="text-center">
+                                {{'SERVICES_Service_States' | translate}}
+                            </h2>
+                            <p style="padding: 0 45px 0 45px">
+                                {{'SERVICES_Service_Published_Template'|translate}}
+                            </p>
+
+                            <p class="row">
+                                <div class="col-sm-3">
+                                    <statusicon data-toggle="tooltip"
+                                                title="{{'GENERIC_Healthy' | translate}}"
+                                                value="'GREEN'"></statusicon>
+                                    <strong>
+                                        {{'GENERIC_Healthy'|translate}}:
+                                    </strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    {{'SERVICES_Service_State_Description_Healthy'|translate}}
+                                </div>
+                            </p>
+
+                            <p class="row">
+                                <div class="col-sm-3">
+                                    <statusicon data-toggle="tooltip"
+                                                title="{{'GENERIC_Warning' | translate}}"
+                                                value="'WARNING'"></statusicon>
+                                    <strong>
+                                        {{'GENERIC_Warning'|translate}}:
+                                    </strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    {{'SERVICES_Service_State_Description_Warning'|translate}}
+                                </div>
+                            </p>
+
+                            <p class="row">
+                                <div class="col-sm-3">
+                                    <statusicon data-toggle="tooltip"
+                                                title="{{'GENERIC_Critical' | translate}}"
+                                                value="'CRITICAL'"></statusicon>
+                                    <strong>
+                                        {{'GENERIC_Critical'|translate}}:
+                                    </strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    {{'SERVICES_Service_State_Description_Critical'|translate}}
+                                </div>
+                            </p>
+
+                            <p class="row">
+                                <div class="col-sm-3">
+                                    <statusicon data-toggle="tooltip"
+                                                title="{{'GENERIC_Pending' | translate}}"
+                                                value="'STANDBY'"></statusicon>
+                                    <strong>
+                                        {{'GENERIC_Pending'|translate}}:
+                                    </strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    {{'SERVICES_Service_State_Description_Pending'|translate}}
+                                </div>
+                            </p>
+
+                            <p class="row">
+                                <div class="col-sm-3">
+                                    <i style="margin-right: 5px;" data-toggle="tooltip" title="{{'GENERIC_InProgress' | translate}}" class="ci-state-standby-clock text-primary"></i>
+                                    <strong>
+                                        {{'GENERIC_InProgress'|translate}}:
+                                    </strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    {{'SERVICES_Service_State_Description_InProgress'|translate}}
+                                </div>
+                            </p>
+
+                            <p class="row">
+                                <div class="col-sm-3">
+                                    <i style="margin-right: 5px; color: #333333" class="ci-action-circle-remove-slash"
+                                       data-toggle="tooltip"
+                                       title="{{'GENERIC_Cancelled' | translate}}"></i>
+                                    <strong>
+                                        {{'GENERIC_Cancelled'|translate}}:
+                                    </strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    {{'SERVICES_Service_State_Description_Cancelled'|translate}}
+                                </div>
+                            </p>
+
+                            <p class="row">
+                                <div class="col-sm-3">
+                                    <i style="margin-right: 5px; color: #EE6411" class="ci-action-circle-minus"
+                                       data-toggle="tooltip"
+                                       title="{{'GENERIC_Incomplete' | translate}}"></i>
+                                    <strong>
+                                        {{'GENERIC_Incomplete'|translate}}:
+                                    </strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    {{'SERVICES_Service_State_Description_Incomplete'|translate}}
+                                </div>
+                            </p>
+
+                            <p class="row">
+                                <div class="col-sm-3">
+                                    <i class="ci-action-circle-wrench" style="color:#efad18"
+                                       data-toggle="tooltip"
+                                       title="{{'GENERIC_ServiceMode' | translate}}"></i>
+                                    <strong>
+                                        {{'GENERIC_ServiceMode'|translate}}:
+                                    </strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    {{'SERVICES_Service_State_Description_ServiceMode'|translate}}
+                                </div>
+                            </p>
+
+                        </div>
+                        <div id="serviceDetails" ng-if="services.selectedService">
+                            <div>
+                                <ul class="list-unstyled clearfix text-center">
+                                    <li id="selectedServiceName">
+                                        <strong style="font-size: 17px;">
+                                            {{services.selectedService.name}}
+                                        </strong>
+                                    </li>
+                                    <li>
+                                        <p>
+                                            {{services.selectedService.description}}
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <br />
+                            <div id="btnList" class="row">
+                                <ul class="list-unstyled clearfix col-lg-6 col-md-12 col-sm-12">
+                                    <li>
+                                        <button class="btn btn-primary btn-block btn-sm"
+                                                id="viewDetails"
+                                                ng-click="services.viewDetails()">
+                                            <i class="ci-action-line-consistency"></i>
+                                            {{'SERVICES_View_Details' | translate}}
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button class="btn btn-primary btn-block btn-sm"
+                                                ng-disabled="!ASM.IsInRole('administrator')
+                                || !services.selectedService.firmwarePackageName
+                                || services.selectedService.health === 'unknown'
+                                || services.selectedService.firmwareCompliant === 'compliant'"
+                                                id="updateResources"
+                                                ng-click="services.updateFirmware()">
+                                            <i class="ci-arrow-box-updates"></i>
+                                            {{'SERVICES_UpdateResources' | translate}}
+                                        </button>
+                                    </li>
+
+                                </ul>
+
+                                <ul class="list-unstyled col-lg-6 col-md-12 col-sm-12">
+                                    <li>
+                                        <button class="btn btn-primary btn-block btn-sm"
+                                                id="lnkExportService"
+                                                ng-disabled="ASM.IsInRole('readonly')"
+                                                ng-click="services.exportService()">
+                                            <i class="ci-arrow-bold-line-export-up"></i>
+                                            {{'SERVICES_ExportSelected' | translate}}
+                                        </button>
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                            <div class="row">
+                                <label for="deployedBy" class="col-xs-6">
+                                    {{'SERVICES_Deployed_By' | translate}}
+                                </label>
+                                <span id="deployedBy" class="col-xs-6">
+                                    {{services.selectedService.deployedBy}}
+                                </span>
+                            </div>
+                            <div class="row">
+                                <label for="deployedOn" class="col-xs-6">
+                                    {{'SERVICES_Deployed_On' | translate}}
+                                </label>
+                                <span id="deployedOn" class="col-xs-6">
+                                    <datetime-display time="services.selectedService.deployedOn" time-format="'LLL'" />
+                                </span>
+                            </div>
+                            <div class="row">
+                                <label for="referencetemplate" class="col-xs-6">
+                                    {{'SERVICES_Reference_Template' | translate}}
+                                </label>
+                                <span id="referencetemplate" class="col-xs-6">
+                                    {{services.selectedService.template}}
+                                </span>
+                            </div>
+                            <div class="row">
+                                <h3 class="col-xs-12">
+                                    {{'SERVICES_Components' | translate}}
+                                </h3>
+                            </div>
+                            <!--<div class="row">
+                                <div class="col-xs-6">
+                                    <ul class="list-inline">
+                                        <li>
+                                            <i class="ci-app-virtual-machine"
+                                               data-toggle="tooltip"
+                                               title="{{'GENERIC_VirtualMachine' | translate}}"
+                                               ng-class="services.selectedService.count_vm > 0 ? 'component-icon-on' : 'component-icon-off'"></i>
+                                        </li>
+                                        <li>
+                                            <label for="vm">
+                                                {{'SERVICES_VM' | translate}}
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <span id="vm" class="col-xs-6">
+                                    {{services.selectedService.count_vm}}
+                                </span>
+                            </div>-->
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <ul class="list-inline">
+                                        <li>
+                                            <i class="ci-device-tower-three-cluster"
+                                               data-toggle="tooltip"
+                                               title="{{'GENERIC_Cluster' | translate}}"
+                                               ng-class="services.selectedService.count_cluster > 0 ? 'component-icon-on' : 'component-icon-off'"></i>
+                                        </li>
+                                        <li>
+                                            <label for="cluster">
+                                                {{'SERVICES_Cluster' | translate}}
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <span id="cluster" class="col-xs-6">
+                                    {{services.selectedService.count_cluster}}
+                                </span>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <ul class="list-inline">
+                                        <li>
+                                            <i class="ci-device-tower"
+                                               data-toggle="tooltip"
+                                               title="{{'GENERIC_Server' | translate}}"
+                                               ng-class="services.selectedService.count_server > 0 ? 'component-icon-on' : 'component-icon-off'"></i>
+                                        </li>
+                                        <li>
+                                            <label for="server">
+                                                {{'SERVICES_Server' | translate}}
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <span id="server" class="col-xs-6">
+                                    {{services.selectedService.count_server}}
+                                </span>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <ul class="list-inline">
+                                        <li>
+                                            <i class="ci-storage-volume-half-full-2"
+                                               data-toggle="tooltip"
+                                               title="{{'GENERIC_Storage' | translate}}"
+                                               ng-class="services.selectedService.count_storage > 0 ? 'component-icon-on' : 'component-icon-off'"></i>
+                                        </li>
+                                        <li>
+                                            <label for="storage">
+                                                {{'SERVICES_Storage' | translate}}
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <span id="storage" class="col-xs-6">
+                                    {{services.selectedService.count_storage}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>

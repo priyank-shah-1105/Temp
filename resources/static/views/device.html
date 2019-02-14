@@ -1,0 +1,2434 @@
+﻿<section id="page_device_details">
+    <div class="col-xs-12">
+
+
+        <error-display errors="$rootScope.errors"
+                       on-click="$root.ASM.RemoveError(error)"
+                       on-expand-collapse=""></error-display>
+        <header>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="#/devices">
+                        {{'DEVICEDETAILS_ResourcesTitle' | translate}}
+                    </a>
+                </li>
+                <li class="active">
+                    {{'DEVICEDETAILS_DetailsTitle' | translate}}
+                </li>
+            </ol>
+            <h1>
+                <span>
+                    {{device.deviceType|deviceType}}
+                </span>
+                <span>
+                    {{device.device.name}}
+                    {{device.device.ipaddress}}
+                </span>
+                <span>
+                    {{'DEVICEDETAILS_DetailsTitle' | translate}}
+                </span>
+            </h1>
+            <button class="btn btn-default pull-right"
+                    ng-href="#/service/{{device.device.server.serviceId}}/details"
+                    ng-if="device.device.server.serviceId">
+                <i class="ci-deploy"></i>
+                {{'DEVICEDETAILS_InService'|translate}}
+                {{device.device.server.serviceName}}
+            </button>
+        </header>
+
+        <!-- Tabs to click -->
+        <div class="row" ng-if="!device.hideTabView()">
+            <div class="col-xs-offset-4">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.summary)}" ng-if="(device.isServer() && device.device.systemusage) || device.isEmcvnx() || device.isEmcUnity() || device.isCompellent()">
+                        <a ng-click="device.setTab(device.tabs.summary)">{{'DEVICE_Summary'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.portView)}" ng-if="device.isServer()">
+                        <a ng-click="device.setTab(device.tabs.portView)">{{'DEVICE_PortView'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.networkInterfaces)}" ng-if="device.isServer() && device.device.nics.length">
+                        <a ng-click="device.setTab(device.tabs.networkInterfaces)">{{'DEVICE_NetworkInterfaces'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.firmwareRevisions)}" ng-if="device.isServer()">
+                        <a ng-click="device.setTab(device.tabs.firmwareRevisions)">{{'DEVICE_FirmwareSoftwareRevisions'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.cpus)}" ng-if="device.isServer() && device.device.cpudata.length">
+                        <a ng-click="device.setTab(device.tabs.cpus)">{{'DEVICE_CPUs'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.memory)}" ng-if="device.isServer() && device.device.memorydata.length">
+                        <a ng-click="device.setTab(device.tabs.memory)">{{'DEVICE_Memory'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.blades)}" ng-if="device.isChassis()">
+                        <a ng-click="device.setTab(device.tabs.blades)">{{'DEVICE_Blades'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.iOModules)}" ng-if="device.isChassis()">
+                        <a ng-click="device.setTab(device.tabs.iOModules)">{{'DEVICE_IOModules'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.chassisController)}" ng-if="device.isChassis()">
+                        <a ng-click="device.setTab(device.tabs.chassisController)">{{'DEVICE_ChassisControllers'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.iKVM)}" ng-if="device.isChassis() && !device.isFX2()">
+                        <a ng-click="device.setTab(device.tabs.iKVM)">{{'DEVICE_Ikvm'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.powerSupplies)}" ng-if="device.isChassis()">
+                        <a ng-click="device.setTab(device.tabs.powerSupplies)">{{'DEVICE_PowerSupplies'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.equallogicVolumes)}" ng-if="device.isEqualLogic()">
+                        <a ng-click="device.setTab(device.tabs.equallogicVolumes)">{{'DEVICE_Volumes'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.compellentVolumes)}" ng-if="device.isCompellent()">
+                        <a ng-click="device.setTab(device.tabs.compellentVolumes)">{{'DEVICE_Volumes'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.netAppVolumes)}" ng-if="device.isNetApp()">
+                        <a ng-click="device.setTab(device.tabs.netAppVolumes)">{{'DEVICE_Volumes'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.localStorage)}" ng-if="device.isServer()">
+                        <a ng-click="device.setTab(device.tabs.localStorage)">{{'DEVICE_LocalStorage'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.luns)}" ng-if="device.isEmcvnx() || device.isEmcUnity()">
+                        <a ng-click="device.setTab(device.tabs.luns)">{{'DEVICES_EMC_LUNs'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.fileSystems)}" ng-if="device.isEmcUnity()">
+                        <a ng-click="device.setTab(device.tabs.fileSystems)">{{'DEVICES_EMC_FileSystems'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.performance)}" ng-if="device.isScaleIO()">
+                        <a ng-click="device.setTab(device.tabs.performance)">{{'DEVICES_EMC_SCALEIO_Performance'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.scaleIOStorage)}" ng-if="device.isScaleIO()">
+                        <a ng-click="device.setTab(device.tabs.scaleIOStorage)">{{'DEVICES_EMC_SCALEIO_TabStorage'|translate}}</a>
+                    </li>
+                    <li role="presentation" ng-class="{'active': device.isCurrentTab(device.tabs.scaleIOServers)}" ng-if="device.isScaleIO()">
+                        <a ng-click="device.setTab(device.tabs.scaleIOServers)">{{'DEVICES_EMC_SCALEIO_TabServers'|translate}}</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+            <!-- Column 1 (summary) -->
+            <div id="deviceInfoCol1" class="col-lg-4 col-md-6">
+                <div class="well">
+                    <!--class="deviceImage {{device.deviceType}} {{device.deviceImageClass}}"-->
+                    <div ng-if="!device.isScaleIO()"
+                         style="display: block; margin: auto;"
+                         class="deviceImage"
+                         ng-class="[device.deviceType, device.deviceImageClass]">
+                    </div>
+                    <h2 class="text-center" ng-if="device.isScaleIO()">
+                        {{'DEVICES_EMC_SCALEIO_ScaleImageText'|translate}}
+                    </h2>
+                    <h2 class="text-center" ng-if="device.device.systemmodel">
+                        {{device.device.systemmodel}}
+                    </h2>
+                    <h2 class="text-center" ng-if="device.device.chassismodel">
+                        {{device.device.chassismodel}}
+                    </h2>
+                    <div class="row">
+
+                        <ul class="col-md-12 list-unstyled text-center" ng-if="device.device.ipaddressurl != ''">
+                            <li ng-if="device.isEqualLogic()">
+                                <button ng-click="device.launchGUI()"
+                                        id="launchGroupManager"
+                                        class="btn btn-primary"
+                                        ng-disabled="$root.ASM.IsInRole('readonly')">
+                                    <span class="buttonLabel">
+                                        {{'DEVICEDETAILS_LaunchGroupManager'|translate}}
+                                    </span>
+                                </button>
+                            </li>
+                            <li ng-if="(device.isCompellent() || device.isNetApp())">
+                                <button id="launchStorageCenter" class="btn btn-primary" ng-disabled="$root.ASM.IsInRole('readonly')"
+                                        ng-click="device.launchGUI()">
+                                    <span class="buttonLabel">
+                                        {{'DEVICEDETAILS_LaunchStorageCenter'|translate}}
+                                    </span>
+                                </button>
+                            </li>
+                            <li ng-if="device.isDellSwitch()">
+                                <button id="launchGUILink" class="btn btn-primary" ng-disabled="$root.ASM.IsInRole('readonly')"
+                                        ng-click="device.launchGUI()">
+                                    <span class="buttonLabel">
+                                        {{'DEVICEDETAILS_LaunchGUILink'|translate}}
+                                    </span>
+                                </button>
+                            </li>
+                            <li ng-if="device.isServer()">
+                                <button id="launchiDRACGUILink" class="btn btn-primary" ng-disabled="$root.ASM.IsInRole('readonly')"
+                                        ng-click="device.launchGUI()">
+                                    <span class="buttonLabel" ng-if="device.deviceType == 'Server'">
+                                        {{'DEVICEDETAILS_LaunchMgmtGUILink'|translate}}
+                                    </span>
+                                    <span class="buttonLabel" ng-if="device.deviceType != 'Server'">
+                                        {{'DEVICEDETAILS_LaunchiDRACGUIDLink'|translate}}
+                                    </span>
+                                </button>
+                            </li>
+                            <li ng-if="device.isChassis()">
+                                <button id="launchCMCGUILink" class="btn btn-primary" ng-disabled="$root.ASM.IsInRole('readonly')"
+                                        ng-click="device.launchGUI()">
+                                    <span class="buttonLabel">
+                                        {{'DEVICEDETAILS_LaunchCMCGUILink'|translate}}
+                                    </span>
+                                </button>
+                            </li>
+                            <li ng-if="device.isEmcvnx() || device.isEmcUnity()">
+                                <button id="launchCMCGUILink" class="btn btn-primary" ng-disabled="$root.ASM.IsInRole('readonly')"
+                                        ng-click="device.launchGUI()">
+                                    <span class="buttonLabel">
+                                        {{'DEVICES_EMC_LaunchUnisphere'|translate}}
+                                    </span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Chassis Details -->
+                    <div class="row" ng-if="device.isChassis()">
+                        <div class="col-xs-12">
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <h3>
+                                        {{'DEVICEDETAILS_ChassisInformation'|translate}}
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label for="deviceType">
+                                        {{'GENERIC_Type'|translate}}
+                                    </label>
+                                </div>
+                                <div class="col-xs-6" id="deviceType">
+                                    {{device.deviceType|deviceType}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label ng-attr-for="{{device.device.ipaddressurl ? 'deviceIP' : 'ipChassisLink'}}">
+                                        {{'DEVICEDETAILS_ManagementIP'|translate}}
+                                    </label>
+                                </div>
+                                <div class="col-xs-6">
+                                    <a id="ipChassisLink"
+                                       ng-if="device.device.ipaddressurl != ''"
+                                       ng-href="{{device.device.ipaddressurl}}"
+                                       target="_blank">
+                                        {{device.device.ipaddress}}
+                                    </a>
+                                    <span id="deviceIP" ng-if="device.device.ipaddressurl == ''">
+                                        {{device.device.ipaddress}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label for="assocCred">
+                                        {{'DEVICEDETAILS_AssociatedCredential'|translate}}
+                                    </label>
+                                </div>
+                                <div class="col-xs-6" id="assocCred">
+                                    {{device.device.associatedcredential}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label for="chassisServiceTag">
+                                        <!--{{'GENERIC_ServiceTag'|translate}}-->
+                                        {{'GENERIC_AssetServiceTag'|translate}}
+                                    </label>
+                                </div>
+                                <div class="col-xs-6" id="chassisServiceTag">
+                                    {{device.device.servicetag}}
+                                </div>
+                            </div>
+                            <!--<div class="row">
+                            <div class="col-xs-6">
+                                <label for="assetTag">
+                                    {{'GENERIC_AssetTag'|translate}}-->
+                            <!--{{'GENERIC_AssetServiceTag'|translate}}-->
+                            <!--</label>
+                                </div>
+                                <div class="col-xs-6" id="assetTag">
+                                    {{device.device.assettag}}
+                                </div>
+                            </div>-->
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label for="chassisName">
+                                        {{'GENERIC_ResourceName'|translate}}
+                                    </label>
+                                </div>
+                                <div class="col-xs-6" id="chassisName">
+                                    {{device.device.chassisname}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label for="chassisModel">
+                                        {{'DEVICEDETAILS_ChassisModel'|translate}}
+                                    </label>
+                                </div>
+                                <div class="col-xs-6" id="chassisModel">
+                                    {{device.device.chassismodel}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label for="dnsName">
+                                        {{'DEVICEDETAILS_ChassisDNSName'|translate}}
+                                    </label>
+                                </div>
+                                <div class="col-xs-6" id="dnsName">
+                                    {{device.device.chassisdnsname}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label for="midPlaneVersion">
+                                        {{'DEVICEDETAILS_ChassisMidVersion'|translate}}
+                                    </label>
+                                </div>
+                                <div class="col-xs-6" id="midPlaneVersion">
+                                    {{device.device.chassismidplaneversion}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label for="powerCap">
+                                        {{'DEVICEDETAILS_PowerCapPercent'|translate}}
+                                    </label>
+                                </div>
+                                <div class="col-xs-6" id="powerCap">
+                                    {{device.device.powercap}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Equallogic Details -->
+                    <h3 ng-if="device.deviceType == 'equallogic'">
+                        {{'DEVICEDETAILS_StorageGroupInformation'|translate}}
+                    </h3>
+                    <ul ng-if="device.deviceType == 'equallogic'" class="list-unstyled">
+                        <li>
+                            <label for="groupname">
+                                {{'GENERIC_ResourceName'|translate}}
+                            </label>
+                            <span id="groupname">
+                                {{device.device.groupname}}
+                            </span>
+                        </li>
+                        <li>
+                            <label ng-attr-for="device.device.ipaddressurl ? 'lnkdeviceIPEq' : 'deviceIPEq'">
+                                {{'GENERIC_IpAddress'|translate}}
+                            </label>
+                            <a id="lnkdeviceIPEq"
+                               ng-if="device.device.ipaddressurl != ''"
+                               href=""
+                               ng-href="{{device.device.ipaddressurl}}"
+                               target="_blank">
+                                {{device.device.ipAddress}}
+                            </a>
+                            <span id="deviceIPEq" ng-if="device.device.ipaddressurl == ''">
+                                {{device.device.ipAddress}}
+                            </span>
+                        </li>
+                        <li>
+                            <label for="location">
+                                {{'GENERIC_Location'|translate}}
+                            </label>
+                            <span id="location">{{device.device.location}}</span>
+                        </li>
+                    </ul>
+                    <!-- Equallogic Details -->
+                    <h3 ng-if="device.deviceType == 'equallogic'">
+                        {{'GENERIC_Volumes'|translate}}
+                    </h3>
+                    <ul class="list-unstyled" ng-if="device.deviceType == 'equallogic'">
+                        <li>
+                            <label for="totalvolumes">
+                                {{'GENERIC_Volumes'|translate}}
+                            </label>
+                            <span id="totalvolumes">{{device.device.totalvolumes}}</span>
+                        </li>
+                        <li>
+                            <label for="volumesonline">
+                                {{'DEVICEDETAILS_TotalVolumes'|translate}}
+                            </label>
+                            <span id="volumesonline">{{device.device.volumesonline}}</span>
+                        </li>
+                        <li>
+                            <label for="volumesinuse">
+                                {{'GENERIC_InUse'|translate}}
+                            </label>
+                            <span id="volumesinuse">{{device.device.volumesinuse}}</span>
+                        </li>
+                        <li>
+                            <label for="iscsi">
+                                {{'DEVICEDETAILS_ISCSIConnections'|translate}}
+                            </label>
+                            <span id="iscsi">{{device.device.iscsiconnections}}</span>
+                        </li>
+                    </ul>
+                    <!-- Compellent Details -->
+                    <h3 ng-if="device.deviceType == 'compellent'">
+                        {{'DEVICEDETAILS_StorageGroupInformation'|translate}}
+                    </h3>
+                    <ul class="list-unstyled" ng-if="device.deviceType == 'compellent'">
+                        <li class="row">
+                            <label class="col-xs-6" for="compellentstoragename">
+                                {{'DEVICEDETAILS_ResourceName'|translate}}
+                            </label>
+                            <span class="col-xs-6" id="compellentstoragename">{{device.device.storagecentername}}</span>
+                        </li>
+                        <li class="row">
+                            <label class="col-xs-6" for="compellenthostip">
+                                {{'GENERIC_IpAddress'|translate}}
+                            </label>
+                            <span class="col-xs-6">
+                                <a id="lnkcompellenthostip"
+                                   ng-if="device.device.ipaddressurl != ''"
+                                   href=""
+                                   ng-href="{{device.device.ipaddressurl}}"
+                                   target="_blank">
+                                    {{device.device.ipAddress}}
+                                </a>
+                            </span>
+                            <span class="col-xs-6" id="compellenthostip" ng-if="device.device.ipaddressurl == ''">
+                                {{device.device.ipAddress}}
+                            </span>
+                        </li>
+                    </ul>
+                    <!-- Compellent Details -->
+                    <h3 ng-if="device.deviceType == 'compellent'">
+                        {{'GENERIC_Volumes'|translate}}
+                    </h3>
+                    <ul ng-if="device.deviceType == 'compellent'" class="list-unstyled">
+                        <li class="row">
+                            <label class="col-xs-6" for="compellenttotalvolumes">
+                                {{'DEVICEDETAILS_TotalVolumes'|translate}}
+                            </label>
+                            <span class="col-xs-6" id="compellenttotalvolumes">{{device.device.totalvolumes}}</span>
+                        </li>
+                        <li class="row">
+                            <label class="col-xs-6" for="volumesup">
+                                {{'DEVICEDETAILS_VolumesUp'|translate}}
+                            </label>
+                            <span class="col-xs-6" id="volumesup">{{device.device.volumesup}}</span>
+                        </li>
+                        <li class="row">
+                            <label class="col-xs-6" for="volumesdown">
+                                {{'DEVICEDETAILS_VolumesDown'|translate}}
+                            </label>
+                            <span class="col-xs-6" id="volumesdown">{{device.device.volumesdown}}</span>
+                        </li>
+                    </ul>
+                    <!-- Netapp Details -->
+                    <h3 ng-if="device.deviceType == 'netapp'">
+                        {{'DEVICEDETAILS_StorageGroupInformation'|translate}}
+                    </h3>
+                    <ul ng-if="device.deviceType == 'netapp'" class="list-unstyled">
+                        <li>
+                            <label for="netappstoragename">
+                                {{'GENERIC_ResourceName'|translate}}
+                            </label>
+                            <span id="netappstoragename">
+                                {{device.device.storagecentername}}
+                            </span>
+                        </li>
+                        <li>
+                            <label for="netapphostip">
+                                {{'GENERIC_IpAddress'|translate}}
+                            </label>
+                            <a id="lnknetapphostip"
+                               ng-if="device.device.ipaddressurl != ''"
+                               href=""
+                               ng-href="{{device.device.ipaddressurl}}"
+                               target="_blank">
+                                {{device.device.ipAddress}}
+                            </a>
+                            <span id="netapphostip" ng-if="device.device.ipaddressurl == ''">
+                                {{device.device.ipAddress}}
+                            </span>
+                        </li>
+                    </ul>
+                    <!-- Netapp Details -->
+                    <h3 ng-if="device.deviceType == 'netapp'">
+                        {{'GENERIC_Volumes'|translate}}
+                    </h3>
+                    <ul ng-if="device.deviceType == 'netapp'" class="list-unstyled">
+                        <li>
+                            <label for="netapptotalvolumes">
+                                {{'DEVICEDETAILS_TotalVolumes'|translate}}
+                            </label>
+                            <span id="netapptotalvolumes">
+                                {{device.device.totalvolumes}}
+                            </span>
+                        </li>
+                        <li>
+                            <label for="netappvolumesup">
+                                {{'DEVICEDETAILS_VolumesUp'|translate}}
+                            </label>
+                            <span id="netappvolumesup">
+                                {{device.device.volumesup}}
+                            </span>
+                        </li>
+                        <li>
+                            <label for="netappvolumesdown">
+                                {{'DEVICEDETAILS_VolumesDown'|translate}}
+                            </label>
+                            <span id="netappvolumesdown">
+                                {{device.device.volumesdown}}
+                            </span>
+                        </li>
+                    </ul>
+
+                    <!-- dellswitch -->
+                    <div ng-if="device.deviceType == 'dellswitch'">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h3>
+                                    {{'DEVICEDETAILS_SwitchInformation'|translate}}
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="dellswitchstatus">
+                                    {{'GENERIC_State'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="dellswitchstatus">
+                                {{device.device.state}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="dellswitchstate">
+                                    {{'DEVICEDETAILS_PowerState'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="dellswitchstate">
+                                {{device.device.powerstate}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label ng-attr-for="device.device.ipaddressurl ? 'lnkdellswitch' : 'dellswitchhostip'">
+                                    {{'GENERIC_IpAddress'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6">
+                                <a id="lnkdellswitch"
+                                   ng-if="device.device.ipaddressurl != ''"
+                                   href=""
+                                   ng-href="{{device.device.ipaddressurl}}"
+                                   target="_blank">
+                                    {{device.device.ipaddress}}
+                                </a>
+                                <span id="dellswitchhostip" ng-if="device.device.ipaddressurl == ''">
+                                    {{device.device.ipaddress}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="dellswitchhostname">
+                                    {{'GENERIC_ResourceName'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="dellswitchhostname">
+                                {{device.device.hostname}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="dellswitchservicetag">
+                                    <!--{{'GENERIC_ServiceTag'|translate}}-->
+                                    {{'GENERIC_AssetServiceTag'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="dellswitchservicetag">
+                                {{device.device.assettag}}
+                                <!--{{device.device.servicetag}}-->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="dellswitchmacaddress">
+                                    {{'DEVICEDETAILS_DellSwitchMACAddress'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="dellswitchmacaddress">
+                                {{device.device.macaddress}}
+                            </div>
+                        </div>
+
+                        <!--<div class="row">
+                            <div class="col-xs-6">
+                                <label for="dellswitchassettag">
+                                    {{'GENERIC_AssetTag'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="">
+                                {{device.device.assettag}}
+                            </div>
+                        </div>-->
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="dellswitchfirmwarever">
+                                    {{'GENERIC_FirmwareVersion'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="dellswitchfirmwarever">
+                                {{device.device.firmwareversion}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="dellswitchsoftwarever">
+                                    {{'DEVICEDETAILS_SoftwareVersion'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="dellswitchsoftwarever">
+                                {{device.device.softwareversion}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="dellswitchsysdesc">
+                                    {{'DEVICEDETAILS_SystemDescription'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="dellswitchsysdesc">
+                                {{device.device.systemdescription}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ciscoswitch -->
+                    <div ng-if="device.deviceType == 'ciscoswitch'">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h3>
+                                    {{'DEVICEDETAILS_SwitchInformation'|translate}}
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="ciscoswitchstatus">
+                                    {{'GENERIC_State'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="ciscoswitchstatus">
+                                {{device.device.state}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="ciscoswitchstate">
+                                    {{'DEVICEDETAILS_PowerState'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="ciscoswitchstate">
+                                {{device.device.powerstate}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label ng-attr-for="device.device.ipaddressurl ? 'lnkciscoswitch' : 'ciscoswitchhostip'">
+                                    {{'DEVICEDETAILS_ManagementIP'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6">
+                                <a id="lnkciscoswitch"
+                                   ng-if="device.device.ipaddressurl != ''"
+                                   href=""
+                                   ng-href="{{device.device.ipaddressurl}}"
+                                   target="_blank">
+                                    {{device.device.ipaddress}}
+                                </a>
+                                <span id="ciscoswitchhostip" ng-if="device.device.ipaddressurl == ''">
+                                    {{device.device.ipaddress}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="ciscoswitchhostname">
+                                    {{'GENERIC_ResourceName'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="ciscoswitchhostname">
+                                {{device.device.hostname}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="ciscoswitchservicetag">
+                                    <!--{{'GENERIC_ServiceTag'|translate}}-->
+                                    {{'GENERIC_AssetServiceTag'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="ciscoswitchservicetag">
+                                {{device.device.serviceTag}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="ciscoswitchmacaddress">
+                                    {{'DEVICEDETAILS_MACAddress'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="ciscoswitchmacaddress">
+                                {{device.device.macaddress}}
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="ciscoswitchfirmwarever">
+                                    {{'GENERIC_FirmwareVersion'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="ciscoswitchfirmwarever">
+                                {{device.device.firmwareversion}}
+                            </div>
+                        </div>
+                        <!--<div class="row">
+                            <div class="col-xs-6">
+                                <label for="ciscoswitchsoftwarever">
+                                    {{'DEVICEDETAILS_SoftwareVersion'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="ciscoswitchsoftwarever">
+                                {{device.device.softwareversion}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="ciscoswitchsysdesc">
+                                    {{'DEVICEDETAILS_SystemDescription'|translate}}
+                                </label>
+                            </div>
+                            <div class="col-xs-6" id="ciscoswitchsysdesc">
+                                {{device.device.systemdescription}}
+                            </div>
+                        </div>-->
+                    </div>
+
+                    <!-- server -->
+                    <div ng-if="device.isServer()">
+                        <h3>
+                            <i class="ci-device-tower-chassis"></i>
+                            <span ng-switch="device.deviceType">
+                                <span ng-switch-when="RackServer">
+                                    {{'DEVICEDETAILS_RackServerInformation'|translate}}
+                                </span>
+                                <span ng-switch-when="TowerServer">
+                                    {{'DEVICEDETAILS_TowerServerInformation'|translate}}
+                                </span>
+                                <span ng-switch-when="BladeServer">
+                                    {{'DEVICEDETAILS_BladeServerInformation'|translate}}
+                                </span>
+                                <span ng-switch-when="FXServer">
+                                    {{'DEVICEDETAILS_BladeServerInformation'|translate}}
+                                </span>
+                                <span ng-switch-when="Server">
+                                    {{'DEVICEDETAILS_ServerInformation'|translate}}
+                                </span>
+                            </span>
+                        </h3>
+                        <div class="row" ng-if="device.deviceType != 'Server'">
+                            <label class="col-xs-6" for="serverPowerState">
+                                {{'DEVICEDETAILS_PowerState'|translate}}
+                            </label>
+                            <span class="col-xs-6" id="serverPowerState">
+                                {{device.device.serverpowerstate}}
+                            </span>
+                        </div>
+                        <div class="row">
+                            <label class="col-xs-6" for="serverModel">
+                                {{'GENERIC_Model'|translate}}
+                            </label>
+                            <span class="col-xs-6" id="serverModel">
+                                {{device.device.systemmodel}}
+                            </span>
+                        </div>
+                        <div class="row">
+                            <label class="col-xs-6" for="serverAssetTag">
+                                <span ng-if="device.deviceType != 'Server'">
+                                    {{'GENERIC_AssetServiceTag'|translate}}
+                                </span>
+                                <span ng-if="device.deviceType === 'Server'">
+                                    {{'DEVICEDETAILS_SerialNumber'|translate}}
+                                </span>
+                            </label>
+                            <span class="col-xs-6" id="serverAssetTag">
+                                {{device.device.servicetag}}
+                            </span>
+                        </div>
+                        <div class="row" ng-if="device.deviceType != 'Server'">
+                            <label class="col-xs-6" for="serverdnsDracName">
+                                {{'GENERIC_ResourceName'|translate}}
+                            </label>
+                            <span class="col-xs-6" id="serverdnsDracName">
+                                {{device.device.dnsIdracName}}
+                            </span>
+                        </div>
+                        <div class="row" ng-if="device.deviceType != 'Server'">
+                            <label class="col-xs-6" for="serverhostname">
+                                {{'DEVICES_OSHostName'|translate}}
+                            </label>
+                            <span class="col-xs-6" id="serverhostname">
+                                {{device.device.hostname}}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- /Server Info Column 1 -->
+                    <!-- Chassis Location -->
+                    <div ng-if="device.isChassis()">
+                        <h3>
+                            {{'DEVICEDETAILS_ChassisLocation'|translate}}
+                        </h3>
+                        <ul class="list-unstyled">
+                            <li class="row">
+                                <label class="col-xs-6" for="dataCenter">
+                                    {{'DEVICEDETAILS_DataCenter'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="dataCenter">
+                                    {{device.device.datacenter}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="aisle">
+                                    {{'DEVICEDETAILS_Aisle'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="aisle">
+                                    {{device.device.aisle}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="rack">
+                                    {{'DEVICEDETAILS_Rack'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="rack">
+                                    {{device.device.rack}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="rackSlot">
+                                    {{'DEVICEDETAILS_RackSlot'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="rackSlot">
+                                    {{device.device.rackslot}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- /Chassis Location -->
+                    <!-- isIOM -->
+                    <div ng-if="device.isIOM()">
+                        <h3>
+                            {{'DEVICEDETAILS_IOModInfo'|translate}}
+                        </h3>
+
+                        <ul class="list-unstyled">
+                            <li class="row">
+                                <label class="col-xs-6" for="iompowerstate">
+                                    {{'DEVICEDETAILS_PowerState'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="iompowerstate">
+                                    {{device.device.iompowerstate}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6">
+                                    {{'GENERIC_AssetServiceTag'|translate}}
+                                </label>
+                                <span class="col-xs-6">
+                                    {{device.device.assettag}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6">
+                                    {{'GENERIC_FirmwareVersion'|translate}}
+                                </label>
+                                <span class="col-xs-6">
+                                    {{device.device.firmwareversion}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6">
+                                    {{'GENERIC_ResourceName'|translate}}
+                                </label>
+                                <span class="col-xs-6">
+                                    {{device.device.switchhostname}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6">
+                                    {{'DEVICEDETAILS_FabricSlot'|translate}}
+                                </label>
+                                <span class="col-xs-6">
+                                    {{device.device.slot}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6">
+                                    {{'DEVICEDETAILS_FabricPurpose'|translate}}
+                                </label>
+                                <span class="col-xs-6">
+                                    {{device.device.fabricpurpose}}
+                                </span>
+                            </li>
+                        </ul>
+                        <h3>
+                            <i class="ci-device-storage-blade-chassis-front"></i>
+                            {{'DEVICEDETAILS_ChassisInformation'|translate}}
+                        </h3>
+                        <ul class="list-unstyled">
+                            <li class="row">
+                                <label class="col-xs-6" ng-attr-for="device.device.chassisipaddressurl ? 'lnkChassis' : 'chassisipaddress'">
+                                    {{'DEVICEDETAILS_ManagementIP'|translate}}
+                                </label>
+                                <span class="col-xs-6" ng-if="device.device.chassisipaddressurl != ''">
+                                    <a id="lnkChassis"
+                                       ng-href="{{device.device.chassisipaddressurl}}"
+                                       target="_blank">
+                                        {{device.device.chassisipaddress}}
+                                    </a>
+                                </span>
+                                <span class="col-xs-6"
+                                      id="chassisipaddress"
+                                      ng-if="device.device.chassisipaddressurl == ''">
+                                    {{device.device.chassisipaddress}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6">
+                                    {{'GENERIC_AssetServiceTag'|translate}}
+                                </label>
+                                <span class="col-xs-6">
+                                    {{device.device.chassisservicetag}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6">
+                                    {{'DEVICEDETAILS_SlotName'|translate}}
+                                </label>
+                                <span class="col-xs-6">
+                                    {{device.device.slot}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- BladeServer -->
+                    <div ng-if="device.deviceType == 'BladeServer'">
+                        <h3 id="bladeInfoTitle">
+                            <i class="ci-device-storage-blade-chassis-front"></i>
+                            {{'DEVICEDETAILS_ChassisInformation'|translate}}
+                        </h3>
+                        <ul id="bladeInformation" class="list-unstyled">
+                            <li class="row">
+                                <label class="col-xs-6" for="bladeIPAddress">
+                                    {{'DEVICEDETAILS_ManagementIP'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="bladeIPAddress">
+                                    {{device.device.chassisipaddress}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="bladeInfoServiceTag">
+                                    {{'GENERIC_AssetServiceTag'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="bladeInfoServiceTag">
+                                    {{device.device.chassisservicetag}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="bladeSlot">
+                                    {{'DEVICEDETAILS_SlotName'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="bladeSlot">
+                                    {{device.device.slotname}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="bladeSlotNum">
+                                    {{'DEVICEDETAILS_SlotNumber'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="bladeSlotNum">
+                                    {{device.device.slotnumber}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- FXServer -->
+                    <div ng-if="device.deviceType == 'FXServer'">
+                        <h3 id="chassisInfoTitle" ng-if="device.deviceType == 'FXServer'">
+                            <i class="ci-device-storage-blade-chassis-front"></i>
+                            {{'DEVICEDETAILS_ChassisInformation'|translate}}
+                        </h3>
+                        <ul id="chassisInformation" class="list-unstyled">
+                            <li class="row">
+                                <label class="col-xs-6" for="chassisIPAddress">
+                                    {{'DEVICEDETAILS_ManagementIP'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="chassisIPAddress">
+                                    {{device.device.chassisipaddress}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="chassisInfoServiceTag">
+                                    {{'GENERIC_AssetServiceTag'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="chassisInfoServiceTag">
+                                    {{device.device.chassisservicetag}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="chassisSlot">
+                                    {{'DEVICEDETAILS_SlotName'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="chassisSlot">
+                                    {{device.device.slotname}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="chassisSlotNum">
+                                    {{'DEVICEDETAILS_SlotNumber'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="chassisSlotNum">
+                                    {{device.device.slotnumber}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- emcvnx -->
+                    <div ng-if="device.deviceType == 'emcvnx'">
+                        <h3 id="storageInfo">
+                            <i class="ci-storage-volume-half-full-2"></i>
+                            {{'DEVICES_EMC_StorageInformation'|translate}}
+                        </h3>
+                        <ul class="list-unstyled">
+                            <li class="row">
+                                <label class="col-xs-6" for="EMCresourcename">
+                                    {{'DEVICES_EMC_ResourceName'|translate}}
+                                </label>
+                                <span id="EMCresourcename" class="col-xs-6">
+                                    {{device.device.name}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" ng-attr-for="device.device.ipaddressurl ? 'EMCipaddressurlLink' : 'EMCipaddressurl'">
+                                    {{'DEVICES_EMC_ManagementIp'|translate}}
+                                </label>
+                                <span class="col-xs-6">
+                                    <a id="EMCipaddressurlLink"
+                                       ng-href="{{device.device.ipaddressurl}}"
+                                       target="_blank"
+                                       ng-if="device.device.ipaddressurl != ''">
+                                        {{device.device.ipaddress}}
+                                    </a>
+                                    <span id="EMCipaddressurl" ng-if="device.device.ipaddressurl == ''">
+                                        {{device.device.ipaddress}}
+                                    </span>
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" ng-attr-for="device.device.spaipaddressurl ? 'EMCspaipaddressSapLink' : 'EMCspaipaddressSap'">
+                                    {{'DEVICES_EMC_SPAIPAddress'|translate}}
+                                </label>
+                                <span class="col-xs-6">
+                                    <a id="EMCspaipaddressSapLink"
+                                       ng-href="{{device.device.spaipaddressurl}}"
+                                       target="_blank"
+                                       ng-if="device.device.spaipaddressurl != ''">
+                                        {{device.device.spaipaddress}}
+                                    </a>
+                                    <span id="EMCspaipaddressSap" ng-if="device.device.spaipaddressurl == ''">
+                                        {{device.device.spaipaddress}}
+                                    </span>
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" ng-attr-for="device.device.spbipaddressurl ? 'EMCspbipaddressSbLink' : 'EMCspbipaddressSb'">
+                                    {{'DEVICES_EMC_SPBIPAddres'|translate}}
+                                </label>
+                                <span class="col-xs-6">
+                                    <a id="EMCspbipaddressSbLink"
+                                       ng-href="{{device.device.spbipaddressurl}}"
+                                       target="_blank"
+                                       ng-if="device.device.spbipaddressurl != ''">
+                                        {{device.device.spbipaddress}}
+                                    </a>
+                                    <span id="EMCspbipaddressSb" ng-if="device.device.spbipaddressurl == ''">
+                                        {{device.device.spbipaddress}}
+                                    </span>
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="EMCblocksoftwareversion">
+                                    {{'DEVICES_EMC_BlockSoftwareVersion'|translate}}
+                                </label>
+                                <span id="EMCblocksoftwareversion" class="col-xs-6">
+                                    {{device.device.blocksoftwareversion}}
+                                </span>
+                            </li>
+                        </ul>
+                        <h3>
+                            {{'DEVICES_EMC_LUNs'|translate}}
+                        </h3>
+                        <ul class="list-unstyled">
+                            <li class="row">
+                                <label class="col-xs-6" for="EMCtotalluns">
+                                    {{'DEVICES_EMC_TotalLUNs'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="EMCtotalluns">
+                                    {{device.device.luns.length}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="EMClunsup">
+                                    {{'DEVICES_EMC_Up'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="EMClunsup">
+                                    {{device.device.lunsup}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="EMClunsdown">
+                                    {{'DEVICES_EMC_Down'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="EMClunsdown">
+                                    {{device.device.lunsdown}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- emcunity -->
+                    <div ng-if="device.isEmcUnity()">
+                        <h3 id="storageInfo">
+                            <i class="ci-storage-volume-half-full-2"></i>
+                            {{'DEVICES_EMC_StorageInformation'|translate}}
+                        </h3>
+                        <ul class="list-unstyled">
+                            <li class="row">
+                                <label class="col-xs-6" for="EMCUnityresourcename">
+                                    {{'DEVICES_EMC_ResourceName'|translate}}
+                                </label>
+                                <span id="EMCUnityresourcename" class="col-xs-6">
+                                    {{device.device.name}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="EMCUnitymanagementip">
+                                    {{'DEVICES_EMC_ManagementIp'|translate}}
+                                </label>
+                                <a id="EMCUnitymanagementip" ng-href="{{device.device.ipaddressurl}}" class="col-xs-6" ng-attr-target="_blank" ng-if="device.device.ipaddressurl">
+                                    {{device.device.managementip}}
+                                </a>
+                                <span id="EMCUnitymanagementip" ng-if="!device.device.ipaddressurl" class="col-xs-6">
+                                    {{device.device.managementip}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="EMCUnitysoftwareversion">
+                                    {{'DEVICES_EMC_SoftwareVersion'|translate}}
+                                </label>
+                                <span id="EMCUnitysoftwareversion" class="col-xs-6">
+                                    {{device.device.softwareversion}}
+                                </span>
+                            </li>
+                        </ul>
+                        <h3>
+                            {{'DEVICES_EMC_LUNs'|translate}}
+                        </h3>
+                        <ul class="list-unstyled">
+                            <li class="row">
+                                <label class="col-xs-6" for="EMCUnitytotalluns">
+                                    {{'DEVICES_EMC_TotalLUNs'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="EMCUnitytotalluns">
+                                    {{device.device.luns.length}}
+                                </span>
+                            </li>
+                            <!--<li class="row">
+                                <label class="col-xs-6" for="EMCUnitylunsup">
+                                    {{'DEVICES_EMC_Up'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="EMCUnitylunsup">
+                                    {{device.device.lunsup}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="EMCUnitylunsdown">
+                                    {{'DEVICES_EMC_Down'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="EMCUnitylunsdown">
+                                    {{device.device.lunsdown}}
+                                </span>
+                            </li>-->
+                        </ul>
+                        <h3>
+                            {{'DEVICES_EMC_FileSystems'|translate}}
+                        </h3>
+                        <ul class="list-unstyled">
+                            <li class="row">
+                                <label class="col-xs-6" for="EMCUnitynfsshares">
+                                    {{'DEVICES_EMC_NFSShares'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="EMCUnitynfsshares">
+                                    {{device.device.nfsshares}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="EMCUnitysmbshares">
+                                    {{'DEVICES_EMC_SMBShares'|translate}}
+                                </label>
+                                <span class="col-xs-6" id="EMCUnitysmbshares">
+                                    {{device.device.smbshares}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- EMC ScaleIO -->
+                    <div ng-if="device.isScaleIO()">
+                        <div class="text-center">
+                            <button ng-click="device.launchGUI()"
+                                    id="launchScaleIOManager"
+                                    class="btn btn-primary"
+                                    ng-disabled="$root.ASM.IsInRole('readonly')">
+                                <span class="buttonLabel">
+                                    {{'DEVICES_EMC_SCALEIO_launchScaleIOManager'|translate}}
+                                </span>
+                            </button>
+                        </div>
+
+                        <h3 id="storageInfo">
+                            <!--<i class="ci-storage-volume-half-full-2"></i>-->
+                            {{'DEVICES_EMC_SCALEIO_ScaleInformation'|translate}}
+                        </h3>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12">
+                                {{'DEVICES_EMC_SCALEIO_TotalCapacity'|translate}}:
+                                {{device.device.scaleIOInformation.maxCapacityInKb | byteConvert}}
+
+                                <highchart ng-if="device.scaleIODonut"
+                                           id="scaleIODonut"
+                                           config="device.scaleIODonut"></highchart>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <br class="visible-lg" />
+                                <ul class="list-inline"
+                                    ng-repeat="info in device.scaleIODonutDataCopy"
+                                    ng-if="info.y">
+                                    <li>
+                                        <i class="ci-control-square-stop" ng-style="{'color': info.color}"></i>
+                                    </li>
+                                    <li>
+                                        {{info.name}}:
+                                        {{info.y | byteConvert}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <ul class="list-unstyled">
+                            <li class="row">
+                                <label class="col-xs-6" for="ScaleIOprotectionDomains">
+                                    {{'DEVICES_EMC_SCALEIO_ProtectionDomains'|translate}}
+                                </label>
+                                <span id="ScaleIOStateprotectionDomains" class="col-xs-6">
+                                    {{device.device.protectionDomainCount}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="ScaleIOvolumeCount">
+                                    {{'DEVICES_EMC_SCALEIO_Volumes'|translate}}
+                                </label>
+                                <span id="ScaleIOvolumeCount" class="col-xs-6">
+                                    {{device.device.volumeCount}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="ScaleIOsDCCount">
+                                    {{'DEVICES_EMC_SCALEIO_SDCs'|translate}}
+                                </label>
+                                <span id="ScaleIOsDCCount" class="col-xs-6">
+                                    {{device.device.sDCCount}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="ScaleIOsDSCount">
+                                    {{'DEVICES_EMC_SCALEIO_SDSs'|translate}}
+                                </label>
+                                <span id="ScaleIOsDSCount" class="col-xs-6">
+                                    {{device.device.sDSCount}}
+                                </span>
+                            </li>
+                            <li class="row">
+                                <label class="col-xs-6" for="ScaleIOmanagement">
+                                    {{'DEVICES_EMC_SCALEIO_Management'|translate}}
+                                </label>
+                                <span id="ScaleIOmanagement" class="col-xs-6">
+                                    {{device.device.management}}
+                                </span>
+                            </li>
+                            <!--<li class="row">
+                                <label class="col-xs-6" for="ScaleIO">
+                                    {{''|translate}}
+                                </label>
+                                <span id="ScaleIO" class="col-xs-6">
+                                    {{device.device.}}
+                                </span>
+                            </li>-->
+                        </ul>
+
+                    </div>
+
+                   
+
+
+
+
+
+
+
+                </div>
+            </div>
+
+
+
+            <!--  <div class="clearfix visible-md"></div>-->
+
+
+
+
+
+
+
+
+
+
+            <div id="deviceInfoCol2" class="col-lg-8 col-md-6 col-sm-12" ng-if="!device.hideTabView()">
+                <!-- Tab views -->
+                <div class="well">
+                    <!-- Summary Tab -->
+                    <div class="whiteBG" role="tabpanel" 
+                         ng-if="device.device && device.device.systemusage && (device.isServer() || device.isEmcvnx() || device.isEmcUnity() || device.isCompellent())" 
+                         ng-show="device.isCurrentTab(device.tabs.summary)" id="devicedetails_summary">
+                        <div class="row" >
+                            <div id="deviceInfoCol2">
+
+                                <!-- Server charts -->
+                                <div class="col-lg-6 col-md-12 col-sm-12" ng-if="device.device.systemusage && device.device.systemusage.category">
+                                    <div class="usage-data">
+                                        <div class="col-xs-12">
+                                            <h3>
+                                                <i class="ci-schedule-clock-o"></i>
+                                                {{device.device.systemusage.category}}
+                                            </h3>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <!-- big donut -->
+                                            <div class="pull-left chartContainer large">
+                                                <highchart class="piechart"
+                                                           ng-if="device.overallSystemUsage"
+                                                           config="device.overallSystemUsage"></highchart>
+                                                <div class="centerText text-center bigPie">
+                                                    {{device.device.systemusage.currentvalue | number:0}}%
+                                                    <p>{{'GENERIC_Utilization' | translate}}</p>
+                                                </div>
+                                            </div>
+                                            <!-- little donut -->
+                                            <!--<div class="pull-left chartContainer visible-xs">
+                                                <highchart class="piechart"
+                                                           ng-if="device.overallSystemUsage2"
+                                                           config="device.overallSystemUsage2"></highchart>
+                                                <div class="centerText text-center">
+                                                    {{device.device.systemusage.currentvalue | number:0}}%
+                                                    <p>{{'GENERIC_Utilization' | translate}}</p>
+                                                </div>
+                                            </div>-->
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="row">
+
+                                            <div class="col-xs-12">
+
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <span ng-if="device.systemUsageHistoricalData">{{'DEVICEDETAILS_HistoricalData'|translate}}</span>
+                                                    </div>
+                                                    <div class="col-xs-6">
+                                                        <div class="dropdown" ng-if="device.systemUsageHistoricalData">
+                                                            <button class="btn btn-link dropdown-toggle"
+                                                                    id="dLabel"
+                                                                    type="button"
+                                                                    data-toggle="dropdown"
+                                                                    aria-haspopup="true"
+                                                                    aria-expanded="false">
+                                                                {{device.usages.system.timeframe}}
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu" aria-labelledby="dLabel">
+                                                                <li ng-repeat="item in device.device.systemusage.historicaldata">
+                                                                    <a ng-click="device.usages.system = item; device.updateSystemUsage()" href="javascript:void(0)">
+                                                                        {{item.timeframe}}
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="chart-container">
+                                                        <highchart ng-if="device.systemUsageHistoricalData" config="device.systemUsageHistoricalData"></highchart>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel-group col-xs-12"
+                                             id="accordion"
+                                             role="tablist"
+                                             aria-multiselectable="true">
+                                            <div class="panel panel-default">
+                                                <div class=""
+                                                     role="tab"
+                                                     id="headingOne">
+
+                                                    <h4 class="">
+                                                        <a role="button"
+                                                           data-toggle="collapse"
+                                                           data-parent="#accordion"
+                                                           data-target="#collapseOne"
+                                                           aria-expanded="true"
+                                                           aria-controls="collapseOne">
+                                                            <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                                            <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                                            {{'DEVICESDETAILS_UsageDetails' | translate}}
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseOne"
+                                                     class="panel-collapse collapse in"
+                                                     role="tabpanel"
+                                                     aria-labelledby="headingOne">
+                                                    <div class="row">
+                                                        <div class="col-xs-8">
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <h5>
+                                                                        {{device.usages.system.timeframelabel}}
+                                                                    </h5>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-xs-6">
+                                                                    <label for="memorySelectedTimeFrame">
+                                                                        {{'DEVICEDETAILS_Average'|translate}}
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-xs-6" id="memorySelectedTimeFrame">
+                                                                    {{device.usages.system.averagevalue| number: 2 }}%
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-xs-6">
+                                                                    <label for="memoryMinimum">
+                                                                        {{'DEVICEDETAILS_Minimum'|translate}}
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-xs-6" id="memoryMinimum">
+                                                                    {{device.usages.system.minimumvalue| number: 2 }}%
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-xs-6">
+                                                                    <label for="memoryMaximum">
+                                                                        {{'DEVICEDETAILS_Maximum'|translate}}
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-xs-6" id="memoryMaximum">
+                                                                    {{device.usages.system.maximumvalue| number: 2 }}%
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <div class="row">
+                                                        <div class="col-xs-8">
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <h5>
+                                                                        {{'DEVICEDETAILS_PeakValues'|translate}}
+                                                                    </h5>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-xs-6">
+                                                                    <label for="memoryPeakValue">
+                                                                        {{'DEVICEDETAILS_PeakValue'|translate}}
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-xs-6" id="memoryPeakValue">
+                                                                    {{device.device.systemusage.peakvalue| number: 2 }}%
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-xs-6">
+                                                                    <label for="memoryPeakTime">
+                                                                        {{'DEVICEDETAILS_PeakTime'|translate}}
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-xs-6" id="memoryPeakTime">
+                                                                    <datetime-display time="device.device.systemusage.peaktime" time-format="'LLL'"></datetime-display>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-xs-6">
+                                                                    <label for="memoryStartTime">
+                                                                        {{'DEVICEDETAILS_StartTime'|translate}}
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-xs-6" id="memoryStartTime">
+                                                                    <datetime-display time="device.device.systemusage.starttime" time-format="'LLL'"></datetime-display>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- charts for compellent -->
+                                    <div class="row" ng-if="device.isCompellent()">
+                                        <div class="usage-data">
+                                            <div class="col-xs-12">
+                                                <h3>
+                                                    <i class="" ng-if=""></i>
+                                                    {{'DEVICEDETAILS_StorageCapacity' | translate}}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <!-- Storage Capacity (Compellent) -->
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <ul class="list-inline">
+                                                    <li>
+                                                        <div class="chartContainer large">
+                                                            <highchart class="piechart"
+                                                                       ng-if="device.storageCapacity"
+                                                                       config="device.storageCapacity"></highchart>
+                                                        </div>
+                                                    </li>
+                                                    <li style="max-height:250px;overflow:auto;">
+                                                        <ul class="list-unstyled pull-left">
+                                                            <li ng-repeat="storage in device.storageCapacity.series[0].data">
+                                                                <ul class="list-inline">
+                                                                    <li style="margin-top: 2px;">
+                                                                        <i class="ci-control-square-stop" ng-style="{'color': storage.color}"></i>
+                                                                    </li>
+                                                                    <li style="margin-top: 0">
+                                                                        <div>
+                                                                            {{storage.name}}:
+                                                                        </div>
+                                                                        <div>
+                                                                            {{storage.num}} ({{storage.y | number:2}}%)
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="row">
+                                                    <label class="col-sm-6" for="compellentTotalDiskSpace">
+                                                        {{'DEVICES_TotalDiskSpace'|translate}}
+                                                    </label>
+                                                    <div id="compellentTotalDiskSpace" class="col-sm-6">
+                                                        {{device.device.diskspacetotal}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <br />
+                                                        <h4>
+                                                            {{'DEVICEDETAILS_Servers'|translate}}
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                                <div class="row" ng-if="device.isCompellent()">
+                                                    <label class="col-sm-6" for="serversonline">
+                                                        {{'DEVICEDETAILS_ServersOnline'|translate}}
+                                                    </label>
+                                                    <div id="serversonline" class="col-sm-6">
+                                                        {{device.device.serversonline}}
+                                                    </div>
+                                                </div>
+                                                <div class="row" ng-if="device.isCompellent()">
+                                                    <label class="col-sm-6" for="serversinuse">
+                                                        {{'DEVICEDETAILS_ServersInUse'|translate}}
+                                                    </label>
+                                                    <div id="serversinuse" class="col-sm-6">
+                                                        {{device.device.serverinuse}}
+                                                    </div>
+                                                </div>
+                                                <div class="row" ng-if="device.isCompellent()">
+                                                    <label class="col-sm-6" for="serveros">
+                                                        {{'DEVICEDETAILS_ServersOS'|translate}}
+                                                    </label>
+                                                    <div id="serveros" class="col-sm-6">
+                                                        {{device.device.serveros}}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <br />
+                                                        <h4>
+                                                            {{'DEVICEDETAILS_DiskTitle'|translate}}
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <label class="col-sm-6" for="manageddisks">
+                                                        {{'DEVICEDETAILS_ManagedDisks'|translate}}
+                                                    </label>
+                                                    <div id="manageddisks" class="col-sm-6">
+                                                        {{device.device.manageddisks}}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <label class="col-sm-6" for="sparedisks">
+                                                        {{'DEVICEDETAILS_SpareDisks'|translate}}
+                                                    </label>
+                                                    <div id="sparedisks" class="col-sm-6">
+                                                        {{device.device.sparedisks}}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <br />
+                                                        <h4>
+                                                            {{'DEVICEDETAILS_ReplayProfile'|translate}}
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <label class="col-sm-6" for="replaysonline">
+                                                        {{'DEVICEDETAILS_ServersOnline'|translate}}
+                                                    </label>
+                                                    <div id="replaysonline" class="col-sm-6">
+                                                        {{device.device.replaysonline}}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <label class="col-sm-6" for="replayinuse">
+                                                        {{'DEVICEDETAILS_ServersInUse'|translate}}
+                                                    </label>
+                                                    <div id="replayinuse" class="col-sm-6">
+                                                        {{device.device.replayinuse}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- charts for EMC Unity, Emcvnx -->
+                                    <div class="row" ng-if="device.isEmcUnity() || device.isEmcvnx()">
+                                        <div class="usage-data">
+                                            <div class="col-xs-12">
+                                                <h3>
+                                                    <i class="" ng-if=""></i>
+                                                    {{'DEVICEDETAILS_StoragePoolCapacity' | translate}}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <!-- Storage Usage (EMC Unity, Emcvnx) -->
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <ul class="list-inline">
+                                                    <li>
+                                                        <div class="chartContainer large">
+                                                            <highchart class="piechart"
+                                                                       ng-if="device.storagePoolCapacity"
+                                                                       config="device.storagePoolCapacity"></highchart>
+                                                        </div>
+                                                    </li>
+                                                    <li style="max-height:250px;overflow:auto;">
+                                                        <ul class="list-unstyled pull-left">
+                                                            <li ng-repeat="storagePool in device.storagePoolCapacity.series[0].data">
+                                                                <ul class="list-inline">
+                                                                    <li style="margin-top: 2px;">
+                                                                        <i class="ci-control-square-stop" ng-style="{'color': storagePool.color}"></i>
+                                                                    </li>
+                                                                    <li style="margin-top: 0">
+                                                                        <div>
+                                                                            {{storagePool.name}}:
+                                                                        </div>
+                                                                        <div>
+                                                                            {{storagePool.num}} ({{storagePool.y | number:2}}%)
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="row">
+                                                    <label class="col-sm-6" for="emcUnityTotalDiskSpace">
+                                                        {{'DEVICES_TotalDiskSpace'|translate}}
+                                                    </label>
+                                                    <div id="emcUnityTotalDiskSpace" class="col-sm-6">
+                                                        {{device.device.diskspacetotal}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Pool usage Pie (EMC Unity, Emcvnx) -->
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <h3>
+                                                    {{'DEVICEDETAILS_StoragePools' | translate}}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <ul class="list-inline">
+                                                    <li>
+                                                        <div class="chartContainer large">
+                                                            <highchart class="piechart"
+                                                                       ng-if="device.storagePools"
+                                                                       config="device.storagePools"></highchart>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <ul class="list-unstyled pull-left">
+                                                            <li ng-repeat="storagePool in device.storagePools.series[0].data">
+                                                                <ul class="list-inline">
+                                                                    <li style="margin-top: 2px;">
+                                                                        <i class="ci-control-square-stop" ng-style="{'color': device.storagePools.getHighcharts().series[0].points[$index].color}"></i>
+                                                                    </li>
+                                                                    <li style="margin-top: 0">
+                                                                        <div>
+                                                                            {{storagePool.name}}:
+                                                                        </div>
+                                                                        <div>
+                                                                            {{storagePool.sizeUsed}} ({{storagePool.percent | number:2}}%)
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="row">
+                                                    <label class="col-sm-6" for="emcUnityMembers">
+                                                        {{'DEVICEDETAILS_Members'|translate}}:
+                                                    </label>
+                                                    <div id="emcUnityMembers" class="col-sm-6">
+                                                        {{device.device.storagepoolmembers}}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <label class="col-sm-6" for="emcUnityTotal">
+                                                        {{'DEVICEDETAILS_Total'|translate}}:
+                                                    </label>
+                                                    <div id="emcUnityTotal" class="col-sm-6">
+                                                        {{device.device.storagepooltotal}}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <br />
+                                                        <h4>
+                                                            {{'DEVICEDETAILS_Hosts'|translate}}
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                                <div class="row" ng-if="device.isEmcUnity()">
+                                                    <label class="col-sm-6" for="emcUnitytotalhosts">
+                                                        {{'DEVICEDETAILS_TotalHosts'|translate}}
+                                                    </label>
+                                                    <div id="emcUnitytotalhosts" class="col-sm-6">
+                                                        {{device.device.totalhosts}}
+                                                    </div>
+                                                </div>
+                                                <div class="row" ng-if="device.isEmcvnx()">
+                                                    <label class="col-sm-6" for="emcUnityserversonline">
+                                                        {{'DEVICEDETAILS_Online'|translate}}
+                                                    </label>
+                                                    <div id="emcUnityserversonline" class="col-sm-6">
+                                                        {{device.device.serversonline}}
+                                                    </div>
+                                                </div>
+                                                <div class="row" ng-if="device.isEmcvnx()">
+                                                    <label class="col-sm-6" for="emcUnityserversinuse">
+                                                        {{'DEVICEDETAILS_InUse'|translate}}
+                                                    </label>
+                                                    <div id="emcUnityserversinuse" class="col-sm-6">
+                                                        {{device.device.serversinuse}}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <br />
+                                                        <h4>
+                                                            {{'DEVICEDETAILS_Disks'|translate}}
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <label class="col-sm-6" for="emcUnitymanageddisks">
+                                                        {{'DEVICEDETAILS_ManagedDisks'|translate}}
+                                                    </label>
+                                                    <div id="emcUnitymanageddisks" class="col-sm-6">
+                                                        {{device.device.manageddisks}}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <label class="col-sm-6" for="emcUnitysparedisks">
+                                                        {{'DEVICEDETAILS_SpareDisks'|translate}}
+                                                    </label>
+                                                    <div id="emcUnitysparedisks" class="col-sm-6">
+                                                        {{device.device.sparedisks}}
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+                                </div>
+
+
+                                <div class="col-lg-6 col-md-12 col-sm-12" style="padding-left: 30px;">
+                                    <!-- Server charts -->
+                                    <div class="row" ng-if="device.isServer() && device.device.cpuusage && device.device.cpuusage.category">
+                                        <div class="usage-data">
+                                            <div class="col-xs-12">
+                                                <h3>
+                                                    <i class="ci-card-processor"></i>
+                                                    {{'DEVICEDETAILS_CPUUsage'|translate}}
+                                                </h3>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <div class="pull-left chartContainer">
+                                                    <highchart class="piechart"
+                                                               ng-if="device.cpuSystemUsage"
+                                                               config="device.cpuSystemUsage"></highchart>
+                                                    <div class="centerText text-center">
+                                                        {{device.device.cpuusage.currentvalue | number:0}}%
+                                                        <p>{{'GENERIC_Utilization' | translate}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <span ng-if="device.cpuUsageHistoricalData">{{'DEVICEDETAILS_HistoricalData'|translate}}</span>
+                                                    </div>
+                                                    <div class="col-xs-6">
+                                                        <div class="dropdown" ng-if="device.cpuUsageHistoricalData">
+                                                            <button class="btn btn-link dropdown-toggle"
+                                                                    id="dLabel2"
+                                                                    type="button"
+                                                                    data-toggle="dropdown"
+                                                                    aria-haspopup="true"
+                                                                    aria-expanded="false">
+                                                                {{device.usages.cpu.timeframe}}
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu" aria-labelledby="dLabel2">
+                                                                <li ng-repeat="item in device.device.cpuusage.historicaldata">
+                                                                    <a ng-click="device.usages.cpu = item; device.updateCPUUsage()" href="javascript:void(0)">
+                                                                        {{item.timeframe}}
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <div class="chart-container">
+                                                        <highchart ng-if="device.cpuUsageHistoricalData" config="device.cpuUsageHistoricalData"></highchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="panel-group col-xs-12"
+                                                 id="accordion4"
+                                                 role="tablist"
+                                                 aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class=""
+                                                         role="tab"
+                                                         id="headingFour">
+                                                        <h4 class="">
+                                                            <a role="button"
+                                                               class="collapsed"
+                                                               data-toggle="collapse"
+                                                               data-parent="#accordion4"
+                                                               data-target="#collapseFour"
+                                                               aria-expanded="true"
+                                                               aria-controls="collapseFour">
+                                                                <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                                                <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                                                {{'DEVICESDETAILS_UsageDetails' | translate}}
+                                                            </a>
+                                                        </h4>
+                                                    </div>
+                                                    <div id="collapseFour"
+                                                         class="panel-collapse collapse"
+                                                         role="tabpanel"
+                                                         aria-labelledby="headingFour">
+                                                        <div class="row">
+                                                            <div class="col-xs-6">
+                                                                <div class="row">
+                                                                    <div class="col-xs-12">
+                                                                        <h5>
+                                                                            {{device.usages.cpu.timeframelabel}}
+                                                                        </h5>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-xs-6">
+                                                                        <label for="cpuAverage">
+                                                                            {{'DEVICEDETAILS_Average'|translate}}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-xs-6" id="cpuAverage">
+                                                                        {{device.usages.cpu.averagevalue| number: 2 }}%
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-xs-6">
+                                                                        <label for="cpuMin">
+                                                                            {{'DEVICEDETAILS_Minimum'|translate}}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-xs-6" id="cpuMin">
+                                                                        {{device.usages.cpu.minimumvalue| number: 2 }}%
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-xs-6">
+                                                                        <label for="cpuMax">
+                                                                            {{'DEVICEDETAILS_Maximum'|translate}}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-xs-6" id="cpuMax">
+                                                                        {{device.usages.cpu.maximumvalue| number: 2 }}%
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-xs-6">
+                                                                <div class="row">
+                                                                    <div class="col-xs-12">
+                                                                        <h5>
+                                                                            {{'DEVICEDETAILS_PeakValues'|translate}}
+                                                                        </h5>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-xs-6">
+                                                                        <label for="cpuPeakValue">
+                                                                            {{'DEVICEDETAILS_PeakValue'|translate}}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-xs-6" id="cpuPeakValue">
+                                                                        {{device.device.cpuusage.peakvalue| number: 2 }}%
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-xs-6">
+                                                                        <label for="cpuPeakTime">
+                                                                            {{'DEVICEDETAILS_PeakTime'|translate}}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-xs-6" id="cpuPeakTime">
+                                                                        <datetime-display time="device.device.cpuusage.peaktime" time-format="'LLL'" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-xs-6">
+                                                                        <label for="cpuStart">
+                                                                            {{'DEVICEDETAILS_StartTime'|translate}}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-xs-6" id="cpuStart">
+                                                                        <datetime-display time="device.device.cpuusage.starttime" time-format="'LLL'" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <!-- Memory Usage -->
+                                        <div ng-if="device.isServer() && device.device.memoryusage && device.device.memoryusage.category != ''">
+                                            <div class="usage-data">
+                                                <div class="col-xs-12">
+                                                    <h3>
+                                                        <i class="ci-card-memory-stick"></i>
+                                                        {{device.device.memoryusage.category}}
+                                                    </h3>
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    <div class="pull-left chartContainer">
+                                                        <highchart class="piechart"
+                                                                   ng-if="device.memorySystemUsage"
+                                                                   config="device.memorySystemUsage"></highchart>
+                                                        <div class="text-center centerText">
+                                                            {{device.device.memoryusage.currentvalue | number:0}}%
+                                                            <p>
+                                                                {{'GENERIC_Utilization' | translate}}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-8">
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <span ng-if="device.memoryUsageHistoricalData">{{'DEVICEDETAILS_HistoricalData'|translate}}</span>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="dropdown" ng-if="device.memoryUsageHistoricalData">
+                                                                <button class="btn btn-link dropdown-toggle"
+                                                                        id="dLabel2"
+                                                                        type="button"
+                                                                        data-toggle="dropdown"
+                                                                        aria-haspopup="true"
+                                                                        aria-expanded="false">
+                                                                    {{device.usages.ram.timeframe}}
+                                                                    <span class="caret"></span>
+                                                                </button>
+                                                                <ul class="dropdown-menu" aria-labelledby="dLabel2">
+                                                                    <li ng-repeat="item in device.device.memoryusage.historicaldata">
+                                                                        <a ng-click="device.usages.ram = item; device.updateMemoryUsage()" href="javascript:void(0)">
+                                                                            {{item.timeframe}}
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <div class="chart-container">
+                                                            <highchart config="device.memoryUsageHistoricalData"></highchart>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="panel-group col-xs-12"
+                                                     id="accordion2"
+                                                     role="tablist"
+                                                     aria-multiselectable="true">
+                                                    <div class="panel panel-default">
+                                                        <div class=""
+                                                             role="tab"
+                                                             id="headingTwo">
+                                                            <h4 class="">
+                                                                <a role="button"
+                                                                   class="collapsed"
+                                                                   data-toggle="collapse"
+                                                                   data-parent="#accordion2"
+                                                                   data-target="#collapseTwo"
+                                                                   aria-expanded="true"
+                                                                   aria-controls="collapseTwo">
+                                                                    <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                                                    <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                                                    {{'DEVICEDETAILS_UsageDetails'|translate}}
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="collapseTwo"
+                                                             class="panel-collapse collapse"
+                                                             role="tabpanel"
+                                                             aria-labelledby="headingTwo">
+                                                            <div class="row">
+                                                                <div class="col-xs-6">
+                                                                    <div class="row">
+                                                                        <div class="col-xs-12">
+                                                                            <h5>
+                                                                                {{device.usages.ram.timeframelabel}}
+                                                                            </h5>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="row">
+                                                                        <div class="col-xs-6">
+                                                                            <label for="ramAverage">
+                                                                                {{'DEVICEDETAILS_Average'|translate}}
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-xs-6" id="ramAverage">
+                                                                            {{device.usages.ram.averagevalue| number: 2 }}%
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-6">
+                                                                            <label for="ramMin">
+                                                                                {{'DEVICEDETAILS_Minimum'|translate}}
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-xs-6" id="ramMin">
+                                                                            {{device.usages.ram.minimumvalue| number: 2 }}%
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-6">
+                                                                            <label for="ramMax">
+                                                                                {{'DEVICEDETAILS_Maximum'|translate}}
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-xs-6" id="ramMax">
+                                                                            {{device.usages.ram.maximumvalue| number: 2 }}%
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-xs-6">
+                                                                    <div class="row">
+                                                                        <div class="col-xs-12">
+                                                                            <h5>
+                                                                                {{'DEVICEDETAILS_PeakValues'|translate}}
+                                                                            </h5>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-6">
+                                                                            <label for="ramPeakValue">
+                                                                                {{'DEVICEDETAILS_PeakValue'|translate}}
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-xs-6" id="ramPeakValue">
+                                                                            {{device.device.memoryusage.peakvalue| number: 2 }}%
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-6">
+                                                                            <label for="ramPeakTime">
+                                                                                {{'DEVICEDETAILS_PeakTime'|translate}}
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-xs-6" id="ramPeakTime">
+                                                                            <datetime-display time="device.device.memoryusage.peaktime" time-format="'LLL'"></datetime-display>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-6">
+                                                                            <label for="ramStart">
+                                                                                {{'DEVICEDETAILS_StartTime'|translate}}
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-xs-6" id="ramStart">
+                                                                            <datetime-display time="device.device.memoryusage.starttime" time-format="'LLL'"></datetime-display>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- I/O Usage -->
+                                        <div ng-if="device.isServer() && device.device.iousage && device.device.iousage.category != ''">
+                                            <div class="usage-data">
+                                                <div class="col-xs-12">
+                                                    <h3>
+                                                        <i class="ci-arrows-compare"></i>
+                                                        {{device.device.iousage.category}}
+                                                    </h3>
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    <div class="chartContainer pull-left">
+                                                        <highchart class="piechart"
+                                                                   ng-if="device.ioSystemUsage"
+                                                                   config="device.ioSystemUsage"></highchart>
+                                                        <div class="text-center centerText">
+                                                            {{device.device.iousage.currentvalue | number:0}}%
+                                                            <p>
+                                                                {{'GENERIC_Utilization' | translate}}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-8">
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <span ng-if="device.ioUsageHistoricalData">{{'DEVICEDETAILS_HistoricalData'|translate}}</span>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="dropdown" ng-if="device.ioUsageHistoricalData">
+                                                                <button class="btn btn-link dropdown-toggle"
+                                                                        id="dLabel2"
+                                                                        type="button"
+                                                                        data-toggle="dropdown"
+                                                                        aria-haspopup="true"
+                                                                        aria-expanded="false">
+                                                                    {{device.usages.io.timeframe}}
+                                                                    <span class="caret"></span>
+                                                                </button>
+                                                                <ul class="dropdown-menu" aria-labelledby="dLabel2">
+                                                                    <li ng-repeat="item in device.device.iousage.historicaldata">
+                                                                        <a ng-click="device.usages.io = item; device.updateIOUsage()" href="javascript:void(0)">
+                                                                            {{item.timeframe}}
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="chart-container">
+                                                            <highchart config="device.ioUsageHistoricalData"></highchart>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="panel-group col-xs-12"
+                                                     id="accordion3"
+                                                     role="tablist"
+                                                     aria-multiselectable="true">
+                                                    <div class="panel panel-default">
+                                                        <div class=""
+                                                             role="tab"
+                                                             id="headingThree">
+                                                            <h4 class="">
+                                                                <a role="button"
+                                                                   class="collapsed"
+                                                                   data-toggle="collapse"
+                                                                   data-parent="#accordion3"
+                                                                   data-target="#collapseThree"
+                                                                   aria-expanded="true"
+                                                                   aria-controls="collapseThree">
+                                                                    <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                                                    <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                                                    {{'DEVICEDETAILS_UsageDetails'|translate}}
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="collapseThree"
+                                                             class="panel-collapse collapse"
+                                                             role="tabpanel"
+                                                             aria-labelledby="headingThree">
+                                                            <div class="row">
+                                                                <div class="col-xs-6">
+                                                                    <div class="row">
+                                                                        <div class="col-xs-12">
+                                                                            <h5>
+                                                                                {{device.usages.io.timeframelabel}}
+                                                                            </h5>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-6">
+                                                                            <label for="ioAverage">
+                                                                                {{'DEVICEDETAILS_Average'|translate}}
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-xs-6" id="ioAverage">
+                                                                            {{device.usages.io.averagevalue| number: 2 }}%
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-6">
+                                                                            <label for="ioMin">
+                                                                                {{'DEVICEDETAILS_Minimum'|translate}}
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-xs-6" id="ioMin">
+                                                                            {{device.usages.io.minimumvalue| number: 2 }}%
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-6">
+                                                                            <label for="ioMax">
+                                                                                {{'DEVICEDETAILS_Maximum'|translate}}
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-xs-6" id="ioMax">
+                                                                            {{device.usages.io.maximumvalue| number: 2 }}%
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-xs-6">
+                                                                    <div class="row">
+                                                                        <div class="col-xs-12">
+                                                                            <h5>
+                                                                                {{'DEVICEDETAILS_PeakValues'|translate}}
+                                                                            </h5>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-6">
+                                                                            <label for="ioPeakVal">
+                                                                                {{'DEVICEDETAILS_PeakValue'|translate}}
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-xs-6" id="ioPeakVal">
+                                                                            {{device.device.iousage.peakvalue| number: 2 }}%
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-6">
+                                                                            <label for="ioPeakTime">
+                                                                                {{'DEVICEDETAILS_PeakTime'|translate}}
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-xs-6" id="ioPeakTime">
+                                                                            <datetime-display time="device.device.iousage.peaktime" time-format="'LLL'"></datetime-display>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-6">
+                                                                            <label for="ioStart">
+                                                                                {{'DEVICEDETAILS_StartTime'|translate}}
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-xs-6" for="ioStart">
+                                                                            <datetime-display time="device.device.iousage.starttime" time-format="'LLL'"></datetime-display>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isServer() && device.device" ng-show="device.isCurrentTab(device.tabs.portView)" id="devicedetails_portview">
+                        <deviceportview device="device.device" errors="$rootScope.errors"></deviceportview>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isServer() && device.device.nics.length > 0 && device.device" ng-show="device.isCurrentTab(device.tabs.networkInterfaces)" id="devicedetails_networkinterfaces">
+                        <device-network-interfaces device="device.device" device-type="device.deviceType"></device-network-interfaces>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isServer() && device.device" ng-show="device.isCurrentTab(device.tabs.firmwareRevisions)" id="devicedetails_firmwarerevisions">
+                        <device-firmware device="device.device" device-type="device.deviceType"></device-firmware>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isServer() && device.device.cpudata.length && device.device" ng-show="device.isCurrentTab(device.tabs.cpus)" id="devicedetails_cpus">
+                        <device-cpus device="device.device" device-type="device.deviceType"></device-cpus>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isServer() && device.device.memorydata.length && device.device" ng-show="device.isCurrentTab(device.tabs.memory)" id="devicedetails_memory">
+                        <device-memory device="device.device" device-type="device.deviceType"></device-memory>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isChassis() && device.device" ng-show="device.isCurrentTab(device.tabs.blades)" id="devicedetails_blades">
+                        <device-blades device="device.device" device-type="device.deviceType"></device-blades>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isChassis() && device.device" ng-show="device.isCurrentTab(device.tabs.iOModules)" id="devicedetails_iomodules">
+                        <device-io-module device="device.device" device-type="device.deviceType"></device-io-module>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isChassis() && device.device" ng-show="device.isCurrentTab(device.tabs.chassisController)" id="devicedetails_chassis">
+                        <device-chassis-controller device="device.device" device-type="device.deviceType"></device-chassis-controller>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isChassis() && !device.isFX2() && device.device" ng-show="device.isCurrentTab(device.tabs.iKVM)" id="devicedetails_ikvm">
+                        <device-ikvm device="device.device" device-type="device.deviceType"></device-ikvm>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isChassis() && device.device" ng-show="device.isCurrentTab(device.tabs.powerSupplies)" id="devicedetails_powersupplies">
+                        <device-power-supplies device="device.device" device-type="device.deviceType"></device-power-supplies>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isEqualLogic() && device.device" ng-show="device.isCurrentTab(device.tabs.equallogicVolumes)" id="devicedetails_equallogicvolumes">
+                        <device-equallogic device="device.device" device-type="device.deviceType"></device-equallogic>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isCompellent() && device.device" ng-show="device.isCurrentTab(device.tabs.compellentVolumes)" id="devicedetails_compellentvolumes">
+                        <device-compellent device="device.device" device-type="device.deviceType"></device-compellent>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isNetApp() && device.device" ng-show="device.isCurrentTab(device.tabs.netAppVolumes)" id="devicedetails_netappvolumes">
+                        <device-netapp-volumes device="device.device" device-type="device.deviceType"></device-netapp-volumes>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isServer() && device.device" ng-show="device.isCurrentTab(device.tabs.localStorage)" id="devicedetails_localstorage">
+                        <device-local-storage device="device.device" device-type="device.deviceType"></device-local-storage>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="((device.isEmcvnx() || device.isEmcUnity()) && device.device)" ng-show="device.isCurrentTab(device.tabs.luns)" id="devicedetails_luns">
+                        <device-luns device="device.device"></device-luns>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isEmcUnity() && device.device" ng-show="device.isCurrentTab(device.tabs.fileSystems)" id="devicedetails_fileSystems">
+                        <device-file-systems device="device.device"></device-file-systems>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isScaleIO() && device.device"  ng-show="device.isCurrentTab(device.tabs.performance)" id="devicedetails_performance">
+                        <device-performance device="device.device" errors="$rootScope.errors" poll-workloads="device.isCurrentTab(device.tabs.performance)"></device-performance>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isScaleIO() && device.device" ng-show="device.isCurrentTab(device.tabs.scaleIOStorage)" id="devicedetails_scaleiostorages">
+                        <scale-storages device="device.device"></scale-storages>
+                    </div>
+                    <div class="whiteBG" role="tabpanel" ng-if="device.isScaleIO() && device.device" ng-show="device.isCurrentTab(device.tabs.scaleIOServers)" id="devicedetails_scaleioservers">
+                        <scale-servers device="device.device"></scale-servers>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+</section>

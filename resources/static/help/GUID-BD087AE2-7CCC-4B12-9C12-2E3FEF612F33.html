@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><!-- saved from url=(0014)about:internet -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><!--$if html5Status  -->  <!--$else--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Application
+component settings</title><link rel="prev" href="GUID-4371BBAC-2E36-459C-BE17-FB9290E1E127.html" /><link rel="next" href="GUID-200DD4B9-1FB4-4546-A430-CF98F20251B4.html" /><link href="static/screen.css?mSUyqg2y" rel="stylesheet" /><link href="static/print.css?IUS/7uGw" media="print" rel="stylesheet" /><script src="static/head.js?qUF72lF0"></script><link rel="shortcut icon" href="static/favicon-blue.ico" /></head><body id="GUID-BD087AE2-7CCC-4B12-9C12-2E3FEF612F33" data-approot=""><header><div class="inner"><a id="logo-link" href="index.html" /><img id="logo" src="static/logoEmc.png" alt="Logo" /></a><div class="title-text">VxRack FLEX Manager</div></div></header><div id="navheader"><div id="breadcrumbs"></div></div><nav class="navigation" id="topicnav"><div id="topicbuttons"><a id="button-back" href="#" title="Previous topic"><span>Previous topic</span></a><a id="button-forward" href="#" title="Next topic"><span>Next topic</span></a></div></nav><section id="center"><div id="scroller"><nav id="topnav"><div id="topbuttons"><a id="button-highlighting" href="#" title="Toggle highlighting"><span>Toggle highlighting</span></a><a id="button-hide-navigation" href="#" title="Toggle navigation"><span>Toggle navigation</span></a><a id="button-print" href="#" title="Print topic"><span>Print topic</span></a><a id="button-print-all" title="Print topics and subtopics"><span>Print topics and subtopics</span></a></div></nav><article><div id="thumbnailDialog"></div><h1>Application
+component settings</h1>
+<table class="table frame-all" id="GUID-A478E731-A6A0-4752-B8B9-974FB9921FD3_unique_1"><caption>Table 1. Application component settings</caption>
+
+
+<thead><tr><td class=" valign_top"><p>Field Name</p></td><td class=" valign_top"><p>Description</p></td><td class=" valign_top"><p>Default and Possible
+Values</p></td></tr></thead><tbody><tr><td colspan="3"><p><b>Mssql 2012</b></p></td></tr><tr><td><p>Media</p></td><td><p>Specifies the location of the SQL
+install image.</p></td><td><p>Default value: <span class="filepath">D:\\</span></p></td></tr><tr><td><p>instancename</p></td><td><p>Specifies a SQL Server instance name for the instance that is being completed. For named instance enter a user-specific name.</p></td><td><p>Default value: <code>MSSQLSERVER</code></p></td></tr><tr><td><p>features</p></td><td><p>Specify the list of individual
+SQL server components to install.</p></td><td><p>Default values: <code>SQLENGINE,CONN,SSMS,ADV_SSMS</code></p><p>Possible values: <code>Replication, FullText,
+DQ, AS, RS, DQC, IS, MDS, BC, BOL, BIDS, DREPLAY_CTLR, DREPLAY_CLT,
+SNAC_SDT, SDK, LocalDB</code></p></td></tr><tr><td><p>sapwd</p></td><td><p>Specifies the password for SQL
+Server SA Account.</p></td><td></td></tr><tr><td><p>agtsvcaccount</p></td><td><p>Specifies the account for the SQL
+Server Agent service.</p></td><td><p>Default value: <code>NT SERVICE\MSSQLSERVER</code></p></td></tr><tr><td><p>agtsvcpassword</p></td><td><p>Specifies the password for SQL
+Server Agent service account.</p></td><td><p>Password is not required for NT
+service accounts.</p></td></tr><tr><td><p>assvcaccount</p></td><td><p>Specifies the account for the
+Analysis Services service.</p></td><td><p>Default value: <code>NT SERVICE\MSSQLSERVER</code></p></td></tr><tr><td><p>assvcpassword</p></td><td><p>Specifies the password for the
+Analysis Services service.</p></td><td><p>Password is not required for NT
+Service accounts.</p></td></tr><tr><td><p>rssvcaccount</p></td><td><p>Specifies the startup account for
+Reporting Services.</p></td><td><p>Default value: <code>NT SERVICE\MSSQLSERVER</code></p></td></tr><tr><td><p>rssvcpassword</p></td><td><p>Specifies the password for the startup
+account for Reporting Services service.</p></td><td><p>Password is not required for NT
+Service accounts.</p></td></tr><tr><td><p>sqlsvcaccount</p></td><td><p>Specifies the startup account
+for the SQL Server service.</p></td><td><p>Default value: <code>NT SERVICE\MSSQLSERVER</code></p></td></tr><tr><td><p>sqlsvcpassword</p></td><td><p>Specifies the password for SQLSVCACCOUNT.</p></td><td><p>Password is not required for NT
+Service accounts.</p></td></tr><tr><td><p>instancedir</p></td><td><p>Specifies a non-default installation
+directory for shared components.</p></td><td><p>Default value: <span class="filepath">C:\Program
+Files\Microsoft SQL Server\\</span></p></td></tr><tr><td><p>ascollation</p></td><td><p>Specifies the collation setting
+for Analysis Services.</p></td><td><p>Default value: <code>Latin1_General_CI_AS</code></p></td></tr><tr><td><p>sqlcollation</p></td><td><p>Specifies the collation settings
+for SQL Server.</p></td><td><p>Default value:<code> SQL_Latin1_General_CP1_CI_AS</code></p></td></tr><tr><td><p>admin</p></td><td><p>Specifies the administrator account
+name</p></td><td><p>Default value: Administrator</p></td></tr><tr><td><p>netfxsource</p></td><td><p>Specifies the .Net install file.</p></td><td></td></tr><tr><td colspan="3"><b>Citrix_xd7</b></td></tr><tr><td><p>Source</p></td><td><p>Specifies the installation media
+location</p></td><td><p>Example, if repository created
+on appliance repo-store directory.<code> &quot;//&lt;ASM appliance IP&gt;/razor/XenDesktop7/x64/XenDesktop
+Setup&quot;</code></p></td></tr><tr><td><p>SQL Server</p></td><td><p>If the value is <code>True</code>, installs SQL Server component from Citrix installer on the virtual
+machine to which the component is related.</p></td><td><p><code>Possible values: True</code> or <code>False</code></p></td></tr><tr><td><p>Delivery Controller</p></td><td><p>If the value is true, installs
+Citrix Delivery Controller component from Citrix installer on the
+virtual machine to which the component is related.</p></td><td><p><code>Possible values: True </code>or <code>False</code></p></td></tr><tr><td><p>Citrix Studio</p></td><td><p>If the value is true, installs
+Citrix Studio component from Citrix installer on the virtual machine
+to which the component is related.</p></td><td><p><code>Possible values: True </code>or <code>False</code></p></td></tr><tr><td><p>License Server</p></td><td><p>If the value is true, installs
+Citrix License Server component from Citrix installer onto the virtual
+machine to which the component is related.</p></td><td><p><code>Possible values: True </code>or <code>False</code></p></td></tr><tr><td><p>Citrix Director</p></td><td><p>If the value is true, installs
+Citrix Director component from Citrix installer on the virtual machine
+to which the component is related.</p></td><td><p><code>Possible values: True </code>or <code>False</code></p></td></tr><tr><td><p>StoreFront</p></td><td><p>If the value is true, installs
+Citrix StoreFront component from Citrix installer on the virtual machine
+to which the component is related.</p></td><td><p><code>Possible values: True </code>or <code>False</code></p></td></tr><tr><td colspan="3"><b>Linux_postinstall </b></td></tr><tr><td><p>Install Packages</p></td><td><p>Optional. Specify a comma-separated
+list of yum packages (without spaces) to install.</p></td><td><p>For example: <code>openssl,mysql,ntp</code></p></td></tr><tr><td><p>Upload Share</p></td><td><p>Optional. Specifies the share
+to use for uploading file to server. Share folder must exist.</p></td><td><p>Default value: <span class="filepath">\\myshareserver\folder</span></p></td></tr><tr><td><p>Upload File</p></td><td><p>Optional. Specifies the file to
+upload from the share that you have specified.</p></td><td><p>For example: <span class="filepath">install.sh</span></p></td></tr><tr><td><p>Upload Recursive</p></td><td><p>Determines whether or not to upload
+all contents of the directory on the share.   (For use in optional
+upload file/script)</p></td><td><p>Possible values: <code>True </code>or <code>False</code></p></td></tr><tr><td>Execute File Command</td><td>Optional. Specifies the command
+to execute uploaded file. The command must be used with upload file
+present. </td><td></td></tr><tr><td><p>Proxy</p></td><td><p>Optional. Specifies the proxy to
+use for yum installs.</p></td><td><p>For example:<span class="filepath"> http://proxy:80</span></p></td></tr><tr><td colspan="3"><p><b>Windows_postinstall</b></p></td></tr><tr><td><p>Share</p></td><td><p>Optional. Specifies the share to
+use for uploading file to server. Share folder must be available.</p></td><td><p><span class="filepath">\\myshareservcer\AppAssureClient</span></p></td></tr><tr><td><p>Install Command</p></td><td><p>Specifies the command to install
+executable located on the share. </p></td><td><p><code>Agent-Web.exe /silent
+reboot=never</code></p></td></tr><tr><td><p>Upload File</p></td><td><p>Specifies the file to upload from
+the share that you have specified. Upload File depends on Share. You
+must upload file to share.</p></td><td><p>Possible value: <span class="filepath">myfile.bat</span></p></td></tr><tr><td><p>Upload Recurse</p></td><td><p>Determines whether to upload all contents of the directory on the share.</p></td><td><p>Possible value: <code>True </code>or <code>False</code></p></td></tr><tr><td><p>Execute File Command</p></td><td><p>Optional. Specifies the command
+to execute uploaded file. The command must be used with upload file
+present. </p></td><td><p>Possible value: <span class="filepath">myfile.bat
+–u username –p password</span></p></td></tr></tbody>
+</table>
+</article></div></section><div id="leftbar"><ul class="tabs"><li class="currentli"><a class="current toc" href="#"><span>Contents</span></a></li><li><a class="search" href="#"><span>Search</span></a></li></ul><form id="searchform"><div class="holdsearch"><input class="search" type="text" placeholder="Search" /></div><input class="submit" type="submit" value="Go" /></form><nav class="toc current"><div class="loader"><img src="static/loader.gif" alt="Loading" /></div></nav><nav class="search"><a id="search-toc-link" href="#"><img title="Table of Contents" id="table-oc-link" src="static/ic_nav_home_blu_16.png" alt="Table of Contents Button" /><span>Contents</span></a><div class="results"><span>No search has been performed.</span></div></nav></div><script src="static/body.js?UzZSRggC"></script></body></html>

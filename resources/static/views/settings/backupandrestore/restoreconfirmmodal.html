@@ -1,0 +1,32 @@
+﻿<section id="page_restore_confirmation">
+    <error-display errors="restoreConfirmModalController.errors"
+                   on-click="$root.ASM.RemoveError(error, restoreConfirmModalController.errors)"
+                   on-expand-collapse=""></error-display>
+    {{'RESTORENOW_confirm_text'|translate}}
+    <ul>
+        <li>{{'SETTINGS_LoggedInusers'|translate}}: {{restoreConfirmModalController.bullets.numUsers}}</li>
+        <li>{{'SETTINGS_InProgressJobs'|translate}}: {{restoreConfirmModalController.bullets.numProgressJobs}}</li>
+        <li>{{'SETTINGS_ScheduledJobs'|translate}}: {{restoreConfirmModalController.bullets.numScheduledJobs}}</li>
+    </ul>
+    <p ng-bind-html="'RESTORENOW_confirm_footnote'|translate|htmlSafe"></p>
+    <footer>
+        <ul class="list-inline pull-right">
+            <li>
+                <button id="btnConfirmRestore"
+                        class="btn btn-primary"
+                        ng-click="restoreConfirmModalController.close()"
+                        form="restoreForm">
+                    {{'SETTINGS_Yes'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="btnCancelRestore"
+                        class="btn btn-default"
+                        ng-click="restoreConfirmModalController.cancel()">
+                    {{'SETTINGS_No'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>
+

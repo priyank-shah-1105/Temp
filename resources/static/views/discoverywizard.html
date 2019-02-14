@@ -1,0 +1,1180 @@
+﻿<section id="page_discoveryWizard">
+    <error-display errors="DiscoveryWizard.errors.global"
+                   on-click="$root.ASM.RemoveError(error, DiscoveryWizard.errors.global)"
+                   on-expand-collapse=""></error-display>
+
+    <wizard on-finish="DiscoveryWizard.finishWizard()"
+            on-cancel="DiscoveryWizard.cancelWizard()">
+
+        <!-- Welcome -->
+        <wizard-step step-title="{{'DISCOVERY_WelcomeTitle'|translate}}"
+                     on-enter="DiscoveryWizard.enterWelcome()">
+            <section id="page_discovery_welcome">
+                <header>
+                    <h2>{{'DISCOVERY_WelcomeTitle'|translate}}</h2>
+                </header>
+                <p ng-bind-html="'DISCOVERY_WelcomeText1'|translate|htmlSafe"></p>
+                <p ng-bind-html="'DISCOVERY_WelcomeText2'|translate|htmlSafe"></p>
+                <ul ng-bind-html="'DISCOVERY_WelcomeText3'|translate|htmlSafe"></ul>
+                <p ng-bind-html="'DISCOVERY_WelcomeText4'|translate|htmlSafe"></p>
+            </section>
+        </wizard-step>
+
+        <!-- Identify Resources -->
+        <wizard-step step-title="{{'DISCOVERY_IdentifyResources'|translate}}"
+                     on-enter="DiscoveryWizard.enterIdentifyResources(); DiscoveryWizard.hasChassis = false;"
+                     on-next="DiscoveryWizard.checkForChassis()">
+            <section id="page_discovery_identifyresources">
+                <error-display errors="DiscoveryWizard.errors.identifyResources"
+                               on-click="$root.ASM.RemoveError(error, DiscoveryWizard.errors.identifyResources)"
+                               on-expand-collapse=""></error-display>
+                <header>
+                    <h2>{{'DISCOVERY_IdentifyResources'|translate}}</h2>
+                </header>
+                <p ng-bind-html="'DISCOVERY_IdentifyResourcesText1'|translate|htmlSafe"></p>
+                <p ng-bind-html="'DISCOVERY_IdentifyResourcesText2'|translate|htmlSafe"></p>
+                <p ng-bind-html="'DISCOVERY_IdentifyResourcesText3'|translate|htmlSafe"></p>
+                <button type="button"
+                        class="btn btn-primary"
+                        ng-click="DiscoveryWizard.addResourceRow()">
+                    <i class="ci-action-add-plus-float"></i>
+                    {{'DISCOVERY_AddResourceType'|translate}}
+                </button>
+                <table id="identifyResourcesGrid" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                {{'DEVICES_ResourceType' | translate}}
+                                <i class="ci ci-info-circle-info text-primary"
+                                   data-toggle="tooltip"
+                                   data-placement="right"
+                                   title="{{'DISCOVERY_IdentifyResources_ResourceTypeToolTipText' | translate}}"></i>
+                            </th>
+                            <th>
+                                {{'DISCOVERY_IPAddressRange' | translate}}
+                            </th>
+                            <th>
+                                {{'DEVICES_ResourceState' | translate}}
+                                <a title="{{'DISCOVERY_IdentifyResources_ResourceStateTooltipTitle'|translate}}"
+                                   popover
+                                   data-content-template="ResourceStateToolTip.html"
+                                   data-trigger="hover">
+                                    <i class="ci-info-circle-info"></i>
+                                </a>
+                            </th>
+                            <th>
+                                {{'DISCOVERY_DiscoverIntoServerPool' | translate}}
+                            </th>
+                            <th>
+                                {{'DISCOVERY_Credentials' | translate}}*
+                            </th>
+                            <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody ng-if="DiscoveryWizard.iresources.length != 0">
+                        <!-- appending form as property on object via name attribute and ng-form -->
+                        <tr ng-repeat="ir in DiscoveryWizard.iresources"
+                            ng-form
+                            name="ir._form"
+                            form-validation="ir._form._submitted">
+                            <td>
+                                <select class="form-control"
+                                        required
+                                        name="resourceType"
+                                        ng-model="ir.resourcetype"
+                                        ng-options="item.id as item.name for item in DiscoveryWizard.constants.availableResourceTypes"
+                                        ng-change="DiscoveryWizard.selectResourceType(ir)">
+                                    <option value="">
+                                        {{'GENERIC_select'|translate}}
+                                    </option>
+                                </select>
+                                <div class="text-danger" ng-if="ir._form._submitted">
+                                    <div ng-if="ir._form.resourceType.$error.required">
+                                        {{'GENERIC_RequiredField' | translate}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <input type="text"
+                                               ng-model="ir.startingIpAddress"
+                                               required
+                                               ip-validator
+                                               autocomplete="on"
+                                               name="ipAddress"
+                                               class="form-control"
+                                               placeholder="{{DiscoveryWizard.getPlaceholder(ir)}}" />
+                                        <div class="text-danger" ng-if="ir._form._submitted">
+                                            <div ng-if="ir._form.ipAddress.$error.required">
+                                                {{'GENERIC_RequiredField' | translate}}
+                                            </div>
+                                            <div ng-if="ir._form.ipAddress.$error.ipValidator && !ir._form.ipAddress.$error.required">
+                                                {{'GENERIC_RequiredField' | translate}}
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <input type="text"
+                                               name="endingIpAddress"
+                                               ng-model="ir.endingIpAddress"
+                                               autocomplete="on"
+                                               placeholder="{{'DISCOVERY_PlaceholderOptional'|translate}}"
+                                               class="form-control" />
+                                        <div class="text-danger" ng-if="ir._form._submitted">
+                                            <div ng-if="ir._form.endingIpAddress.$error.ipValidator && ir.endingIpAddress">
+                                                {{'GENERIC_RequiredField' | translate}}
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td>
+                                <select required
+                                        class="form-control"
+                                        ng-model="ir.managedstate"
+                                        name="managedState"
+                                        ng-options="item.id as item.name for item in DiscoveryWizard.constants.availableManagedStates">
+                                    <option value="">
+                                        {{"GENERIC_select" | translate}}
+                                    </option>
+                                </select>
+                                <div class="text-danger" ng-if="ir._form._submitted">
+                                    <div ng-if="ir._form.managedState.$error.required">
+                                        {{'GENERIC_RequiredField' | translate}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="removeBtnLinkPadding">
+                                <div class="col-sm-10">
+                                    <!-- Putting two here to clear the value of serverPoolId selected if
+                                    a resource type is changed from chassis/server to something else -->
+                                    <select disabled
+                                            ng-init="ir.serverPoolId = ''"
+                                            ng-if="ir.resourcetype != 'chassis' && ir.resourcetype != 'server'"
+                                            class="form-control"
+                                            name="serverPoolId"
+                                            ng-model="ir.serverPoolId">
+                                        <option value="">
+                                            {{'DISCOVERY_SelectServerPool'|translate}}
+                                        </option>
+                                    </select>
+                                    <select ng-if="ir.resourcetype === 'chassis' || ir.resourcetype === 'server'"
+                                            ng-init="ir.serverPoolId = '-1'"
+                                            class="form-control"
+                                            required
+                                            name="serverPoolId"
+                                            ng-model="ir.serverPoolId"
+                                            ng-options="item.id as item.name for item in  DiscoveryWizard.serverpools">
+                                        <option value="">{{'DISCOVERY_SelectServerPool'|translate}}</option>
+                                    </select>
+                                    <div class="text-danger" ng-if="ir._form._submitted">
+                                        <div ng-if="ir._form.serverPoolId.$error.required">
+                                            {{'GENERIC_RequiredField' | translate}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button ng-click="DiscoveryWizard.doCreateServerPool(ir)"
+                                            ng-disabled="ir.resourcetype != 'chassis' && ir.resourcetype != 'server'"
+                                            class="btn btn-link">
+                                        <i class="ci-action-add-plus-float"
+                                           data-toggle="tooltip"
+                                           title="{{'DISCOVERY_Add_Server_Pool' | translate}}"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="removeBtnLinkPadding">
+                                <ul class="list-unstyled">
+                                    <li ng-if="ir.resourcetype == 'all' || ir.resourcetype == 'chassis'">
+                                        <ul class="list-unstyled">
+                                            <li>
+                                                <!--Chassis Credential-->
+                                                <div class="row">
+                                                    <div class="col-sm-8">
+                                                        <select class="form-control"
+                                                                required
+                                                                name="chassisCredentialId"
+                                                                ng-model="ir.chassisCredentialId"
+                                                                ng-options="item.id as item.credentialsName for item in DiscoveryWizard.credentials.chassis">
+                                                            <option value="">{{'DISCOVERY_Select_Chassis_Credential'|translate}}</option>
+                                                        </select>
+                                                        <div class="text-danger" ng-if="ir._form._submitted">
+                                                            <div ng-if="ir._form.chassisCredentialId.$error.required">
+                                                                {{'GENERIC_RequiredField' | translate}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <button class="btn btn-link" ng-click="DiscoveryWizard.doManageCredentials('create', 'chassis', ir)">
+                                                            <i class="ci-action-add-plus-float"
+                                                               data-toggle="tooltip"
+                                                               title="{{'DISCOVERY_Add_Credential' | translate}}"></i>
+                                                        </button>
+                                                        <button class="btn btn-link"
+                                                                ng-click="DiscoveryWizard.doManageCredentials('edit', 'chassis', ir)"
+                                                                ng-if="ir.chassisCredentialId">
+                                                            <i class="ci-edit-pencil"
+                                                               data-toggle="tooltip"
+                                                               title="{{'DISCOVERY_Edit_Credential' | translate}}">
+                                                            </i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <!--Blade Credential-->
+                                                <div class="row">
+                                                    <div class="col-sm-8">
+                                                        <select class="form-control"
+                                                                required
+                                                                name="bladeCredentialId"
+                                                                ng-model="ir.bladeCredentialId"
+                                                                ng-options="item.id as item.credentialsName for item in DiscoveryWizard.credentials.server">
+                                                            <option value="">{{'DISCOVERY_Select_Blade_Credential'|translate}}</option>
+                                                        </select>
+                                                        <div class="text-danger" ng-if="ir._form._submitted">
+                                                            <div ng-if="ir._form.bladeCredentialId.$error.required">
+                                                                {{'GENERIC_RequiredField' | translate}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-4">
+                                                        <button class="btn btn-link" ng-click="DiscoveryWizard.doManageCredentials('create', 'blade', ir)">
+                                                            <i class="ci-action-add-plus-float"
+                                                               data-toggle="tooltip"
+                                                               title="{{'DISCOVERY_Add_Credential' | translate}}"></i>
+                                                        </button>
+                                                        <button class="btn btn-link"
+                                                                ng-click="DiscoveryWizard.doManageCredentials('edit', 'blade', ir)"
+                                                                ng-if="ir.bladeCredentialId">
+                                                            <i class="ci-edit-pencil"
+                                                               data-toggle="tooltip"
+                                                               title="{{'DISCOVERY_Edit_Credential' | translate}}">
+                                                            </i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <!--Switch Credential-->
+                                                <div class="row">
+                                                    <div class="col-sm-8">
+                                                        <select class="form-control"
+                                                                required
+                                                                name="iomCredentialId"
+                                                                ng-model="ir.iomCredentialId"
+                                                                ng-options="item.id as item.credentialsName for item in DiscoveryWizard.credentials.iom">
+                                                            <option value="">{{'DISCOVERY_Select_IOM_Credential'|translate}}</option>
+                                                        </select>
+                                                        <div class="text-danger" ng-if="ir._form._submitted">
+                                                            <div ng-if="ir._form.iomCredentialId.$error.required">
+                                                                {{'GENERIC_RequiredField' | translate}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-4">
+                                                        <button class="btn btn-link" ng-click="DiscoveryWizard.doManageCredentials('create', 'iom', ir)">
+                                                            <i class="ci-action-add-plus-float"
+                                                               data-toggle="tooltip"
+                                                               title="{{'DISCOVERY_Add_Credential' | translate}}"></i>
+                                                        </button>
+                                                        <button class="btn btn-link"
+                                                                ng-click="DiscoveryWizard.doManageCredentials('edit', 'iom', ir)"
+                                                                ng-if="ir.iomCredentialId">
+                                                            <i class="ci-edit-pencil"
+                                                               data-toggle="tooltip"
+                                                               title="{{'DISCOVERY_Edit_Credential' | translate}}">
+                                                            </i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li ng-if="ir.resourcetype == 'all' || ir.resourcetype == 'server'">
+                                        <!--Server Credential-->
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <select class="form-control"
+                                                        required
+                                                        name="serverCredentialId"
+                                                        ng-model="ir.serverCredentialId"
+                                                        ng-options="item.id as item.credentialsName for item in DiscoveryWizard.credentials.server">
+                                                    <option value="">{{'DISCOVERY_Select_Server_Credential'|translate}}</option>
+                                                </select>
+                                                <div class="text-danger" ng-if="ir._form._submitted">
+                                                    <div ng-if="ir._form.serverCredentialId.$error.required">
+                                                        {{'GENERIC_RequiredField' | translate}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <button class="btn btn-link" ng-click="DiscoveryWizard.doManageCredentials('create', 'server', ir)">
+                                                    <i class="ci-action-add-plus-float"
+                                                       data-toggle="tooltip"
+                                                       title="{{'DISCOVERY_Add_Credential' | translate}}"></i>
+                                                </button>
+                                                <button class="btn btn-link"
+                                                        ng-click="DiscoveryWizard.doManageCredentials('edit', 'server', ir)"
+                                                        ng-if="ir.serverCredentialId">
+                                                    <i class="ci-edit-pencil"
+                                                       data-toggle="tooltip"
+                                                       title="{{'DISCOVERY_Edit_Credential' | translate}}">
+                                                    </i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li ng-if="ir.resourcetype == 'all' || ir.resourcetype == 'storage'">
+                                        <!--Storage Credential-->
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <select class="form-control"
+                                                        required
+                                                        name="storageCredentialId"
+                                                        ng-model="ir.storageCredentialId"
+                                                        ng-options="item.id as item.credentialsName for item in DiscoveryWizard.credentials.storage">
+                                                    <option value="">{{'DISCOVERY_Select_Storage_Credential'|translate}}</option>
+                                                </select>
+                                                <div class="text-danger" ng-if="ir._form._submitted">
+                                                    <div ng-if="ir._form.storageCredentialId.$error.required">
+                                                        {{'GENERIC_RequiredField' | translate}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <button class="btn btn-link" ng-click="DiscoveryWizard.doManageCredentials('create', 'storage', ir)">
+                                                    <i class="ci-action-add-plus-float"
+                                                       data-toggle="tooltip"
+                                                       title="{{'DISCOVERY_Add_Credential' | translate}}"></i>
+                                                </button>
+                                                <button class="btn btn-link"
+                                                        ng-click="DiscoveryWizard.doManageCredentials('edit', 'storage', ir)"
+                                                        ng-if="ir.storageCredentialId">
+                                                    <i class="ci-edit-pencil"
+                                                       data-toggle="tooltip"
+                                                       title="{{'DISCOVERY_Edit_Credential' | translate}}">
+                                                    </i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li ng-if="ir.resourcetype == 'all' || ir.resourcetype == 'switch'">
+                                        <!--Switch Credential-->
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <select class="form-control"
+                                                        required
+                                                        name="torCredentialId"
+                                                        ng-model="ir.torCredentialId"
+                                                        ng-options="item.id as item.credentialsName for item in DiscoveryWizard.credentials.iom">
+                                                    <option value="">{{'DISCOVERY_Select_Switch_Credential'|translate}}</option>
+                                                </select>
+                                                <div class="text-danger" ng-if="ir._form._submitted">
+                                                    <div ng-if="ir._form.torCredentialId.$error.required">
+                                                        {{'GENERIC_RequiredField' | translate}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <button class="btn btn-link" ng-click="DiscoveryWizard.doManageCredentials('create', 'tor', ir)">
+                                                    <i class="ci-action-add-plus-float"
+                                                       data-toggle="tooltip"
+                                                       title="{{'DISCOVERY_Add_Credential' | translate}}"></i>
+                                                </button>
+                                                <button class="btn btn-link"
+                                                        ng-click="DiscoveryWizard.doManageCredentials('edit', 'tor', ir)"
+                                                        ng-if="ir.torCredentialId">
+                                                    <i class="ci-edit-pencil"
+                                                       data-toggle="tooltip"
+                                                       title="{{'DISCOVERY_Edit_Credential' | translate}}">
+                                                    </i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li ng-if="ir.resourcetype == 'all' || ir.resourcetype == 'scvmm'">
+                                        <!--SCVMM Credential-->
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <select class="form-control"
+                                                        required
+                                                        name="scvmmCredentialId"
+                                                        ng-model="ir.scvmmCredentialId"
+                                                        ng-options="item.id as item.credentialsName for item in DiscoveryWizard.credentials.scvmm">
+                                                    <option value="">{{'DISCOVERY_Select_SCVMM_Credential'|translate}}</option>
+                                                </select>
+                                                <div class="text-danger" ng-if="ir._form._submitted">
+                                                    <div ng-if="ir._form.scvmmCredentialId.$error.required">
+                                                        {{'GENERIC_RequiredField' | translate}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <button class="btn btn-link" ng-click="DiscoveryWizard.doManageCredentials('create', 'scvmm', ir)">
+                                                    <i class="ci-action-add-plus-float"
+                                                       data-toggle="tooltip"
+                                                       title="{{'DISCOVERY_Add_Credential' | translate}}"></i>
+                                                </button>
+                                                <button class="btn btn-link"
+                                                        ng-click="DiscoveryWizard.doManageCredentials('edit', 'scvmm', ir)"
+                                                        ng-if="ir.scvmmCredentialId">
+                                                    <i class="ci-edit-pencil"
+                                                       data-toggle="tooltip"
+                                                       title="{{'DISCOVERY_Edit_Credential' | translate}}">
+                                                    </i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li ng-if="ir.resourcetype == 'all' || ir.resourcetype == 'vcenter'">
+                                        <!--vCenter Credential-->
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <select class="form-control"
+                                                        required
+                                                        name="vcenterCredentialId"
+                                                        ng-model="ir.vcenterCredentialId"
+                                                        ng-options="item.id as item.credentialsName for item in DiscoveryWizard.credentials.vcenter">
+                                                    <option value="">{{'DISCOVERY_Select_vCenter_Credential'|translate}}</option>
+                                                </select>
+                                                <div class="text-danger" ng-if="ir._form._submitted">
+                                                    <div ng-if="ir._form.vcenterCredentialId.$error.required">
+                                                        {{'GENERIC_RequiredField' | translate}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <button class="btn btn-link" ng-click="DiscoveryWizard.doManageCredentials('create', 'vcenter', ir)">
+                                                    <i class="ci-action-add-plus-float"
+                                                       data-toggle="tooltip"
+                                                       title="{{'DISCOVERY_Add_Credential' | translate}}"></i>
+                                                </button>
+                                                <button class="btn btn-link"
+                                                        ng-click="DiscoveryWizard.doManageCredentials('edit', 'vcenter', ir)"
+                                                        ng-if="ir.vcenterCredentialId">
+                                                    <i class="ci-edit-pencil"
+                                                       data-toggle="tooltip"
+                                                       title="{{'DISCOVERY_Edit_Credential' | translate}}">
+                                                    </i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li ng-if="ir.resourcetype == 'all' || ir.resourcetype == 'em'">
+                                        <!--EM Credential-->
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <select class="form-control"
+                                                        required
+                                                        name="emCredentialId"
+                                                        ng-model="ir.emCredentialId"
+                                                        ng-options="item.id as item.credentialsName for item in DiscoveryWizard.credentials.em">
+                                                    <option value="">{{'DISCOVERY_Select_EM_Credential'|translate}}</option>
+                                                </select>
+                                                <div class="text-danger" ng-if="ir._form._submitted">
+                                                    <div ng-if="ir._form.emCredentialId.$error.required">
+                                                        {{'GENERIC_RequiredField' | translate}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <button class="btn btn-link" ng-click="DiscoveryWizard.doManageCredentials('create', 'em', ir)">
+                                                    <i class="ci-action-add-plus-float"
+                                                       data-toggle="tooltip"
+                                                       title="{{'DISCOVERY_Add_Credential' | translate}}"></i>
+                                                </button>
+                                                <button class="btn btn-link"
+                                                        ng-click="DiscoveryWizard.doManageCredentials('edit', 'em', ir)"
+                                                        ng-if="ir.emCredentialId">
+                                                    <i class="ci-edit-pencil"
+                                                       data-toggle="tooltip"
+                                                       title="{{'DISCOVERY_Edit_Credential' | translate}}">
+                                                    </i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li ng-if="ir.resourcetype == 'all' || ir.resourcetype == 'scaleio'">
+                                        <!--ScaleIO Credential-->
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <select class="form-control"
+                                                        required
+                                                        name="scaleioCredentialId"
+                                                        ng-model="ir.scaleioCredentialId"
+                                                        ng-options="item.id as item.credentialsName for item in DiscoveryWizard.credentials.scaleio">
+                                                    <option value="">{{'DISCOVERY_Select_ScaleIOGateway_Credential'|translate}}</option>
+                                                </select>
+                                                <div class="text-danger" ng-if="ir._form._submitted">
+                                                    <div ng-if="ir._form.scaleioCredentialId.$error.required">
+                                                        {{'GENERIC_RequiredField' | translate}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <button class="btn btn-link" ng-click="DiscoveryWizard.doManageCredentials('create', 'scaleio', ir)">
+                                                    <i class="ci-action-add-plus-float"
+                                                       data-toggle="tooltip"
+                                                       title="{{'DISCOVERY_Add_Credential' | translate}}"></i>
+                                                </button>
+                                                <button class="btn btn-link"
+                                                        ng-click="DiscoveryWizard.doManageCredentials('edit', 'scaleio', ir)"
+                                                        ng-if="ir.scaleioCredentialId">
+                                                    <i class="ci-edit-pencil"
+                                                       data-toggle="tooltip"
+                                                       title="{{'DISCOVERY_Edit_Credential' | translate}}">
+                                                    </i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td class="checkColumn">
+                                <button class="btn btn-link" ng-click="DiscoveryWizard.deleteResourceRow(ir)">
+                                    <i class="ci-trash"
+                                       data-toggle="tooltip"
+                                       title="{{'DISCOVERY_Delete_Resource_Type' | translate}}"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                    <tbody ng-if="DiscoveryWizard.iresources.length == 0">
+                        <tr>
+                            <td colspan="6">
+                                {{'GENERIC_EmptyTable'|translate}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </wizard-step>
+
+        <!-- Initial Resource Configuration -->
+        <wizard-step step-title="{{'DISCOVERY_InitialResourceConfig'|translate}}"
+                     ng-if="DiscoveryWizard.hasChassis || DiscoveryWizard.hasRack"
+                     on-enter="DiscoveryWizard.enterInitialChassisConfig(); DiscoveryWizard.configureDeviceShown();"
+                     on-next="DiscoveryWizard.validateInitialChassisConfig()"
+                     invalid="DiscoveryWizard.nextButtonDisabled()">
+            <!--invalid="DiscoveryWizard.chassisDevices.pending || DiscoveryWizard.rackDevices.pending">-->
+            <p>
+                <strong>
+                    {{'DISCOVERY_InitialChassisConfigHelp1'|translate}}
+                </strong>
+            </p>
+            <p>
+                {{'DISCOVERY_InitialChassisConfigHelp2'|translate}}
+            </p>
+            <div class="panel-group"
+                 id="parent"
+                 role="tablist"
+                 aria-multiselectable="true">
+                <!-- Chassis -->
+                <div class="panel panel-default" ng-if="DiscoveryWizard.hasChassis">
+                    <div class="panel-heading"
+                         role="tab"
+                         id="headId">
+                        <h4 class="panel-title">
+                            <a role="button"
+                               data-toggle="collapse"
+                               data-target="#collapseOne"
+                               aria-expanded="true"
+                               class="in"
+                               aria-controls="collapseOne">
+                                <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                {{"DISCOVERY_InitialChassisConfigTitle2" | translate}}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne"
+                         class="panel-collapse collapse in"
+                         role="tabpanel"
+                         aria-labelledby="headId">
+                        <div class="panel-body">
+                            <p class="alert alert-danger alert-dismissible"
+                               ng-repeat="error in DiscoveryWizard.errors.chassis">
+                                <span ng-click="error.action();"
+                                      ng-bind-html="error.message">
+                                </span>
+                                <button type="button"
+                                        class="close"
+                                        data-dismiss="alert"
+                                        aria-label="Close"
+                                        ng-click="actions.errorClicked(error)">
+                                    <span>
+                                        ×
+                                    </span>
+                                </button>
+                            </p>
+                            <p>
+                                {{'DISCOVERY_InitialChassisConfigHelp3'|translate}}
+                            </p>
+                            <p ng-if="DiscoveryWizard.chassisDevices.pending">
+                                <spinner></spinner>
+                                {{'DISCOVERY_InitialChassisConfigConnecting'|translate}}
+                            </p>
+                            <strong ng-if="!DiscoveryWizard.chassisDevices.pending"
+                                    translate="DISCOVERY_ChassisDiscovered"
+                                    translate-values="{num:DiscoveryWizard.chassisDevices.noErrorArray.length}"></strong>
+                            <!-- chassisDevices -->
+                            <chassis-table mode="edit"
+                                           chassis-list="DiscoveryWizard.chassisDevices.noErrorArray"
+                                           pending="DiscoveryWizard.chassisDevices.pending"></chassis-table>
+
+                            <div ng-if="DiscoveryWizard.configurableDevice(DiscoveryWizard.chassisDevices.chassisConfigurations);">
+                                <device-config networks="DiscoveryWizard.networks"
+                                               credentials="DiscoveryWizard.credentials"
+                                               config="DiscoveryWizard.globalConfiguration"
+                                               forms="DiscoveryWizard.configForms"
+                                               errors="DiscoveryWizard.errors.chassis">
+                                </device-config>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Rack Server -->
+                <div class="panel panel-default" ng-if="DiscoveryWizard.hasRack">
+                    <div class="panel-heading"
+                         role="tab"
+                         id="headIdRack">
+                        <h4 class="panel-title">
+                            <a role="button"
+                               data-toggle="collapse"
+                               data-target="#collapseTwo"
+                               ng-class=":: !DiscoveryWizard.hasChassis ?  'in' :'collapsed'"
+                               aria-expanded="{{(!DiscoveryWizard.hasChassis)}}"
+                               aria-controls="collapseTwo">
+                                <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                {{"DISCOVERY_SelectRackServersforInitialConfiguration" | translate}}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo"
+                         class="panel-collapse collapse"
+                         ng-class="::{' in' : !DiscoveryWizard.hasChassis}"
+                         role="tabpanel"
+                         aria-labelledby="headIdRack">
+                        <div class="panel-body">
+                            <p class="alert alert-danger alert-dismissible"
+                               ng-repeat="error in DiscoveryWizard.errors.rack">
+                                <span ng-click="error.action();"
+                                      ng-bind-html="error.message">
+                                </span>
+                                <button type="button"
+                                        class="close"
+                                        data-dismiss="alert"
+                                        aria-label="Close"
+                                        ng-click="actions.errorClicked(error)">
+                                    <span>
+                                        ×
+                                    </span>
+                                </button>
+                            </p>
+                            <div ng-if="!DiscoveryWizard.rackDevices.pending">
+                                <p>
+                                    {{'DISCOVERY_InitialChassisConfigHelp4'|translate}}
+                                </p>
+                                <strong translate="DISCOVERY_ResourcesDiscovered" translate-values="{num:DiscoveryWizard.rackDevices.noErrorArray.length}"></strong>
+                            </div>
+
+                            <p ng-if="DiscoveryWizard.rackDevices.pending">
+                                <spinner></spinner>
+                                {{'DISCOVERY_InitialResourcesConfigConnecting'|translate}}
+                            </p>
+                            <!-- rackDevices -->
+                            <rack-table mode="edit"
+                                        rack-list="DiscoveryWizard.rackDevices.noErrorArray"
+                                        pending="DiscoveryWizard.rackDevices.pending"></rack-table>
+
+                            <div ng-if="DiscoveryWizard.configurableDevice(DiscoveryWizard.rackDevices.rackConfigurations);">
+                                <div class="panel-group"
+                                     id=""
+                                     role="tablist"
+                                     aria-multiselectable="true">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading"
+                                             role="tab"
+                                             id="headId3">
+                                            <h4 class="panel-title">
+                                                <a role="button"
+                                                   data-toggle="collapse"
+                                                   data-parent="#parent2"
+                                                   data-target="#collapseThree"
+                                                   aria-expanded="false"
+                                                   class="collapsed"
+                                                   aria-controls="collapseThree">
+                                                    <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                                    <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                                    {{'CONFIGURECHASSIS_DEVICE_CONFIG_Manage_Credentials'|translate}}
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseThree"
+                                             class="panel-collapse collapse"
+                                             ng-class="::{' in' : !DiscoveryWizard.hasRack}"
+                                             role="tabpanel"
+                                             aria-labelledby="headId3">
+                                            <div class="panel-body well">
+                                                <p>{{'CONFIGURECHASSIS_DEVICE_CONFIG_Credentials_Help'|translate}}</p>
+                                                <form name="DiscoveryWizard.configForms.rackManageCredentials"
+                                                      form-validation="DiscoveryWizard.configForms.rackManageCredentials._submitted">
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            {{'DISCOVERY_RackServerCredentials'|translate}}
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-control"
+                                                                    name="rackCredentialId"
+                                                                    required
+                                                                    ng-model="DiscoveryWizard.globalConfiguration.rackCredentialId"
+                                                                    ng-options="item.id as item.credentialsName for item in DiscoveryWizard.credentials.server">
+                                                                <option value="">
+                                                                    {{'GENERIC_select'|translate}}
+                                                                </option>
+                                                            </select>
+                                                            <div class="text-danger" ng-if="DiscoveryWizard.configForms.rackManageCredentials._submitted">
+                                                                <div ng-if="DiscoveryWizard.configForms.rackManageCredentials.rackCredentialId.$error.required">
+                                                                    {{'GENERIC_RequiredField' | translate}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <ul class="list-inline">
+                                                                <li>
+                                                                    <button class="btn btn-default" ng-click="DiscoveryWizard.doManageCredentials('create', 'rack', DiscoveryWizard.globalConfiguration)">
+                                                                        {{'GENERIC_CreateNew'|translate}}
+                                                                    </button>
+                                                                </li>
+                                                                <li>
+                                                                    <button class="btn btn-default"
+                                                                            ng-click="DiscoveryWizard.doManageCredentials('edit', 'rack', DiscoveryWizard.globalConfiguration)"
+                                                                            ng-if="DiscoveryWizard.globalConfiguration.rackCredentialId">
+                                                                        {{'GENERIC_Edit' | translate}}
+                                                                    </button>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading"
+                                             role="tab"
+                                             id="headId4">
+                                            <h4 class="panel-title">
+                                                <a role="button"
+                                                   data-toggle="collapse"
+                                                   data-parent="#parent2"
+                                                   data-target="#collapseFour"
+                                                   aria-expanded="false"
+                                                   class="collapsed"
+                                                   aria-controls="collapseFour">
+                                                    <i class="collapsed-show ci ci-arrow-chev-right-2-med"></i>
+                                                    <i class="collapsed-hide ci ci-arrow-chev-down-2-med"></i>
+                                                    {{'CONFIGURECHASSIS_DEVICE_CONFIG_IPAddressing'|translate}}
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseFour"
+                                             class="panel-collapse collapse"
+                                             role="tabpanel"
+                                             aria-labelledby="headId4">
+                                            <div class="panel-body well">
+                                                <h4>
+                                                    {{'CREDENTIALS_Servers'|translate}}
+                                                </h4>
+                                                <form name="DiscoveryWizard.configForms.rackIpAddressing" form-validation="DiscoveryWizard.configForms.rackIpAddressing._submitted">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <div class="radio">
+                                                                <label>
+                                                                    <input type="radio"
+                                                                           ng-init="DiscoveryWizard.globalConfiguration.rackAddressingMode = 'existing'"
+                                                                           ng-model="DiscoveryWizard.globalConfiguration.rackAddressingMode"
+                                                                           name="rackAddressingMode"
+                                                                           id="rackAddressingModeExisting"
+                                                                           value="existing">
+                                                                    {{'CREDENTIALS_UseexistingserverIPaddress'|translate}}
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <div class="radio">
+                                                                <label>
+                                                                    <input type="radio"
+                                                                           ng-model="DiscoveryWizard.globalConfiguration.rackAddressingMode"
+                                                                           name="rackAddressingMode"
+                                                                           id="rackAddressingModeStatic"
+                                                                           value="static">
+                                                                    {{'CREDENTIALS_AssignstaticIPaddressfromthisnetwork'|translate}}
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <select ng-model="DiscoveryWizard.globalConfiguration.rackNetworkId"
+                                                                    name="rackNetworkId"
+                                                                    ng-disabled="DiscoveryWizard.globalConfiguration.rackAddressingMode !== 'static'"
+                                                                    ng-required="DiscoveryWizard.globalConfiguration.rackAddressingMode === 'static'"
+                                                                    ng-options="network.id as network.name for network in DiscoveryWizard.networks"
+                                                                    class="form-control">
+                                                                <option value="">
+                                                                    {{'GENERIC_select'|translate}}
+                                                                </option>
+                                                            </select>
+                                                            <div class="text-danger" ng-if="DiscoveryWizard.configForms.rackIpAddressing._submitted">
+                                                                <div ng-if="DiscoveryWizard.configForms.rackIpAddressing.rackNetworkId.$error.required">
+                                                                    {{'GENERIC_RequiredField' | translate}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <ul class="list-inline">
+                                                                <li>
+                                                                    <button class="btn btn-default"
+                                                                            ng-click="DiscoveryWizard.configNetworks(false)"
+                                                                            ng-disabled="DiscoveryWizard.globalConfiguration.rackAddressingMode !== 'static'">
+                                                                        {{'GENERIC_CreateNew'|translate}}
+                                                                    </button>
+                                                                </li>
+                                                                <li ng-if="DiscoveryWizard.globalConfiguration.rackNetworkId">
+                                                                    <button class="btn btn-default"
+                                                                            ng-click="DiscoveryWizard.configNetworks('edit', DiscoveryWizard.globalConfiguration.rackNetworkId)">
+                                                                        {{'GENERIC_Edit' | translate}}
+                                                                    </button>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </wizard-step>
+
+        <!-- Summary -->
+        <wizard-step step-title="{{'GENERIC_Summary'|translate}}"
+                     on-enter="DiscoveryWizard.enterSummary()">
+            <!-- on-next="SetupWizard.updateTime()"> -->
+            <section id="page_discovery_summary">
+                <header>
+                    <h2>{{'GENERIC_Summary'|translate}}</h2>
+                </header>
+
+                <p ng-if="DiscoveryWizard.$scope.modal.params.mode == 'resources'
+           && (DiscoveryWizard.chassisDevices.chassisConfigurations.length == 0 || DiscoveryWizard.rackDevices.rackConfigurations.length == 0)"
+                   ng-bind-html="DISCOVERY_SummaryHelp1 | translate | htmlSafe">
+                </p>
+                <p ng-if="DiscoveryWizard.$scope.modal.params.mode == 'resources'
+           && (DiscoveryWizard.chassisDevices.chassisConfigurations.length == 0 || DiscoveryWizard.rackDevices.rackConfigurations.length == 0)">
+                    {{'DISCOVERY_SummaryHelp1.5'|translate}}
+                </p>
+                <p ng-if="DiscoveryWizard.$scope.modal.params.mode == 'resources'
+           && (DiscoveryWizard.chassisDevices.chassisConfigurations.length || DiscoveryWizard.rackDevices.rackConfigurations.length)">
+                    {{'DISCOVERY_SummaryHelp2'|translate}}
+                </p>
+                <p ng-if="DiscoveryWizard.$scope.modal.params.mode == 'resources'
+           && (DiscoveryWizard.chassisDevices.chassisConfigurations.length || DiscoveryWizard.rackDevices.rackConfigurations.length)">
+                    {{'DISCOVERY_SummaryHelp2.5'|translate}}
+                </p>
+                <p ng-if="DiscoveryWizard.$scope.modal.params.mode == 'gettingstarted'
+           && (DiscoveryWizard.chassisDevices.chassisConfigurations.length == 0 || DiscoveryWizard.rackDevices.rackConfigurations.length == 0)">
+                    {{'DISCOVERY_SummaryHelp3'|translate}}
+                </p>
+                <p ng-if="DiscoveryWizard.$scope.modal.params.mode == 'gettingstarted'
+           && (DiscoveryWizard.chassisDevices.chassisConfigurations.length == 0 || DiscoveryWizard.rackDevices.rackConfigurations.length == 0)">
+                    {{'DISCOVERY_SummaryHelp3.5'|translate}}
+                </p>
+                <p ng-if="DiscoveryWizard.$scope.modal.params.mode == 'gettingstarted'
+           && (DiscoveryWizard.chassisDevices.chassisConfigurations.length || DiscoveryWizard.rackDevices.rackConfigurations.length)">
+                    {{'DISCOVERY_SummaryHelp4'|translate}}
+                </p>
+                <p ng-if="DiscoveryWizard.$scope.modal.params.mode == 'gettingstarted'
+           && (DiscoveryWizard.chassisDevices.chassisConfigurations.length || DiscoveryWizard.rackDevices.rackConfigurations.length)">
+                    {{'DISCOVERY_SummaryHelp4.5'|translate}}
+                </p>
+
+                <fieldset>
+                    <h2>
+                        {{"DISCOVERY_IdentifyResources" | translate}}
+                    </h2>
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    {{'DEVICES_ResourceType' | translate}}
+                                </th>
+                                <th>
+                                    {{'DISCOVERY_IPAddressRange' | translate}}
+                                </th>
+                                <th>
+                                    {{'DEVICES_ResourceState' | translate}}
+                                </th>
+                                <th>
+                                    {{'DISCOVERY_DiscoverIntoServerPool' | translate}}
+                                </th>
+                                <th>
+                                    {{'DISCOVERY_Credentials' | translate}}*
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="ir in DiscoveryWizard.iresources">
+                                <td>
+                                    {{ir.resourcetype|availableResourceTypes}}
+                                </td>
+                                <td>
+                                    {{ir.startingIpAddress}}
+                                    <span ng-if="ir.endingIpAddress != ''"> - {{ir.endingIpAddress}}</span>
+                                </td>
+                                <td>
+                                    {{ir.managedstate|availableManagedStates}}
+                                </td>
+                                <td>
+                                    {{DiscoveryWizard.getServerPoolValue(ir)}}
+                                </td>
+                                <td>
+                                    <ul class="list-unstyled">
+                                        <li ng-if="ir.resourcetype == 'all' || ir.resourcetype == 'chassis'">
+                                            <ul class="list-unstyled">
+                                                <li>
+                                                    {{DiscoveryWizard.getSelectedCredential(ir.chassisCredentialId, 'chassis')}}
+                                                </li>
+                                                <li>
+                                                    {{DiscoveryWizard.getSelectedCredential(ir.bladeCredentialId, 'blade')}}
+                                                </li>
+                                                <li>
+                                                    {{DiscoveryWizard.getSelectedCredential(ir.iomCredentialId, 'iom')}}
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li ng-if="ir.resourcetype == 'all' || ir.resourcetype == 'server'">
+                                            {{DiscoveryWizard.getSelectedCredential(ir.serverCredentialId, 'server')}}
+                                        </li>
+                                        <li ng-if="ir.resourcetype == 'all' || ir.resourcetype == 'storage'">
+                                            {{DiscoveryWizard.getSelectedCredential(ir.storageCredentialId, 'storage')}}
+                                        </li>
+                                        <li ng-if="ir.resourcetype == 'all' || ir.resourcetype == 'switch'">
+                                            {{DiscoveryWizard.getSelectedCredential(ir.torCredentialId, 'iom')}}
+                                        </li>
+                                        <li ng-if="ir.resourcetype == 'all' || ir.resourcetype == 'vcenter'">
+                                            {{DiscoveryWizard.getSelectedCredential(ir.vcenterCredentialId, 'vcenter')}}
+                                        </li>
+                                        <li ng-if="ir.resourcetype == 'all' || ir.resourcetype == 'scvmm'">
+                                            {{DiscoveryWizard.getSelectedCredential(ir.scvmmCredentialId, 'scvmm')}}
+                                        </li>
+                                        <li ng-if="ir.resourcetype == 'all' || ir.resourcetype == 'em'">
+                                            {{DiscoveryWizard.getSelectedCredential(ir.emCredentialId, 'em')}}
+                                        </li>
+                                        <li ng-if="ir.resourcetype == 'all' || ir.resourcetype == 'scaleio'">
+                                            {{DiscoveryWizard.getSelectedCredential(ir.scaleioCredentialId, 'scaleio')}}
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+
+                <hr />
+                <!-- Chassis Devices -->
+                <fieldset ng-if="DiscoveryWizard.chassisDevices.selectedArray.length">
+                    <h2>
+                        {{'DISCOVERY_InitialResourceConfig'|translate}}
+                    </h2>
+
+                    <chassis-table mode="view" chassis-list="DiscoveryWizard.chassisDevices.selectedArray"></chassis-table>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4>
+                                {{'CONFIGUREDEVICE_Credentials'|translate}}
+                            </h4>
+                            <div class="row">
+                                <label for="credentials" class="col-sm-4 control-label">
+                                    {{'DISCOVERY_ChassisCredentials'|translate}}
+                                </label>
+                                <div class="col-sm-8" id="credentials">
+                                    {{DiscoveryWizard.getSelectedCredential(DiscoveryWizard.globalConfiguration.chassisCredentialId,'chassis')}}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="bladecredentials" class="col-sm-4 control-label">
+                                    {{'DISCOVERY_BladeCredentials'|translate}}
+                                </label>
+                                <div class="col-sm-8" id="bladecredentials">
+                                    {{DiscoveryWizard.getSelectedCredential(DiscoveryWizard.globalConfiguration.bladeCredentialId,'server')}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label for="iomcredentials" class="col-sm-4 control-label">
+                                    {{'DISCOVERY_IOMCredentials'|translate}}
+                                </label>
+                                <div class="col-sm-8" id="iomcredentials">
+                                    {{DiscoveryWizard.getSelectedCredential(DiscoveryWizard.globalConfiguration.iomCredentialId,'iom')}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4>
+                                {{'DISCOVERY_IPAddressing'|translate}}
+                            </h4>
+
+                            <h5>
+                                {{'DISCOVERY_IPAddressing_Chassis'|translate}}
+                            </h5>
+                            <div ng-if="DiscoveryWizard.globalConfiguration.chassisaddressingmode=='existing'">
+                                <label>
+                                    {{'DISCOVERY_IPAddressing_Chassis_Use_Existing'|translate}}
+                                </label>
+                            </div>
+
+                            <div ng-if="DiscoveryWizard.globalConfiguration.chassisaddressingmode=='static'">
+                                <label for="chassis_selectednetwork_summary" class="">
+                                    {{'DISCOVERY_IPAddressing_Chassis_Assign_Static'|translate}}
+                                </label>
+                                <span id="chassis_selectednetwork_summary">
+                                    {{DiscoveryWizard.getSelectedNetwork(DiscoveryWizard.globalConfiguration.chassisnetworkid,'chassis')}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <h5>
+                                {{'DISCOVERY_IPAddressing_Servers'|translate}}
+
+                            </h5>
+                            <div ng-if="DiscoveryWizard.globalConfiguration.serveraddressingmode=='existing'">
+                                <label>
+                                    {{'DISCOVERY_IPAddressing_Servers_Use_Existing'|translate}}
+                                </label>
+                            </div>
+                            <div ng-if="DiscoveryWizard.globalConfiguration.serveraddressingmode=='dhcp'">
+                                <label>
+                                    {{'DISCOVERY_IPAddressing_Servers_Assign_DHCP'|translate}}
+                                </label>
+                            </div>
+                            <div ng-if="DiscoveryWizard.globalConfiguration.serveraddressingmode=='static'">
+                                <label for="server_selectednetwork_summary" class="">
+                                    {{'DISCOVERY_IPAddressing_Servers_Assign_Static'|translate}}
+                                </label>
+                                <span id="server_selectednetwork_summary">
+                                    {{DiscoveryWizard.getSelectedNetwork(DiscoveryWizard.globalConfiguration.servernetworkid,'server')}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <h5>
+                                {{'DISCOVERY_IPAddressing_IOM'|translate}}
+                            </h5>
+                            <div ng-if="DiscoveryWizard.globalConfiguration.iomaddressingmode=='existing'">
+                                <label>
+                                    {{'DISCOVERY_IPAddressing_IOM_Use_Existing'|translate}}
+                                </label>
+                            </div>
+                            <div ng-if="DiscoveryWizard.globalConfiguration.iomaddressingmode=='dhcp'">
+                                <label>
+                                    {{'DISCOVERY_IPAddressing_IOM_Assign_DHCP'|translate}}
+                                </label>
+                            </div>
+                            <div ng-if="DiscoveryWizard.globalConfiguration.iomaddressingmode=='static'">
+                                <label for="iom_selectednetwork_summary" class="">
+                                    {{'DISCOVERY_IPAddressing_IOM_Assign_Static'|translate}}
+                                </label>
+                                <span id="iom_selectednetwork_summary">
+                                    {{DiscoveryWizard.getSelectedNetwork(DiscoveryWizard.globalConfiguration.iomnetworkid,'iom')}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <!-- Rack Devices -->
+                <fieldset ng-if="DiscoveryWizard.rackDevices.selectedArray.length">
+                    <h2>
+                        {{'CREDENTIALS_RackServers' | translate}}
+                    </h2>
+
+                    <rack-table mode="view" rack-list="DiscoveryWizard.rackDevices.selectedArray"></rack-table>
+
+                    <div ng-if="DiscoveryWizard.configurableDevice(DiscoveryWizard.rackDevices.rackConfigurations);">
+                        <h4>
+                            {{'CONFIGURECHASSIS_DEVICE_CONFIG_Manage_Credentials'|translate}}
+                        </h4>
+                        <div class="row">
+                            <div class="col-sm-4" for="rackServerCredentials">
+                                {{'DISCOVERY_RackServerCredentials'|translate}}
+                            </div>
+                            <div class="col-sm-8">
+                                <list-lookup list="DiscoveryWizard.credentials.server"
+                                             id="rackServerCredentials"
+                                             key="DiscoveryWizard.globalConfiguration.rackCredentialId"
+                                             property-name="'credentialsName'"></list-lookup>
+                            </div>
+                        </div>
+                        <h4>
+                            {{'CONFIGURECHASSIS_DEVICE_CONFIG_IPAddressing'|translate}}
+                        </h4>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label ng-if="DiscoveryWizard.globalConfiguration.rackAddressingMode == 'existing'">
+                                    {{'CREDENTIALS_UseexistingserverIPaddress'|translate}}
+                                </label>
+                                <div ng-if="DiscoveryWizard.globalConfiguration.rackAddressingMode == 'static'">
+                                    <ul class="list-inline">
+                                        <li>
+                                            <label>
+                                                {{'CREDENTIALS_AssignstaticIPaddressfromthisnetwork'|translate}}
+                                            </label>
+                                        </li>
+                                        <li>
+                                            <list-lookup list="DiscoveryWizard.networks"
+                                                         key="DiscoveryWizard.globalConfiguration.rackNetworkId"
+                                                         property-name="'name'"></list-lookup>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </section>
+        </wizard-step>
+
+        <script type="text/ng-template" id="ResourceStateToolTip.html">
+            <div class="popover-body" ng-bind-html="'DISCOVERY_IdentifyResources_ResourceStateTooltip' | translate | htmlSafe"></div>
+        </script>
+
+    </wizard>
+
+</section>

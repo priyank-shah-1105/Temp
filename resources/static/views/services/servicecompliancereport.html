@@ -1,0 +1,242 @@
+﻿<section id="page_serviceComplianceReport">
+    <error-display errors="serviceComplianceReportController.errors"
+                   on-click="$root.ASM.RemoveError(error, serviceComplianceReportController.errors)"
+                   on-expand-collapse=""></error-display>
+    <header>
+        <h2>
+            {{serviceComplianceReportController.service.name}}
+        </h2>
+    </header>
+    <h4>
+        {{'SERVICES_FirmwareCompliance'|translate}}&nbsp;&nbsp;
+        <span ng-switch="serviceComplianceReportController.complianceReport.firmwareCompliant">
+            <span ng-switch-when="unknown">
+                <statusicon value="'UNKNOWN'"></statusicon>
+            </span>
+            <span ng-switch-when="compliant">
+                <statusicon value="'SUCCESS'"></statusicon>
+            </span>
+            <span ng-switch-when="noncompliant">
+                <a data-toggle="tooltip"
+                   title="{{'SERVICES_FirmwareCompliance_Warning_Tooltip'|translate}}"
+                   data-trigger="hover"
+                   id="ComplianceStatusIcon">
+                    <statusicon value="'WARNING'"></statusicon>
+                   </a>
+            </span>
+            <span ng-switch-when="updaterequired">
+                <a data-toggle="tooltip"
+                   title="{{'SERVICES_FirmwareCompliance_Critical_Tooltip'|translate}}"
+                   data-trigger="hover"
+                   id="ComplianceStatusIcon">
+                    <statusicon value="'CRITICAL'"></statusicon>
+                </a>
+            </span>
+            <span ng-switch-when="updatefailed">
+                <statusicon value="'CRITICAL'"></statusicon>
+            </span>
+            <span ng-switch-when="updating">
+                <statusicon value="'INPROGRESS'"></statusicon>
+            </span>
+            <!--<span ng-switch-when="green">
+                <statusicon value="'GREEN'"></statusicon>
+            </span>
+            <span ng-switch-when="yellow">
+                <a data-toggle="tooltip"
+                    title="{{'SERVICES_FirmwareCompliance_Warning_Tooltip'|translate}}"
+                    data-trigger="hover"
+                    id="ComplianceStatusIcon">
+                    <statusicon value="'YELLOW'"></statusicon>
+                </a>
+            </span>
+            <span ng-switch-when="red">
+                <a data-toggle="tooltip"
+                    title="{{'SERVICES_FirmwareCompliance_Critical_Tooltip'|translate}}"
+                    data-trigger="hover"
+                    id="ComplianceStatusIcon">
+                    <statusicon value="'RED'"></statusicon>
+                </a>
+            </span>-->
+        </span>
+        <span>
+            {{serviceComplianceReportController.complianceReport.firmwareCompliantText}}
+        </span>
+    </h4>
+    <label style="margin-right:20px;">{{'GENERIC_View'|translate}}</label>
+    <label class="radio-inline">
+        <input type="radio"
+               name="inlineRadioOptions"
+               id="inlineRadio1"
+               ng-model="serviceComplianceReportController.tableView"
+               value="firmware"> 
+        {{'DEVICES_DETAILS_FIRMWARE_Components'|translate}}
+    </label>
+    <label class="radio-inline">
+        <input type="radio"
+               name="inlineRadioOptions"
+               id="inlineRadio2"
+               ng-model="serviceComplianceReportController.tableView"
+               value="software"> 
+        {{'DEVICES_DETAILS_SOFTWARE_Components'|translate}}
+    </label>
+
+    <table id="serviceFirmwareReportTable"
+           class="table table-hover"
+           ng-if="serviceComplianceReportController.tableView == 'firmware'"
+           st-table="serviceComplianceReportController.complianceReport.devices"
+           st-safe-src="serviceComplianceReportController.reportsSafe">
+        <thead>
+            <tr>
+                <th scope="col">
+                    {{'SERVICES_FirmwareCompReport_ServiceTable_IPAddress'|translate}}
+                </th>
+                <th scope="col">
+                    {{'SERVICES_FirmwareCompReport_ServiceTable_AssetServiceTag'|translate}}
+                </th>
+                <th scope="col" colspan="2">
+                    {{'SERVICES_FirmwareCompReport_ServiceTable_Components'|translate}}
+                </th>
+                <th scope="col">
+                    {{'SERVICES_FirmwareCompReport_ServiceTable_CurrentVersion'|translate}}
+                </th>
+                <th scope="col" colspan="2">
+                    {{'SERVICES_FirmwareCompReport_ServiceTable_ExpectedVersion'|translate}}
+                </th>
+                <th scope="col">
+                    {{'SERVICES_FirmwareCompReport_ServiceTable_LastUpdated'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="report in serviceComplianceReportController.complianceReport.devices" ng-if="report.firmwareComponents.length">
+        <tr>
+            <td>{{report.ipAddress}}</td>
+            <td>{{report.serviceTag}}</td>
+            <td class="icon-col">
+                <statusicon ng-if="report.fwComponents_compcode === 'yellow'" value="'yellow'"></statusicon>
+            </td>
+            <td>
+                <chevron item="report.open">
+                    <span translate="CONFIGURECHASSIS_StorageOption_NumComponents" translate-values="{num: report.firmwareComponents.length}"></span>
+                </chevron>
+            </td>
+            <td colspan="4"></td>
+        </tr>
+            <tr ng-if="report.open" ng-repeat="component in report.firmwareComponents">
+                <td colspan="3"></td>
+                <td>{{component.name}}</td>
+                <td>{{component.currentversion.firmwareversion}}</td>
+                <td class="icon-col">
+                    <statusicon ng-if="component.compliant === false" value="'yellow'"></statusicon>
+                </td>
+                <td>
+                    {{component.targetversion.firmwareversion}}
+                </td>
+                <td>
+                    <datetime-display time="component.currentversion.firmwarelastupdatetime" time-format="'LL'" />
+                </td>
+            </tr>
+        </tbody>
+        <!--<tfoot>
+            <tr>
+                <td colspan="8" class="text-center">
+                    <div st-pagination=""
+                         st-items-by-page="20"
+                         st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>-->
+    </table>
+
+    <table id="serviceSoftwareReportTable"
+           class="table table-hover"
+           ng-if="serviceComplianceReportController.tableView == 'software'"
+           st-table="serviceComplianceReportController.complianceReport.devices"
+           st-safe-src="serviceComplianceReportController.reportsSafe">
+        <thead>
+            <tr>
+                <th scope="col">
+                    {{'SERVICES_FirmwareCompReport_ServiceTable_IPAddress'|translate}}
+                </th>
+                <th scope="col">
+                    {{'SERVICES_FirmwareCompReport_ServiceTable_AssetServiceTag'|translate}}
+                </th>
+                <th scope="col" colspan="2">
+                    {{'SERVICES_FirmwareCompReport_ServiceTable_Components'|translate}}
+                </th>
+                <th>
+                    {{'GENERIC_Vendor' | translate}}
+                </th>
+                <th scope="col">
+                    {{'SERVICES_FirmwareCompReport_ServiceTable_CurrentVersion'|translate}}
+                </th>
+                <th scope="col" colspan="2">
+                    {{'SERVICES_FirmwareCompReport_ServiceTable_ExpectedVersion'|translate}}
+                </th>
+                <th scope="col">
+                    {{'SERVICES_FirmwareCompReport_ServiceTable_LastUpdated'|translate}}
+                </th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="report in serviceComplianceReportController.complianceReport.devices" ng-if="report.softwareComponents.length">
+            <tr>
+                <td>{{report.ipAddress}}</td>
+                <td>{{report.serviceTag}}</td>
+                <td class="icon-col">
+                    <statusicon ng-if="report.swComponents_compcode === 'yellow'" value="'yellow'"></statusicon>
+                </td>
+                <td>
+                    <chevron item="report.open">
+                        <span translate="CONFIGURECHASSIS_StorageOption_NumComponents" translate-values="{num: report.softwareComponents.length}"></span>
+                    </chevron>
+                </td>
+                <td colspan="5"></td>
+            </tr>
+        <tr ng-if="report.open" ng-repeat="component in report.softwareComponents">
+            <td colspan="3"></td>
+            <td>{{component.name}}</td>
+            <td>{{component.vendor}}</td>
+            <td>{{component.currentversion.softwareversion}}</td>
+            <td class="icon-col">
+                <statusicon ng-if="component.compliant === false" value="'yellow'"></statusicon>
+            </td>
+            <td>
+                {{component.targetversion.softwareversion}}
+            </td>
+            <td>
+                <datetime-display time="component.currentversion.softwarelastupdatetime" time-format="'LL'"/>
+            </td>
+        </tr>
+        </tbody>
+        <!--<tfoot>
+            <tr>
+                <td colspan="9" class="text-center">
+                    <div st-pagination=""
+                         st-items-by-page="20"
+                         st-displayed-pages="7"></div>
+                </td>
+            </tr>
+        </tfoot>-->
+    </table>
+
+    <footer>
+        <ul class="list-inline">
+            <li class="pull-right">
+                <button id="firmwareReportOkButton"
+                        class="btn btn-default pull-right"
+                        ng-click="serviceComplianceReportController.cancel()">
+                    {{'GENERIC_Close'|translate}}
+                </button>
+            </li>
+            <li class="pull-right">
+                <button type="button"
+                        ng-click="serviceComplianceReportController.updateServiceResource()"
+                        id="lnkUpdateResource"
+                        class="btn btn-primary"
+                        ng-disabled="serviceComplianceReportController.updateDisabled">
+                    {{'SERVICES_FirmwareCompReport_ServiceTable_UpdateResources'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+
+</section>

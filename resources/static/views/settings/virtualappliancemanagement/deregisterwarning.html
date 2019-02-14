@@ -1,0 +1,34 @@
+﻿<section id="page_dregister_warning">
+    
+   
+    <div class="row">
+        <div class="col-xs-12" ng-if="deregisterWarningController.connectionType === 'srs'">
+            {{"SETTINGS_VirtualApplianceManagement_DeregisterWarning" | translate}}
+        </div>
+        <div class="col-xs-12" ng-if="deregisterWarningController.connectionType === 'phonehome'">
+            {{"SETTINGS_VirtualApplianceManagement_DeregisterWarning_PhoneHome" | translate}}
+        </div>
+    </div>
+
+    <footer>
+        <ul class="list-unstyled list-inline text-right">
+            <li>
+                <button id="btnSaveServiceTag"
+                        type="submit"
+                        class="btn btn-danger"
+                        ng-click="deregisterWarningController.deregister();">
+                    {{'SETTINGS_VirtualApplianceManagement_Deregister'|translate}}
+                </button>
+            </li>
+            <li>
+                <button id="btnCancelServiceTag"
+                        class="btn btn-default"
+                        type="button"
+                        ng-click="deregisterWarningController.cancel()">
+                    {{'GENERIC_Cancel'|translate}}
+                </button>
+            </li>
+        </ul>
+    </footer>
+</section>
+

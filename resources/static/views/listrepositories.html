@@ -1,0 +1,38 @@
+﻿<section id="page_repositories">
+    <div>
+        <h1>
+            {{'SETTINGS_Repositories_OSRCMRepositories'|translate}}
+        </h1>
+        <br/>
+        <div role="tabpanel">
+            <ul class="nav nav-tabs" role="tablist" id="rep_tabs">
+                <li role="presentation" ng-click="rep.clickTab('firmware')" ng-class="{active: rep.viewData.activeTab == 'firmware'}">
+                    <a data-target="#directoryservices" aria-controls="tab-firmware" role="tab" data-toggle="tab" id="tabFirmware">
+                        {{'SETTINGS_Repositories_ManageRCMVersions'|translate}}
+                    </a>
+                </li>
+                <li role="presentation" ng-click="rep.clickTab('iso')" ng-class="{active: rep.viewData.activeTab == 'iso'}">
+                    <a data-target="#tab-iso" aria-controls="tab-iso" role="tab" data-toggle="tab" id="tabISO">
+                        {{'SETTINGS_Repositories_OSImageRepositories'|translate}}
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane" id="tab-iso" ng-class="{active: rep.viewData.activeTab == 'iso'}">
+                    <div ng-if="rep.viewData.activeTab === 'iso'">
+                        <editrepository errors="$rootScope.errors"></editrepository>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="tab-firmware" ng-class="{active: rep.viewData.activeTab == 'firmware'}">
+                    <div ng-if="rep.viewData.activeTab === 'firmware'">
+                        <editfirmware mode="standard" errors="$rootScope.errors"></editfirmware>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</section>

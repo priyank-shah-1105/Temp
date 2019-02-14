@@ -1,0 +1,203 @@
+﻿<div>
+    <div class="col-sm-6">
+        <label class="control-label"
+               for="{{basicSetting.id}}"
+               data-toggle="tooltip"
+               data-placement="right"
+               data-html="true"
+               >
+            {{ (basicSetting.setting.id | translateLabel : basicSetting.category.id : basicSetting.setting.name) | titleCase }}
+        </label>
+        <span ng-if="basicSetting.setting.required">*</span>
+        <span id="{{'label_' + basicSetting.setting.id}}"
+              ng-if="basicSetting.setting.tooltip && !basicSetting.setting.useinfotooltip"
+              data-toggle="tooltip"
+              data-placement="right"
+              data-html="true"
+              title="{{basicSetting.setting.tooltip}}">
+            <i class="ci ci-info-circle-info text-primary"></i>
+        </span>
+        <span id="{{'label_info_' + basicSetting.setting.id}}"
+              ng-if="basicSetting.setting.tooltip && basicSetting.setting.useinfotooltip"
+              data-toggle="tooltip"
+              data-placement="right"
+              title="{{basicSetting.setting.tooltip}}">
+            <i class="ci ci-info-circle-info text-primary"></i>
+        </span>
+    </div>
+
+    <div class="col-sm-6"
+         ng-class="{ actions: !!basicSetting.setting.addAction }">
+        <div ng-if="basicSetting.editMode">
+
+            <div ng-if="basicSetting.setting.datatype == 'password' && !basicSetting.setting.options.length">
+                <div class="input-group">
+                    <input id="{{basicSetting.id}}"
+                           name="{{basicSetting.id}}"
+                           ng-model="basicSetting.setting.value"
+                           data-automation-id="{{basicSetting.setting.id}}"
+                           ng-required="basicSetting.setting.required"
+                           class="form-control"
+                           type="password" password-viewer
+                           placeholder="" />
+                </div>
+            </div>
+
+            <input type="text"
+                   ng-if="basicSetting.setting.datatype == 'string' && !basicSetting.setting.options.length"
+                   class="form-control"
+                   name="{{basicSetting.id}}"
+                   id="{{basicSetting.id}}"
+                   ng-model="basicSetting.setting.value"
+                   data-automation-id="{{basicSetting.setting.id}}"
+                   ng-required="basicSetting.setting.required"
+                   ng-maxlength="basicSetting.setting.maxlength" />
+
+            <label ng-if="basicSetting.setting.datatype == 'statictext'"
+                   name="{{basicSetting.id}}"
+                   id="{{basicSetting.id}}"
+                   data-automation-id="{{basicSetting.setting.id}}">
+                {{ basicSetting.setting.value }}
+            </label>
+
+            <input type="number"
+                   string-to-number
+                   ng-if="basicSetting.setting.datatype == 'number' && !basicSetting.setting.options.length"
+                   class="form-control"
+                   id="{{basicSetting.id}}"
+                   name="{{basicSetting.id}}"
+                   ng-model="basicSetting.setting.value"
+                   data-automation-id="{{basicSetting.setting.id}}"
+                   ng-required="basicSetting.setting.required"
+                   min="{{basicSetting.setting.min}}"
+                   max="{{basicSetting.setting.max}}"
+                   step="{{basicSetting.setting.step}}" />
+
+            <input ng-if="basicSetting.setting.datatype == 'boolean'"
+                   type="checkbox"
+                   id="{{basicSetting.id}}"
+                   name="{{basicSetting.id}}"
+                   ng-model="basicSetting.setting.value"
+                   ng-true-value="'true'"
+                   ng-false-value="'false'"
+                   data-automation-id="{{basicSetting.setting.id}}" />
+
+            <textarea class="form-control"
+                      ng-if="basicSetting.setting.datatype == 'textarea' && !basicSetting.setting.options.length"
+                      id="{{basicSetting.id}}"
+                      ng-model="basicSetting.setting.value"
+                      name="{{basicSetting.id}}"
+                      data-automation-id="{{basicSetting.setting.id}}"
+                      ng-required="basicSetting.setting.required"></textarea>
+
+            <select ng-if="basicSetting.setting.datatype != 'radio' && basicSetting.setting.options.length && !basicSetting.setting.multiple"
+                    class="form-control"
+                    id="{{basicSetting.id}}"
+                    ng-model="basicSetting.setting.value"
+                    data-automation-id="{{basicSetting.setting.id}}"
+                    name="{{basicSetting.id}}"
+                    ng-required="basicSetting.setting.required"
+                    ng-options="item.id as item.name for item in basicSetting.filteredoptions(basicSetting.setting, basicSetting.component)"></select>
+
+            <ul ng-if="basicSetting.setting.datatype == 'radio' && basicSetting.setting.options.length && !basicSetting.setting.multiple"
+                class="list-unstyled list-inline">
+
+                <li ng-repeat="filteredoption in basicSetting.filteredoptions(basicSetting.setting, basicSetting.component)">
+                    <label>
+                        <input id="{{basicSetting.id}}_{{$index}}"
+                               type="radio"
+                               name="{{basicSetting.id}}"
+                               class=""
+                               value="{{filteredoption.id}}"
+                               ng-model="basicSetting.setting.value" />
+                        <span>{{filteredoption.name | titleCase}}</span>
+                    </label>
+                </li>
+            </ul>
+
+            <div>
+                <button ng-if="basicSetting.setting.addAction"
+                        class="btn btn-info settings_button"
+                        type="button"
+                        data-action="{{basicSetting.setting.addAction}}"
+                        data-select="{{'setting_' + basicSetting.setting.id}}"
+                        id="{{'setting_button_' + basicSetting.setting.id}}">
+                    {{'GENERIC_Add'|translate}}
+                </button>
+
+                <ul ng-if="basicSetting.setting.options.length && basicSetting.setting.multiple"
+                    class="list-unstyled">
+                    <li ng-repeat="filteredoption in basicSetting.filteredoptions(basicSetting.setting, basicSetting.component)">
+                        <div class="checkbox">
+                            <label>
+                                <input id="chkSetting"
+                                       type="checkbox"
+                                       class="checkbox-setting"
+                                       ng-click="basicSetting.checkboxSettingClicked(filteredoption.id, $event)"
+                                       ng-checked="basicSetting.setting.valuearray.indexOf(filteredoption.id) > -1" /> {{filteredoption.name | titleCase}}
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Read-only -->
+        <div ng-if="!basicSetting.editMode">
+            <div ng-if="!basicSetting.setting.options.length && basicSetting.setting.datatype == 'password'">
+                <p class="form-control-static" id="{{basicSetting.id}}">
+                    <span ng-if="!basicSetting.setting.value">
+                        {{'GENERIC_NoPassword'|translate}}
+                    </span>
+                    <span ng-if="basicSetting.setting.value">
+                        {{'GENERIC_stars'|translate}}
+                    </span>
+                </p>
+            </div>
+            <div ng-if="!basicSetting.setting.options.length && basicSetting.setting.datatype != 'password'">
+                <p class="form-control-static" id="{{basicSetting.id}}">
+                    {{basicSetting.setting.value}}
+                </p>
+            </div>
+
+            <div ng-if="basicSetting.setting.options.length">
+                <p ng-if="!basicSetting.setting.multiple"
+                   class="form-control-static"
+                   id="{{basicSetting.id}}">
+                    <list-lookup list="basicSetting.setting.options"
+                                 key="basicSetting.setting.value"
+                                 property-name="'name'"></list-lookup>
+                </p>
+
+                <p ng-if="basicSetting.setting.multiple"
+                   class="form-control-static"
+                   id="{{basicSetting.id}}">
+                    {{basicSetting.setting.valuearraydisplay}}
+                </p>
+            </div>
+        </div>
+        <!-- Validation Messages -->
+        <div class="text-danger" ng-if="basicSetting.form._submitted">
+            <div ng-if="basicSetting.setting.multiple && !basicSetting.setting.value">
+                {{'GENERIC_RequiredField'|translate}}
+            </div>
+            <div ng-if="basicSetting.form[basicSetting.id].$error.required">
+                {{'GENERIC_RequiredField'|translate}}
+            </div>
+            <div ng-if="!basicSetting.form[basicSetting.id].$error.required">
+                <div ng-if="basicSetting.form[basicSetting.id].$error.min"
+                     translate="VALIDATIONMESSAGES_minNumber"
+                     translate-values="{ min : basicSetting.setting.min }">
+                </div>
+                <div ng-if="basicSetting.form[basicSetting.id].$error.max"
+                     translate="VALIDATIONMESSAGES_maxNumber"
+                     translate-values="{ max : basicSetting.setting.max }">
+                </div>
+                <div ng-if="basicSetting.form[basicSetting.id].$error.email">
+                    {{'SETTINGS_EnterValidEmail'|translate}}
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="clearfix"></div>
+</div>
