@@ -1428,6 +1428,24 @@ public class ApplianceController extends BaseController {
 
         return jobResponse;
     }
+    @RequestMapping(value = "addforwardingdetails", method = RequestMethod.POST)
+    public JobResponse addForwardingDetails(
+            @RequestBody JobTroubleshootingBundleRequest jobTestTroubleshootingBundleRequest) {
+
+        JobResponse jobResponse = new JobResponse();
+//        try {
+//            TroubleshootingBundleParams troubleshootingBundleParams = parseVxfmTroubleshootingBundleParams(
+//                    jobTestTroubleshootingBundleRequest.getRequestObj());
+//
+//            vxfmTroubleshootingBundleServiceAdapter.testTroubleshootingBundle(troubleshootingBundleParams);
+//        } catch (Throwable t) {
+//            log.error("testTroubleShootingBundle() - Exception from service call", t);
+//            jobResponse = addFailureResponseInfo(t);
+//        }
+        System.out.println("In addCommunity String method");
+
+        return jobResponse;
+    }
 
 
     /**
