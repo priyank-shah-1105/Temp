@@ -15,10 +15,12 @@ var asm;
             this.settings = {};
             this.errors = [];
             var self = this;
+            console.log("ProxySettings.js");
             self.initialize();
         }
         //help url: ASM.urlConfig.help.EditingProxySettings
         EditProxySettingsModalController.prototype.initialize = function () {
+            console.log("ProxySettings.js");
             var self = this;
             self.settings = self.$scope.modal.params.httpProxySettings;
         };

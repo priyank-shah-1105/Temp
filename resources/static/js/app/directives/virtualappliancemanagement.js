@@ -438,6 +438,7 @@ var asm;
                 .finally(function () { return d.resolve(); });
         };
         VirtualApplianceManagementController.prototype.generateTroubleBundle_modal = function () {
+            console.log('In virtual Applicanec Managemnet .js file');
             var self = this;
             var theModal = self.Modal({
                 title: self.$translate.instant('SETTINGS_GenerateTroubleshootingBundle'),
@@ -456,6 +457,28 @@ var asm;
             });
             theModal.modal.show();
         };
+
+        VirtualApplianceManagementController.prototype.generateSNMPModal = function () {
+            var self = this;
+            var theModal = self.Modal({
+                title: self.$translate.instant('Generate SNMP data'),
+
+                /*onHelp() {
+                    self.GlobalServices.showHelp('Addingfirmwarerepositories');
+                },*/
+                modalSize: 'modal-lg',
+                templateUrl: 'views/settings/virtualappliancemanagement/editSNMPdetails.html',
+                controller: 'GenerateTroubleshootingBundleModalController as generateTroubleshootingBundleModalController',
+                params: {
+                    callingPage: 'VirtualApplianceManagement'
+                },
+                onComplete: function () {
+                    self.refresh();
+                }
+            });
+            theModal.modal.show();
+        };
+
         VirtualApplianceManagementController.prototype.saveVxRackSettings = function () {
             var self = this, d = self.$q.defer();
             self.GlobalServices.ClearErrors();

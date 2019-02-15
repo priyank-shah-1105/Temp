@@ -1395,7 +1395,7 @@ public class ApplianceController extends BaseController {
     @RequestMapping(value = "testtroubleshootingbundle", method = RequestMethod.POST)
     public JobResponse testTroubleShootingBundle(
             @RequestBody JobTroubleshootingBundleRequest jobTestTroubleshootingBundleRequest) {
-
+        System.out.println("In test Trouble bundle request");
         JobResponse jobResponse = new JobResponse();
         try {
             TroubleshootingBundleParams troubleshootingBundleParams = parseVxfmTroubleshootingBundleParams(
@@ -1409,6 +1409,26 @@ public class ApplianceController extends BaseController {
 
         return jobResponse;
     }
+
+    @RequestMapping(value = "addcommunitystring", method = RequestMethod.POST)
+    public JobResponse addCommunityString(
+            @RequestBody JobTroubleshootingBundleRequest jobTestTroubleshootingBundleRequest) {
+
+        JobResponse jobResponse = new JobResponse();
+//        try {
+//            TroubleshootingBundleParams troubleshootingBundleParams = parseVxfmTroubleshootingBundleParams(
+//                    jobTestTroubleshootingBundleRequest.getRequestObj());
+//
+//            vxfmTroubleshootingBundleServiceAdapter.testTroubleshootingBundle(troubleshootingBundleParams);
+//        } catch (Throwable t) {
+//            log.error("testTroubleShootingBundle() - Exception from service call", t);
+//            jobResponse = addFailureResponseInfo(t);
+//        }
+        System.out.println("In addCommunity String method");
+
+        return jobResponse;
+    }
+
 
     /**
      * Export trouble shooting bundle.

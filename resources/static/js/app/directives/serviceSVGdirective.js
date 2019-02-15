@@ -403,6 +403,28 @@ var asm;
             });
             theModal.modal.show();
         };
+
+        ServicesvgController.prototype.generateSNMPModal = function () {
+            var self = this;
+            var theModal = self.Modal({
+                title: self.$translate.instant('Generate SNMP data'),
+                /*onHelp() {
+                    self.GlobalServices.showHelp('Addingfirmwarerepositories');
+                },*/
+                modalSize: 'modal-lg',
+                templateUrl: 'views/settings/virtualappliancemanagement/editSNMPdetails.html',
+                controller: 'GenerateTroubleshootingBundleModalController as generateTroubleshootingBundleModalController',
+                params: {
+                    callingPage: 'Service',
+                    serviceId: self.serviceId
+                },
+                onComplete: function () {
+                    self.refresh();
+                }
+            });
+            theModal.modal.show();
+        };
+
         ServicesvgController.prototype.retryService_Modal = function () {
             var self = this;
             var showAAParm = false;

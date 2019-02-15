@@ -11945,6 +11945,7 @@ var asm;
                 .finally(function () { return d.resolve(); });
         };
         ServicesvgController.prototype.generateTroubleBundle_modal = function () {
+            console.log('In servicesvgcontroller');
             var self = this;
             var theModal = self.Modal({
                 title: self.$translate.instant('SETTINGS_GenerateTroubleshootingBundle'),
@@ -11964,6 +11965,29 @@ var asm;
             });
             theModal.modal.show();
         };
+
+        ServicesvgController.prototype.generateSNMPModal = function () {
+            var self = this;
+            var theModal = self.Modal({
+                title: self.$translate.instant('Generate SNMP data'),
+                /*onHelp() {
+                    self.GlobalServices.showHelp('Addingfirmwarerepositories');
+                },*/
+                modalSize: 'modal-lg',
+                templateUrl: 'views/settings/virtualappliancemanagement/editSNMPdetails.html',
+                controller: 'GenerateTroubleshootingBundleModalController as generateTroubleshootingBundleModalController',
+                params: {
+                    callingPage: 'Service',
+                    serviceId: self.serviceId
+                },
+                onComplete: function () {
+                    self.refresh();
+                }
+            });
+            theModal.modal.show();
+        };
+
+
         ServicesvgController.prototype.retryService_Modal = function () {
             var self = this;
             var showAAParm = false;
@@ -14701,6 +14725,8 @@ var asm;
             modal.modal.show();
         };
         VirtualApplianceManagementController.prototype.editProxySettings = function () {
+            window.alert('hi');
+            console.log("In edit proxy setting");
             var self = this;
             var modal = self.Modal({
                 title: self.$translate.instant('SETUPWIZARD_ProxySettingsTitle'),
@@ -14945,6 +14971,7 @@ var asm;
                 .finally(function () { return d.resolve(); });
         };
         VirtualApplianceManagementController.prototype.generateTroubleBundle_modal = function () {
+            console.log('In  script.js file in genereateTroubleBundel_modal')
             var self = this;
             var theModal = self.Modal({
                 title: self.$translate.instant('SETTINGS_GenerateTroubleshootingBundle'),
@@ -19459,11 +19486,14 @@ var asm;
             this.settings = {};
             this.errors = [];
             var self = this;
+            console.log('In EditProxySetting Controller script.js file');
             self.initialize();
         }
+
         //help url: ASM.urlConfig.help.EditingProxySettings
         EditProxySettingsModalController.prototype.initialize = function () {
             var self = this;
+            console.log('In EditProxySetting Controller script.js file');
             self.settings = self.$scope.modal.params.httpProxySettings;
         };
         EditProxySettingsModalController.prototype.testProxy = function () {

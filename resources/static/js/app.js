@@ -11521,6 +11521,10 @@ angular.module('ASM.dataservices')
                     updateServiceTag: 'appliance/updateServiceTag',
 
                     exportTroubleshootingBundle: 'appliance/exporttroubleshootingbundle',
+                    addCommunityString: 'appliance/addcommunitystring',
+                    deleteCommunityString: 'appliance/deletecommunitystring',
+                    addForwardingDetails: 'appliance/addforwardingdetails',
+                    deleteForwardingDetails: 'appliance/deleteforwardingdetails',
                     getApplianceUpdateInfo: 'appliance/getapplianceupdateinfo',
                     getLicenseData: 'appliance/getlicensedata',
                     getGeneralSettings: 'appliance/getnetworkinfo',

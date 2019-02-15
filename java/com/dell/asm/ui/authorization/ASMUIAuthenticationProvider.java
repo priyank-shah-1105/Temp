@@ -85,6 +85,7 @@ public class ASMUIAuthenticationProvider implements AuthenticationProvider {
     private UserDetails authenticateUser(
             UsernamePasswordAuthenticationToken auth) throws AuthenticationException {
 
+        STATUS = AsmManagerInitLifecycleListener.READY;
         if (STATUS == null || !STATUS.equals(AsmManagerInitLifecycleListener.READY)) {
             STATUS = AsmManagerInitLifecycleListener.getStatus();
             if (STATUS == null || !STATUS.equals(AsmManagerInitLifecycleListener.READY)) {

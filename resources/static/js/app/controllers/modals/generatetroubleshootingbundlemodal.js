@@ -178,6 +178,22 @@ var asm;
             var self = this;
             return self.$http.post(self.Commands.data.applianceManagement.testTroubleshootingBundle, bundle);
         };
+        GenerateTroubleshootingBundleModalController.prototype.testAddCSBundle = function (bundle) {
+            var self = this;
+            return self.$http.post(self.Commands.data.applianceManagement.addCommunityString, bundle);
+        };
+        GenerateTroubleshootingBundleModalController.prototype.testDeleteCSBundle = function (bundle) {
+            var self = this;
+            return self.$http.post(self.Commands.data.applianceManagement.deleteCommunityString, bundle);
+        };
+        GenerateTroubleshootingBundleModalController.prototype.testAddForwardingBundle = function (bundle) {
+            var self = this;
+            return self.$http.post(self.Commands.data.applianceManagement.addForwardingDetails, bundle);
+        };
+        GenerateTroubleshootingBundleModalController.prototype.testDeleteForwardingBundle = function (bundle) {
+            var self = this;
+            return self.$http.post(self.Commands.data.applianceManagement.deleteForwardingDetails, bundle);
+        };
         GenerateTroubleshootingBundleModalController.prototype.close = function () {
             var self = this;
             self.$scope.modal.close();
